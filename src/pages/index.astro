@@ -1,0 +1,262 @@
+---
+const title = "Alex Gavrilescu — MrLesk";
+const description = "Minimal, elegant profile with About and public links.";
+const year = new Date().getFullYear();
+---
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <meta name="color-scheme" content="light" />
+    <meta name="theme-color" content="#ffffff" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="canonical" href="https://mrlesk.com" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content="https://mrlesk.com" />
+    <meta property="og:image" content="https://mrlesk.com/alex.jpg" />
+    <style>
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+      }
+      :root {
+        --bg: #fafafa; /* page background */
+        --card: #ffffff; /* surface */
+        --ink: #0b1220; /* main text */
+        --muted: #49536a; /* secondary */
+        --border: #e5e7eb; /* subtle lines */
+        --accent: #0ea5e9; /* sky-500 */
+        --shadow: 0 1px 2px rgba(15, 23, 42, 0.06),
+          0 6px 18px rgba(2, 6, 23, 0.06);
+        --radius: 14px;
+      }
+      html,
+      body {
+        height: 100%;
+      }
+      body {
+        margin: 0;
+        color: var(--ink);
+        background: radial-gradient(
+            1200px 600px at 50% -10%,
+            #eaf6fd 0%,
+            rgba(234, 246, 253, 0) 60%
+          ),
+          var(--bg);
+        font-family:
+          ui-sans-serif,
+          system-ui,
+          -apple-system,
+          Segoe UI,
+          Roboto,
+          Helvetica,
+          Arial,
+          "Apple Color Emoji",
+          "Segoe UI Emoji";
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+      }
+      .wrap {
+        max-width: 720px;
+        margin: 0 auto;
+        padding: clamp(40px, 6vw, 72px) 20px 56px;
+      }
+
+      .header {
+        display: grid;
+        justify-items: center;
+        text-align: center;
+        gap: 16px;
+        margin-bottom: 26px;
+      }
+      .avatar {
+        width: 128px;
+        height: 128px;
+        border-radius: 999px;
+        object-fit: cover;
+        background: #fff;
+        border: 1px solid var(--border);
+        box-shadow: var(--shadow);
+      }
+      h1 {
+        font-size: clamp(28px, 5vw, 40px);
+        line-height: 1.1;
+        letter-spacing: -0.02em;
+        margin: 0;
+      }
+      .tag {
+        color: var(--muted);
+        margin: 0;
+        font-size: 1rem;
+      }
+
+      .links {
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+        justify-content: center;
+        margin-top: 8px;
+      }
+      .btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        padding: 10px 14px;
+        border-radius: 999px;
+        background: var(--card);
+        color: var(--ink);
+        text-decoration: none;
+        font-weight: 600;
+        border: 1px solid var(--border);
+        box-shadow: var(--shadow);
+        transition:
+          transform 0.08s ease,
+          background 0.2s ease,
+          border-color 0.2s ease,
+          box-shadow 0.2s ease;
+      }
+      .btn:hover {
+        background: #f8fafc;
+        border-color: #dbe1ea;
+      }
+      .btn:active {
+        transform: translateY(1px);
+      }
+      .btn svg {
+        width: 18px;
+        height: 18px;
+        display: block;
+      }
+      .btn.accent {
+        background: #eaf6fd;
+        border-color: #cae9f8;
+      }
+      .btn.accent:hover {
+        background: #dff0fb;
+      }
+      .btn:focus-visible {
+        outline: 3px solid rgba(14, 165, 233, 0.35);
+        outline-offset: 2px;
+      }
+
+      .about {
+        max-width: 62ch;
+        margin: 26px auto 0;
+        font-size: 1.05rem;
+        line-height: 1.65;
+      }
+      .about h2 {
+        font-size: 0.95rem;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        color: var(--muted);
+        margin: 0 0 10px;
+      }
+      .about p {
+        margin: 0 0 14px;
+      }
+      .about a {
+        color: var(--accent);
+        text-underline-offset: 3px;
+      }
+
+      footer {
+        margin-top: 40px;
+        color: var(--muted);
+        font-size: 0.95rem;
+        text-align: center;
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .btn,
+        .btn:hover {
+          transition: none;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="wrap">
+      <header class="header">
+        <img
+          class="avatar"
+          src="/alex.jpg"
+          alt="Portrait of Alex Gavrilescu"
+          width="128"
+          height="128"
+          loading="eager"
+          decoding="async"
+        />
+        <h1>Alex Gavrilescu</h1>
+        <p class="tag">
+          Engineering lead &mdash; Backend &amp; Web &mdash; Funstage GmbH
+        </p>
+        <nav class="links" aria-label="Primary">
+          <a
+            class="btn accent"
+            href="https://www.linkedin.com/in/alexandrugavrilescu"
+            rel="me noopener"
+            target="_blank"
+            aria-label="LinkedIn profile"
+          >
+            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"
+              ><path
+                d="M4.98 3.5C4.98 4.88 3.86 6 2.5 6S0 4.88 0 3.5 1.12 1 2.5 1s2.48 1.12 2.48 2.5zM.5 8.5h4V24h-4zM8.5 8.5h3.84v2.11h.05c.53-1 1.84-2.11 3.79-2.11 4.05 0 4.8 2.67 4.8 6.14V24h-4v-6.86c0-1.64-.03-3.74-2.28-3.74-2.28 0-2.63 1.78-2.63 3.62V24h-4z"
+              ></path></svg
+            >
+            LinkedIn
+          </a>
+          <a
+            class="btn"
+            href="https://github.com/MrLesk"
+            rel="me noopener"
+            target="_blank"
+            aria-label="GitHub profile"
+          >
+            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"
+              ><path
+                fill-rule="evenodd"
+                clip-rule="evenodd"
+                d="M12 .5a11.5 11.5 0 0 0-3.64 22.41c.58.1.79-.25.79-.56v-2.18c-3.22.7-3.9-1.4-3.9-1.4-.52-1.32-1.28-1.67-1.28-1.67-1.05-.72.08-.71.08-.71 1.16.08 1.78 1.2 1.78 1.2 1.03 1.77 2.7 1.26 3.36.97.1-.75.4-1.26.72-1.55-2.57-.29-5.28-1.28-5.28-5.7 0-1.26.45-2.28 1.2-3.09-.12-.29-.52-1.47.12-3.06 0 0 .97-.31 3.18 1.18.92-.26 1.9-.39 2.88-.39.98 0 1.96.13 2.88.39 2.21-1.49 3.18-1.18 3.18-1.18.64 1.59.24 2.77.12 3.06.75.81 1.2 1.83 1.2 3.09 0 4.43-2.71 5.41-5.29 5.69.41.36.77 1.07.77 2.17v3.22c0 .31.21.67.79.56A11.5 11.5 0 0 0 12 .5Z"
+              ></path></svg
+            >
+            GitHub
+          </a>
+        </nav>
+      </header>
+
+      <section class="about" aria-labelledby="about-title">
+        <h2 id="about-title">About</h2>
+        <p>
+          Hi! I'm Alex Gavrilescu. I like building reliable, low-latency online
+          gaming platforms serving millions of players. I've spent 13+ years in
+          backend/web (lots of .NET + Kubernetes), and the last 2+ years mixing
+          in practical AI.
+        </p>
+        <p>
+          I care about performance, readable code, and developer experience. I
+          enjoy pairing, sketching systems, and shipping small, frequent
+          changes. I'm currently building <a
+            href="https://github.com/MrLesk/backlog.md"
+            target="_blank"
+            rel="noopener">Backlog.md</a
+          >, a markdown-native Kanban + AI agents toolkit for Git repos.
+        </p>
+        <p>
+          Lately I'm exploring how autonomous AI agents plug into everyday Agile
+          dev workflows, adding value without getting in the way.
+        </p>
+      </section>
+
+      <footer>
+        &copy; {year} Alex Gavrilescu &mdash; MrLesk<br />
+        Hosted on a Raspberry Pi, powered by Coolify and Cloudflare Tunnels.
+      </footer>
+    </main>
+  </body>
+</html>
