@@ -1,0 +1,8 @@
+---
+layout: default
+---
+
+# Just ask AI
+
+## ~Please~ ...[after click]... Add this feature to my project.
+## Do not make mistakes!

@@ -9,20 +9,24 @@ drawings:
 mdc: true
 seoMeta:
   ogImage: auto
+themeConfig:
+    eve
 transition: slide-left
 layout: intro
 ---
 # From zero to Backlog.md
-## by Alex Gavrilescu
 
-#### Vienna AI Engineering Meetup, 2nd October 2025
+### Vienna AI Engineering Meetup
+#### 2 October 2025
 
 ---
+src: ./pages/presenter.md
+---
+
+---
+src: ./pages/toc.md
+---
+
 ---
 
 # Second slide title
-
-
-<!--
-The last comment block of each slide will be treated as slide notes. It will be visible and editable in Presenter Mode along with the slide. [Read more in the docs](https://sli.dev/guide/syntax.html#notes)
--->
