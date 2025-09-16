@@ -2,6 +2,6 @@
 layout: default
 ---
 
-# Pre-commit hook
+# 4. Take over one task at the time
 
-## linting, formatting, type-checking
+## Review #2 - The HOW

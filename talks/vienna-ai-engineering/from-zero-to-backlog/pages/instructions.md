@@ -2,4 +2,4 @@
 layout: intro
 ---
 
-# How do Agents know how to use it?
+# How do Agents know what to do?

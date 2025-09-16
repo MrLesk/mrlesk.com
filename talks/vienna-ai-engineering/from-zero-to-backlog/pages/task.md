@@ -2,4 +2,4 @@
 layout: intro
 ---
 
-# Task structure
+# We need to create good Tasks

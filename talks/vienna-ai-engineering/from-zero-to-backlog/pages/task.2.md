@@ -2,6 +2,6 @@
 layout: default
 ---
 
-# What
+# Title
 
-(image of the checklist)
+(highlight the title of the task)

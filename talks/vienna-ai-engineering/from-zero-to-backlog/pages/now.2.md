@@ -2,4 +2,4 @@
 layout: default
 ---
 
-# Codex or Claude Code
+# 2. Ask Codex or Claude Code to create tasks for it

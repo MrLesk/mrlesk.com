@@ -2,6 +2,6 @@
 layout: default
 ---
 
-# How
+# What
 
-(image of agent thinking and holding the checklist in his hands)
+(highlight the description and acceptance criteria of the task)

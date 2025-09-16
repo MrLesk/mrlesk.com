@@ -1,7 +1,5 @@
 ---
-layout: default
+layout: intro
 ---
 
-# Why
-
-(image of the direction we are going)
+(code block of the task we are going to do in second talk)
