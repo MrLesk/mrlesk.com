@@ -2,6 +2,8 @@
 layout: default
 ---
 
-# How we started
+# Code completition
 
-## Code completion
+<div class="mt-16">
+    <img class="" src="/context.1.png">
+</div>

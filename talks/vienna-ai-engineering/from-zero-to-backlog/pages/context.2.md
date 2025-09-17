@@ -2,6 +2,8 @@
 layout: default
 ---
 
-# The ChatGPT era
+# ChatGPT style
 
-## Chat Code
+<div class="mt-16">
+    <img class="w-130" src="/context.2.png">
+</div>

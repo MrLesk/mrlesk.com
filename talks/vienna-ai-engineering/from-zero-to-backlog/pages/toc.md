@@ -12,3 +12,7 @@ layout: default
 6. Agent Instructions
 7. How do I work now
 8. Q&A
+
+... Short break ...
+
+- Second talk: Demo with Backlog.md and Agents

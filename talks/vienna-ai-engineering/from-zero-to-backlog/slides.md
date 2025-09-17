@@ -3,14 +3,9 @@ theme: penguin
 colorSchema: "light"
 title: From Zero to Backlog.md
 author: Alex Gavrilescu
-class: text-center
 drawings:
   persist: false
 mdc: true
-seoMeta:
-  ogImage: auto
-themeConfig:
-    eve
 transition: slide-left
 layout: intro
 ---
