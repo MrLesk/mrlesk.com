@@ -1,5 +1,6 @@
 ---
 layout: intro
+section: Why Backlog.md
 ---
 
 # What exactly is Backlog.md?

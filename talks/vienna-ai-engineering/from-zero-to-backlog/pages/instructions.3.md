@@ -1,5 +1,6 @@
 ---
 layout: default
+section: Agent Instructions
 ---
 
 # Agents know how to use Backlog.md

@@ -1,5 +1,6 @@
 ---
 layout: default
+section: Why Backlog.md
 ---
 
 # Agents love CLI Tools

@@ -8,6 +8,7 @@ drawings:
 mdc: true
 transition: slide-left
 layout: intro
+section: Introduction
 ---
 # From zero to Backlog.md
 

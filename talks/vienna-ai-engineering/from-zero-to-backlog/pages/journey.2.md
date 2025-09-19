@@ -1,5 +1,6 @@
 ---
 layout: default
+section: How I started
 ---
 
 # Add CLAUDE.md

@@ -1,5 +1,6 @@
 ---
 layout: default
+section: Why Backlog.md
 ---
 
 # Install Backlog.md

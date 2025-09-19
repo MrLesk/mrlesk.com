@@ -1,5 +1,6 @@
 ---
 layout: default
+section: Task structure
 ---
 
 # What

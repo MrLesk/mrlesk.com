@@ -1,5 +1,6 @@
 ---
 layout: intro
+section: Spec-driven flow
 ---
 
-# 3-way Review Flow
+# Spec Driven AI Development Flow

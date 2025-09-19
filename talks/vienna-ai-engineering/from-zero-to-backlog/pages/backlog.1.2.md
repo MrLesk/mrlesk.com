@@ -1,5 +1,6 @@
 ---
 layout: intro
+section: Why Backlog.md
 ---
 
 # It's a Project Management tool for your terminal
