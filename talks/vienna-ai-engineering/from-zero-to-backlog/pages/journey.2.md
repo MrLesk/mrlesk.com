@@ -2,7 +2,9 @@
 layout: default
 ---
 
-# Add CLAUDE.md (75% success rate)
+# Add CLAUDE.md
+### still blame AI → 75% success rate
 
-## Also Blame AI (but more complex)
-(image of neural network)
+<div class="mt-8">
+    <img class="h-90" src="/journey.2.png">
+</div>

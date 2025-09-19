@@ -2,7 +2,7 @@
 layout: default
 ---
 
-# Agenda
+# Table of Contents
 
 1. A bit of "Context"
 2. How I started
