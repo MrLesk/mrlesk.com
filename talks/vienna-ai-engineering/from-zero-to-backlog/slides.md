@@ -9,6 +9,7 @@ mdc: true
 transition: slide-left
 layout: intro
 section: Introduction
+hideIndicator: true
 ---
 # From zero to Backlog.md
 

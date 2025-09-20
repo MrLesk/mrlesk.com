@@ -7,10 +7,12 @@ const { currentSlideNo, total, slides } = useNav()
 // Build maps for sections and their boundaries
 const sectionMap = ref<Map<number, string>>(new Map())
 const sectionBoundaries = ref<Map<string, { start: number, end: number }>>(new Map())
+const hiddenSlides = ref<Set<number>>(new Set())
 
 watchEffect(() => {
   const map = new Map<number, string>()
   const boundaries = new Map<string, { start: number, end: number }>()
+  const hidden = new Set<number>()
   let currentSectionName = ''
   let sectionStart = 1
 
@@ -18,6 +20,15 @@ watchEffect(() => {
   if (slides.value) {
     slides.value.forEach((slide: any, index: number) => {
       const slideNo = index + 1
+      // Check if this slide should hide the indicator
+      const hideIndicator = slide.meta?.frontmatter?.hideIndicator ||
+                           slide.meta?.slide?.frontmatter?.hideIndicator ||
+                           slide.frontmatter?.hideIndicator
+
+      if (hideIndicator) {
+        hidden.add(slideNo)
+      }
+
       // Check if this slide defines a new section - try different property paths
       const section = slide.meta?.frontmatter?.section ||
                      slide.meta?.slide?.frontmatter?.section ||
@@ -52,6 +63,7 @@ watchEffect(() => {
 
   sectionMap.value = map
   sectionBoundaries.value = boundaries
+  hiddenSlides.value = hidden
 })
 
 const currentSection = computed(() => {
@@ -90,10 +102,14 @@ const sectionSlideNumbers = computed(() => {
   const sectionLength = bounds.end - bounds.start + 1
   return `${positionInSection} / ${sectionLength}`
 })
+
+const isVisible = computed(() => {
+  return !hiddenSlides.value.has(currentSlideNo.value)
+})
 </script>
 
 <template>
-  <div class="section-indicator">
+  <div v-if="isVisible" class="section-indicator">
     <div class="section-name">{{ currentSection }}</div>
     <div class="progress-bar">
       <div class="progress-fill" :style="{ width: sectionProgress + '%' }"></div>
