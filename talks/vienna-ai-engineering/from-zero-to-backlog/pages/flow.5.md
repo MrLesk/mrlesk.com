@@ -3,4 +3,6 @@ layout: default
 section: Spec-driven flow
 ---
 
-# 1) Human define what to build
+# 4) Ask the Agent to write the code
+
+## Review

@@ -3,4 +3,4 @@ layout: default
 section: Spec-driven flow
 ---
 
-# 1) Human define what to build
+# Start with a PRD

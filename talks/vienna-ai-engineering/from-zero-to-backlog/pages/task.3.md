@@ -3,6 +3,6 @@ layout: default
 section: Task structure
 ---
 
-# What
+# Why
 
-(highlight the description and acceptance criteria of the task)
+(highlight the description of the task)

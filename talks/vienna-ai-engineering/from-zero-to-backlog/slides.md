@@ -145,6 +145,34 @@ src: ./pages/backlog.15.md
 ---
 
 ---
+src: ./pages/flow.md
+---
+
+---
+src: ./pages/flow.1.md
+---
+
+---
+src: ./pages/flow.1.1.md
+---
+
+---
+src: ./pages/flow.2.md
+---
+
+---
+src: ./pages/flow.3.md
+---
+
+---
+src: ./pages/flow.4.md
+---
+
+---
+src: ./pages/flow.5.md
+---
+
+---
 src: ./pages/task.md
 ---
 
@@ -158,6 +186,10 @@ src: ./pages/task.2.md
 
 ---
 src: ./pages/task.3.md
+---
+
+---
+src: ./pages/task.3.5.md
 ---
 
 ---
@@ -177,19 +209,7 @@ src: ./pages/task.7.md
 ---
 
 ---
-src: ./pages/flow.md
----
-
----
-src: ./pages/flow.1.md
----
-
----
-src: ./pages/flow.2.md
----
-
----
-src: ./pages/flow.3.md
+src: ./pages/instructions.backlog.md
 ---
 
 ---

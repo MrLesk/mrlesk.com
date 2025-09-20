@@ -3,6 +3,6 @@ layout: default
 section: Spec-driven flow
 ---
 
-# 3) Ask the Agent to write the code
+# 2) Ask the Agent to create a task
 
-## Review
+## And validate if they understood the why and what
