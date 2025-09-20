@@ -104,82 +104,57 @@ const sectionSlideNumbers = computed(() => {
 
 <style scoped>
 .section-indicator {
-  position: fixed;
-  bottom: 20px;
-  right: 20px;
-  background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(0, 0, 0, 0.1);
-  border-radius: 8px;
-  padding: 10px 16px;
-  z-index: 50;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  font-family: system-ui, -apple-system, sans-serif;
-  line-height: 1.4;
+  @apply fixed bottom-5 right-5 z-50 text-center;
+  @apply px-4 py-2.5;
+  @apply border rounded-lg shadow-lg;
+
   min-width: 140px;
-  text-align: center;
+  backdrop-filter: blur(10px);
+  background-color: rgba(255, 255, 255, 0.95);
+  border-color: rgba(0, 0, 0, 0.1);
 }
 
-.section-name {
-  font-size: 13px;
-  font-weight: 600;
-  color: #2c3e50;
-  margin-bottom: 6px;
-  letter-spacing: 0.02em;
-}
-
-.progress-bar {
-  width: 100%;
-  height: 3px;
-  background: rgba(0, 0, 0, 0.1);
-  border-radius: 2px;
-  overflow: hidden;
-  margin-bottom: 6px;
-}
-
-.progress-fill {
-  height: 100%;
-  background: linear-gradient(90deg, #10b981, #059669);
-  border-radius: 2px;
-  transition: width 0.3s ease;
-}
-
-.slide-number {
-  font-size: 11px;
-  color: #6b7280;
-  font-variant-numeric: tabular-nums;
-}
-
-/* Dark mode support */
 html.dark .section-indicator {
-  background: rgba(30, 30, 30, 0.95);
+  background-color: rgba(30, 30, 30, 0.95);
   border-color: rgba(255, 255, 255, 0.1);
 }
 
+.section-name {
+  @apply text-sm font-semibold mb-1.5;
+
+  color: var(--slidev-theme-primary);
+  letter-spacing: 0.02em;
+}
+
 html.dark .section-name {
-  color: #e5e7eb;
+  color: var(--slidev-theme-secondary);
+}
+
+.progress-bar {
+  @apply w-full h-1 rounded-sm overflow-hidden mb-1.5;
+
+  background: rgba(0, 0, 0, 0.1);
 }
 
 html.dark .progress-bar {
   background: rgba(255, 255, 255, 0.1);
 }
 
-html.dark .progress-fill {
-  background: linear-gradient(90deg, #34d399, #10b981);
+.progress-fill {
+  @apply h-full rounded-sm;
+
+  height: 3px;
+  background: var(--slidev-theme-secondary);
+  transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-html.dark .slide-number {
-  color: #9ca3af;
+.slide-number {
+  @apply text-xs opacity-60;
+
+  font-variant-numeric: tabular-nums;
 }
 
-/* Hide on intro/cover slides if needed */
-.slidev-layout.intro .section-indicator,
-.slidev-layout.cover .section-indicator {
-  /* Uncomment to hide on intro slides */
-  /* display: none; */
-}
-
-/* Ensure it doesn't interfere with navigation controls */
+/* Hide on print */
 @media print {
   .section-indicator {
     display: none;
