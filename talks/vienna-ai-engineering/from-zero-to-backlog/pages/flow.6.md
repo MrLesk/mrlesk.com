@@ -3,4 +3,4 @@ layout: default
 section: Spec-driven flow
 ---
 
-# Start with a PRD
+# Agent might misunderstand us

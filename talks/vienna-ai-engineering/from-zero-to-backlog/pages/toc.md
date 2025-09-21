@@ -7,11 +7,11 @@ section: Introduction
 
 1. A bit of "Context"
 2. How I started with AI Agents
-3. Why I made Backlog.md
-4. Spec-driven flow
-5. Task structure
-6. What are Agent Instructions
-7. How do I work now
+3. The Spec-driven flow
+4. How Backlog.md implements it
+5. Tasks structure
+6. Backlog's Agent instructions
+7. Backlog.md flow
 8. Q&A
 
 ... Short break ...

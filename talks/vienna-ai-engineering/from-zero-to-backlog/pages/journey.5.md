@@ -3,5 +3,5 @@ layout: default
 section: How I started
 ---
 
-# Agents get the right context
+# Enables the Spec Driven Flow
 
