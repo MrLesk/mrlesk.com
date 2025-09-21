@@ -5,9 +5,23 @@ section: Context
 
 # What are AI Agents?
 
-# What are AI Agents?
+<div v-click class="line-through">
 
-* ~Function calling on steroids~
-* An AI Agent is a system that uses an LLM to perform tasks autonomously.
-* It can take actions based on its understanding of the task and the environment,
-* Can interact with APIs, databases, and other tools to achieve its goals.
+* Function calling on steroids
+</div>
+
+<div v-click>
+
+* A system that uses LLM to perform tasks autonomously
+</div>
+
+<div v-click>
+
+* Perform actions based on their understanding of the task and the environment
+</div>
+
+<div v-click>
+
+* Can interact with APIs, databases, and other tools to achieve their goals
+</div>
+

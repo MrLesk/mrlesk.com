@@ -1,7 +1,8 @@
 ---
 layout: default
+transition: slide-up
 section: How I started
 ---
 
-# Enables the Spec Driven Flow
+# Agents have a persistent context
 

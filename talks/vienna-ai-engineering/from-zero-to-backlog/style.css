@@ -1,3 +1,26 @@
 .slidev-layout h1 {
     margin-bottom: 0.5rem;
 }
+
+.bg-section {
+    @apply bg-secondary h-full flex items-center justify-center;
+}
+
+/* Fix code block styling */
+.slidev-layout pre.shiki {
+    border-radius: 0.5rem !important;
+    padding: 1rem !important;
+    overflow: hidden !important;
+}
+
+.slidev-layout pre.shiki code {
+    border-radius: 0.5rem !important;
+    display: block !important;
+    background: inherit !important;
+}
+
+.slidev-layout .shiki {
+    border-radius: 0.5rem !important;
+    padding: 1rem !important;
+    overflow: hidden !important;
+}

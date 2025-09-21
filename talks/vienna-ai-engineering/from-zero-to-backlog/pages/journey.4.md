@@ -1,7 +1,7 @@
 ---
 layout: default
+transition: slide-up
 section: How I started
 ---
 
-# Agents get the right context
-
+# Why does this work so well?

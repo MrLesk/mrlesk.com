@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="JavaScriptLibraryMappings">
+    <excludedPredefinedLibrary name="mrlesk.com/talks/vienna-ai-engineering/from-backlog-to-success/node_modules/@babel/core/node_modules" />
+    <excludedPredefinedLibrary name="mrlesk.com/talks/vienna-ai-engineering/from-backlog-to-success/node_modules/@babel/helper-compilation-targets/node_modules" />
+    <excludedPredefinedLibrary name="mrlesk.com/talks/vienna-ai-engineering/from-backlog-to-success/node_modules/@babel/helper-create-class-features-plugin/node_modules" />
+    <excludedPredefinedLibrary name="mrlesk.com/talks/vienna-ai-engineering/from-backlog-to-success/node_modules/@nuxt/kit/node_modules" />
+    <excludedPredefinedLibrary name="mrlesk.com/talks/vienna-ai-engineering/from-backlog-to-success/node_modules/@unocss/cli/node_modules" />
+    <excludedPredefinedLibrary name="mrlesk.com/talks/vienna-ai-engineering/from-backlog-to-success/node_modules/@unocss/cli/node_modules/chokidar/node_modules" />
+    <excludedPredefinedLibrary name="mrlesk.com/talks/vienna-ai-engineering/from-backlog-to-success/node_modules/@unocss/cli/node_modules/chokidar/node_modules/readdirp/node_modules" />
+    <excludedPredefinedLibrary name="mrlesk.com/talks/vienna-ai-engineering/from-backlog-to-success/node_modules/@unocss/postcss/node_modules" />
+    <excludedPredefinedLibrary name="mrlesk.com/talks/vienna-ai-engineering/from-backlog-to-success/node_modules/@unocss/postcss/node_modules/css-tree/node_modules" />
+    <excludedPredefinedLibrary name="mrlesk.com/talks/vienna-ai-engineering/from-backlog-to-success/node_modules/@unocss/transformer-attributify-jsx/node_modules" />
+    <excludedPredefinedLibrary name="mrlesk.com/talks/vienna-ai-engineering/from-backlog-to-success/node_modules/@unocss/transformer-attributify-jsx/node_modules/@babel/traverse/node_modules" />
+    <excludedPredefinedLibrary name="mrlesk.com/talks/vienna-ai-engineering/from-backlog-to-success/node_modules/@unocss/transformer-directives/node_modules" />
+    <excludedPredefinedLibrary name="mrlesk.com/talks/vienna-ai-engineering/from-backlog-to-success/node_modules/@unocss/transformer-directives/node_modules/css-tree/node_modules" />
+    <excludedPredefinedLibrary name="mrlesk.com/talks/vienna-ai-engineering/from-backlog-to-success/node_modules/@unocss/vite/node_modules" />
+    <excludedPredefinedLibrary name="mrlesk.com/talks/vienna-ai-engineering/from-backlog-to-success/node_modules/@unocss/vite/node_modules/chokidar/node_modules" />
+    <excludedPredefinedLibrary name="mrlesk.com/talks/vienna-ai-engineering/from-backlog-to-success/node_modules/@unocss/vite/node_modules/chokidar/node_modules/readdirp/node_modules" />
+    <excludedPredefinedLibrary name="mrlesk.com/talks/vienna-ai-engineering/from-backlog-to-success/node_modules/@vitejs/plugin-vue-jsx/node_modules" />
+    <excludedPredefinedLibrary name="mrlesk.com/talks/vienna-ai-engineering/from-backlog-to-success/node_modules/@vue/compiler-core/node_modules" />
+    <excludedPredefinedLibrary name="mrlesk.com/talks/vienna-ai-engineering/from-backlog-to-success/node_modules/c12/node_modules" />
+    <excludedPredefinedLibrary name="mrlesk.com/talks/vienna-ai-engineering/from-backlog-to-success/node_modules/cliui/node_modules" />
+    <excludedPredefinedLibrary name="mrlesk.com/talks/vienna-ai-engineering/from-backlog-to-success/node_modules/cliui/node_modules/string-width/node_modules" />
+    <excludedPredefinedLibrary name="mrlesk.com/talks/vienna-ai-engineering/from-backlog-to-success/node_modules/cliui/node_modules/strip-ansi/node_modules" />
+    <excludedPredefinedLibrary name="mrlesk.com/talks/vienna-ai-engineering/from-backlog-to-success/node_modules/connect/node_modules" />
+    <excludedPredefinedLibrary name="mrlesk.com/talks/vienna-ai-engineering/from-backlog-to-success/node_modules/connect/node_modules/debug/node_modules" />
+    <excludedPredefinedLibrary name="mrlesk.com/talks/vienna-ai-engineering/from-backlog-to-success/node_modules/csso/node_modules" />
+    <excludedPredefinedLibrary name="mrlesk.com/talks/vienna-ai-engineering/from-backlog-to-success/node_modules/csso/node_modules/css-tree/node_modules" />
+    <excludedPredefinedLibrary name="mrlesk.com/talks/vienna-ai-engineering/from-backlog-to-success/node_modules/d3-dsv/node_modules" />
+    <excludedPredefinedLibrary name="mrlesk.com/talks/vienna-ai-engineering/from-backlog-to-success/node_modules/giget/node_modules" />
+    <excludedPredefinedLibrary name="mrlesk.com/talks/vienna-ai-engineering/from-backlog-to-success/node_modules/importx/node_modules" />
+    <excludedPredefinedLibrary name="mrlesk.com/talks/vienna-ai-engineering/from-backlog-to-success/node_modules/importx/node_modules/esbuild/node_modules" />
+    <excludedPredefinedLibrary name="mrlesk.com/talks/vienna-ai-engineering/from-backlog-to-success/node_modules/js-yaml/node_modules" />
+    <excludedPredefinedLibrary name="mrlesk.com/talks/vienna-ai-engineering/from-backlog-to-success/node_modules/mlly/node_modules" />
+    <excludedPredefinedLibrary name="mrlesk.com/talks/vienna-ai-engineering/from-backlog-to-success/node_modules/mlly/node_modules/pkg-types/node_modules" />
+    <excludedPredefinedLibrary name="mrlesk.com/talks/vienna-ai-engineering/from-backlog-to-success/node_modules/nypm/node_modules" />
+    <excludedPredefinedLibrary name="mrlesk.com/talks/vienna-ai-engineering/from-backlog-to-success/node_modules/svgo/node_modules" />
+    <excludedPredefinedLibrary name="mrlesk.com/talks/vienna-ai-engineering/from-backlog-to-success/node_modules/unctx/node_modules" />
+    <excludedPredefinedLibrary name="mrlesk.com/talks/vienna-ai-engineering/from-backlog-to-success/node_modules/untun/node_modules" />
+    <excludedPredefinedLibrary name="mrlesk.com/talks/vienna-ai-engineering/from-backlog-to-success/node_modules/yargs/node_modules" />
+    <excludedPredefinedLibrary name="mrlesk.com/talks/vienna-ai-engineering/from-backlog-to-success/node_modules/yargs/node_modules/string-width/node_modules" />
+    <excludedPredefinedLibrary name="mrlesk.com/talks/vienna-ai-engineering/from-backlog-to-success/node_modules/yargs/node_modules/string-width/node_modules/strip-ansi/node_modules" />
+  </component>
+</project>

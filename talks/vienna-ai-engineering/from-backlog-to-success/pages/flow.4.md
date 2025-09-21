@@ -3,4 +3,6 @@ layout: default
 section: Spec-driven flow
 ---
 
-# We can't easily rollback
+# 3) Ask the Agent to write the code
+
+## Review

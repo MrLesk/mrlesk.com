@@ -1,10 +1,16 @@
 ---
 layout: default
-section: Why Backlog.md
+section: Backlog.md
 ---
 
 # It's a CLI Tool - Command Line Interface
 
-## You probably did this at least once
+<h3 v-click="1" class="mt-8"> You probably did this at least once</h3>
+<div v-click="1" class="mt-2">
 
-(image of git clone or git add .)
+```bash
+git add .
+git commit -m "feat: add new feature"
+git push origin main
+```
+</div>

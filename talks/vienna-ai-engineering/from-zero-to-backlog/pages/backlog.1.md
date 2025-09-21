@@ -1,10 +1,7 @@
 ---
-layout: intro
-section: Why Backlog.md
+layout: default
+transition: slide-up
+section: Backlog.md
 ---
 
-# What exactly is Backlog.md?
-
-<div class="flex items-center justify-center">
-    <img class="w-80" src="/backlog.png">
-</div>
+# What is Backlog.md?

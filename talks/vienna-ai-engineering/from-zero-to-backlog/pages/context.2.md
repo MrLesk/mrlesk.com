@@ -3,7 +3,7 @@ layout: default
 section: Context
 ---
 
-# ChatGPT style
+# Chat based interaction
 
 <div class="mt-16">
     <img class="w-130" src="/context.2.png">
