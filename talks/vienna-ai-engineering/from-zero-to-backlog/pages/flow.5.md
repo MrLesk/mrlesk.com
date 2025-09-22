@@ -4,12 +4,12 @@ transition: slide-up
 section: Spec-driven flow
 ---
 
-# 3) Add the implementation plan
+# 4) Implementation & final review
 
 <ActionPrompt v-click icon="🤖" title="AI Agent" class="mt-6">
-  Ask the Agent to check the codebase, research technologies and create the implementation plan.
+  Ask the Agent to implement the task
 </ActionPrompt>
 
 <ActionPrompt v-click icon="👶" title="Review" class="mt-6">
-  Review checkpoint <strong>#2</strong>: Does it make sense? Are the technologies/libraries correct?
+  Review checkpoint <strong>#3</strong>: Code review & testing
 </ActionPrompt>

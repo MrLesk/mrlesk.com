@@ -1,5 +1,6 @@
 ---
 layout: quote
+transition: slide-up
 section: Backlog.md
 ---
 

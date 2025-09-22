@@ -1,5 +1,5 @@
 ---
-layout: intro
+layout: new-section
 section: Spec-driven flow
 ---
 

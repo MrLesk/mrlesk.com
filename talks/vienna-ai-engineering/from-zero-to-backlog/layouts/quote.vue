@@ -27,18 +27,20 @@
   /* Main quote text styling */
   .quote-text p:first-child,
   .quote-text h1:first-child {
-    @apply text-5xl leading-tight text-primary font-light mb-16;
+    @apply text-5xl leading-tight font-light mb-16;
     font-family: 'Georgia', 'Times New Roman', serif;
     line-height: 1.3;
     margin-top: 0;
+    color: color-mix(in srgb, var(--slidev-theme-primary) 85%, black 15%);
   }
 
   /* Attribution styling */
   .quote-text p:last-child {
-    @apply text-2xl text-primary opacity-60 font-medium not-italic;
+    @apply text-2xl font-medium not-italic;
     font-family: inherit;
     margin-bottom: 0;
     margin-top: 2rem;
+    color: color-mix(in srgb, var(--slidev-theme-primary) 70%, black 30%);
   }
 
 
@@ -60,6 +62,17 @@
     .quote-text p:last-child {
       @apply text-xl;
     }
+  }
+}
+
+html.dark .slidev-layout.quote {
+  .quote-text p:first-child,
+  .quote-text h1:first-child {
+    color: color-mix(in srgb, #f8fafc 85%, white 15%);
+  }
+
+  .quote-text p:last-child {
+    color: color-mix(in srgb, #e2e8f0 80%, white 20%);
   }
 }
 </style>

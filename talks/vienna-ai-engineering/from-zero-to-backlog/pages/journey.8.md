@@ -3,5 +3,5 @@ layout: default
 section: How I started
 ---
 
-# But managing tasks is slow
+# But creating tasks is a slow process
 

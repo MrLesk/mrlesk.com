@@ -4,5 +4,5 @@ transition: slide-up
 section: How I started
 ---
 
-# Agents have a persistent context
+# They can easily read markdown files
 

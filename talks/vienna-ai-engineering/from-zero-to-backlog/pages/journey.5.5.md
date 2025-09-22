@@ -4,5 +4,5 @@ transition: slide-up
 section: How I started
 ---
 
-# They can work on multiple tasks in parallel
+# Agents have a persistent context
 
