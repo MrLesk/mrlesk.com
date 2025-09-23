@@ -5,12 +5,21 @@ section: Introduction
 
 # Table of Contents
 
-1. Recap
-2. Tasks structure
-3. Backlog's Agent instructions
-4. Backlog.md flow
-5. Q&A
+<div class="mt-10">
 
-... Short break ...
+| **Hands-on Spec Driven AI Flow** | **While we are waiting**   |
+|----------------------------------|----------------------------|
+| 1. PRD preparation               | 2. Backlog.md init         |
+| 3. Task splitting                | 4. Task structure          |
+| 5. Implementation plan           | 6. Backlog.md instructions |
+| 7. Implementation & review       | 8. My setup with AI Agents |
 
-- Second talk: Demo with Backlog.md and Agents
+
+
+</div>
+<div class="mt-10">
+
+9. Bonus: manage tasks from your phone
+10. Conclusions
+11. Q&A and link to these slides
+</div>

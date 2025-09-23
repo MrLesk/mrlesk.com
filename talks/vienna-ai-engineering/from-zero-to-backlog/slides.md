@@ -13,7 +13,7 @@ hideIndicator: true
 ---
 # From zero to Backlog.md
 
-### Vienna AI Engineering Meetup
+### Vienna AI Engineering Meetup - Part 1
 #### 2 October 2025
 
 ---

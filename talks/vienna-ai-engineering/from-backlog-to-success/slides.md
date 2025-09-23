@@ -11,14 +11,10 @@ layout: intro
 section: Introduction
 hideIndicator: true
 ---
-# From zero to Backlog.md
+# From Backlog.md to Success
 
-### Vienna AI Engineering Meetup
+### Vienna AI Engineering Meetup - Part 2
 #### 2 October 2025
-
----
-src: ./pages/presenter.md
----
 
 ---
 src: ./pages/toc.md
