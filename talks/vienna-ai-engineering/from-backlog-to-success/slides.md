@@ -7,169 +7,83 @@ drawings:
   persist: false
 mdc: true
 transition: slide-left
-layout: intro
+layout: intro-terminal
 section: Introduction
 hideIndicator: true
+terminalSrc: http://localhost:7681/
+terminalTitle: Live Backlog CLI
+terminalHeight: 420
+showTerminal: false
 ---
 # From Backlog.md to Success
 
 ### Vienna AI Engineering Meetup - Part 2
 #### 2 October 2025
 
+<BacklogScreensaver />
+
 ---
 src: ./pages/toc.md
 ---
 
 ---
-src: ./pages/context.md
+src: ./pages/prd.md
 ---
 
 ---
-src: ./pages/context.1.md
+src: ./pages/prd.1.md
 ---
 
 ---
-src: ./pages/context.2.md
+src: ./pages/init.md
 ---
 
 ---
-src: ./pages/context.3.md
+src: ./pages/init.1.md
 ---
 
 ---
-src: ./pages/context.4.md
+src: ./pages/prd.result.md
 ---
 
 ---
-src: ./pages/context.4.1.md
+src: ./pages/splitting.md
 ---
 
 ---
-src: ./pages/journey.md
+src: ./pages/splitting.1.md
 ---
 
 ---
-src: ./pages/journey.1.md
+src: ./pages/splitting.2.md
 ---
 
 ---
-src: ./pages/journey.2.md
+src: ./pages/instructions.backlog.md
 ---
 
 ---
-src: ./pages/journey.3.md
+src: ./pages/instructions.md
 ---
 
 ---
-src: ./pages/journey.4.md
+src: ./pages/instructions.1.md
 ---
 
 ---
-src: ./pages/journey.5.md
+src: ./pages/instructions.2.md
 ---
 
 ---
-src: ./pages/backlog.md
+src: ./pages/instructions.3.md
 ---
 
 ---
-src: ./pages/backlog.1.md
+src: ./pages/instructions.4.md
 ---
 
 ---
-src: ./pages/backlog.1.2.md
----
-
----
-src: ./pages/backlog.1.3.md
----
-
----
-src: ./pages/backlog.2.md
----
-
----
-src: ./pages/backlog.3.md
----
-
----
-src: ./pages/backlog.3.5.md
----
-
----
-src: ./pages/backlog.4.md
----
-
----
-src: ./pages/backlog.5.md
----
-
----
-src: ./pages/backlog.6.md
----
-
----
-src: ./pages/backlog.7.md
----
-
----
-src: ./pages/backlog.8.md
----
-
----
-src: ./pages/backlog.9.md
----
-
----
-src: ./pages/backlog.10.md
----
-
----
-src: ./pages/backlog.11.md
----
-
----
-src: ./pages/backlog.12.md
----
-
----
-src: ./pages/backlog.13.md
----
-
----
-src: ./pages/backlog.14.md
----
-
----
-src: ./pages/backlog.15.md
----
-
----
-src: ./pages/flow.md
----
-
----
-src: ./pages/flow.1.md
----
-
----
-src: ./pages/flow.1.1.md
----
-
----
-src: ./pages/flow.2.md
----
-
----
-src: ./pages/flow.3.md
----
-
----
-src: ./pages/flow.4.md
----
-
----
-src: ./pages/flow.5.md
+src: ./pages/instructions.5.md
 ---
 
 ---
@@ -206,34 +120,6 @@ src: ./pages/task.6.md
 
 ---
 src: ./pages/task.7.md
----
-
----
-src: ./pages/instructions.backlog.md
----
-
----
-src: ./pages/instructions.md
----
-
----
-src: ./pages/instructions.1.md
----
-
----
-src: ./pages/instructions.2.md
----
-
----
-src: ./pages/instructions.3.md
----
-
----
-src: ./pages/instructions.4.md
----
-
----
-src: ./pages/instructions.5.md
 ---
 
 ---
