@@ -9,7 +9,6 @@
       <slot name="terminal">
         <TtydFrame
           :src="terminalSrc"
-          :title="terminalTitle"
           :height="terminalHeight"
         />
       </slot>
@@ -28,7 +27,6 @@ const { $frontmatter } = useSlideContext()
 
 const showTerminal = computed(() => $frontmatter.showTerminal !== false)
 const terminalSrc = computed(() => $frontmatter.terminalSrc || 'http://localhost:7681/')
-const terminalTitle = computed(() => $frontmatter.terminalTitle || 'Live CLI')
 const terminalHeight = computed(() => $frontmatter.terminalHeight ?? 420)
 </script>
 

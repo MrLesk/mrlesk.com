@@ -11,7 +11,6 @@ layout: intro-terminal
 section: Introduction
 hideIndicator: true
 terminalSrc: http://localhost:7681/
-terminalTitle: Live Backlog CLI
 terminalHeight: 420
 showTerminal: false
 ---
@@ -59,10 +58,6 @@ src: ./pages/splitting.2.md
 ---
 
 ---
-src: ./pages/instructions.backlog.md
----
-
----
 src: ./pages/instructions.md
 ---
 
@@ -87,6 +82,26 @@ src: ./pages/instructions.5.md
 ---
 
 ---
+src: ./pages/splitting.result.md
+---
+
+---
+src: ./pages/plan.md
+---
+
+---
+src: ./pages/plan.1.md
+---
+
+---
+src: ./pages/plan.2.md
+---
+
+---
+src: ./pages/plan.3.md
+---
+
+---
 src: ./pages/task.md
 ---
 
@@ -95,31 +110,7 @@ src: ./pages/task.1.md
 ---
 
 ---
-src: ./pages/task.2.md
----
-
----
-src: ./pages/task.3.md
----
-
----
-src: ./pages/task.3.5.md
----
-
----
-src: ./pages/task.4.md
----
-
----
-src: ./pages/task.5.md
----
-
----
-src: ./pages/task.6.md
----
-
----
-src: ./pages/task.7.md
+src: ./pages/plan.result.md
 ---
 
 ---

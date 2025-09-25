@@ -10,31 +10,55 @@ interface Command {
 }
 
 const ttydPort = process.env.TTYD_PORT ?? '7681'
-const splittingPort = process.env.TTYD_SPLITTING_PORT ?? '7682'
 const shell = process.env.TTYD_SHELL ?? process.env.SHELL ?? 'bash'
-
-const splittingPrompt = [
-  '# Backlog.md Task Splitter',
-  '',
-  'You act as an AI engineering project manager.',
-  'Given the backlog item:',
-  '- Title: "Backlog.md splitting demo"',
-  '- Context: Show how we transform a PRD into tasks during the talk.',
-  '',
-  'Instructions:',
-  '1. Produce exactly 5 tasks.',
-  '2. Each task lists `Task`, `Why`, and `Owner`.',
-  '3. Format the result as a markdown table with those columns.',
-  '4. Keep each task within 2 hours of work.',
-  '',
-  'Sign off with "Backlog.md FTW" on the last line.',
-].join('\n')
-
-const resumeShell = JSON.stringify(shell)
-const splittingCommand = `codex --yolo --search ${JSON.stringify(splittingPrompt)}; printf '\n'; exec ${resumeShell}`
 
 function decode(buffer: Uint8Array) {
   return new TextDecoder().decode(buffer)
+}
+
+function ensureTmuxSession(session: string, cwd: string, command: string[] = [shell]) {
+  const hasSession = Bun.spawnSync({
+    cmd: ['tmux', 'has-session', '-t', session],
+    cwd,
+    stdout: 'ignore',
+    stderr: 'ignore',
+  })
+
+  if (hasSession.exitCode === 0) return
+
+  const created = Bun.spawnSync({
+    cmd: ['tmux', 'new-session', '-d', '-s', session, ...command],
+    cwd,
+    stdout: 'inherit',
+    stderr: 'inherit',
+  })
+
+  if (created.exitCode !== 0) {
+    log('tmux', `failed to create session ${session} (exit ${created.exitCode})`)
+  }
+}
+
+function configureTmux(session: string, cwd: string) {
+  Bun.spawnSync({
+    cmd: ['tmux', 'set-option', '-t', session, 'status', 'off'],
+    cwd,
+    stdout: 'ignore',
+    stderr: 'ignore',
+  })
+
+  Bun.spawnSync({
+    cmd: ['tmux', 'set-option', '-t', session, 'status-left', ''],
+    cwd,
+    stdout: 'ignore',
+    stderr: 'ignore',
+  })
+
+  Bun.spawnSync({
+    cmd: ['tmux', 'set-option', '-t', session, 'status-right', ''],
+    cwd,
+    stdout: 'ignore',
+    stderr: 'ignore',
+  })
 }
 
 function ensurePortFree(port: string) {
@@ -86,6 +110,10 @@ function ensurePortFree(port: string) {
 
 ensurePortFree(ttydPort)
 
+const projectsDir = join(process.cwd(), 'projects/vienna-ai-engineering-demo')
+ensureTmuxSession('backlog-demo', projectsDir)
+configureTmux('backlog-demo', projectsDir)
+
 const commands: Command[] = [
   {
     name: 'ttyd',
@@ -98,26 +126,12 @@ const commands: Command[] = [
       'scrollback=0',
       '--port',
       ttydPort,
-      shell,
+      'tmux',
+      'attach-session',
+      '-t',
+      'backlog-demo',
     ],
-    cwd: join(process.cwd(), 'projects/vienna-ai-engineering-demo'),
-  },
-  {
-    name: 'ttyd-splitting',
-    cmd: [
-      'ttyd',
-      '-W',
-      '--client-option',
-      'rendererType=dom',
-      '--client-option',
-      'scrollback=0',
-      '--port',
-      splittingPort,
-      shell,
-      '-lc',
-      splittingCommand,
-    ],
-    cwd: join(process.cwd(), 'projects/vienna-ai-engineering-demo'),
+    cwd: projectsDir,
   },
   {
     name: 'slidev',
