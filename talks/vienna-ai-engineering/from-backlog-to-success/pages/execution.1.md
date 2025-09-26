@@ -5,7 +5,9 @@ section: Execution
 
 # Ask AI to do it
 
-Here is the prompt we hand to `codex --yolo --search`:
+Here is the prompt we hand to <PromptChip>codex --yolo</PromptChip>
+
+<div class="w-190">
 
 ```markdown
 Read all tasks of this project and understand what is the scope.
@@ -17,4 +19,9 @@ At the end of each task, write the implementation notes and the definition of do
 
 ```
 
-!Don't do it at home
+</div>
+
+<CalloutCard v-click icon="⚠️" variant="warning" title="Warning" class="mt-10 w-190">
+  Don't try it at home
+</CalloutCard>
+

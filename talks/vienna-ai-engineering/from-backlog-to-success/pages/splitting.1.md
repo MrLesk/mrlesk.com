@@ -5,7 +5,7 @@ section: Task splitting
 
 # Ask AI to do it
 
-Here is the prompt we hand to `codex --yolo --search`:
+Here is the prompt we hand to <PromptChip>codex --yolo --search</PromptChip>
 
 ```markdown
 Given the @prd.md file,

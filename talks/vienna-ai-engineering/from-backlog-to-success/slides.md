@@ -74,14 +74,6 @@ src: ./pages/instructions.3.md
 ---
 
 ---
-src: ./pages/instructions.4.md
----
-
----
-src: ./pages/instructions.5.md
----
-
----
 src: ./pages/splitting.result.md
 ---
 
@@ -111,6 +103,14 @@ src: ./pages/task.1.md
 
 ---
 src: ./pages/plan.result.md
+---
+
+---
+src: ./pages/execution.md
+---
+
+---
+src: ./pages/execution.1.md
 ---
 
 ---

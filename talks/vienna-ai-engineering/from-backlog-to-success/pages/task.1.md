@@ -100,10 +100,3 @@ Implementation Notes
 </div>
 </div>
 
-<style scoped>
-.language-markdown {
-  font-size: 0.75rem !important;
-  line-height: 1.25;
-  white-space: pre-wrap;
-}
-</style>
