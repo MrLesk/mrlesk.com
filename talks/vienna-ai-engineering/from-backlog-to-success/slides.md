@@ -4,7 +4,7 @@ colorSchema: "light"
 title: From Zero to Backlog.md
 author: Alex Gavrilescu
 drawings:
-  persist: false
+    persist: false
 mdc: true
 transition: slide-left
 layout: intro-terminal
@@ -14,9 +14,11 @@ terminalSrc: http://localhost:7681/
 terminalHeight: 420
 showTerminal: false
 ---
+
 # From Backlog.md to Success
 
 ### Vienna AI Engineering Meetup - Part 2
+
 #### 2 October 2025
 
 <BacklogScreensaver />
@@ -58,19 +60,11 @@ src: ./pages/splitting.2.md
 ---
 
 ---
-src: ./pages/instructions.md
+src: ./pages/task.md
 ---
 
 ---
-src: ./pages/instructions.1.md
----
-
----
-src: ./pages/instructions.2.md
----
-
----
-src: ./pages/instructions.3.md
+src: ./pages/task.1.md
 ---
 
 ---
@@ -94,11 +88,19 @@ src: ./pages/plan.3.md
 ---
 
 ---
-src: ./pages/task.md
+src: ./pages/instructions.md
 ---
 
 ---
-src: ./pages/task.1.md
+src: ./pages/instructions.1.md
+---
+
+---
+src: ./pages/instructions.2.md
+---
+
+---
+src: ./pages/instructions.3.md
 ---
 
 ---
@@ -114,31 +116,55 @@ src: ./pages/execution.1.md
 ---
 
 ---
-src: ./pages/now.md
+src: ./pages/backlog.md
 ---
 
 ---
-src: ./pages/now.1.md
+src: ./pages/backlog.1.md
 ---
 
 ---
-src: ./pages/now.2.md
+src: ./pages/conclusions.md
 ---
 
 ---
-src: ./pages/now.3.md
+src: ./pages/conclusions.1.md
 ---
 
 ---
-src: ./pages/now.4.md
+src: ./pages/conclusions.2.md
 ---
 
 ---
-src: ./pages/now.5.md
+src: ./pages/conclusions.3.md
 ---
 
 ---
-src: ./pages/now.6.md
+src: ./pages/conclusions.4.md
+---
+
+---
+src: ./pages/conclusions.5.md
+---
+
+---
+src: ./pages/wrong.md
+---
+
+---
+src: ./pages/wrong.1.md
+---
+
+---
+src: ./pages/wrong.2.md
+---
+
+---
+src: ./pages/wrong.3.md
+---
+
+---
+src: ./pages/bonus.md
 ---
 
 ---

@@ -20,6 +20,6 @@ section: Agent Instructions
 <Arrow v-click="1" x1="774" y1="230" x2="530" y2="290"  color="darkred"/>
 
 <!--
-They are files in the root folder of the repository containng instructions for the agent.
+They are files in the root folder of the repository containing instructions for the agent.
 Backlog.md injects custom CLAUDE.md or AGENTS.md instructions during initialization
 -->

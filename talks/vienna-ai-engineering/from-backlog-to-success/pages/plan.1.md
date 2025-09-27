@@ -3,8 +3,20 @@ layout: default
 section: Implementation Plan
 ---
 
-# What happens if you tell the agent how to do it?
+# Ask AI to do it
 
-https://youtu.be/cDA3_5982h8?si=zajYEtDQTnnE_dKA&t=65
+Here is the prompt we hand to <PromptChip>codex --yolo --search</PromptChip>
 
-You're allowed to give him hints
+```markdown
+## Preparation
+Read and understand all tasks in "To Do".
+
+## Task
+Think hard about how to implement them in a meaningful way.
+Afterwards write in each task the appropriate implementation plan according to the guidelines.
+
+## Details
+* You can search on internet the technologies that we are using to ensure that you know how to use their latest versions.
+* Make sure each task plan includes meaningful testing when possible.
+
+```

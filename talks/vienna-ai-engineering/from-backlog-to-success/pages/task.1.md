@@ -75,7 +75,7 @@ Tests/Checks:
 
 ```
 </div>
-<div>
+<div class="w-120">
 <ul>
 <li v-click="1">
 Frontmatter with metadata
@@ -94,7 +94,7 @@ Implementation Plan (HOW)
 </li>
 
 <li v-click="5">
-Implementation Notes
+Implementation Notes (PR notes)
 </li>
 </ul>
 </div>

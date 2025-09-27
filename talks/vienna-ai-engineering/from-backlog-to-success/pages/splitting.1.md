@@ -16,6 +16,6 @@ Tasks should follow the task guidelines.
 Think hard how each task can implement the
 definition of done in a meaningful way.
 
-Also, I want to see tests and and type checks as early as possible.
+Also, I want to see tests and type checks as early as possible.
 
 ```

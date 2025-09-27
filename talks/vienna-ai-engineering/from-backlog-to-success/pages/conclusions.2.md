@@ -3,8 +3,12 @@ layout: default
 section: Conclusions
 ---
 
-# Human input is still indispensable
+# Don't expect 100% quality
 
-The 3-way review process is the best solution today.
+<v-clicks class="mt-10">
 
-But you can add linting, testing, type checking and pre-commit hooks to your workflow.
+* Accept a good enough result and move on.
+* Keep the specs (tasks).
+* One day a better model will be available.
+</v-clicks>
+

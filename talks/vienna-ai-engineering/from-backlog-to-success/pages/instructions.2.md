@@ -281,6 +281,8 @@ When you are ready, write it down in the task so that you can refer to it later.
 backlog task edit 42 --plan "1. Research codebase for references\n2Research on internet for similar cases\n3. Implement\n4. Test"
 ~~~
 
+<!-- I'd add the missing ". " after the 2 in the plan example so it reads "2. Research". -->
+
 ## 5.3. Implementation
 
 Once you have a plan, you can start implementing the task. This is where you write code, run tests, and make sure
@@ -535,7 +537,7 @@ Descriptions support literal newlines; shell examples may show escaped `\\n`, bu
 Full help available: `backlog --help`
 ```
 </div>
-<div class="w-88">
+<div class="w-120">
 <ul>
 <li v-click="1">
 Description about Backlog.md

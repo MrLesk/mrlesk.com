@@ -1,15 +1,13 @@
 ---
 layout: default
 section: Implementation Plan
-terminalSrc: http://localhost:7681/
-terminalHeight: 320
+hideIndicator: true
 ---
 
-# Watch Codex split it
+<h1 class="text-center">
+What happens if you tell the agent HOW to do it?
+</h1>
 
-<TtydFrame
-  class="mt-8 max-w-[740px]"
-  :src="$frontmatter.terminalSrc"
-  :height="$frontmatter.terminalHeight"
-  data-testid="splitting-terminal"
-/>
+<YoutubeEmbed url="https://youtu.be/cDA3_5982h8?si=zajYEtDQTnnE_dKA&t=65" title="Backlog.md Planning Session" />
+
+You're allowed to give him hints

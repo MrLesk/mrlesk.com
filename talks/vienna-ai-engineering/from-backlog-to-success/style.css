@@ -158,7 +158,7 @@
 }
 
 .slidev-layout h1 {
-    margin-bottom: 0.5rem;
+    margin-bottom: 2.5rem;
 }
 
 .bg-section {
@@ -184,8 +184,12 @@
     overflow: hidden !important;
 }
 
+.slidev-layout code{
+    font-size: 0.70rem !important;
+}
+
 .language-markdown {
-    font-size: 0.75rem !important;
+    font-size: 0.70rem !important;
     line-height: 1.25;
     white-space: pre-wrap;
 }

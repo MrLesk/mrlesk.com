@@ -5,5 +5,4 @@ section: Conclusions
 
 # One task per context window
 
-if you have to compact, you are losing quality.
-
+If you have to compact, you are losing quality.

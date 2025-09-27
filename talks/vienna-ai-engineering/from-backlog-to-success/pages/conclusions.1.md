@@ -3,10 +3,6 @@ layout: default
 section: Conclusions
 ---
 
-# Don't expect 100% quality
+# You need to know what to build
 
-Accept a good enough result and move on.
-
-Keep the specs (tasks).
-
-One day a better model will be available.
+If you don't know what to expect, no AI agent will help you.
