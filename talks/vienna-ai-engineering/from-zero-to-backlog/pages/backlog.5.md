@@ -3,7 +3,10 @@ layout: default
 section: Backlog.md
 ---
 
-# It has a ~WUI~ Web interface
+<h1>It has a <span class="line-through">WUI</span> Web interface</h1>
 
-## Jira get out of here
-(image of backlog web board)
+<div class="mt-13" v-click>
+    <img class="h-100" src="/backlog.5.2.png">
+</div>
+
+<!-- Jira get out of here -->

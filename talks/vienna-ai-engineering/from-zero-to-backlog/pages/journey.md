@@ -1,6 +1,6 @@
 ---
 layout: new-section
-section: How I started
+section: My journey
 ---
 
 # My journey with AI Agents

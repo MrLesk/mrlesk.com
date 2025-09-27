@@ -1,7 +1,7 @@
 ---
 layout: default
 transition: slide-up
-section: How I started
+section: My journey
 ---
 
 # Why does this work so well?

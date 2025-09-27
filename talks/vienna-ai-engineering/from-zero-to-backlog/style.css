@@ -102,6 +102,23 @@
     margin-bottom: 0.75rem;
 }
 
+.task-structure-block {
+    border-radius: 24px !important;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    box-shadow: 0 18px 36px -28px rgba(15, 23, 42, 0.45);
+}
+
+.task-structure-block pre.shiki,
+.task-structure-block .shiki {
+    max-height: inherit;
+    overflow: auto !important;
+    border-radius: inherit !important;
+}
+
+
+
+
+
 .action-prompt__content {
     font-size: 1.05rem;
     line-height: 1.65;
@@ -147,7 +164,7 @@
 }
 
 .slidev-layout h1 {
-    margin-bottom: 0.5rem;
+    margin-bottom: 2.5rem;
 }
 
 .bg-section {
@@ -171,4 +188,26 @@
     border-radius: 0.5rem !important;
     padding: 1rem !important;
     overflow: hidden !important;
+}
+
+.slidev-layout code{
+    font-size: 0.70rem !important;
+}
+
+.language-markdown {
+    font-size: 0.70rem !important;
+    line-height: 1.25;
+    white-space: pre-wrap;
+}
+
+.slidev-code-wrapper{
+    max-width: 860px !important;
+}
+
+/* Allow long task structure snippets to scroll inside their cards */
+.slidev-layout .task-structure-block pre.shiki,
+.slidev-layout .task-structure-block .shiki {
+    max-height: inherit;
+    overflow: auto !important;
+    border-radius: inherit !important;
 }

@@ -79,28 +79,40 @@ const currentSection = computed(() => {
   return section
 })
 
+function getSectionStats(section: string) {
+  const entries = Array.from(sectionMap.value.entries())
+    .filter(([, name]) => name === section)
+    .map(([slideNo]) => slideNo)
+    .sort((a, b) => a - b)
+
+  if (!entries.length)
+    return { position: 0, total: 0 }
+
+  const position = entries.indexOf(currentSlideNo.value) + 1
+  return {
+    position: position > 0 ? position : entries.length,
+    total: entries.length,
+  }
+}
+
 const sectionProgress = computed(() => {
   const section = currentSection.value
   if (!section) return 0
 
-  const bounds = sectionBoundaries.value.get(section)
-  if (!bounds) return 0
+  const { position, total } = getSectionStats(section)
+  if (!total) return 0
 
-  const sectionLength = bounds.end - bounds.start + 1
-  const positionInSection = currentSlideNo.value - bounds.start + 1
-  return (positionInSection / sectionLength) * 100
+  return (position / total) * 100
 })
 
 const sectionSlideNumbers = computed(() => {
   const section = currentSection.value
   if (!section) return ''
 
-  const bounds = sectionBoundaries.value.get(section)
-  if (!bounds) return ''
+  const { position, total } = getSectionStats(section)
+  if (!total) return ''
 
-  const positionInSection = currentSlideNo.value - bounds.start + 1
-  const sectionLength = bounds.end - bounds.start + 1
-  return `${positionInSection} / ${sectionLength}`
+  return `${position} / ${total}`
 })
 
 const isVisible = computed(() => {

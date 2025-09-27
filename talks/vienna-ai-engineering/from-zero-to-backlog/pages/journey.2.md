@@ -1,6 +1,6 @@
 ---
 layout: default
-section: How I started
+section: My journey
 ---
 
 # Add CLAUDE.md

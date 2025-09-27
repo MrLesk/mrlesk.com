@@ -1,6 +1,6 @@
 ---
 layout: default
-section: How I started
+section: My journey
 ---
 
 # Tried to have AI to create tasks directly

@@ -1,7 +1,7 @@
 ---
 layout: default
 transition: slide-up
-section: How I started
+section: My journey
 ---
 
 # Can use different models for different tasks
