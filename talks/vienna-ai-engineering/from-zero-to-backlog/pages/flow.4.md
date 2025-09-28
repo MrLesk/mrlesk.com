@@ -6,10 +6,10 @@ section: Spec-driven flow
 
 # 3) Add the implementation plan
 
-<ActionPrompt v-click icon="🤖" title="AI Agent" class="mt-6">
+<Card v-click icon="🤖" title="AI Agent" class="mt-6">
   Ask the Agent to check the codebase, research technologies and create the implementation plan.
-</ActionPrompt>
+</Card>
 
-<ActionPrompt v-click icon="👶" title="Review" class="mt-6">
+<Card v-click icon="👶" title="Review" class="mt-6">
   Review checkpoint <strong>#2</strong>: Does it make sense? Are the technologies/libraries correct?
-</ActionPrompt>
+</Card>

@@ -4,5 +4,5 @@ transition: slide-up
 section: My journey
 ---
 
-# Agents have a persistent context
+# They can use them as persistent context
 

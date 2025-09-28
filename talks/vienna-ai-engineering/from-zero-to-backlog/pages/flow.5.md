@@ -6,10 +6,10 @@ section: Spec-driven flow
 
 # 4) Implementation & final review
 
-<ActionPrompt v-click icon="🤖" title="AI Agent" class="mt-6">
+<Card v-click icon="🤖" title="AI Agent" class="mt-6">
   Ask the Agent to implement the task
-</ActionPrompt>
+</Card>
 
-<ActionPrompt v-click icon="👶" title="Review" class="mt-6">
+<Card v-click icon="👶" title="Review" class="mt-6">
   Review checkpoint <strong>#3</strong>: Code review & testing
-</ActionPrompt>
+</Card>

@@ -3,7 +3,8 @@ layout: default
 section: My journey
 ---
 
-# Tried to have AI to create tasks directly
+# Tried to ask AI to create tasks
 
-### But it would create inconsistent files
-
+<Card v-click  class="w-100" icon="😖" title="Result" variant="warning">
+  They would create inconsistent files
+</Card>
