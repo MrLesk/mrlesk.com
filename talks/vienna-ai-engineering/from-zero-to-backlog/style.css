@@ -48,6 +48,18 @@
     font-size: 0.70rem !important;
 }
 
+.link-primary {
+    color: var(--slidev-theme-primary) !important;
+}
+
+.link-primary:hover {
+    color: color-mix(in srgb, var(--slidev-theme-primary) 85%, black 15%) !important;
+}
+
+.slidev-vclick-hidden-explicitly {
+    display: none !important;
+}
+
 .language-markdown {
     font-size: 0.70rem !important;
     line-height: 1.25;

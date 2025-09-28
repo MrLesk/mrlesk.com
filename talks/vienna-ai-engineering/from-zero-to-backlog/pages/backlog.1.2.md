@@ -4,4 +4,6 @@ transition: slide-up
 section: Backlog.md
 ---
 
-"It's a project management tool for your terminal that happens to be extremely effective when working with AI Agents"
+<h3>
+Terminal project management tool that's  <br><span v-mark.underline="{ at: '+0' }">extremely effective</span> at keeping tasks structured with AI Agents.
+</h3>

@@ -105,10 +105,6 @@ src: ./pages/backlog.1.2.md
 ---
 
 ---
-src: ./pages/backlog.1.3.md
----
-
----
 src: ./pages/backlog.2.md
 ---
 

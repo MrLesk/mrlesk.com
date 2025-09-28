@@ -5,6 +5,7 @@ section: Q&A
 
 # Questions?
 
-(qr code to these slides)
-
-<!-- I'd embed the actual QR code image/component so attendees can scan it live. -->
+<div class="mt-8" >
+    <img class="h-50" src="/qr-code.png">
+</div>
+<a target="_blank" class="mt-10 inline-block font-semibold link-primary" href="https://mrlesk.com/talks">https://mrlesk.com/talks</a>

@@ -6,7 +6,7 @@ section: Backlog.md
 
 # It's a CLI Tool - Command Line Interface
 
-<h3 v-click="1" class="mt-8"> You probably did this at least once</h3>
+<div v-click="1" class="mt-8"> You probably wrote this at least once</div>
 <div v-click="1" class="mt-2">
 
 ```bash

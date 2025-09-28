@@ -7,12 +7,12 @@ section: Backlog.md
 
 <div class=" grid gap-12 lg:grid-cols-[minmax(0,0.5fr)_minmax(0,1fr)] items-center">
   <div class="space-y-4">
-    <h3 v-click class="">
+    <card v-click class="text-3xl font-bold text-center">
       Have you ever seen a terminal Kanban board?
-    </h3>
-    <p v-click class="text-lg text-slate-600">
+    </card>
+    <card v-click class="text-lg font-bold text-center">
       Me neither, so I made one.
-    </p>
+    </card>
   </div>
 
   <div class="relative overflow-hidden rounded-3xl border border-slate-200/70 bg-white shadow-[0_24px_48px_-32px_rgba(15,23,42,0.35)]" v-click>

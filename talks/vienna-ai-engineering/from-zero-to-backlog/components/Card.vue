@@ -1,11 +1,11 @@
 <template>
   <div
-    class="relative rounded-3xl border border-slate-200/60 bg-gradient-to-br from-white/95 via-white/90 to-emerald-50/80 px-6 py-4 text-slate-900 shadow-[0_18px_40px_-30px_rgba(15,23,42,0.55)] backdrop-blur-xl dark:border-slate-700/60 dark:from-slate-900/80 dark:via-slate-900/70 dark:to-emerald-900/30 dark:text-slate-100"
+    class="relative inline-flex max-w-full flex-col rounded-3xl border border-slate-200/60 bg-gradient-to-br from-white/95 via-white/90 to-emerald-50/80 px-6 py-4 text-slate-900 shadow-[0_18px_40px_-30px_rgba(15,23,42,0.55)] backdrop-blur-xl dark:border-slate-700/60 dark:from-slate-900/80 dark:via-slate-900/70 dark:to-emerald-900/30 dark:text-slate-100"
     :class="containerVariantClass"
   >
     <header
       v-if="hasHeader"
-      class="inline-flex items-center gap-2 rounded-full px-3 py-1 text-[0.75rem] font-semibold uppercase tracking-[0.12em]"
+      class="mb-3 inline-flex items-center gap-2 self-start rounded-full px-3 py-1 text-[0.75rem] font-semibold uppercase tracking-[0.12em]"
       :class="badgeVariantClass"
     >
       <span v-if="icon" class="text-base leading-none">{{ icon }}</span>
