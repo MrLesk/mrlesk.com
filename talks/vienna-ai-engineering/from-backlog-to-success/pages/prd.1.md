@@ -17,6 +17,8 @@ Also some technologies might have changed so please check the latest best practi
 We need to build it in 30 minutes so skip any non-essential details.
 The PRD should be enough for an AI Agent to build a working web application using the latest version of the technologies below.
 
+# **Important**: The PRD should never include code. The focus is on the WHY and WHAT, not the HOW.
+
 Project Goal: Rock Paper Scissors Game
 
 Build a full-stack web application using SvelteKit and TypeScript that lets a user play "Rock Paper Scissors" against the computer. The application should track player scores and display a public scoreboard.
