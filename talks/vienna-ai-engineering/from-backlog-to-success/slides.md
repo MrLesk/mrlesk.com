@@ -21,8 +21,6 @@ showTerminal: false
 
 #### 2 October 2025
 
-<BacklogScreensaver />
-
 ---
 src: ./pages/toc.md
 ---
