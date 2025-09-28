@@ -58,10 +58,6 @@ src: ./pages/splitting.2.md
 ---
 
 ---
-src: ./pages/splitting.2.5.md
----
-
----
 src: ./pages/task.md
 ---
 
@@ -83,10 +79,6 @@ src: ./pages/plan.1.md
 
 ---
 src: ./pages/plan.2.md
----
-
----
-src: ./pages/plan.2.5.md
 ---
 
 ---
@@ -123,10 +115,6 @@ src: ./pages/execution.1.md
 
 ---
 src: ./pages/execution.2.md
----
-
----
-src: ./pages/execution.2.5.md
 ---
 
 ---
