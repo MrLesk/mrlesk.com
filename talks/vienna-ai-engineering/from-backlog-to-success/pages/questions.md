@@ -5,6 +5,9 @@ section: Q&A
 
 # Questions?
 
-(qr code to these slides)
+<div class="mt-8" >
+    <img class="h-50" src="/qr-code.png">
+</div>
+<a target="_blank" class="mt-4 inline-block font-semibold link-primary" href="https://mrlesk.com/talks">https://mrlesk.com/talks</a>
 
-<PoweredBySlidev />
+<PoweredBySlidev class="mt-30"/>

@@ -10,14 +10,14 @@ section: Agent Instructions
     <div >
         <img class="h-60" src="/instructions.1.png">
     </div>
-    <div v-click="1" class="text-center font-bold ">
+    <card v-click="1" class="text-center font-bold w-40">
         The magic <br>
         is here
-    </div>
+    </card>
 </div>
 
 
-<Arrow v-click="1" x1="774" y1="230" x2="530" y2="290"  color="darkred"/>
+<Arrow v-click="1" x1="718" y1="226" x2="480" y2="290"  color="darkred"/>
 
 <!--
 They are files in the root folder of the repository containing instructions for the agent.

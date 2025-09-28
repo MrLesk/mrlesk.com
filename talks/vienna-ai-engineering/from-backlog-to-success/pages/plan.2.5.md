@@ -1,10 +1,10 @@
 ---
 layout: default
 section: Implementation Plan
-terminalSrc: http://localhost:7681/
+terminalSrc: http://localhost:7683/
 ---
 
-# Ask Codex to plan it
+# Claude version
 
 <TtydFrame
 class="mt-8 max-w-180 h-103"

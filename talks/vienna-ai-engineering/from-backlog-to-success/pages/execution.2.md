@@ -1,12 +1,14 @@
 ---
 layout: default
-section: Implementation Plan
+section: Execution
 terminalSrc: http://localhost:7681/
 ---
 
-# Ask Codex to plan it
+# Let Codex code it
 
 <TtydFrame
-class="mt-8 max-w-180 h-103"
+class="mt-8 max-w-188 h-103"
 :src="$frontmatter.terminalSrc"
 />
+
+

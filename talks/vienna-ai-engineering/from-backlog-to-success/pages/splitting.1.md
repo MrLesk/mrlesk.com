@@ -8,14 +8,14 @@ section: Task splitting
 Here is the prompt we hand to <PromptChip>codex --yolo --search</PromptChip>
 
 ```markdown
-Given the @prd.md file,
-create relevant tasks and subtasks using backlog CLI tool.
+## Context
+In the root of the project you will find the @prd.md file.
 
-Tasks should follow the task guidelines.
+## Task
+Create relevant tasks and subtasks using backlog CLI tool according to the the task guidelines.
+Tasks should be atomic and fit a good PR size.
 
-Think hard how each task can implement the
-definition of done in a meaningful way.
-
-Also, I want to see tests and type checks as early as possible.
+## Details
+I want to see tests and type checks as early as possible.
 
 ```

@@ -1,6 +1,7 @@
 #!/usr/bin/env bun
 
 import { join } from 'node:path'
+import { homedir } from 'node:os'
 
 interface Command {
   name: string
@@ -9,8 +10,14 @@ interface Command {
   env?: Record<string, string>
 }
 
-const ttydPort = process.env.TTYD_PORT ?? '7681'
 const shell = process.env.TTYD_SHELL ?? process.env.SHELL ?? 'bash'
+
+interface TerminalConfig {
+  name: string
+  port: string
+  session: string
+  cwd: string
+}
 
 function decode(buffer: Uint8Array) {
   return new TextDecoder().decode(buffer)
@@ -24,7 +31,25 @@ function ensureTmuxSession(session: string, cwd: string, command: string[] = [sh
     stderr: 'ignore',
   })
 
-  if (hasSession.exitCode === 0) return
+  if (hasSession.exitCode === 0) {
+    // Recycle the session if it points at a different workspace
+    const sessionPath = Bun.spawnSync({
+      cmd: ['tmux', 'display-message', '-p', '-t', `${session}:0`, '#{pane_current_path}'],
+      cwd,
+      stdout: 'pipe',
+      stderr: 'ignore',
+    })
+
+    const currentPath = decode(sessionPath.stdout).trim()
+    if (sessionPath.exitCode === 0 && currentPath === cwd) return
+
+    Bun.spawnSync({
+      cmd: ['tmux', 'kill-session', '-t', session],
+      cwd,
+      stdout: 'ignore',
+      stderr: 'ignore',
+    })
+  }
 
   const created = Bun.spawnSync({
     cmd: ['tmux', 'new-session', '-d', '-s', session, ...command],
@@ -108,15 +133,39 @@ function ensurePortFree(port: string) {
   }
 }
 
-ensurePortFree(ttydPort)
+const codexDir = join(homedir(), 'projects/vienna-ai-engineering-demo-codex')
+const claudeDir = join(homedir(), 'projects/vienna-ai-engineering-demo-claude')
 
-const projectsDir = join(process.cwd(), 'projects/vienna-ai-engineering-demo')
-ensureTmuxSession('backlog-demo', projectsDir)
-configureTmux('backlog-demo', projectsDir)
-
-const commands: Command[] = [
+const terminals: TerminalConfig[] = [
   {
-    name: 'ttyd',
+    name: 'ttyd-codex-primary',
+    port: process.env.TTYD_PORT ?? '7681',
+    session: 'backlog-codex-primary',
+    cwd: codexDir,
+  },
+  {
+    name: 'ttyd-codex-secondary',
+    port: process.env.TTYD_BACKLOG_PORT ?? '7682',
+    session: 'backlog-codex-secondary',
+    cwd: codexDir,
+  },
+  {
+    name: 'ttyd-claude',
+    port: process.env.TTYD_CLAUDE_PORT ?? '7683',
+    session: 'backlog-claude',
+    cwd: claudeDir,
+  },
+]
+
+const commands: Command[] = []
+
+for (const terminal of terminals) {
+  ensurePortFree(terminal.port)
+  ensureTmuxSession(terminal.session, terminal.cwd)
+  configureTmux(terminal.session, terminal.cwd)
+
+  commands.push({
+    name: terminal.name,
     cmd: [
       'ttyd',
       '-W',
@@ -125,20 +174,21 @@ const commands: Command[] = [
       '--client-option',
       'scrollback=0',
       '--port',
-      ttydPort,
+      terminal.port,
       'tmux',
       'attach-session',
       '-t',
-      'backlog-demo',
+      terminal.session,
     ],
-    cwd: projectsDir,
-  },
-  {
-    name: 'slidev',
-    cmd: ['bun', 'x', 'slidev', '--open'],
-    cwd: process.cwd(),
-  },
-]
+    cwd: terminal.cwd,
+  })
+}
+
+commands.push({
+  name: 'slidev',
+  cmd: ['bun', 'x', 'slidev', '--open'],
+  cwd: process.cwd(),
+})
 
 const running: { name: string; proc: Bun.Subprocess }[] = []
 let shuttingDown = false

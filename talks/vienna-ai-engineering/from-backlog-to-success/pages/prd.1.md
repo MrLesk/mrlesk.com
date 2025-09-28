@@ -15,7 +15,7 @@ We are here live at Vienna AI Engineering Meetup doing a demo of new AI Agent ca
 Your goal is to create a Canvas with a very minimal PRD from the document below. If anything is not clear please search on the internet.
 Also some technologies might have changed so please check the latest best practices.
 We need to build it in 30 minutes so skip any non-essential details.
-The PRD should be enough for an AI Agent to build a working web application.
+The PRD should be enough for an AI Agent to build a working web application using the latest version of the technologies below.
 
 Project Goal: Rock Paper Scissors Game
 
@@ -23,6 +23,7 @@ Build a full-stack web application using SvelteKit and TypeScript that lets a us
 
 1. Core Technology Stack
     * Framework: Svelte & SvelteKit
+    * Local only: all logic is client-side;
     * Language: TypeScript
     * Package Manager: bun
     * Styling: Tailwind CSS
@@ -31,7 +32,7 @@ Build a full-stack web application using SvelteKit and TypeScript that lets a us
 
 2. State Management & Data
     * No Database: Do not use an external database (like Postgres, SQLite, etc.).
-    * In-Memory Storage: All application state, including player names and their scores, must be stored in a single, global object in the server's memory. This data will be reset if the server restarts.
+    * In-Memory Storage: All application state, including player names and their scores, must be stored in the browser. This data will be reset if the page reloads.
 
 3. User Identification
     * No Authentication: Do not implement a formal username/password authentication system.
