@@ -11,6 +11,13 @@ section: Introduction
    2. board
    3. task list & filters
    4. web ui
+[if fits]
+Why Backlog?
+   1. split bigger features into smaller tasks -> keep context window small -> not run out of context
+   2. being able to work with web agents like Codex Web or Google Jules -> can assign tasks in parallel
+   3. being able to check and prepare tasks fully offline if needed
+   4. force a certain structure when working with AI Agents
+[/if fits]
 2. How are tasks structured?
    1. slide with title, why, what, how, notes
    2. archive, completed, drafts
@@ -23,7 +30,7 @@ section: Introduction
    4. #3 Implementation plan + review
    5. #4 Execution + review
    6. Previous results
-7. Conclusions
-8. False myths
-9. Q&A
+5. Conclusions
+6. False myths
+7. Q&A
 

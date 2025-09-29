@@ -14,7 +14,7 @@
         />
         <img
           ref="logoRef"
-          :src="imageSrc"
+          :src="resolvedImageSrc"
           alt="Backlog logo bouncing screensaver"
           class="backlog-screensaver__logo"
           :style="logoStyle"
@@ -68,6 +68,26 @@ const debugStyle = computed(() => ({
   width: `${bounds.width}px`,
   height: `${bounds.height}px`,
 }))
+
+const externalSrcPattern = /^(?:[a-z][a-z0-9+.-]*:|\/\/)/i
+const resolvedImageSrc = computed(() => resolveImageSrc(props.imageSrc))
+
+function resolveImageSrc(src) {
+  if (!src) return src
+  if (externalSrcPattern.test(src) || src.startsWith('data:') || src.startsWith('blob:')) {
+    return src
+  }
+
+  const baseUrl = new URL(import.meta.env.BASE_URL || '/', 'http://slidev.local')
+  const normalizedSrc = src.replace(/^(\.\/)+/, '').replace(/^\/+/, '')
+
+  try {
+    const url = new URL(normalizedSrc, baseUrl)
+    return url.href.replace(baseUrl.origin, '')
+  } catch (error) {
+    return src
+  }
+}
 
 const activityEvents = ['mousemove', 'mousedown', 'keydown', 'touchstart', 'pointerdown', 'wheel']
 const route = useRoute()
