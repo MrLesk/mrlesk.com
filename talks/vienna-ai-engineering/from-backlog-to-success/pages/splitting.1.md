@@ -7,7 +7,7 @@ section: Task splitting
 
 Here is the prompt we hand to <PromptChip>codex --yolo --search</PromptChip>
 
-<CopyCodeBlock class="mr-2" copy-label="Copy prompt" copied-label="Copied!" aria-label="Copy prompt">
+<CopyCodeBlock copy-label="Copy prompt" copied-label="Copied!" aria-label="Copy prompt">
 
 ```markdown
 ## Context

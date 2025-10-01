@@ -1,5 +1,5 @@
 <template>
-  <div ref="container" :class="['copy-code-container', props.wrapperClass]">
+  <div ref="container" :class="['copy-code-container mr-2', props.wrapperClass]">
     <slot />
     <div :class="['copy-code-button-wrapper', props.buttonWrapperClass]">
       <button

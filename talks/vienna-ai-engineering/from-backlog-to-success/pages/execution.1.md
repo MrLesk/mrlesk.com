@@ -7,7 +7,7 @@ section: Execution
 
 Here is the prompt we hand to <PromptChip>codex --yolo</PromptChip>
 
-<div class="w-160">
+<CopyCodeBlock class="w-160" copy-label="Copy prompt" copied-label="Copied!" aria-label="Copy prompt">
 
 ```markdown
 ## Preparation
@@ -22,9 +22,9 @@ At the end of each task, write the implementation notes and the definition of do
 
 ```
 
-</div>
+</CopyCodeBlock>
 
-<CalloutCard v-click icon="⚠️" variant="warning" title="Warning" class="mt-10 w-160">
+<card v-click icon="⚠️" variant="warning" title="Warning" class="mt-10 w-160">
   Don't try it at home
-</CalloutCard>
+</card>
 
