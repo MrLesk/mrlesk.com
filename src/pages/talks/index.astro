@@ -80,7 +80,7 @@ const isDev = import.meta.env.DEV;
 
 const talks = talksData
   .slice()
-  .sort((a, b) => toLocalDate(a.dateISO).getTime() - toLocalDate(b.dateISO).getTime())
+  .sort((a, b) => toLocalDate(b.dateISO).getTime() - toLocalDate(a.dateISO).getTime())
   // Hide future talks only in builds so local dev shows full list.
   .filter((talk) =>
     isDev ? true : toLocalDate(talk.dateISO).getTime() <= tomorrowLocal.getTime(),
