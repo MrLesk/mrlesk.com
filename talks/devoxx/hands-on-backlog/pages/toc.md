@@ -11,6 +11,10 @@ section: Introduction
    2. board
    3. task list & filters
    4. web ui
+   5. Extra
+      1. It's free and open source (MIT License)
+      2. Works offline (no data is sent to any server)
+      3. Works on Windows, MacOS, Linux
 [if fits]
 Why Backlog?
    1. split bigger features into smaller tasks -> keep context window small -> not run out of context
@@ -25,11 +29,12 @@ Why Backlog?
    1. agent instructions
 4. Demo
    1. Spec-driven AI Development with Backlog.md
-   2. #1 Idea/PRD
-   3. #2 Task breakdown + review
-   4. #3 Implementation plan + review
-   5. #4 Execution + review
-   6. Previous results
+   2. Install backlog.md and init a new project
+   3. #1 Idea/PRD
+   4. #2 Task breakdown + review
+   5. #3 Implementation plan + review
+   6. #4 Execution + review
+   7. Previous results
 5. Conclusions
 6. False myths
 7. Q&A

@@ -38,85 +38,6 @@ by Alex Gavrilescu
 Notes
 -->
 
----
-
-# Who am I?
-
-Alex Gavrilescu
-
-* Working in Funstage GmbH in Vienna as Lead Backend and Web Developer
-* 13+ years of experience of professional software development
-* Started working on Backlog.md in June 2025
-
-<!--
-Notes
--->
-
----
-
-# Agenda
-
-1. Introduction about Backlog.md
-2. Presentation of the Project we want to build
-3. Hands-on demo:
-    1. create PRD using canvas,
-    2. backlog init,
-    3. create tasks,
-    4. TUI and Web interfaces,
-    5. ask ai to start implementing the first task.
-4. Tips for using Backlog.md
-5. Q&A
-6. Link to these slides
-
----
-transition: slide-up
----
-
-# 1. Backlog.md
-
----
-transition: slide-up
----
-
-# What is Backlog.md?
-
-* CLI Tool to create and manage Tasks using markdown files in your repo
-* Has TUI + WEB interfaces
-* Works cross-platform: Windows, Linux, Mac
-* Free, Open source MIT
-
----
-transition: slide-up
----
-
-# Why Backlog.md?
-
-* Wanted to have the simplest possible tool to easily split a project into smaller tasks
-* Interoperability with most AI Tools: cli, ide, web
-* No need of external DBs, APIs; works 100% offline
-* Ships with very powerful Agent instructions that allows you to start immediately
-* Enforces certain standards for AI agents that allow to immediately increase success rate
-* Can assign multiple tasks in parallel to AI agents
-
----
-
-# How does Backlog.md work?
-
-* Install backlog as global cli tool: brew install backlog-md or npm i -g backlog.md
-* Initialize backlog in a GIT repository: backlog init
-* Backlog task create -t “My first task” -d “Set up tests pipeline”
-* Ask AI to implement the task: Codex/Claude/Jules implement task 1
-
----
-transition: slide-up
----
-
-# 2. The Project
-
----
-transition: slide-up
----
-
 # Istoria - AI Voice to Story Builder
 
 * Cross platform app using Expo framework
@@ -125,10 +46,6 @@ transition: slide-up
 * AI understand if we are adding new text or we want to modify existing text (make the previous paragraph a bullet point
   list)
 * Ideally works 100% offline using local LLMs
-
----
-transition: slide-up
----
 
 # PRD First
 

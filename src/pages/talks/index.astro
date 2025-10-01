@@ -65,9 +65,26 @@ const talksData = [
   },
 ];
 
+// Interpret YYYY-MM-DD strings in local time so we don't surface talks a day early.
+const toLocalDate = (isoDate) => {
+  const [year, month, day] = isoDate.split("-").map(Number);
+  return new Date(year, month - 1, day);
+};
+
+const today = new Date();
+const todayLocal = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+const tomorrowLocal = new Date(todayLocal);
+tomorrowLocal.setDate(todayLocal.getDate() + 1);
+
+const isDev = import.meta.env.DEV;
+
 const talks = talksData
   .slice()
-  .sort((a, b) => new Date(a.dateISO).getTime() - new Date(b.dateISO).getTime());
+  .sort((a, b) => toLocalDate(a.dateISO).getTime() - toLocalDate(b.dateISO).getTime())
+  // Hide future talks only in builds so local dev shows full list.
+  .filter((talk) =>
+    isDev ? true : toLocalDate(talk.dateISO).getTime() <= tomorrowLocal.getTime(),
+  );
 ---
 
 <html lang="en">

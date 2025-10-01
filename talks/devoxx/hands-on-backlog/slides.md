@@ -1,25 +1,29 @@
 ---
 theme: penguin
 colorSchema: "light"
-title: From Zero to Backlog.md
+title: "Hands-on: Backlog.md - Plan Tasks with AI"
 author: Alex Gavrilescu
 drawings:
     persist: false
 mdc: true
 transition: slide-left
-layout: intro-terminal
+layout: intro
 section: Introduction
 hideIndicator: true
-terminalSrc: http://localhost:7681/
-terminalHeight: 420
-showTerminal: false
 ---
 
-# From Backlog.md to Success
+<h1>
+Hands-on: Backlog.md <br>
+<div class="text-5xl pb-4">Plan Tasks with AI</div>
+</h1>
 
-### Vienna AI Engineering Meetup - Part 2
+### Devoxx Belgium 2025
 
-#### 2 October 2025
+#### 6 October 2025
+
+---
+src: ./pages/presenter.md
+---
 
 ---
 src: ./pages/toc.md
