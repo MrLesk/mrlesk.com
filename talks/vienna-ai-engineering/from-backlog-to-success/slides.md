@@ -1,18 +1,15 @@
 ---
 theme: penguin
 colorSchema: "light"
-title: From Zero to Backlog.md
+title: From Backlog.md to Success
 author: Alex Gavrilescu
 drawings:
     persist: false
 mdc: true
 transition: slide-left
-layout: intro-terminal
+layout: intro
 section: Introduction
 hideIndicator: true
-terminalSrc: http://localhost:7681/
-terminalHeight: 420
-showTerminal: false
 ---
 
 # From Backlog.md to Success
