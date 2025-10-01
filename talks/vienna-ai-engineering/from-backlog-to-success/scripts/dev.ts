@@ -1,5 +1,6 @@
 #!/usr/bin/env bun
 
+import { $ } from 'bun'
 import { join } from 'node:path'
 import { homedir } from 'node:os'
 
@@ -12,6 +13,9 @@ interface Command {
 
 const shell = process.env.TTYD_SHELL ?? process.env.SHELL ?? 'bash'
 
+// Bun.spawnSync doesn't use PATH from env, so we need absolute path
+const tmux = '/opt/homebrew/Cellar/tmux/3.5a/bin/tmux'
+
 interface TerminalConfig {
   name: string
   port: string
@@ -23,67 +27,31 @@ function decode(buffer: Uint8Array) {
   return new TextDecoder().decode(buffer)
 }
 
-function ensureTmuxSession(session: string, cwd: string, command: string[] = [shell]) {
-  const hasSession = Bun.spawnSync({
-    cmd: ['tmux', 'has-session', '-t', session],
-    cwd,
-    stdout: 'ignore',
-    stderr: 'ignore',
-  })
+async function ensureTmuxSession(session: string, cwd: string, command: string[] = [shell]) {
+  const hasSession = await $`tmux has-session -t ${session}`.cwd(cwd).quiet().nothrow()
 
   if (hasSession.exitCode === 0) {
     // Recycle the session if it points at a different workspace
-    const sessionPath = Bun.spawnSync({
-      cmd: ['tmux', 'display-message', '-p', '-t', `${session}:0`, '#{pane_current_path}'],
-      cwd,
-      stdout: 'pipe',
-      stderr: 'ignore',
-    })
+    const sessionPath = await $`tmux display-message -p -t ${session}:0 '#{pane_current_path}'`.cwd(cwd).quiet().nothrow()
 
-    const currentPath = decode(sessionPath.stdout).trim()
+    const currentPath = sessionPath.text().trim()
     if (sessionPath.exitCode === 0 && currentPath === cwd) return
 
-    Bun.spawnSync({
-      cmd: ['tmux', 'kill-session', '-t', session],
-      cwd,
-      stdout: 'ignore',
-      stderr: 'ignore',
-    })
+    await $`tmux kill-session -t ${session}`.cwd(cwd).quiet().nothrow()
   }
 
-  const created = Bun.spawnSync({
-    cmd: ['tmux', 'new-session', '-d', '-s', session, ...command],
-    cwd,
-    stdout: 'inherit',
-    stderr: 'inherit',
-  })
+  const cmdStr = command.length > 0 ? ` ${command.join(' ')}` : ''
+  const created = await $`tmux new-session -d -s ${session}${cmdStr}`.cwd(cwd).nothrow()
 
   if (created.exitCode !== 0) {
     log('tmux', `failed to create session ${session} (exit ${created.exitCode})`)
   }
 }
 
-function configureTmux(session: string, cwd: string) {
-  Bun.spawnSync({
-    cmd: ['tmux', 'set-option', '-t', session, 'status', 'off'],
-    cwd,
-    stdout: 'ignore',
-    stderr: 'ignore',
-  })
-
-  Bun.spawnSync({
-    cmd: ['tmux', 'set-option', '-t', session, 'status-left', ''],
-    cwd,
-    stdout: 'ignore',
-    stderr: 'ignore',
-  })
-
-  Bun.spawnSync({
-    cmd: ['tmux', 'set-option', '-t', session, 'status-right', ''],
-    cwd,
-    stdout: 'ignore',
-    stderr: 'ignore',
-  })
+async function configureTmux(session: string, cwd: string) {
+  await $`tmux set-option -t ${session} status off`.cwd(cwd).quiet().nothrow()
+  await $`tmux set-option -t ${session} status-left ''`.cwd(cwd).quiet().nothrow()
+  await $`tmux set-option -t ${session} status-right ''`.cwd(cwd).quiet().nothrow()
 }
 
 function ensurePortFree(port: string) {
@@ -161,8 +129,8 @@ const commands: Command[] = []
 
 for (const terminal of terminals) {
   ensurePortFree(terminal.port)
-  ensureTmuxSession(terminal.session, terminal.cwd)
-  configureTmux(terminal.session, terminal.cwd)
+  await ensureTmuxSession(terminal.session, terminal.cwd)
+  await configureTmux(terminal.session, terminal.cwd)
 
   commands.push({
     name: terminal.name,
@@ -175,7 +143,7 @@ for (const terminal of terminals) {
       'scrollback=0',
       '--port',
       terminal.port,
-      'tmux',
+      tmux,
       'attach-session',
       '-t',
       terminal.session,

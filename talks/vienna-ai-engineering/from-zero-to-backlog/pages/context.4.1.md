@@ -1,5 +1,6 @@
 ---
 layout: default
+transition: slide-up
 section: Context
 ---
 

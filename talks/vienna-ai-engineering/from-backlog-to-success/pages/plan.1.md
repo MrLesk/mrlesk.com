@@ -7,6 +7,8 @@ section: Implementation Plan
 
 Here is the prompt we hand to <PromptChip>codex --yolo --search</PromptChip>
 
+<CopyCodeBlock class="mr-2" copy-label="Copy prompt" copied-label="Copied!" aria-label="Copy prompt">
+
 ```markdown
 ## Preparation
 Read and understand all tasks in "To Do".
@@ -20,3 +22,5 @@ Afterwards write in each task the appropriate implementation plan according to t
 * Make sure each task plan includes meaningful testing when possible.
 
 ```
+
+</CopyCodeBlock>
