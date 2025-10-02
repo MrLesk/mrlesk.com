@@ -38,11 +38,7 @@ src: ./pages/prd.1.md
 ---
 
 ---
-src: ./pages/init.md
----
-
----
-src: ./pages/init.1.md
+src: ./pages/prd.2.md
 ---
 
 ---

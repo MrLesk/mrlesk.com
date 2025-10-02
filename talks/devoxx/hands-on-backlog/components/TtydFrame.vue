@@ -1,5 +1,5 @@
 <template>
-  <div class="ttyd-frame" :style="{ minHeight: frameHeight }">
+  <div class="ttyd-frame" >
     <iframe
       v-if="isClient"
       ref="frameRef"
@@ -28,10 +28,7 @@ const props = defineProps({
     type: String,
     default: 'ttyd session',
   },
-  height: {
-    type: [Number, String],
-    default: 420,
-  },
+
 })
 
 const frameRef = ref(null)
@@ -39,13 +36,6 @@ const isClient = ref(false)
 
 onMounted(() => {
   isClient.value = true
-})
-
-const frameHeight = computed(() => {
-  if (typeof props.height === 'number') {
-    return `${props.height}px`
-  }
-  return props.height || '420px'
 })
 </script>
 

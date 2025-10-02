@@ -5,7 +5,7 @@ section: Introduction
 
 # Table of Contents
 
-[Premise]
+[//]: # ([Premise])
 1. What is Backlog.md?
    1. init
    2. board
