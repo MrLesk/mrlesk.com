@@ -14,3 +14,16 @@ section: Introduction
 ... Short break ...
 
 - Second talk: Demo with Backlog.md and Agents
+
+<div class="mt-6" v-click="0">
+
+### Not in the scope:
+<v-clicks at="+2">
+
+* Dangers of deleting production database
+* Remote agents (Droid, Jules, Capy.ai)
+* Advanced AI Agents use (mcp, multi agents)
+* Advanced optimiziations (defeating context rot)
+
+</v-clicks>
+</div>
