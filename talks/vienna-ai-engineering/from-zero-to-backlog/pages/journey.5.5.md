@@ -4,5 +4,5 @@ transition: slide-up
 section: My journey
 ---
 
-# They can use them as persistent context
+# Humans too
 

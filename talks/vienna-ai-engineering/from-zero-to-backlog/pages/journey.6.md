@@ -4,5 +4,5 @@ transition: slide-up
 section: My journey
 ---
 
-# They can work on multiple tasks in parallel
+# Agents can use them as persistent context
 

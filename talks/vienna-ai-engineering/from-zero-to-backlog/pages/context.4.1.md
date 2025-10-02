@@ -13,16 +13,18 @@ section: Context
 
 <div v-click>
 
-* A system that uses LLM to perform tasks autonomously
+* A system that uses AI models to perform tasks autonomously
 </div>
+
+<div v-click>
+
+* Can interact with other tools, APIs and databases to achieve their goals
+</div>
+
 
 <div v-click>
 
 * Perform actions based on their understanding of the task and the environment
 </div>
 
-<div v-click>
-
-* Can interact with APIs, databases, and other tools to achieve their goals
-</div>
 

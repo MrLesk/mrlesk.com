@@ -4,5 +4,5 @@ transition: slide-up
 section: My journey
 ---
 
-# Humans can easily rollback
+# Agents can work on multiple tasks in parallel
 

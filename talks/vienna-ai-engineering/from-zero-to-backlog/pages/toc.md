@@ -20,9 +20,9 @@ section: Introduction
 ### Not in the scope:
 <v-clicks at="+2">
 
-* Dangers of deleting production database
+* Dangers of deleting production database because of AI
 * Remote agents (Droid, Jules, Capy.ai)
-* Advanced AI Agents use (mcp, multi agents)
+* Advanced AI Agents workflows (mcp, multi agents)
 * Advanced optimiziations (defeating context rot)
 
 </v-clicks>
