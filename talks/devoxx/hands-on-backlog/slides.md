@@ -30,94 +30,6 @@ src: ./pages/toc.md
 ---
 
 ---
-src: ./pages/prd.md
----
-
----
-src: ./pages/prd.1.md
----
-
----
-src: ./pages/prd.2.md
----
-
----
-src: ./pages/prd.result.md
----
-
----
-src: ./pages/splitting.md
----
-
----
-src: ./pages/splitting.1.md
----
-
----
-src: ./pages/splitting.2.md
----
-
----
-src: ./pages/task.md
----
-
----
-src: ./pages/task.1.md
----
-
----
-src: ./pages/splitting.result.md
----
-
----
-src: ./pages/plan.md
----
-
----
-src: ./pages/plan.1.md
----
-
----
-src: ./pages/plan.2.md
----
-
----
-src: ./pages/plan.3.md
----
-
----
-src: ./pages/instructions.md
----
-
----
-src: ./pages/instructions.1.md
----
-
----
-src: ./pages/instructions.2.md
----
-
----
-src: ./pages/instructions.3.md
----
-
----
-src: ./pages/plan.result.md
----
-
----
-src: ./pages/execution.md
----
-
----
-src: ./pages/execution.1.md
----
-
----
-src: ./pages/execution.2.md
----
-
----
 src: ./pages/backlog.md
 ---
 
@@ -126,57 +38,121 @@ src: ./pages/backlog.1.md
 ---
 
 ---
-src: ./pages/execution.results.md
+src: ./pages/backlog.2.md
 ---
 
 ---
-src: ./pages/conclusions.md
+src: ./pages/backlog.3.md
 ---
 
 ---
-src: ./pages/conclusions.1.md
+src: ./pages/backlog.4.md
 ---
 
 ---
-src: ./pages/conclusions.2.md
+src: ./pages/backlog.5.md
 ---
 
 ---
-src: ./pages/conclusions.3.md
+src: ./pages/backlog.6.md
 ---
 
 ---
-src: ./pages/conclusions.4.md
+src: ./pages/backlog.7.md
 ---
 
 ---
-src: ./pages/conclusions.5.md
+src: ./pages/demo.md
 ---
 
 ---
-src: ./pages/wrong.md
+src: ./pages/demo.1.md
 ---
 
 ---
-src: ./pages/wrong.1.md
+src: ./pages/demo.2.md
 ---
 
 ---
-src: ./pages/wrong.2.md
+src: ./pages/demo.3.md
 ---
 
 ---
-src: ./pages/wrong.3.md
+src: ./pages/demo.4.md
 ---
 
 ---
-src: ./pages/bonus.md
+src: ./pages/demo.5.md
+---
+
+---
+src: ./pages/demo.6.md
+---
+
+---
+src: ./pages/demo.7.md
+---
+
+---
+src: ./pages/demo.8.md
+---
+
+---
+src: ./pages/demo.9.md
+---
+
+---
+src: ./pages/demo.10.md
+---
+
+---
+src: ./pages/demo.11.md
+---
+
+---
+src: ./pages/demo.12.md
+---
+
+---
+src: ./pages/demo.13.md
+---
+
+---
+src: ./pages/demo.14.md
+---
+
+---
+src: ./pages/demo.15.md
+---
+
+---
+src: ./pages/demo.16.md
+---
+
+---
+src: ./pages/demo.17.md
+---
+
+---
+src: ./pages/why.md
+---
+
+---
+src: ./pages/why.1.md
+---
+
+---
+src: ./pages/why.2.md
+---
+
+---
+src: ./pages/why.3.md
+---
+
+---
+src: ./pages/why.4.md
 ---
 
 ---
 src: ./pages/questions.md
----
-
----
-src: ./pages/extra.md
 ---

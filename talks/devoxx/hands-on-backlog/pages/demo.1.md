@@ -1,7 +1,7 @@
 ---
 layout: intro
 transition: slide-up
-section: Backlog.md
+section: Demo
 ---
 
-# What is Backlog.md?
+# Let's build Istoria

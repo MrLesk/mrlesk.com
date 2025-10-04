@@ -33,7 +33,22 @@ COPY talks/vienna-ai-engineering/from-backlog-to-success/ ./
 RUN mkdir -p dist && (bun run build -- --base /talks/vienna-ai-engineering/from-backlog-to-success/ || echo "Build failed - esbuild compatibility issue")
 
 # ========================================
-# Stage 3: Build Main Astro Site
+# Stage 3: Build Devoxx - Hands-on: Backlog.md
+# ========================================
+FROM oven/bun:latest AS slidev-devoxx-backlog
+WORKDIR /app
+
+# Copy package files and install dependencies
+COPY talks/devoxx/hands-on-backlog/package.json ./
+COPY talks/devoxx/hands-on-backlog/bun.lock ./
+RUN bun install --frozen-lockfile
+
+# Copy source files and build with base path
+COPY talks/devoxx/hands-on-backlog/ ./
+RUN mkdir -p dist && (bun run build -- --base /talks/devoxx/hands-on-backlog/ || echo "Build failed - esbuild compatibility issue")
+
+# ========================================
+# Stage 4: Build Main Astro Site
 # ========================================
 FROM oven/bun:latest AS astro-build
 WORKDIR /app
@@ -59,6 +74,7 @@ COPY --from=astro-build /app/dist /usr/share/nginx/html
 # Copy Slidev builds to their respective paths (if they succeeded)
 COPY --from=slidev-vienna-zero /app/dist /usr/share/nginx/html/talks/vienna-ai-engineering/from-zero-to-backlog
 COPY --from=slidev-vienna-backlog /app/dist /usr/share/nginx/html/talks/vienna-ai-engineering/from-backlog-to-success
+COPY --from=slidev-devoxx-backlog /app/dist /usr/share/nginx/html/talks/devoxx/hands-on-backlog
 
 # Copy custom nginx config
 COPY nginx.conf /etc/nginx/conf.d/default.conf
