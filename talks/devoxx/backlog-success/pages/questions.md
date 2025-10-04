@@ -5,17 +5,13 @@ section: Q&A
 
 # Questions?
 
-<div class="mt-8 flex flex-col items-center">
+<div class="mt-16 flex flex-col items-center">
 
 <div >
     <img class="h-50" src="/qr-devoxx-1.png">
 </div>
 <a target="_blank" class="mt-4 inline-block font-semibold link-primary" href="https://mrlesk.com/talks">https://mrlesk.com/talks</a>
 
-<card class="w-120 mt-8">
-See you on <span class="font-bold underline">Thursday at 9:30 in room 9</span> for my talk "Reaching 95 % Task success rate with AI Agents"!
-</card>
-
-<PoweredBySlidev class="mt-12"/>
+<PoweredBySlidev class="mt-16"/>
 
 </div>

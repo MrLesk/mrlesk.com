@@ -11,13 +11,12 @@ This documentation contains essential information about:
 - All technical details for working with Slidev
 
 ## Project Context
-You have spawned in a Slidev presentation repository for the Vienna AI Engineering Meetup talk titled "From Zero to Backlog.md".
+You have spawned in a Slidev presentation repository for the Devoxx talk titled "From Zero to Backlog.md".
 
 ### What This Project Is
 - **Type**: Slidev presentation slides (NOT an application)
 - **Topic**: Discussion about "Backlog.md" - a CLI tool for markdown-based task management with AI agent integration
-- **Audience**: Vienna AI Engineering Meetup attendees
-- **Date**: October 2, 2025
+- **Audience**: Devoxx conference
 
 ### Project Structure
 ```
