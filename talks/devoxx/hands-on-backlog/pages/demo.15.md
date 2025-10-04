@@ -21,7 +21,7 @@ For each task look at the implementation plan and follow it step by step.
 Implement all tasks and ensure the acceptance criteria and the goals are met.
 
 ## Details
-At the end of each task, write the implementation notes and the definition of done.
+At the end of each task, write the implementation notes and follow the definition of done.
 
 ```
 

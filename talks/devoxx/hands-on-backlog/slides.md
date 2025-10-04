@@ -42,6 +42,10 @@ src: ./pages/backlog.2.md
 ---
 
 ---
+src: ./pages/backlog.2.5.md
+---
+
+---
 src: ./pages/backlog.3.md
 ---
 
@@ -54,19 +58,11 @@ src: ./pages/backlog.5.md
 ---
 
 ---
-src: ./pages/backlog.6.md
----
-
----
 src: ./pages/backlog.7.md
 ---
 
 ---
 src: ./pages/demo.md
----
-
----
-src: ./pages/demo.1.md
 ---
 
 ---

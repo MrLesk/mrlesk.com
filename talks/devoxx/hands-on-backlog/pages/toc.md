@@ -12,6 +12,7 @@ section: Introduction
 5. Plan (Backlog.md instructions)
 6. Execution (Backlog.md overview)
 7. Why Backlog.md?
+8. Q&A + Link to these slides
 
 <!--
 [//]: # ([Premise])

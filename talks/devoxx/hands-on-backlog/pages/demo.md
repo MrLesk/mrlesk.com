@@ -4,4 +4,4 @@ transition: slide-up
 section: Demo
 ---
 
-# Demo time
+# Demo time: Let's build Istoria!

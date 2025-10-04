@@ -21,7 +21,7 @@ Create relevant tasks and subtasks using backlog CLI tool according to the the t
 Tasks should be atomic and fit a good PR size.
 
 ## Details
-I want to see tests and type checks as early as possible.
+I want to see tests, type checks and linting as early as possible.
 
 ```
 
