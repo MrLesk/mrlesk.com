@@ -1,14 +1,17 @@
 ---
 layout: default
+transition: slide-up
 section: My journey
 ---
 
-# We need to make the flow more deterministic
+# How to make the flow more deterministic?
 
 <v-clicks>
 
-* Add clear requirements (specs)
-* Add clear acceptance criteria
-* Maybe use BDD (Gherkin)
+* Have consistent tasks structure
+  * Goals
+  * Acceptance criteria
+  * Definition of done
+* Ask AI to create tasks and review them
 
 </v-clicks>

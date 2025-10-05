@@ -9,6 +9,7 @@ import { onMounted, ref } from 'vue'
 interface ExcalidrawJSON {
   elements?: any[]
   appState?: Record<string, any>
+  files?: Record<string, any>
   [key: string]: any
 }
 
@@ -24,26 +25,31 @@ const props = withDefaults(defineProps<{
 const loading = ref(false)
 const svg = ref<string | null>(null)
 
+let excalidrawLibPromise: Promise<typeof import('@excalidraw/excalidraw')> | null = null
+
 onMounted(async () => {
   loading.value = true
   try {
-    await loadScripts([
-      'https://cdn.jsdelivr.net/npm/react@18.2.0/umd/react.production.min.js',
-      'https://cdn.jsdelivr.net/npm/react-dom@18.2.0/umd/react-dom.production.min.js',
-      'https://cdn.jsdelivr.net/npm/@excalidraw/excalidraw/dist/excalidraw.production.min.js',
-    ])
-    await loadAndRender()
+    const excalidrawLib = await loadExcalidrawLib()
+    await loadAndRender(excalidrawLib)
   } finally {
     loading.value = false
   }
 })
 
-async function loadAndRender() {
+function loadExcalidrawLib() {
+  if (!excalidrawLibPromise) {
+    excalidrawLibPromise = import('@excalidraw/excalidraw')
+  }
+  return excalidrawLibPromise
+}
+
+async function loadAndRender(excalidrawLib: typeof import('@excalidraw/excalidraw')) {
   const url = new URL(props.drawFilePath, window.location.origin + import.meta.env.BASE_URL).href
   const response = await fetch(url)
   const json = await response.json() as ExcalidrawJSON
 
-  const virgilId = (window as any)?.ExcalidrawLib?.FONT_FAMILY?.Virgil ?? 1
+  const virgilId = excalidrawLib.FONT_FAMILY?.Virgil ?? 1
 
   const normalized: ExcalidrawJSON = {
     ...json,
@@ -60,38 +66,21 @@ async function loadAndRender() {
       ...(json.appState ?? {}),
       currentItemFontFamily: virgilId,
     },
+    files: json.files ?? {},
   }
 
-  const svgElement = await (window as any).ExcalidrawLib.exportToSvg({
+  const svgElement = await excalidrawLib.exportToSvg({
     ...normalized,
     appState: {
       ...(normalized.appState ?? {}),
       exportWithDarkMode: props.darkMode,
       exportBackground: props.background,
     },
+    files: normalized.files ?? {},
   })
 
   svgElement.style.maxWidth = '100%'
   svgElement.style.height = 'auto'
   svg.value = svgElement.outerHTML
-}
-
-function loadScript(src: string) {
-  return new Promise<void>((resolve, reject) => {
-    if (document.querySelector(`script[src="${src}"]`)) {
-      resolve()
-      return
-    }
-    const script = document.createElement('script')
-    script.src = src
-    script.async = true
-    script.onload = () => resolve()
-    script.onerror = reject
-    document.head.appendChild(script)
-  })
-}
-
-function loadScripts(srcs: string[]) {
-  return Promise.all(srcs.map(loadScript))
 }
 </script>

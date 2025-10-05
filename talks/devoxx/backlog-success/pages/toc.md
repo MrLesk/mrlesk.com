@@ -11,7 +11,7 @@ section: Introduction
 4. The Spec-driven AI Development
 5. Work from your phone
 6. Conclusions
-7. Q&A + Link to these slides
+7. Q&A + QR code to these slides
 
 <!--
 [//]: # ([Premise])

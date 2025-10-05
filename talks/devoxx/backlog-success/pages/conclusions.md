@@ -1,7 +1,7 @@
 ---
 layout: new-section
 transition: slide-up
-section: My journey
+section: Conclusions
 ---
 
-# My journey with AI Agents
+# Conclusions

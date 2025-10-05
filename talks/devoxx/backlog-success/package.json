@@ -8,11 +8,17 @@
     "export": "slidev export"
   },
   "dependencies": {
+    "@excalidraw/excalidraw": "^0.18.0",
     "@iconify-json/logos": "1.2.9",
     "@slidev/cli": "52.1.0",
     "@types/bun": "^1.2.22",
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
     "slidev-theme-penguin": "2.3.1",
     "vite-svg-loader": "5.1.0",
     "vue": "3.5.21"
+  },
+  "devDependencies": {
+    "sass": "^1.93.2"
   }
 }

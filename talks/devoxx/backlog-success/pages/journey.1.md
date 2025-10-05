@@ -1,12 +1,13 @@
 ---
 layout: default
+transition: slide-up
 section: My journey
 ---
 
 # Just prompting
 
 <div class="mt-8 flex justify-between">
-    <div v-click>
+    <div >
         <img class="" src="/journey.1.jpeg">
     </div>
     <div class="flex flex-col gap-10 items-center justify-center w-100 text-center" >

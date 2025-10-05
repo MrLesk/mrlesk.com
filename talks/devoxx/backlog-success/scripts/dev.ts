@@ -134,29 +134,18 @@ function ensurePortFree(port: string) {
     }
 }
 
-const demoDir = join(homedir(), 'projects/devoxx-demo')
+const backlogDir = join(homedir(), 'projects', 'Backlog.md')
+const backlogStartupCommand = process.env.BACKLOG_START_COMMAND ?? 'backlog board'
+const backlogFallbackMessage = `[ttyd] unable to launch ${backlogStartupCommand}, falling back to shell`
+const backlogCommand = `${backlogStartupCommand} || echo ${JSON.stringify(backlogFallbackMessage)}; exec ${JSON.stringify(shell)} -i`
 
 const terminals: TerminalConfig[] = [
     {
-        name: 'ttyd-codex-planner',
-        port: process.env.TTYD_PORT ?? '7681',
-        session: 'devoxx-codex-planner',
-        cwd: demoDir,
-        command: ['codex', '--yolo', '--search', '-c', 'model_reasoning_effort=high', '-m', 'gpt-5'],
-    },
-    {
-        name: 'ttyd-devoxx-shell',
-        port: process.env.TTYD_BACKLOG_PORT ?? '7682',
-        session: 'devoxx-shell',
-        cwd: demoDir,
-        command: [shell],
-    },
-    {
-        name: 'ttyd-codex-execute',
-        port: process.env.TTYD_PORT ?? '7683',
-        session: 'devoxx-codex-execute',
-        cwd: demoDir,
-        command: ['codex', '--yolo', '-c', 'model_reasoning_effort=high', '-m', 'gpt-5-codex'],
+        name: 'ttyd-backlog-shell',
+        port: process.env.TTYD_BACKLOG_PORT ?? process.env.TTYD_PORT ?? '7681',
+        session: 'devoxx-backlog-shell',
+        cwd: backlogDir,
+        command: [shell, '-lc', backlogCommand],
     },
 ]
 

@@ -1,9 +1,10 @@
 ---
 layout: default
+transition: slide-up
 section: My journey
 ---
 
-# Add CLAUDE.md
+# Add Agent instructions (AGENTS.md)
 
 <div class="mt-8 flex justify-between">
     <div class="flex flex-col gap-10 items-center justify-center w-140 text-center" >
