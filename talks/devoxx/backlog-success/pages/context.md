@@ -1,7 +1,8 @@
 ---
 layout: new-section
 transition: slide-up
-section: Demo
+section: Context
 ---
 
-# Demo time: Let's build Istoria!
+# Context
+

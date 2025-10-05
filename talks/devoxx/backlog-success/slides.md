@@ -13,8 +13,8 @@ hideIndicator: true
 ---
 
 <h1>
-Hands-on: Backlog.md <br>
-<div class="text-5xl pb-4">Plan Tasks with AI</div>
+Backlog.md <br>
+<div class="text-4xl pb-4">Reaching 95 % Task success rate with AI Agents</div>
 </h1>
 
 ### Devoxx Belgium 2025

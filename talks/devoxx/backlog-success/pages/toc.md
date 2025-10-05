@@ -5,14 +5,13 @@ section: Introduction
 
 # Table of Contents
 
-1. What is Backlog.md?
-2. The Project we want to build
-3. PRD (backlog install + init)
-4. Task splitting (Task structure)
-5. Plan (Backlog.md instructions)
-6. Execution (Backlog.md overview)
-7. Why Backlog.md?
-8. Q&A + Link to these slides
+1. Context
+2. My journey with AI Agents [made me build backlog.md]
+3. Backlog.md (Cli, Tui, Web UI) [enabled me to work in a spec-driven way]
+4. The Spec-driven AI Development
+5. Work from your phone
+6. Conclusions
+7. Q&A + Link to these slides
 
 <!--
 [//]: # ([Premise])

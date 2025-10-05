@@ -1,7 +1,8 @@
 ---
 layout: intro
 transition: slide-up
-section: Backlog.md
+section: Context
 ---
 
-# What is Backlog.md?
+# What are AI Agents?
+
