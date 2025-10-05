@@ -1,12 +1,13 @@
 <template>
-  <div class="ttyd-frame" >
+  <div class="ttyd-frame">
     <iframe
       v-if="isClient"
       ref="frameRef"
       class="ttyd-frame__iframe"
       :src="src"
       :title="title"
-      allow="clipboard-read; clipboard-write"
+      allow="clipboard-read; clipboard-write; fullscreen; keyboard-lock"
+      tabindex="-1"
       scrolling="no"
       loading="lazy"
     />
@@ -17,7 +18,7 @@
 </template>
 
 <script setup>
-import { computed, onMounted, ref } from 'vue'
+import { onMounted, ref } from 'vue'
 
 const props = defineProps({
   src: {
