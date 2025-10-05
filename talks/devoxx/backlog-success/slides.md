@@ -14,7 +14,7 @@ hideIndicator: true
 
 <h1>
 Backlog.md <br>
-<div class="text-4xl pb-4">Reaching 95 % Task success rate with AI Agents</div>
+<div class="text-4xl pb-4">Reaching 95% Task success rate with AI Agents</div>
 </h1>
 
 ### Devoxx Belgium 2025
@@ -102,6 +102,10 @@ src: ./pages/backlog.3.md
 ---
 
 ---
+src: ./pages/backlog.3.5.md
+---
+
+---
 src: ./pages/backlog.4.md
 ---
 
@@ -143,10 +147,6 @@ src: ./pages/backlog.13.md
 
 ---
 src: ./pages/backlog.14.md
----
-
----
-src: ./pages/backlog.15.md
 ---
 
 ---

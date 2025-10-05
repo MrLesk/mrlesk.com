@@ -8,7 +8,7 @@ section: Spec-driven flow
 
 <v-clicks>
 
-* Ask AI to to implement the task by following Backlog.md CLI guidelines
+* Ask AI to implement the task by following Backlog.md CLI guidelines
 * Review the code and the acceptance criteria
 
 </v-clicks>

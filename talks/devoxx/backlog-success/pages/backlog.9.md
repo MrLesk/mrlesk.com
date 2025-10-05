@@ -6,9 +6,9 @@ section: Backlog.md
 
 # Codex kept hallucinating commands
 
-After a few times that Codex wanted to run <prompt-chip>backlog task edit 123 --check-ac 1</prompt-chip>, I built it!
+Codex kept running <prompt-chip>backlog task edit 123 --check-ac 1</prompt-chip> to check single ACs, so I built it in.
 
 <card v-click class="mt-6 text-center">
 This was the beginning of <br>
-Hallucination Driven Developement
+Hallucination Driven Development
 </card>

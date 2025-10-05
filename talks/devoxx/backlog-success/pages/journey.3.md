@@ -8,7 +8,7 @@ section: My journey
 
 <v-clicks>
 
-* Have consistent tasks structure
+* Have consistent task structure
   * Goals
   * Acceptance criteria
   * Definition of done

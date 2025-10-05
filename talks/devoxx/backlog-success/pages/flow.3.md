@@ -9,7 +9,7 @@ section: Spec-driven flow
 <v-clicks>
 
 * Ask AI to do it using Backlog.md CLI
-* Review the tasks descriptions and acceptance criteria and adjust if needed
+* Review the task descriptions and acceptance criteria and adjust if needed
 
 </v-clicks>
 

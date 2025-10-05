@@ -11,7 +11,7 @@ section: My journey
 * Agents can easily read markdown files → it's just text
 * Tasks act as persistent context → allow better context engineering
 * Scope is well defined → Claude is less likely to implement features outside of scope
-* Can easily switch between models for different tasks
-* Can work on multiple tasks in parallel using Git Worktrees
+* You can easily switch between models for different tasks
+* You can work on multiple tasks in parallel using Git Worktrees
 
 </v-clicks>
