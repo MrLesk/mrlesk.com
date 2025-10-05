@@ -8,17 +8,17 @@
     "export": "slidev export"
   },
   "dependencies": {
-    "@excalidraw/excalidraw": "^0.18.0",
+    "@excalidraw/excalidraw": "0.18.0",
     "@iconify-json/logos": "1.2.9",
-    "@slidev/cli": "52.1.0",
-    "@types/bun": "^1.2.22",
-    "react": "18.2.0",
-    "react-dom": "18.2.0",
+    "@slidev/cli": "52.2.4",
+    "@types/bun": "1.2.23",
+    "@vueuse/core": "13.9.0",
     "slidev-theme-penguin": "2.3.1",
     "vite-svg-loader": "5.1.0",
-    "vue": "3.5.21"
+    "vue": "3.5.22"
   },
   "devDependencies": {
+    "vite": "7.1.9",
     "sass": "^1.93.2"
   }
 }
