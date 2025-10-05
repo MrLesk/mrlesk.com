@@ -190,10 +190,6 @@ src: ./pages/flow.6.md
 ---
 
 ---
-src: ./pages/phone.md
----
-
----
 src: ./pages/conclusions.md
 ---
 
@@ -215,6 +211,10 @@ src: ./pages/conclusions.4.md
 
 ---
 src: ./pages/conclusions.5.md
+---
+
+---
+src: ./pages/phone.md
 ---
 
 ---
