@@ -1,81 +1,80 @@
 # syntax=docker/dockerfile:1
 # This Dockerfile includes Slidev presentations build
-# Note: Currently the Slidev builds have esbuild compatibility issues that need to be resolved
 
 # ========================================
 # Stage 1: Build Vienna AI Engineering - From Zero to Backlog
 # ========================================
-FROM oven/bun:latest AS slidev-vienna-zero
+FROM node:24-alpine AS slidev-vienna-zero
 WORKDIR /app
 
 # Copy package files and install dependencies
 COPY talks/vienna-ai-engineering/from-zero-to-backlog/package.json ./
-COPY talks/vienna-ai-engineering/from-zero-to-backlog/bun.lock ./
-RUN bun install --frozen-lockfile
+COPY talks/vienna-ai-engineering/from-zero-to-backlog/package-lock.json ./
+RUN rm -f package-lock.json && npm install --no-audit
 
 # Copy source files and build with base path
 COPY talks/vienna-ai-engineering/from-zero-to-backlog/ ./
-RUN mkdir -p dist && (bun run build -- --base /talks/vienna-ai-engineering/from-zero-to-backlog/ || echo "Build failed - esbuild compatibility issue")
+RUN mkdir -p dist && npm run build -- --base /talks/vienna-ai-engineering/from-zero-to-backlog/
 
 # ========================================
 # Stage 2: Build Vienna AI Engineering - From Backlog to Success
 # ========================================
-FROM oven/bun:latest AS slidev-vienna-backlog
+FROM node:24-alpine AS slidev-vienna-backlog
 WORKDIR /app
 
 # Copy package files and install dependencies
 COPY talks/vienna-ai-engineering/from-backlog-to-success/package.json ./
-COPY talks/vienna-ai-engineering/from-backlog-to-success/bun.lock ./
-RUN bun install --frozen-lockfile
+COPY talks/vienna-ai-engineering/from-backlog-to-success/package-lock.json ./
+RUN rm -f package-lock.json && npm install --no-audit
 
 # Copy source files and build with base path
 COPY talks/vienna-ai-engineering/from-backlog-to-success/ ./
-RUN mkdir -p dist && (bun run build -- --base /talks/vienna-ai-engineering/from-backlog-to-success/ || echo "Build failed - esbuild compatibility issue")
+RUN mkdir -p dist && npm run build -- --base /talks/vienna-ai-engineering/from-backlog-to-success/
 
 # ========================================
 # Stage 3: Build Devoxx - Hands-on: Backlog.md
 # ========================================
-FROM oven/bun:latest AS slidev-devoxx-backlog
+FROM node:24-alpine AS slidev-devoxx-backlog
 WORKDIR /app
 
 # Copy package files and install dependencies
 COPY talks/devoxx/hands-on-backlog/package.json ./
-COPY talks/devoxx/hands-on-backlog/bun.lock ./
-RUN bun install --frozen-lockfile
+COPY talks/devoxx/hands-on-backlog/package-lock.json ./
+RUN rm -f package-lock.json && npm install --no-audit
 
 # Copy source files and build with base path
 COPY talks/devoxx/hands-on-backlog/ ./
-RUN mkdir -p dist && (bun run build -- --base /talks/devoxx/hands-on-backlog/ || echo "Build failed - esbuild compatibility issue")
+RUN mkdir -p dist && npm run build -- --base /talks/devoxx/hands-on-backlog/
 
 # ========================================
 # Stage 4: Build Devoxx - Backlog success
 # ========================================
-FROM oven/bun:latest AS slidev-devoxx-success
+FROM node:24-alpine AS slidev-devoxx-success
 WORKDIR /app
 
 # Copy package files and install dependencies
 COPY talks/devoxx/backlog-success/package.json ./
-COPY talks/devoxx/backlog-success/bun.lock ./
-RUN bun install --frozen-lockfile
+COPY talks/devoxx/backlog-success/package-lock.json ./
+RUN rm -f package-lock.json && npm install --no-audit
 
 # Copy source files and build with base path
 COPY talks/devoxx/backlog-success/ ./
-RUN mkdir -p dist && (bun run build -- --base /talks/devoxx/backlog-success/ || echo "Build failed - esbuild compatibility issue")
+RUN mkdir -p dist && npm run build -- --base /talks/devoxx/backlog-success/
 
 # ========================================
 # Stage X: Build Main Astro Site
 # ========================================
-FROM oven/bun:latest AS astro-build
+FROM node:24-alpine AS astro-build
 WORKDIR /app
 
 # Install deps
 COPY package.json ./
-COPY bun.lock ./
-RUN bun install --frozen-lockfile
+COPY package-lock.json ./
+RUN rm -f package-lock.json && npm install --no-audit
 
 # Build static site
 COPY . .
-RUN bun run build
+RUN npm run build
 
 # ========================================
 # Stage Y: Production - Serve with Nginx
