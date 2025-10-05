@@ -25,31 +25,63 @@ const props = withDefaults(defineProps<{
 const loading = ref(false)
 const svg = ref<string | null>(null)
 
-let excalidrawLibPromise: Promise<typeof import('@excalidraw/excalidraw')> | null = null
+// Global singleton promise for script loading (shared across all component instances)
+declare global {
+  interface Window {
+    __excalidrawScriptsPromise?: Promise<void>
+    ExcalidrawLib?: any
+  }
+}
 
 onMounted(async () => {
   loading.value = true
   try {
-    const excalidrawLib = await loadExcalidrawLib()
-    await loadAndRender(excalidrawLib)
+    await loadExcalidrawScripts()
+    await loadAndRender()
   } finally {
     loading.value = false
   }
 })
 
-function loadExcalidrawLib() {
-  if (!excalidrawLibPromise) {
-    excalidrawLibPromise = import('@excalidraw/excalidraw')
+function loadExcalidrawScripts(): Promise<void> {
+  // Return existing promise if scripts are already loading/loaded
+  if (window.__excalidrawScriptsPromise) {
+    return window.__excalidrawScriptsPromise
   }
-  return excalidrawLibPromise
+
+  // Create singleton promise for script loading
+  window.__excalidrawScriptsPromise = (async () => {
+    // Check if already loaded
+    if (window.ExcalidrawLib) {
+      return
+    }
+
+    const scripts = [
+      'https://cdn.jsdelivr.net/npm/react@18.2.0/umd/react.production.min.js',
+      'https://cdn.jsdelivr.net/npm/react-dom@18.2.0/umd/react-dom.production.min.js',
+      'https://cdn.jsdelivr.net/npm/@excalidraw/excalidraw/dist/excalidraw.production.min.js',
+    ]
+
+    for (const src of scripts) {
+      await new Promise<void>((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = src
+        script.onload = () => resolve()
+        script.onerror = () => reject(new Error(`Failed to load script: ${src}`))
+        document.head.appendChild(script)
+      })
+    }
+  })()
+
+  return window.__excalidrawScriptsPromise
 }
 
-async function loadAndRender(excalidrawLib: typeof import('@excalidraw/excalidraw')) {
+async function loadAndRender() {
   const url = new URL(props.drawFilePath, window.location.origin + import.meta.env.BASE_URL).href
   const response = await fetch(url)
   const json = await response.json() as ExcalidrawJSON
 
-  const virgilId = excalidrawLib.FONT_FAMILY?.Virgil ?? 1
+  const virgilId = window.ExcalidrawLib?.FONT_FAMILY?.Virgil ?? 1
 
   const normalized: ExcalidrawJSON = {
     ...json,
@@ -69,7 +101,7 @@ async function loadAndRender(excalidrawLib: typeof import('@excalidraw/excalidra
     files: json.files ?? {},
   }
 
-  const svgElement = await excalidrawLib.exportToSvg({
+  const svgElement = await window.ExcalidrawLib.exportToSvg({
     ...normalized,
     appState: {
       ...(normalized.appState ?? {}),

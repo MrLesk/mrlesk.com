@@ -9,6 +9,7 @@ import { onMounted, ref } from 'vue'
 interface ExcalidrawJSON {
   elements?: any[]
   appState?: Record<string, any>
+  files?: Record<string, any>
   [key: string]: any
 }
 
@@ -24,26 +25,63 @@ const props = withDefaults(defineProps<{
 const loading = ref(false)
 const svg = ref<string | null>(null)
 
+// Global singleton promise for script loading (shared across all component instances)
+declare global {
+  interface Window {
+    __excalidrawScriptsPromise?: Promise<void>
+    ExcalidrawLib?: any
+  }
+}
+
 onMounted(async () => {
   loading.value = true
   try {
-    await loadScripts([
-      'https://cdn.jsdelivr.net/npm/react@18.2.0/umd/react.production.min.js',
-      'https://cdn.jsdelivr.net/npm/react-dom@18.2.0/umd/react-dom.production.min.js',
-      'https://cdn.jsdelivr.net/npm/@excalidraw/excalidraw/dist/excalidraw.production.min.js',
-    ])
+    await loadExcalidrawScripts()
     await loadAndRender()
   } finally {
     loading.value = false
   }
 })
 
+function loadExcalidrawScripts(): Promise<void> {
+  // Return existing promise if scripts are already loading/loaded
+  if (window.__excalidrawScriptsPromise) {
+    return window.__excalidrawScriptsPromise
+  }
+
+  // Create singleton promise for script loading
+  window.__excalidrawScriptsPromise = (async () => {
+    // Check if already loaded
+    if (window.ExcalidrawLib) {
+      return
+    }
+
+    const scripts = [
+      'https://cdn.jsdelivr.net/npm/react@18.2.0/umd/react.production.min.js',
+      'https://cdn.jsdelivr.net/npm/react-dom@18.2.0/umd/react-dom.production.min.js',
+      'https://cdn.jsdelivr.net/npm/@excalidraw/excalidraw/dist/excalidraw.production.min.js',
+    ]
+
+    for (const src of scripts) {
+      await new Promise<void>((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = src
+        script.onload = () => resolve()
+        script.onerror = () => reject(new Error(`Failed to load script: ${src}`))
+        document.head.appendChild(script)
+      })
+    }
+  })()
+
+  return window.__excalidrawScriptsPromise
+}
+
 async function loadAndRender() {
   const url = new URL(props.drawFilePath, window.location.origin + import.meta.env.BASE_URL).href
   const response = await fetch(url)
   const json = await response.json() as ExcalidrawJSON
 
-  const virgilId = (window as any)?.ExcalidrawLib?.FONT_FAMILY?.Virgil ?? 1
+  const virgilId = window.ExcalidrawLib?.FONT_FAMILY?.Virgil ?? 1
 
   const normalized: ExcalidrawJSON = {
     ...json,
@@ -60,38 +98,21 @@ async function loadAndRender() {
       ...(json.appState ?? {}),
       currentItemFontFamily: virgilId,
     },
+    files: json.files ?? {},
   }
 
-  const svgElement = await (window as any).ExcalidrawLib.exportToSvg({
+  const svgElement = await window.ExcalidrawLib.exportToSvg({
     ...normalized,
     appState: {
       ...(normalized.appState ?? {}),
       exportWithDarkMode: props.darkMode,
       exportBackground: props.background,
     },
+    files: normalized.files ?? {},
   })
 
   svgElement.style.maxWidth = '100%'
   svgElement.style.height = 'auto'
   svg.value = svgElement.outerHTML
-}
-
-function loadScript(src: string) {
-  return new Promise<void>((resolve, reject) => {
-    if (document.querySelector(`script[src="${src}"]`)) {
-      resolve()
-      return
-    }
-    const script = document.createElement('script')
-    script.src = src
-    script.async = true
-    script.onload = () => resolve()
-    script.onerror = reject
-    document.head.appendChild(script)
-  })
-}
-
-function loadScripts(srcs: string[]) {
-  return Promise.all(srcs.map(loadScript))
 }
 </script>

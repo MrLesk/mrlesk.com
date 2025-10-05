@@ -8,7 +8,6 @@
     "export": "slidev export"
   },
   "dependencies": {
-    "@excalidraw/excalidraw": "0.18.0",
     "@iconify-json/logos": "1.2.9",
     "@slidev/cli": "52.2.4",
     "@types/bun": "1.2.23",

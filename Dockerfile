@@ -4,77 +4,77 @@
 # ========================================
 # Stage 1: Build Vienna AI Engineering - From Zero to Backlog
 # ========================================
-FROM node:24-alpine AS slidev-vienna-zero
+FROM oven/bun:latest AS slidev-vienna-zero
 WORKDIR /app
 
 # Copy package files and install dependencies
 COPY talks/vienna-ai-engineering/from-zero-to-backlog/package.json ./
-RUN --mount=type=cache,target=/root/.npm \
-    npm install --no-audit
+RUN --mount=type=cache,target=/root/.bun/install/cache \
+    bun install --no-save
 
 # Copy source files and build with base path
 COPY talks/vienna-ai-engineering/from-zero-to-backlog/ ./
-RUN mkdir -p dist && npm run build -- --base /talks/vienna-ai-engineering/from-zero-to-backlog/
+RUN mkdir -p dist && bun run build -- --base /talks/vienna-ai-engineering/from-zero-to-backlog/
 
 # ========================================
 # Stage 2: Build Vienna AI Engineering - From Backlog to Success
 # ========================================
-FROM node:24-alpine AS slidev-vienna-backlog
+FROM oven/bun:latest AS slidev-vienna-backlog
 WORKDIR /app
 
 # Copy package files and install dependencies
 COPY talks/vienna-ai-engineering/from-backlog-to-success/package.json ./
-RUN --mount=type=cache,target=/root/.npm \
-    npm install --no-audit
+RUN --mount=type=cache,target=/root/.bun/install/cache \
+    bun install --no-save
 
 # Copy source files and build with base path
 COPY talks/vienna-ai-engineering/from-backlog-to-success/ ./
-RUN mkdir -p dist && npm run build -- --base /talks/vienna-ai-engineering/from-backlog-to-success/
+RUN mkdir -p dist && bun run build -- --base /talks/vienna-ai-engineering/from-backlog-to-success/
 
 # ========================================
 # Stage 3: Build Devoxx - Hands-on: Backlog.md
 # ========================================
-FROM node:24-alpine AS slidev-devoxx-backlog
+FROM oven/bun:latest AS slidev-devoxx-backlog
 WORKDIR /app
 
 # Copy package files and install dependencies
 COPY talks/devoxx/hands-on-backlog/package.json ./
-RUN --mount=type=cache,target=/root/.npm \
-    npm install --no-audit
+RUN --mount=type=cache,target=/root/.bun/install/cache \
+    bun install --no-save
 
 # Copy source files and build with base path
 COPY talks/devoxx/hands-on-backlog/ ./
-RUN mkdir -p dist && npm run build -- --base /talks/devoxx/hands-on-backlog/
+RUN mkdir -p dist && bun run build -- --base /talks/devoxx/hands-on-backlog/
 
 # ========================================
 # Stage 4: Build Devoxx - Backlog success
 # ========================================
-FROM node:24-alpine AS slidev-devoxx-success
+FROM oven/bun:latest AS slidev-devoxx-success
 WORKDIR /app
 
 # Copy package files and install dependencies
 COPY talks/devoxx/backlog-success/package.json ./
-RUN --mount=type=cache,target=/root/.npm \
-    npm install --no-audit
+RUN --mount=type=cache,target=/root/.bun/install/cache \
+    bun install --no-save
 
 # Copy source files and build with base path
 COPY talks/devoxx/backlog-success/ ./
-RUN mkdir -p dist && npm run build -- --base /talks/devoxx/backlog-success/
+RUN mkdir -p dist && bun run build -- --base /talks/devoxx/backlog-success/
 
 # ========================================
 # Stage X: Build Main Astro Site
 # ========================================
-FROM node:24-alpine AS astro-build
+FROM oven/bun:latest AS astro-build
 WORKDIR /app
 
 # Install deps
 COPY package.json ./
-RUN --mount=type=cache,target=/root/.npm \
-    npm install --no-audit
+RUN --mount=type=cache,target=/root/.bun/install/cache \
+    bun install --no-save
 
 # Build static site
 COPY . .
-RUN npm run build
+RUN bun run build
 
 # ========================================
 # Stage Y: Production - Serve with Nginx
