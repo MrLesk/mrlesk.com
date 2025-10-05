@@ -9,8 +9,8 @@ WORKDIR /app
 
 # Copy package files and install dependencies
 COPY talks/vienna-ai-engineering/from-zero-to-backlog/package.json ./
-COPY talks/vienna-ai-engineering/from-zero-to-backlog/package-lock.json ./
-RUN rm -f package-lock.json && npm install --no-audit
+RUN --mount=type=cache,target=/root/.npm \
+    npm install --no-audit
 
 # Copy source files and build with base path
 COPY talks/vienna-ai-engineering/from-zero-to-backlog/ ./
@@ -24,8 +24,8 @@ WORKDIR /app
 
 # Copy package files and install dependencies
 COPY talks/vienna-ai-engineering/from-backlog-to-success/package.json ./
-COPY talks/vienna-ai-engineering/from-backlog-to-success/package-lock.json ./
-RUN rm -f package-lock.json && npm install --no-audit
+RUN --mount=type=cache,target=/root/.npm \
+    npm install --no-audit
 
 # Copy source files and build with base path
 COPY talks/vienna-ai-engineering/from-backlog-to-success/ ./
@@ -39,8 +39,8 @@ WORKDIR /app
 
 # Copy package files and install dependencies
 COPY talks/devoxx/hands-on-backlog/package.json ./
-COPY talks/devoxx/hands-on-backlog/package-lock.json ./
-RUN rm -f package-lock.json && npm install --no-audit
+RUN --mount=type=cache,target=/root/.npm \
+    npm install --no-audit
 
 # Copy source files and build with base path
 COPY talks/devoxx/hands-on-backlog/ ./
@@ -54,8 +54,8 @@ WORKDIR /app
 
 # Copy package files and install dependencies
 COPY talks/devoxx/backlog-success/package.json ./
-COPY talks/devoxx/backlog-success/package-lock.json ./
-RUN rm -f package-lock.json && npm install --no-audit
+RUN --mount=type=cache,target=/root/.npm \
+    npm install --no-audit
 
 # Copy source files and build with base path
 COPY talks/devoxx/backlog-success/ ./
@@ -69,8 +69,8 @@ WORKDIR /app
 
 # Install deps
 COPY package.json ./
-COPY package-lock.json ./
-RUN rm -f package-lock.json && npm install --no-audit
+RUN --mount=type=cache,target=/root/.npm \
+    npm install --no-audit
 
 # Build static site
 COPY . .
