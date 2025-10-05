@@ -2,64 +2,31 @@
 # This Dockerfile includes Slidev presentations build
 
 # ========================================
-# Stage 1: Build Vienna AI Engineering - From Zero to Backlog
+# Stage 1: Build All Slidev Presentations
 # ========================================
-FROM oven/bun:latest AS slidev-vienna-zero
+FROM oven/bun:latest AS slidev-builds
 WORKDIR /app
 
-# Copy package files and install dependencies
-COPY talks/vienna-ai-engineering/from-zero-to-backlog/package.json ./
+# Install dependencies once (all talks use same dependencies)
+COPY talks/devoxx/backlog-success/package.json ./package.json
 RUN --mount=type=cache,target=/root/.bun/install/cache \
     bun install --no-save
 
-# Copy source files and build with base path
-COPY talks/vienna-ai-engineering/from-zero-to-backlog/ ./
-RUN mkdir -p dist && bun run build -- --base /talks/vienna-ai-engineering/from-zero-to-backlog/
+# Build Vienna AI Engineering - From Zero to Backlog
+COPY talks/vienna-ai-engineering/from-zero-to-backlog/ ./vienna-zero/
+RUN cd vienna-zero && mkdir -p dist && bun run build -- --base /talks/vienna-ai-engineering/from-zero-to-backlog/
 
-# ========================================
-# Stage 2: Build Vienna AI Engineering - From Backlog to Success
-# ========================================
-FROM oven/bun:latest AS slidev-vienna-backlog
-WORKDIR /app
+# Build Vienna AI Engineering - From Backlog to Success
+COPY talks/vienna-ai-engineering/from-backlog-to-success/ ./vienna-backlog/
+RUN cd vienna-backlog && mkdir -p dist && bun run build -- --base /talks/vienna-ai-engineering/from-backlog-to-success/
 
-# Copy package files and install dependencies
-COPY talks/vienna-ai-engineering/from-backlog-to-success/package.json ./
-RUN --mount=type=cache,target=/root/.bun/install/cache \
-    bun install --no-save
+# Build Devoxx - Hands-on: Backlog.md
+COPY talks/devoxx/hands-on-backlog/ ./devoxx-backlog/
+RUN cd devoxx-backlog && mkdir -p dist && bun run build -- --base /talks/devoxx/hands-on-backlog/
 
-# Copy source files and build with base path
-COPY talks/vienna-ai-engineering/from-backlog-to-success/ ./
-RUN mkdir -p dist && bun run build -- --base /talks/vienna-ai-engineering/from-backlog-to-success/
-
-# ========================================
-# Stage 3: Build Devoxx - Hands-on: Backlog.md
-# ========================================
-FROM oven/bun:latest AS slidev-devoxx-backlog
-WORKDIR /app
-
-# Copy package files and install dependencies
-COPY talks/devoxx/hands-on-backlog/package.json ./
-RUN --mount=type=cache,target=/root/.bun/install/cache \
-    bun install --no-save
-
-# Copy source files and build with base path
-COPY talks/devoxx/hands-on-backlog/ ./
-RUN mkdir -p dist && bun run build -- --base /talks/devoxx/hands-on-backlog/
-
-# ========================================
-# Stage 4: Build Devoxx - Backlog success
-# ========================================
-FROM oven/bun:latest AS slidev-devoxx-success
-WORKDIR /app
-
-# Copy package files and install dependencies
-COPY talks/devoxx/backlog-success/package.json ./
-RUN --mount=type=cache,target=/root/.bun/install/cache \
-    bun install --no-save
-
-# Copy source files and build with base path
-COPY talks/devoxx/backlog-success/ ./
-RUN mkdir -p dist && bun run build -- --base /talks/devoxx/backlog-success/
+# Build Devoxx - Backlog success
+COPY talks/devoxx/backlog-success/ ./devoxx-success/
+RUN cd devoxx-success && mkdir -p dist && bun run build -- --base /talks/devoxx/backlog-success/
 
 # ========================================
 # Stage X: Build Main Astro Site
@@ -85,11 +52,11 @@ RUN rm -rf /usr/share/nginx/html/*
 # Copy Astro build output
 COPY --from=astro-build /app/dist /usr/share/nginx/html
 
-# Copy Slidev builds to their respective paths (if they succeeded)
-COPY --from=slidev-vienna-zero /app/dist /usr/share/nginx/html/talks/vienna-ai-engineering/from-zero-to-backlog
-COPY --from=slidev-vienna-backlog /app/dist /usr/share/nginx/html/talks/vienna-ai-engineering/from-backlog-to-success
-COPY --from=slidev-devoxx-backlog /app/dist /usr/share/nginx/html/talks/devoxx/hands-on-backlog
-COPY --from=slidev-devoxx-success /app/dist /usr/share/nginx/html/talks/devoxx/backlog-success
+# Copy Slidev builds to their respective paths
+COPY --from=slidev-builds /app/vienna-zero/dist /usr/share/nginx/html/talks/vienna-ai-engineering/from-zero-to-backlog
+COPY --from=slidev-builds /app/vienna-backlog/dist /usr/share/nginx/html/talks/vienna-ai-engineering/from-backlog-to-success
+COPY --from=slidev-builds /app/devoxx-backlog/dist /usr/share/nginx/html/talks/devoxx/hands-on-backlog
+COPY --from=slidev-builds /app/devoxx-success/dist /usr/share/nginx/html/talks/devoxx/backlog-success
 
 # Copy custom nginx config
 COPY nginx.conf /etc/nginx/conf.d/default.conf
