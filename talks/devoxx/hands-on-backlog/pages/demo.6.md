@@ -8,7 +8,7 @@ section: Demo
 
 <div v-click="0">
 
-Here is the prompt we hand to <span v-mark.red.underline>GPT-5 High</span>
+Here is the prompt we hand to <span v-mark.red.underline>Claude Sonnet 4.5</span>
 
 <CopyCodeBlock copy-label="Copy prompt" copied-label="Copied!" aria-label="Copy prompt">
 

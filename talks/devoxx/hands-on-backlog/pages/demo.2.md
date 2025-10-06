@@ -27,4 +27,8 @@ section: Demo
 
 </v-clicks>
 
+<card v-click icon="💡" class="mt-6" title="NOTE" >
+Istoria is going to take more than 30 minutes to be built. <br>
+But it's a realistic example of what you can do with Backlog.md.
+</card>
 

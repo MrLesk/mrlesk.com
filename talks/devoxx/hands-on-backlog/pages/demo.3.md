@@ -24,7 +24,7 @@ Given the short time we have available and given that this is a demo, try to foc
 Cross platform app using Expo framework but for this demo we will focus on macOS only.
 Use Gemma E2B LiteRT for processing audio input and storing notes. No other LLMs allowed.
 We want full coverage with unit tests and linting using Biome.
-You must search on the internet the best and latest technologies to accomplish this task.
+You **must search on the internet the best and latest technologies to accomplish this task**.
 
 ## Quality requirements
 Works 100% offline using local LLMs. No external calls to OpenAI or other APIs.

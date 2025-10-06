@@ -6,7 +6,7 @@ section: Backlog.md
 
 # Tasks are stored as Markdown files
 
-<div v-click class="">
+<div v-click class="w-186">
 
 ```markdown {all}{maxHeight:'24rem',class:'task-structure-block'}
 ---

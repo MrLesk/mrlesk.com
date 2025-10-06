@@ -142,7 +142,7 @@ const terminals: TerminalConfig[] = [
         port: process.env.TTYD_PORT ?? '7681',
         session: 'devoxx-codex-planner',
         cwd: demoDir,
-        command: ['codex', '--yolo', '--search', '-c', 'model_reasoning_effort=high', '-m', 'gpt-5'],
+        command: ['claude', '--dangerously-skip-permissions'],
     },
     {
         name: 'ttyd-devoxx-shell',
@@ -156,7 +156,7 @@ const terminals: TerminalConfig[] = [
         port: process.env.TTYD_PORT ?? '7683',
         session: 'devoxx-codex-execute',
         cwd: demoDir,
-        command: ['codex', '--yolo', '-c', 'model_reasoning_effort=high', '-m', 'gpt-5-codex'],
+        command: ['claude --dangerously-skip-permissions'],
     },
 ]
 
