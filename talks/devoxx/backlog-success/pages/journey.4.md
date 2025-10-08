@@ -4,14 +4,22 @@ transition: slide-up
 section: My journey
 ---
 
-# My solution: Put tasks in markdown files
+# We need a structure for this: markdown files
 
 <v-clicks>
 
-* with a pre-defined structure
-* we can effectively use Agent Instructions file
-* Acceptance Criteria as checkboxes for the agent
-* Can use a differnt model for planning/execution
+* With a pre-defined structure
+* And stored in your git repo
+
+</v-clicks>
+
+<h3 v-click class=mt-10 mb-4>So that we can achieve a successful loop</h3>
+
+<v-clicks >
+
+* Effectively use Agent Instructions file to instruct the agents how we like to work
+* Can use specialized agents for planning/execution
+
 
 </v-clicks>
 

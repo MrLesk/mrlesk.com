@@ -15,3 +15,12 @@ section: My journey
 * You can work on multiple tasks in parallel using Git Worktrees
 
 </v-clicks>
+
+
+<h3 v-click class="mt-10 mb-4"> Most important </h3>
+
+<ul>
+<li v-click >
+You are less likely to run out of context window when implementing tasks
+</li>
+</ul>
