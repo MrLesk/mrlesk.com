@@ -13,6 +13,11 @@ section: Spec-driven flow
 
 </v-clicks>
 
-<Card v-click icon="💡" title="Hint" class="w-192 mt-6">
+<Excalidraw v-click="3"
+drawFilePath="/flow.splitting.json"
+class="w-[780px] max-w-full mt-10"
+:background="false"/>
+
+<Card v-click="4" icon="💡" title="Hint" class="w-192 mt-5">
 Use a model that is good at planning and can research on the internet the latest best practices.
 </Card>

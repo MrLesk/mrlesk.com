@@ -11,8 +11,8 @@ section: Q&A
     <img class="h-50" src="/qr-devoxx-2.png">
 </div>
 
-<card class="w-126 mt-8 text-sm">
-Hands-on Demo video of Backlog.md on my website below
+<card class="w-110 mt-8 text-sm">
+Hands-on Demo slides on my website below
 </card>
 
 <a target="_blank" class="mt-4 inline-block font-semibold link-primary" href="https://mrlesk.com/talks">

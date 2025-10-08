@@ -12,7 +12,6 @@ section: Conclusions
   1. Review the Task Description and Acceptance Criteria
   2. Review the Implementation Plan
   3. Review the Code and check the results
-* For UI tasks, human review is even more important
-* If the result is not good enough, you can adjust the task and try again
+* For UI tasks, human review is even more important → UI testing is still in its infancy
 
 </v-clicks>

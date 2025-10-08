@@ -12,3 +12,8 @@ section: Spec-driven flow
 * Review the code and the acceptance criteria
 
 </v-clicks>
+
+<Excalidraw v-click="3"
+drawFilePath="/flow.execution.json"
+class="w-[780px] max-w-full mt-10"
+:background="false"/>
