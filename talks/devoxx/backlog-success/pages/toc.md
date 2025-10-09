@@ -10,5 +10,5 @@ section: Introduction
 3. Backlog.md
 4. The Spec-driven AI Development
 5. Conclusions
-6. Work from your phone
+6. Bonus: Work from your phone
 7. Q&A + QR code to these slides

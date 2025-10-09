@@ -17,7 +17,7 @@ section: My journey
 
 <v-clicks >
 
-* Effectively use Agent Instructions file to instruct the agents how we like to work
+* Use Agent Instructions effectively
 * Can use specialized agents for planning/execution
 
 
@@ -30,6 +30,6 @@ section: My journey
         </card>
     </div>
      <div>
-        <img class="-mt-12" src="/journey.3.1.png">
+        <img class="-mt-34" src="/journey.3.1.png">
      </div>
 </div>

@@ -12,6 +12,7 @@ const talksData = [
     focus:
       "Backlog.md is a lightweight, Git-native CLI tool for managing project tasks offline using Markdown files. Designed for solo developers and small teams, it enables seamless collaboration between humans and AI agents without extra infrastructure. Features include a terminal Kanban board, offline web UI, and cross-platform support.",
     url: "/talks/devoxx/hands-on-backlog",
+    videoUrl: "https://www.youtube.com/watch?v=FIZbQbkgRG0&pp=ygUKYmFja2xvZy5tZA%3D%3D",
     logo: {
       src: "/talks/devoxx-logo.png",
       alt: "Devoxx Belgium logo",
@@ -353,6 +354,13 @@ const talks = talksData
         align-items: center;
         gap: 8px;
       }
+      .cta-group {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        align-items: center;
+        margin-top: 8px;
+      }
       .cta-link {
         color: rgba(47, 75, 62, 0.78);
         text-decoration: none;
@@ -371,6 +379,10 @@ const talks = talksData
       .cta-link:hover strong,
       .cta-link:focus-visible strong {
         text-decoration: underline;
+      }
+      .cta-link-video::before {
+        margin-left:14px;
+        content: "▶";
       }
       .cta-status {
         color: rgba(74, 84, 104, 0.78);
@@ -414,6 +426,8 @@ const talks = talksData
           {talks.map((talk) => {
             const trimmedUrl = talk.url ? talk.url.trim() : "";
             const hasSlides = trimmedUrl.length > 0;
+            const trimmedVideoUrl = talk.videoUrl ? talk.videoUrl.trim() : "";
+            const hasVideo = trimmedVideoUrl.length > 0;
             const logo = talk.logo ?? {
               src: "/talks/vienna-ai-engineering-logo.jpeg",
               alt: "Vienna AI Engineering logo",
@@ -445,13 +459,20 @@ const talks = talksData
                     {hasSlides ? "Slides ready" : "Slides coming soon"}
                   </span>
                 </div>
-                {hasSlides ? (
-                  <a class="cta cta-link" href={trimmedUrl} target="_blank" rel="noopener noreferrer">
-                    <strong>View slides</strong>
-                  </a>
-                ) : (
-                  <span class="cta cta-status">Slides not available yet.</span>
-                )}
+                <div class="cta-group">
+                  {hasSlides ? (
+                    <a class="cta cta-link" href={trimmedUrl} target="_blank" rel="noopener noreferrer">
+                      <strong>View slides</strong>
+                    </a>
+                  ) : (
+                    <span class="cta cta-status">Slides not available yet.</span>
+                  )}
+                  {hasVideo ? (
+                    <a class="cta cta-link cta-link-video" href={trimmedVideoUrl} target="_blank" rel="noopener noreferrer">
+                      <strong>Watch video</strong>
+                    </a>
+                  ) : null}
+                </div>
               </article>
             );
           })}
