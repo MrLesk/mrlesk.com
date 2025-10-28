@@ -1,0 +1,16 @@
+{
+  "name": "backlog-presentation",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "dev": "slidev --open",
+    "build": "slidev build",
+    "export": "slidev export"
+  },
+  "dependencies": {
+    "@slidev/cli": "^0.50.0",
+    "@vueuse/core": "^13.9.0",
+    "slidev-theme-penguin": "file:../../../../slidev-theme-penguin",
+    "vue": "^3.5.0"
+  }
+}
