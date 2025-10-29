@@ -2,7 +2,7 @@
 theme: penguin
 title: "Backlog - AI Engineer Code Summit"
 author: Alex Gavrilescu
-colorSchema: "auto"
+colorSchema: "light"
 drawings:
   persist: false
 mdc: true
@@ -11,11 +11,14 @@ layout: intro
 css: unocss
 ---
 
-<style src="./style.css"></style>
+<h1>
+Backlog.md <br>
+<div class="text-4xl pb-4">Reaching 95% Task success rate with AI Agents</div>
+</h1>
 
-# Backlog
+### Devoxx Belgium 2025
 
-AI Engineer Code Summit
+#### 9 October 2025
 
 ---
 layout: default
