@@ -48,22 +48,14 @@ onMounted(() => {
 }
 
 .ttyd-frame__iframe {
-  @apply block w-full border-0;
+  @apply block border-0;
+  width: calc(100% + 20px);
   height: 100%;
   min-height: inherit;
   background: #000;
+  margin-right: -20px;
 }
 
-.ttyd-frame::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  width: 14px;
-  background: #000;
-  pointer-events: none;
-}
 
 .ttyd-frame__placeholder {
   @apply flex items-center justify-center text-base text-white/70 p-8;
