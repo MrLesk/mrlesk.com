@@ -1,5 +1,5 @@
 <template>
-  <div class="ttyd-frame" :class="{ 'ttyd-frame--no-focus': !allowFocus }">
+  <div class="ttyd-frame" :class="{ 'ttyd-frame--no-inputs': !shouldAllowInputs }">
     <iframe
       v-if="isClient"
       ref="frameRef"
@@ -7,9 +7,10 @@
       :src="src"
       :title="title"
       allow="clipboard-read; clipboard-write; fullscreen; keyboard-lock"
-      :tabindex="allowFocus ? 0 : -1"
+      :tabindex="shouldAllowInputs ? 0 : -1"
       scrolling="no"
       loading="lazy"
+      @load="onIframeLoad"
     />
     <div v-else class="ttyd-frame__placeholder">
       Loading terminal…
@@ -32,6 +33,14 @@
 import { computed, onMounted, ref, useSlots, watch } from 'vue'
 import { useSlideContext } from '@slidev/client'
 
+// Global state to track what has been sent (persists across slide navigation, resets on page reload)
+if (!window.__ttydFrameState) {
+  window.__ttydFrameState = {
+    // Map of slideNo -> { textSent: boolean, enterSent: boolean }
+    slides: new Map()
+  }
+}
+
 const props = defineProps({
   src: {
     type: String,
@@ -49,7 +58,7 @@ const props = defineProps({
     type: String,
     default: null,
   },
-  allowFocus: {
+  allowInputs: {
     type: Boolean,
     default: false,
   },
@@ -69,8 +78,59 @@ const sessionName = computed(() => {
 const slots = useSlots()
 const frameRef = ref(null)
 const isClient = ref(false)
-const { $clicks, $nav } = useSlideContext()
-const textSent = ref(false)
+const { $clicks, $nav, $page } = useSlideContext()
+
+// Get current slide number - try multiple methods
+const currentSlideNo = computed(() => {
+  // Method 1: Try $nav.currentSlideNo
+  if ($nav.value?.currentSlideNo?.value != null) {
+    return $nav.value.currentSlideNo.value
+  }
+  // Method 2: Try $nav.currentSlideNo directly (might not be a ref)
+  if ($nav.value?.currentSlideNo != null && typeof $nav.value.currentSlideNo === 'number') {
+    return $nav.value.currentSlideNo
+  }
+  // Method 3: Parse from URL
+  const path = window.location.pathname
+  const match = path.match(/\/(\d+)$/)
+  if (match) {
+    return parseInt(match[1], 10)
+  }
+  return 0
+})
+
+// Get this component's slide number from $page
+const thisSlideNo = computed(() => {
+  const page = $page.value
+  if (typeof page === 'number') return page
+  if (page && typeof page.value === 'number') return page.value
+  return 0
+})
+
+// Check if this slide is currently active
+const isActiveSlide = computed(() => {
+  const current = currentSlideNo.value
+  const thisPage = thisSlideNo.value
+  return current === thisPage
+})
+
+// Only allow inputs if prop is true AND this slide is active
+const shouldAllowInputs = computed(() => props.allowInputs && isActiveSlide.value)
+
+// Unique key for this specific TtydFrame instance (slide + session)
+const stateKey = computed(() => `${currentSlideNo.value}-${sessionName.value}`)
+
+// Get or create state for this specific TtydFrame instance
+const frameState = computed(() => {
+  const key = stateKey.value
+  if (!window.__ttydFrameState.slides.has(key)) {
+    window.__ttydFrameState.slides.set(key, {
+      textSent: false,
+      enterSent: false
+    })
+  }
+  return window.__ttydFrameState.slides.get(key)
+})
 
 // Count how many click-N slots are defined, +1 for the Enter key
 const clickSlotCount = computed(() => {
@@ -85,48 +145,68 @@ const currentClick = computed(() => {
   return clicks - props.clickOffset
 })
 
-// Watch for slide changes to reset text sent flag
-watch(() => $nav.currentSlideNo, () => {
-  textSent.value = false
-})
 
-function handleIframeClick(e) {
-  if (!props.allowFocus) {
-    e.preventDefault()
-    // Blur the iframe to prevent it from capturing keyboard input
-    if (frameRef.value) {
-      frameRef.value.blur()
+function onIframeLoad() {
+  if (!shouldAllowInputs.value && frameRef.value) {
+    // Immediately blur iframe when it loads
+    frameRef.value.blur()
+
+    // Also try to blur the iframe's contentWindow
+    try {
+      frameRef.value.contentWindow?.blur()
+    } catch (e) {
+      // Cross-origin, can't access contentWindow
     }
+
+    // Focus the body instead
+    document.body.focus()
   }
 }
 
+// Watch for shouldAllowInputs changes and prevent focus when disabled
+watch(shouldAllowInputs, (allowed) => {
+  if (!allowed && frameRef.value) {
+    // Blur immediately when inputs become disabled
+    frameRef.value.blur()
+    document.body.focus()
+  }
+})
+
+// Continuously prevent focus stealing when slide changes
+watch(() => currentSlideNo.value, () => {
+  // Small delay to let DOM update
+  setTimeout(() => {
+    if (!shouldAllowInputs.value && frameRef.value && document.activeElement === frameRef.value) {
+      frameRef.value.blur()
+      document.body.focus()
+    }
+  }, 100)
+})
+
 // Watch for clicks to send text on first click, Enter on subsequent clicks
 watch(currentClick, (newClick, oldClick) => {
-  console.log('[TtydFrame] Click change:', { newClick, oldClick, clickOffset: props.clickOffset })
-
   // Only trigger on click increment (not decrement/navigation back)
-  if (newClick <= oldClick || newClick < 1) {
-    console.log('[TtydFrame] Skipping click - not increment')
-    return
-  }
+  if (newClick <= oldClick || newClick < 1) return
 
-  // First click: send text without Enter
-  if (newClick === 1 && !textSent.value) {
+  // First click: send text without Enter (if not already sent)
+  if (newClick === 1 && !frameState.value.textSent) {
     const slotContent = slots['click-1']
     if (!slotContent) return
 
     const text = extractTextFromSlot(slotContent)
     if (!text) return
 
-    console.log('[TtydFrame] First click - sending text:', text.substring(0, 50) + '...')
     injectTextToTerminal(text, false) // Don't send Enter yet
-    textSent.value = true
+    frameState.value.textSent = true
     return
   }
 
-  // Subsequent clicks: send Enter key
-  console.log('[TtydFrame] Subsequent click - sending Enter key')
-  sendEnterKey()
+  // Second click: send Enter key (if not already sent)
+  if (newClick === 2 && !frameState.value.enterSent) {
+    sendEnterKey()
+    frameState.value.enterSent = true
+    return
+  }
 })
 
 function extractTextFromSlot(slotFn) {
@@ -160,11 +240,7 @@ function extractTextFromSlot(slotFn) {
 async function injectTextToTerminal(text, sendEnter = false) {
   if (!text) return
 
-  console.log('[TtydFrame] Attempting to inject text:', text.substring(0, 50) + '...')
-  console.log('[TtydFrame] Target session:', sessionName.value)
-
   try {
-    // Use tmux send-keys via a simple HTTP API endpoint
     const response = await fetch('http://localhost:3099/send-keys', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -178,16 +254,12 @@ async function injectTextToTerminal(text, sendEnter = false) {
     if (!response.ok) {
       throw new Error(`Failed to send keys: ${response.status}`)
     }
-
-    console.log('[TtydFrame] Successfully injected text via tmux send-keys')
   } catch (e) {
     console.error('[TtydFrame] Failed to inject text:', e)
   }
 }
 
 async function sendEnterKey() {
-  console.log('[TtydFrame] Sending Enter key to session:', sessionName.value)
-
   try {
     const response = await fetch('http://localhost:3099/send-keys', {
       method: 'POST',
@@ -202,8 +274,6 @@ async function sendEnterKey() {
     if (!response.ok) {
       throw new Error(`Failed to send Enter: ${response.status}`)
     }
-
-    console.log('[TtydFrame] Successfully sent Enter key')
   } catch (e) {
     console.error('[TtydFrame] Failed to send Enter key:', e)
   }
@@ -211,6 +281,19 @@ async function sendEnterKey() {
 
 onMounted(() => {
   isClient.value = true
+
+  // Aggressively prevent focus for 2 seconds after mount
+  // This handles the case where iframe loads before slide number updates
+  const preventFocusInterval = setInterval(() => {
+    if (!shouldAllowInputs.value && frameRef.value && document.activeElement === frameRef.value) {
+      frameRef.value.blur()
+      document.body.focus()
+    }
+  }, 10) // Check every 10ms
+
+  setTimeout(() => {
+    clearInterval(preventFocusInterval)
+  }, 2000) // Stop after 2 seconds
 })
 </script>
 
@@ -230,6 +313,10 @@ onMounted(() => {
   margin-right: -20px;
 }
 
+.ttyd-frame--no-inputs .ttyd-frame__iframe {
+  pointer-events: none !important;
+}
+
 .ttyd-frame__placeholder {
   @apply flex items-center justify-center text-base text-white/70 p-8;
 }
@@ -240,22 +327,5 @@ onMounted(() => {
   pointer-events: none;
   width: 0;
   height: 0;
-}
-
-/* Add an overlay to prevent all iframe interactions when focus is disabled */
-.ttyd-frame--no-focus::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  z-index: 100;
-  background: transparent;
-}
-
-/* Remove overlay on hover to allow interactions */
-.ttyd-frame--no-focus:hover::before {
-  display: none;
 }
 </style>

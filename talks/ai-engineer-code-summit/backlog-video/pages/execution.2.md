@@ -5,8 +5,13 @@ timeline:
   current: task-execution
 ---
 
-<TtydFrame class="max-w-220 h-100 mt-4" src="http://localhost:7682" :click-offset="0">
-  <template #click-1>
-    Implement the task according to Backlog.md workflow.
-  </template>
-</TtydFrame>
+<h1 class="pt-4">Task Execution</h1>
+
+<h3 v-click class="pb-4">AI writes the code</h3>
+
+<v-clicks>
+
+* Ask your favorite Agent to write the code that implements each of the acceptance criteria
+* AI Agent should bring the task to "Done" according to the Definition of Done
+
+</v-clicks>

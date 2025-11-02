@@ -5,9 +5,4 @@ timeline:
   current: task-execution
 ---
 
-<h1 class="pt-4">Backlog.md a PM tool for Humans and AI Agents</h1>
-
-<Excalidraw
-drawFilePath="/execution.4.json"
-class="w-[780px] max-w-full mt-20"
-:background="false"/>
+<TtydFrame class="max-w-220 h-100 mt-4" src="http://localhost:7681" :allow-inputs="true"></TtydFrame>
