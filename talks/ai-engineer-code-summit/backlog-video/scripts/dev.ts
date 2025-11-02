@@ -143,6 +143,13 @@ const terminals: TerminalConfig[] = [
     cwd: backlogDir,
     command: [shell, '-lc', backlogStartupCommand],
   },
+  {
+    name: 'ttyd-claude-shell',
+    port: process.env.TTYD_CLAUDE_PORT ?? '7682',
+    session: 'ai-engineer-claude-shell',
+    cwd: backlogDir,
+    command: [shell, '-lc', 'claude --dangerously-skip-permissions'],
+  },
 ]
 
 const commands: Command[] = []
@@ -173,6 +180,13 @@ for (const terminal of terminals) {
 commands.push({
   name: 'slidev',
   cmd: ['bun', 'x', 'slidev', '--open'],
+  cwd: process.cwd(),
+})
+
+// Add simple HTTP server for tmux send-keys API
+commands.push({
+  name: 'send-keys-api',
+  cmd: ['bun', 'run', join(process.cwd(), 'scripts', 'send-keys-server.ts')],
   cwd: process.cwd(),
 })
 
