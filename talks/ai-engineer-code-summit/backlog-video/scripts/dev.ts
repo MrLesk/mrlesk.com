@@ -133,8 +133,8 @@ function ensurePortFree(port: string) {
 }
 
 const backlogDir = join(homedir(), 'projects', 'Backlog.md')
-const backlogStartupCommand = process.env.BACKLOG_START_COMMAND ?? 'backlog board'
-const sendKeysPort = process.env.SEND_KEYS_PORT ?? '3031'
+const backlogStartupCommand = process.env.BACKLOG_START_COMMAND ?? 'bun run cli board'
+const sendKeysPort = process.env.SEND_KEYS_PORT ?? '3099'
 
 const terminals: TerminalConfig[] = [
   {

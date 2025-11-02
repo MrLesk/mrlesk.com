@@ -7,7 +7,7 @@ drawings:
   persist: false
 mdc: true
 transition: slide-left
-layout: default
+layout: new-section
 css: unocss
 timelinePresets:
   backlog-flow:
@@ -20,9 +20,15 @@ timelinePresets:
         label: Task Execution
 ---
 
-<h1 class="text-center">Have you ever seen a terminal Kanban board?</h1>
+<h1 style="font-size:4rem;">Backlog.md</h1>
 
-<TtydFrame class="max-w-220 h-100" src="http://localhost:7681"></TtydFrame>
+<div class="flex items-center justify-center mt-10">
+    <img class="w-80" src="/backlog.png">
+</div>
+
+---
+src: ./pages/backlog.md
+---
 
 ---
 src: ./pages/task.1.md
@@ -46,4 +52,36 @@ src: ./pages/plan.2.md
 
 ---
 src: ./pages/plan.3.md
+---
+
+---
+src: ./pages/execution.1.md
+---
+
+---
+src: ./pages/execution.2.md
+---
+
+---
+src: ./pages/execution.3.md
+---
+
+---
+src: ./pages/execution.4.md
+---
+
+---
+src: ./pages/execution.5.md
+---
+
+---
+src: ./pages/why.md
+---
+
+---
+src: ./pages/backlog.finale.md
+---
+
+---
+src: ./pages/end.md
 ---
