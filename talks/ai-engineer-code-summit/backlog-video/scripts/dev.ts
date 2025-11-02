@@ -134,6 +134,7 @@ function ensurePortFree(port: string) {
 
 const backlogDir = join(homedir(), 'projects', 'Backlog.md')
 const backlogStartupCommand = process.env.BACKLOG_START_COMMAND ?? 'backlog board'
+const sendKeysPort = process.env.SEND_KEYS_PORT ?? '3031'
 
 const terminals: TerminalConfig[] = [
   {
@@ -184,10 +185,14 @@ commands.push({
 })
 
 // Add simple HTTP server for tmux send-keys API
+ensurePortFree(sendKeysPort)
 commands.push({
   name: 'send-keys-api',
   cmd: ['bun', 'run', join(process.cwd(), 'scripts', 'send-keys-server.ts')],
   cwd: process.cwd(),
+  env: {
+    SEND_KEYS_PORT: sendKeysPort,
+  },
 })
 
 const running: { name: string; proc: Bun.Subprocess }[] = []

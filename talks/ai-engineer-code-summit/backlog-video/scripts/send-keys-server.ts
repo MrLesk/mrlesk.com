@@ -4,7 +4,7 @@
  * Simple HTTP server that forwards text to tmux sessions via send-keys
  */
 
-const PORT = 3031
+const PORT = Number.parseInt(process.env.SEND_KEYS_PORT ?? '3031', 10) || 3031
 
 Bun.serve({
   port: PORT,
