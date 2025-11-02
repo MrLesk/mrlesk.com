@@ -1,17 +1,20 @@
 ---
 layout: default
+timeline:
+  preset: backlog-flow
+  current: task-creation
 ---
 
-# Task Creation
+<h1 class="pt-4">Task Creation</h1>
 
-### Requirements:
+<h3 class="pb-4">Requirements:</h3>
 
-* Press m key to toggle move mode
+* Press `m` key to toggle move mode
 * The current task is highlighted for moving
 * Using up/down arrow keys we can move the task up and down in the list triggering a live reordering
 * Using left/right arrow keys we can change status column for that task
-* Pressing m key again or Enter we will confirm the move
-* Pressing Esc will cancel the move and return the task to its original position
+* Pressing `m` key again or `Enter` we will confirm the move
+* Pressing `Esc` will cancel the move and return the task to its original position
 * The footer should show instructions for triggering the move mode and confirming/canceling the move
 
 

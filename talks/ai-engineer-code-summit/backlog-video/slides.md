@@ -9,6 +9,15 @@ mdc: true
 transition: slide-left
 layout: default
 css: unocss
+timelinePresets:
+  backlog-flow:
+    steps:
+      - id: task-creation
+        label: Task Creation
+      - id: implementation-plan
+        label: Implementation Plan
+      - id: task-execution
+        label: Task Execution
 ---
 
 <h1 class="text-center">Have you ever seen a terminal Kanban board?</h1>
@@ -24,65 +33,17 @@ src: ./pages/task.2.md
 ---
 
 ---
-layout: two-cols
-timeline:
-  preset: backlog-flow
-  current: task-creation
-title: Task Creation
+src: ./pages/task.3.md
 ---
 
-# Task Creation
-
-- Capture the problem statement while the context is fresh
-- Link supporting evidence like logs, screenshots, or user notes
-- Assign metadata that drives automation (labels, owner, urgency)
-
-::right::
-### What the AI does
-- Generates the initial backlog task file structure
-- Normalizes metadata and cross-references dependencies
-- Flags missing context the team should supply
-
 ---
-layout: two-cols
-timeline:
-  preset: backlog-flow
-  current: implementation-plan
-title: Implementation Plan
+src: ./pages/plan.1.md
 ---
 
-# Implementation Plan
-
-- Break the task into verifiable acceptance criteria
-- Outline the step-by-step remediation or delivery plan
-- Surface risks, open questions, and runtime assumptions
-
-::right::
-### What the AI does
-- Synthesizes remediation steps from historical fixes
-- Maps ACs to code owners and suggests test coverage
-- Highlights blockers that require human decisions
-
 ---
-layout: two-cols
-timeline:
-  preset: backlog-flow
-  current: task-execution
-title: Task Execution
+src: ./pages/plan.2.md
 ---
 
-# Task Execution
-
-- Drive coding, testing, and rollout directly from the plan
-- Track progress and status changes inside the markdown task
-- Capture validation evidence for future retrospectives
-
-::right::
-### What the AI does
-- Keeps the task file in sync with commits and environments
-- Generates status summaries for stakeholders in real time
-- Suggests follow-up work based on telemetry and outcomes
-
 ---
-src: ./pages/backlog.3.5.md
+src: ./pages/plan.3.md
 ---
