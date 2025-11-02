@@ -5,4 +5,4 @@ timeline:
   current: task-execution
 ---
 
-<TtydFrame class="max-w-220 h-100 mt-4" src="http://localhost:7681" :allow-inputs="true"></TtydFrame>
+<TtydFrame class="max-w-220 h-100 mt-4" src="http://localhost:7683" :allow-inputs="true" auto-run="bun run cli board"></TtydFrame>

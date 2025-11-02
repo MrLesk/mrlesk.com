@@ -62,6 +62,10 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  autoRun: {
+    type: String,
+    default: null,
+  },
 })
 
 // Auto-detect tmux session from port if not specified
@@ -71,6 +75,7 @@ const sessionName = computed(() => {
   // Map port to session name
   if (props.src.includes(':7681')) return 'ai-engineer-backlog-shell'
   if (props.src.includes(':7682')) return 'ai-engineer-claude-shell'
+  if (props.src.includes(':7683')) return 'ai-engineer-backlog-refresh'
 
   return 'ai-engineer-claude-shell' // default
 })
@@ -181,6 +186,19 @@ watch(() => currentSlideNo.value, () => {
       document.body.focus()
     }
   }, 100)
+})
+
+// Watch for slide becoming active to auto-run command if specified
+watch(isActiveSlide, (active) => {
+  if (!active || !props.autoRun) return
+
+  // Check if we've already run this command on this slide
+  if (frameState.value.textSent) return
+
+  // Send the command + Enter immediately
+  injectTextToTerminal(props.autoRun, true)
+  frameState.value.textSent = true
+  frameState.value.enterSent = true
 })
 
 // Watch for clicks to send text on first click, Enter on subsequent clicks

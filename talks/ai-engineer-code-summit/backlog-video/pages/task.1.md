@@ -7,7 +7,9 @@ timeline:
 
 <h1 class="pt-4">Task Creation</h1>
 
-<h3 class="pb-4">Requirements:</h3>
+<h3 v-click class="pb-4">Requirements</h3>
+
+<v-clicks>
 
 * Press `m` key to toggle move mode
 * The current task is highlighted for moving
@@ -17,5 +19,5 @@ timeline:
 * Pressing `Esc` will cancel the move and return the task to its original position
 * The footer should show instructions for triggering the move mode and confirming/canceling the move
 
-
+</v-clicks>
 

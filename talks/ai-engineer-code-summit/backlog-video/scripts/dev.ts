@@ -151,6 +151,13 @@ const terminals: TerminalConfig[] = [
     cwd: backlogDir,
     command: [shell, '-lc', 'claude --dangerously-skip-permissions'],
   },
+  {
+    name: 'ttyd-backlog-refresh',
+    port: process.env.TTYD_BACKLOG_REFRESH_PORT ?? '7683',
+    session: 'ai-engineer-backlog-refresh',
+    cwd: backlogDir,
+    command: [shell, '-l'],
+  },
 ]
 
 const commands: Command[] = []
