@@ -7,7 +7,7 @@ timeline:
 
 <h1 class="pt-4">Implementation Plan</h1>
 
-<h3 v-click class="pb-4">AI comes up with a plan:</h3>
+<h3 v-click class="pb-4">AI comes up with a plan</h3>
 
 <v-clicks>
 

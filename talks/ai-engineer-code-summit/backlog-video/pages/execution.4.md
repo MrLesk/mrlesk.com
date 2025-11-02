@@ -5,7 +5,7 @@ timeline:
   current: task-execution
 ---
 
-<h1 class="pt-4">Backlog.md a CLI tool for Humans and AI Agents</h1>
+<h1 class="pt-4">Backlog.md a PM tool for Humans and AI Agents</h1>
 
 <Excalidraw
 drawFilePath="/execution.4.json"

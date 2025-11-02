@@ -7,11 +7,12 @@ timeline:
 
 <div class="flex gap-8 mt-4">
     <MarkdownSectionViewer
-      file="/Users/agavrilescu/Projects/Backlog.md/backlog/tasks/task-316 - *.md"
+      file="/Users/agavrilescu/Projects/Backlog.md/backlog/tasks/task-316 -*.md"
       :sections="['frontmatter', 'Description', 'Acceptance Criteria']"
       :click-offset="1"
       max-height="24rem"
-      class="w-140"
+      :refresh-interval="2000"
+      class="w-260"
     />
     <div class="w-120">
         <ul>

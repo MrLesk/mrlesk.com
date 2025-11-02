@@ -11,7 +11,8 @@ timeline:
       :sections="['Implementation Plan']"
       :click-offset="1"
       max-height="24rem"
-      class="w-140"
+      :refresh-interval="2000"
+      class="w-260"
     />
     <div class="w-120">
         <ul>

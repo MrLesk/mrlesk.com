@@ -72,11 +72,12 @@ const isClient = ref(false)
 const { $clicks, $nav } = useSlideContext()
 const textSent = ref(false)
 
-// Count how many click-N slots are defined
+// Count how many click-N slots are defined, +1 for the Enter key
 const clickSlotCount = computed(() => {
   const slotNames = Object.keys(slots)
   const clickSlots = slotNames.filter(name => /^click-\d+$/.test(name))
-  return clickSlots.length
+  // Add 1 extra click for sending Enter after the text
+  return clickSlots.length > 0 ? clickSlots.length + 1 : 0
 })
 
 const currentClick = computed(() => {
@@ -99,22 +100,7 @@ function handleIframeClick(e) {
   }
 }
 
-// Send text immediately on slide load
-watch(isClient, (ready) => {
-  if (!ready || textSent.value) return
-
-  const slotContent = slots['click-1']
-  if (!slotContent) return
-
-  const text = extractTextFromSlot(slotContent)
-  if (!text) return
-
-  console.log('[TtydFrame] Sending text on slide load:', text.substring(0, 50) + '...')
-  injectTextToTerminal(text, false) // Don't send Enter yet
-  textSent.value = true
-})
-
-// Watch for clicks to send Enter key
+// Watch for clicks to send text on first click, Enter on subsequent clicks
 watch(currentClick, (newClick, oldClick) => {
   console.log('[TtydFrame] Click change:', { newClick, oldClick, clickOffset: props.clickOffset })
 
@@ -124,7 +110,22 @@ watch(currentClick, (newClick, oldClick) => {
     return
   }
 
-  console.log('[TtydFrame] Sending Enter key')
+  // First click: send text without Enter
+  if (newClick === 1 && !textSent.value) {
+    const slotContent = slots['click-1']
+    if (!slotContent) return
+
+    const text = extractTextFromSlot(slotContent)
+    if (!text) return
+
+    console.log('[TtydFrame] First click - sending text:', text.substring(0, 50) + '...')
+    injectTextToTerminal(text, false) // Don't send Enter yet
+    textSent.value = true
+    return
+  }
+
+  // Subsequent clicks: send Enter key
+  console.log('[TtydFrame] Subsequent click - sending Enter key')
   sendEnterKey()
 })
 
