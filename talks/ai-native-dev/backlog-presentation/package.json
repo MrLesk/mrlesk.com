@@ -1,16 +1,16 @@
 {
-  "name": "backlog-presentation",
+  "name": "backlog-ai-engineer-summit",
   "type": "module",
   "private": true,
   "scripts": {
-    "dev": "slidev --open",
+    "dev": "bun run scripts/dev.ts",
     "build": "slidev build",
     "export": "slidev export"
   },
   "dependencies": {
-    "@slidev/cli": "^0.50.0",
-    "@vueuse/core": "^13.9.0",
+    "@slidev/cli": "52.8.0",
+    "@vueuse/core": "14.0.0",
     "slidev-theme-penguin": "file:../../../../slidev-theme-penguin",
-    "vue": "^3.5.0"
+    "vue": "3.5.24"
   }
 }

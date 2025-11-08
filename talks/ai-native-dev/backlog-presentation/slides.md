@@ -1,90 +1,134 @@
 ---
 theme: penguin
-title: "My Presentation Title"
+title: "Backlog - AI Engineer Code Summit"
 author: Alex Gavrilescu
-colorSchema: "auto"
+colorSchema: "light"
 drawings:
   persist: false
 mdc: true
 transition: slide-left
 layout: intro
 css: unocss
+timelinePresets:
+  backlog-flow:
+    steps:
+      - id: task-creation
+        label: Task Creation
+      - id: implementation-plan
+        label: Implementation Plan
+      - id: task-execution
+        label: Task Execution
 ---
 
-<style src="./style.css"></style>
+<h1>
+Backlog.md <br>
+<div class="text-4xl pb-4">From zero to success with AI Agents</div>
+</h1>
 
-# My Presentation Title
+### AI Native Dev - NYC
 
-Subtitle or tagline here
-
----
-layout: default
----
-
-# First Slide
-
-Your content here
+#### November 19, 2025
 
 ---
-layout: quote
+src: ./pages/presenter.md
 ---
 
-> This is a quote
-
-Attribution here
-
 ---
-layout: default
+src: ./pages/toc.md
 ---
 
-# Example with Card Component
-
-<Card variant="info" title="Info" icon="ℹ️">
-This is an info card with content
-</Card>
-
-<Card variant="success" title="Success" icon="✓">
-This card shows success state
-</Card>
-
 ---
-layout: default
+src: ./pages/journey.md
 ---
 
-# Code Example
-
-<CopyCodeBlock>
-
-```javascript
-function hello() {
-  console.log('Hello, world!')
-}
-```
-
-</CopyCodeBlock>
-
 ---
-layout: default
+src: ./pages/journey.1.md
 ---
 
-# YouTube Video
-
-<YoutubeEmbed url="https://www.youtube.com/watch?v=dQw4w9WgXcQ" />
-
 ---
-layout: default
+src: ./pages/journey.2.md
 ---
 
-# Inline Badges
-
-Regular text with <PromptChip>a chip</PromptChip> inline
-
-<PromptChip variant="primary" size="lg">Primary Large</PromptChip>
-
-<PromptChip variant="accent" size="sm">Accent Small</PromptChip>
-
 ---
-layout: center
+src: ./pages/journey.3.md
 ---
 
-# Thank You!
+---
+src: ./pages/journey.4.md
+---
+
+---
+src: ./pages/journey.5.md
+---
+
+---
+src: ./pages/journey.6.md
+---
+
+---
+src: ./pages/backlog.md
+---
+
+---
+src: ./pages/backlog.1.md
+---
+
+---
+src: ./pages/task.1.md
+---
+
+---
+src: ./pages/task.2.md
+---
+
+---
+src: ./pages/task.3.md
+---
+
+---
+src: ./pages/plan.1.md
+---
+
+---
+src: ./pages/plan.2.md
+---
+
+---
+src: ./pages/plan.3.md
+---
+
+---
+src: ./pages/plan.4.md
+---
+
+---
+src: ./pages/execution.1.md
+---
+
+---
+src: ./pages/execution.2.md
+---
+
+---
+src: ./pages/execution.3.md
+---
+
+---
+src: ./pages/execution.4.md
+---
+
+---
+src: ./pages/why.md
+---
+
+---
+src: ./pages/backlog.finale.md
+---
+
+---
+src: ./pages/next.md
+---
+
+---
+src: ./pages/end.md
+---
