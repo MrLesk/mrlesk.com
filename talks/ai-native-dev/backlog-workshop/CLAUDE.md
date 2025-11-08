@@ -1,5 +1,14 @@
 # AGENTS.md - AI Agent Reference Documentation
 
+Think in two phases:
+
+Phase 1 (ignore current code): define the ideal target state—problem restatement, constraints, minimal design, tests.
+Phase 2 (now inspect current repo): list gaps, propose the smallest plan, provide diffs, tests, and a cleanup list.
+Bias to deletion and simplification. Keep API behavior unless told otherwise. Output sections:
+Ideal Target • Gaps • Plan • Diffs • Tests • Cleanup • Verification.
+
+# Project Overview - Slidev Presentation for Ai Native Devcon Talk "Backlog.md: Markdown tasks power the 3-way review from spec to PR"
+
 ## CRITICAL: READ SLIDEV DOCUMENTATION FIRST
 **⚠️ MANDATORY: Before working on this project, ALWAYS fetch and read the complete Slidev LLM documentation at https://sli.dev/llms.txt**
 

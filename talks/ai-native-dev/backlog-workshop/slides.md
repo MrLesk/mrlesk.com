@@ -86,10 +86,6 @@ src: ./pages/journey.5.md
 ---
 
 ---
-src: ./pages/journey.6.md
----
-
----
 src: ./pages/backlog.md
 ---
 

@@ -3,7 +3,7 @@ layout: default
 transition: slide-up
 ---
 
-# We write each task as a Markdown file
+# Write each task as a Markdown file
 
 <v-clicks>
 

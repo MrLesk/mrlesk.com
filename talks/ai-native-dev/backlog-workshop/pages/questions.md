@@ -3,22 +3,23 @@ layout: new-section
 section: Q&A
 ---
 
-# Questions?
+<div class="flex flex-col items-center">
 
-<div class="mt-8 flex flex-col items-center">
+<h1 style="font-size:6rem; z-index:1" >Thank you!</h1>
 
-<div>
-    <img class="h-50" src="/qr-devoxx-2.png">
-</div>
-
-<card class="w-110 mt-8 text-sm">
-Hands-on Demo slides on my website below
-</card>
-
-<a target="_blank" class="mt-4 inline-block font-semibold link-primary" href="https://mrlesk.com/talks">
+<a target="_blank" class="mt-8 inline-block font-semibold link-primary" href="https://mrlesk.com/talks">
 https://mrlesk.com/talks
 </a>
 
-<PoweredBySlidev class="mt-8"/>
+[//]: # (<img class="h-50 mt-4" src="/qr-pres.png">)
+
+<div class="mt-8">
+Discover more about Backlog.md by visiting
+</div>
+<a target="_blank" class="mt-1 inline-block font-semibold link-primary" href="https://mrlesk.com/talks">
+https://backlog.md
+</a>
+
+<PoweredBySlidev class="mt-10"/>
 
 </div>

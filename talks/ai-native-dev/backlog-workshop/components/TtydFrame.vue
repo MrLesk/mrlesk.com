@@ -1,7 +1,7 @@
 <template>
   <div class="ttyd-frame" :class="{ 'ttyd-frame--no-inputs': !shouldAllowInputs }">
     <iframe
-      v-if="isClient"
+      v-if="!shouldUseFallback && isClient"
       ref="frameRef"
       class="ttyd-frame__iframe"
       :src="src"
@@ -12,6 +12,9 @@
       loading="lazy"
       @load="onIframeLoad"
     />
+    <div v-else-if="shouldUseFallback" class="ttyd-frame__fallback">
+      <img :src="resolvedFallbackImage" :alt="title" loading="lazy" />
+    </div>
     <div v-else class="ttyd-frame__placeholder">
       Loading terminal…
     </div>
@@ -66,7 +69,13 @@ const props = defineProps({
     type: String,
     default: null,
   },
+  fallbackImage: {
+    type: String,
+    default: null,
+  },
 })
+
+const isDev = import.meta.env?.DEV ?? false
 
 // Auto-detect tmux session from port if not specified
 const sessionName = computed(() => {
@@ -84,6 +93,17 @@ const slots = useSlots()
 const frameRef = ref(null)
 const isClient = ref(false)
 const { $clicks, $nav, $page } = useSlideContext()
+const shouldUseFallback = computed(() => Boolean(props.fallbackImage) && !isDev)
+const resolvedFallbackImage = computed(() => {
+  if (!props.fallbackImage) return ''
+  if (/^https?:\/\//i.test(props.fallbackImage)) return props.fallbackImage
+  const base = import.meta.env.BASE_URL || '/'
+  if (props.fallbackImage.startsWith('/')) {
+    const baseTrimmed = base.endsWith('/') ? base.slice(0, -1) : base
+    return `${baseTrimmed}${props.fallbackImage}`
+  }
+  return `${base}${props.fallbackImage}`
+})
 
 // Get current slide number - try multiple methods
 const currentSlideNo = computed(() => {
@@ -170,6 +190,7 @@ function onIframeLoad() {
 
 // Watch for shouldAllowInputs changes and prevent focus when disabled
 watch(shouldAllowInputs, (allowed) => {
+  if (shouldUseFallback.value) return
   if (!allowed && frameRef.value) {
     // Blur immediately when inputs become disabled
     frameRef.value.blur()
@@ -179,6 +200,7 @@ watch(shouldAllowInputs, (allowed) => {
 
 // Continuously prevent focus stealing when slide changes
 watch(() => currentSlideNo.value, () => {
+  if (shouldUseFallback.value) return
   // Small delay to let DOM update
   setTimeout(() => {
     if (!shouldAllowInputs.value && frameRef.value && document.activeElement === frameRef.value) {
@@ -190,6 +212,7 @@ watch(() => currentSlideNo.value, () => {
 
 // Watch for slide becoming active to auto-run command if specified
 watch(isActiveSlide, (active) => {
+  if (shouldUseFallback.value) return
   if (!active || !props.autoRun) return
 
   // Check if we've already run this command on this slide
@@ -203,6 +226,7 @@ watch(isActiveSlide, (active) => {
 
 // Watch for clicks to send text on first click, Enter on subsequent clicks
 watch(currentClick, (newClick, oldClick) => {
+  if (shouldUseFallback.value) return
   // Only trigger on click increment (not decrement/navigation back)
   if (newClick <= oldClick || newClick < 1) return
 
@@ -256,6 +280,7 @@ function extractTextFromSlot(slotFn) {
 }
 
 async function injectTextToTerminal(text, sendEnter = false) {
+  if (shouldUseFallback.value) return
   if (!text) return
 
   try {
@@ -278,6 +303,7 @@ async function injectTextToTerminal(text, sendEnter = false) {
 }
 
 async function sendEnterKey() {
+  if (shouldUseFallback.value) return
   try {
     const response = await fetch('http://localhost:3099/send-keys', {
       method: 'POST',
@@ -298,6 +324,7 @@ async function sendEnterKey() {
 }
 
 onMounted(() => {
+  if (shouldUseFallback.value) return
   isClient.value = true
 
   // Aggressively prevent focus for 2 seconds after mount
@@ -333,6 +360,14 @@ onMounted(() => {
 
 .ttyd-frame--no-inputs .ttyd-frame__iframe {
   pointer-events: none !important;
+}
+
+.ttyd-frame__fallback {
+  @apply flex items-center justify-center bg-black/60;
+}
+
+.ttyd-frame__fallback img {
+  @apply max-w-full max-h-full object-contain;
 }
 
 .ttyd-frame__placeholder {
