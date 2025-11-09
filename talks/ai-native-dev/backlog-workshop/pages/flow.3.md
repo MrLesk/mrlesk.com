@@ -1,6 +1,5 @@
 ---
 layout: default
-transition: slide-up
 section: Spec-driven flow
 timeline:
   preset: spec-flow
