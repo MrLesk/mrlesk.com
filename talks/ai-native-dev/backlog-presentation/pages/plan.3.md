@@ -28,3 +28,9 @@ timeline:
 * Update tasks
 
 </v-clicks>
+
+<style>
+ li + li {
+      margin-top: 0!important;
+    }
+</style>
