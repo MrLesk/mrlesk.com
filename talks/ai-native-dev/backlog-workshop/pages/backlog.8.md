@@ -6,9 +6,9 @@ section: Backlog.md
 
 # Backlog's CLI has a rich set of commands
 
-<div class="task-cheatsheet h-80">
+<div class="task-cheatsheet h-100">
 
-```markdown {|1-15|16-19|20-30|31-40|41-70}{maxHeight:'24rem',class:'task-structure-block'}
+```markdown {|1-14|15-23|24-35|36-70}{maxHeight:'40rem',class:'task-structure-block'}
 | Action      | Example                                              |
 |-------------|------------------------------------------------------|
 | Create task | `backlog task create "Add OAuth System"`                    |
@@ -25,6 +25,11 @@ section: Backlog.md
 | Create (all options) | `backlog task create "Feature" -d "Description" -a @sara -s "To Do" -l auth --priority high --ac "Must work" --notes "Initial setup done" --dep task-1 -p 14` |
 | List tasks  | `backlog task list [-s <status>] [-a <assignee>] [-p <parent>]` |
 | List by parent | `backlog task list --parent 42` or `backlog task list -p task-42` |
+| Search tasks       | `backlog search "auth"`                        |
+| Filter by status   | `backlog search "api" --status "In Progress"`   |
+| Filter by priority | `backlog search "bug" --priority high`        |
+| Combine filters    | `backlog search "web" --status "To Do" --priority medium` |
+| Plain text output  | `backlog search "feature" --plain` (for scripts/AI) |
 | View detail | `backlog task 7` (interactive UI, press 'E' to edit in editor) |
 | View (AI mode) | `backlog task 7 --plain`                           |
 | Edit        | `backlog task edit 7 -a @sara -l auth,backend`       |
@@ -43,11 +48,6 @@ section: Backlog.md
 | Draft flow  | `backlog draft create "Spike GraphQL"` → `backlog draft promote 3.1` |
 | Demote to draft| `backlog task demote <id>` |
 | Archive     | `backlog task archive 7`                             |
-| Search tasks       | `backlog search "auth"`                        |
-| Filter by status   | `backlog search "api" --status "In Progress"`   |
-| Filter by priority | `backlog search "bug" --priority high`        |
-| Combine filters    | `backlog search "web" --status "To Do" --priority medium` |
-| Plain text output  | `backlog search "feature" --plain` (for scripts/AI) |
 | Kanban board      | `backlog board` (interactive UI, press 'E' to edit in editor) |
 | Export board | `backlog board export [file]` (exports Kanban board to markdown) |
 | Export with version | `backlog board export --export-version "v1.0.0"` (includes version in export) |

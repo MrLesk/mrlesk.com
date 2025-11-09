@@ -62,7 +62,7 @@ function ensurePortFree(port: string) {
   }
 }
 
-const backlogDir = join(homedir(), 'projects', 'Backlog.md-conference')
+const backlogDir = join(homedir(), 'projects', 'Backlog.md')
 const backlogStartupCommand = process.env.BACKLOG_START_COMMAND ?? 'bun run cli board'
 const backlogTtydPort = process.env.TTYD_BACKLOG_PORT ?? process.env.TTYD_PORT ?? '7681'
 

@@ -21,7 +21,7 @@ section: Backlog.md
           <li v-click="2">Description (WHY)</li>
           <li v-click="3">Acceptance Criteria (WHAT)</li>
           <li v-click="4">Implementation Plan (HOW)</li>
-          <li v-click="5">Implementation Notes (PR notes)</li>
+          <li v-click="5">Implementation Notes</li>
         </ul>
         <card v-click="6" class="mt-10">
             #1 review step!

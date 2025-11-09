@@ -10,6 +10,21 @@ transition: slide-left
 layout: intro
 section: Introduction
 hideIndicator: true
+timelinePresets:
+  spec-flow:
+    steps:
+      - id: spec
+        label: Idea
+        color: "#33d399"
+      - id: tasks
+        label: Task Split
+        color: "#f6d272"
+      - id: plan
+        label: Research & Plan
+        color: "#8fd4ff"
+      - id: build
+        label: Build & Review
+        color: "#c9b5ff"
 ---
 
 <h1>
@@ -122,14 +137,6 @@ src: ./pages/backlog.8.md
 ---
 
 ---
-src: ./pages/backlog.9.md
----
-
----
-src: ./pages/backlog.10.md
----
-
----
 src: ./pages/backlog.11.md
 ---
 
@@ -210,9 +217,9 @@ src: ./pages/conclusions.5.md
 ---
 
 ---
-src: ./pages/phone.md
+src: ./pages/questions.md
 ---
 
 ---
-src: ./pages/questions.md
+src: ./pages/workshop.md
 ---

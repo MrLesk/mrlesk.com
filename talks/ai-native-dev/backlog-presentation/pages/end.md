@@ -14,7 +14,7 @@ https://mrlesk.com/talks
 <div class="mt-8">
 Discover more about Backlog.md by visiting
 </div>
-<a target="_blank" class="mt-1 inline-block font-semibold link-primary" href="https://mrlesk.com/talks">
+<a target="_blank" class="mt-1 inline-block font-semibold link-primary" href="https://backlog.md">
 https://backlog.md
 </a>
 

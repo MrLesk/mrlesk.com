@@ -16,10 +16,4 @@ section: Backlog.md
     </card>
 </div>
 
-
-<Arrow v-click="1" x1="436" y1="339" x2="436" y2="220"  color="darkred"/>
-
-<!--
-They are files in the root folder of the repository containing instructions for the agent.
-Backlog.md injects custom CLAUDE.md or AGENTS.md instructions during initialization
--->
+<Arrow v-click="1" x1="436" y1="339" x2="436" y2="220" />

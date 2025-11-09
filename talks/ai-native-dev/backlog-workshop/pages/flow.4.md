@@ -2,13 +2,17 @@
 layout: default
 transition: slide-up
 section: Spec-driven flow
+timeline:
+  preset: spec-flow
+  current: plan
 ---
 
-# 3) Add the implementation plan
+<h1 class="pt-4">3) Add the implementation plan</h1>
 
 <v-clicks>
 
-* Ask AI to create the implementation plan using Backlog.md CLI
+* Ask AI to understand the task requirements and research how to implement them
+* Store it on the Backlog.md task for persistent access
 * Do this right before starting the implementation, not when you create the tasks → avoid unnecessary conflicts
 * Review the plan and adjust if needed
 
