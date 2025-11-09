@@ -1,0 +1,3 @@
+[submodule "slidev-theme-penguin"]
+	path = slidev-theme-penguin
+	url = https://github.com/MrLesk/slidev-theme-penguin.git

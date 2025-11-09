@@ -7,8 +7,13 @@
 FROM oven/bun:latest AS slidev-builds
 WORKDIR /app
 
+# Copy the theme submodule first (required by all talks)
+COPY slidev-theme-penguin ./slidev-theme-penguin
+
 # Install dependencies once (all talks use same dependencies)
+# We need to adjust the path in package.json since we're copying it to root
 COPY talks/devoxx/backlog-success/package.json ./package.json
+RUN sed -i 's|file:../../../slidev-theme-penguin|file:./slidev-theme-penguin|g' package.json
 RUN --mount=type=cache,target=/root/.bun/install/cache \
     bun install --no-save
 
