@@ -132,7 +132,8 @@ function ensurePortFree(port: string) {
   }
 }
 
-const backlogDir = join(homedir(), 'projects', 'Backlog.md-conference')
+const backlogDir = join(homedir(), 'projects', 'Backlog.md')
+const backlogDirConference = join(homedir(), 'projects', 'Backlog.md-conference')
 const backlogStartupCommand = process.env.BACKLOG_START_COMMAND ?? 'bun run cli board'
 const sendKeysPort = process.env.SEND_KEYS_PORT ?? '3099'
 
@@ -155,7 +156,7 @@ const terminals: TerminalConfig[] = [
     name: 'ttyd-backlog-refresh',
     port: process.env.TTYD_BACKLOG_REFRESH_PORT ?? '7683',
     session: 'ai-engineer-backlog-refresh',
-    cwd: backlogDir,
+    cwd: backlogDirConference,
     command: [shell, '-l'],
   },
 ]

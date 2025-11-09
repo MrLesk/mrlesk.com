@@ -25,6 +25,8 @@ Backlog.md <br>
 <div class="text-4xl pb-4">From zero to success with AI Agents</div>
 </h1>
 
+<IdleScreensaver image-src="/backlog-logo.png" />
+
 ### AI Native Dev - NYC
 
 #### November 19, 2025

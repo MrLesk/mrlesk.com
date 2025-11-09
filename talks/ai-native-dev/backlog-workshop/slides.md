@@ -32,6 +32,9 @@ Backlog.md <br>
 <div class="text-3xl pb-4">Markdown tasks power the 3-way review from spec to PR</div>
 </h1>
 
+<IdleScreensaver image-src="/backlog-logo.png" />
+
+
 ### AI Native Dev - NYC
 
 #### November 18, 2025
