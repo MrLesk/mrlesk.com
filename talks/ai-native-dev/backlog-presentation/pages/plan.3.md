@@ -5,9 +5,9 @@ timeline:
   current: implementation-plan
 ---
 
-<h1 class="">How does this work?</h1>
+<h1 class="mb-6!">How does this work?</h1>
 
-<h3 v-click class="pb-4">Backlog.md exposes 4 MCP resources for AI Agents</h3>
+<h4 v-click class="pb-4">Backlog.md exposes 4 MCP resources for AI Agents</h4>
 
 <v-clicks>
 
@@ -18,7 +18,7 @@ timeline:
 
 </v-clicks>
 
-<h3 v-click class="pb-4 mt-6">Agents know how to use Backlog MCP tools</h3>
+<h4 v-click class="pb-4 mt-6">Agents know how to use Backlog MCP tools</h4>
 
 <v-clicks>
 
