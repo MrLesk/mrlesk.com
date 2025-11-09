@@ -1,6 +1,6 @@
 ---
 layout: presenter
-presenterImage: 'https://pbs.twimg.com/profile_images/1759655834827501568/pMZCM2jV_400x400.jpg'
+presenterImage: '/presenter.jpg'
 section: Introduction
 ---
 

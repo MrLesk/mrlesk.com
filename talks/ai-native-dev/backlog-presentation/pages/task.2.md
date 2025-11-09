@@ -5,7 +5,7 @@ timeline:
   current: task-creation
 ---
 
-<TtydFrame class="max-w-220 h-100 mt-4" src="http://localhost:7682" :click-offset="0">
+<TtydFrame class="max-w-220 h-100 mt-4" src="http://localhost:7682" :click-offset="0" fallback-image="/task-creation.png">
   <template #click-1>
     Use Backlog.md workflow to create a task for the following feature requirements:
     ## Backlog.md Kanban board - Move mode feature

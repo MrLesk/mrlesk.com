@@ -28,6 +28,14 @@ RUN cd devoxx-backlog && mkdir -p dist && bun run build -- --base /talks/devoxx/
 COPY talks/devoxx/backlog-success/ ./devoxx-success/
 RUN cd devoxx-success && mkdir -p dist && bun run build -- --base /talks/devoxx/backlog-success/
 
+# Build AI Native Dev - Backlog Presentation
+COPY talks/ai-native-dev/backlog-presentation/ ./ai-native-dev-presentation/
+RUN cd ai-native-dev-presentation && mkdir -p dist && bun run build -- --base /talks/ai-native-dev/backlog-presentation/
+
+# Build AI Native Dev - Backlog Workshop
+COPY talks/ai-native-dev/backlog-workshop/ ./ai-native-dev-workshop/
+RUN cd ai-native-dev-workshop && mkdir -p dist && bun run build -- --base /talks/ai-native-dev/backlog-workshop/
+
 # ========================================
 # Stage X: Build Main Astro Site
 # ========================================
@@ -57,6 +65,8 @@ COPY --from=slidev-builds /app/vienna-zero/dist /usr/share/nginx/html/talks/vien
 COPY --from=slidev-builds /app/vienna-backlog/dist /usr/share/nginx/html/talks/vienna-ai-engineering/from-backlog-to-success
 COPY --from=slidev-builds /app/devoxx-backlog/dist /usr/share/nginx/html/talks/devoxx/hands-on-backlog
 COPY --from=slidev-builds /app/devoxx-success/dist /usr/share/nginx/html/talks/devoxx/backlog-success
+COPY --from=slidev-builds /app/ai-native-dev-presentation/dist /usr/share/nginx/html/talks/ai-native-dev/backlog-presentation
+COPY --from=slidev-builds /app/ai-native-dev-workshop/dist /usr/share/nginx/html/talks/ai-native-dev/backlog-workshop
 
 # Copy custom nginx config
 COPY nginx.conf /etc/nginx/conf.d/default.conf

@@ -103,6 +103,8 @@ function ensurePortFree(port: string) {
 
 const codexDir = join(homedir(), 'projects/vienna-ai-engineering-demo-codex')
 const claudeDir = join(homedir(), 'projects/vienna-ai-engineering-demo-claude')
+Bun.spawnSync({ cmd: ['mkdir', codexDir] })
+Bun.spawnSync({ cmd: ['mkdir', claudeDir] })
 
 const terminals: TerminalConfig[] = [
   {
