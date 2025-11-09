@@ -1,7 +1,7 @@
 ---
 theme: penguin
 colorSchema: "light"
-title: "Backlog.md - Reaching 95 % Task success rate with AI Agents"
+title: "Backlog.md - Markdown tasks power the 3-way review from spec to PR"
 author: Alex Gavrilescu
 drawings:
     persist: false
@@ -28,7 +28,7 @@ timelinePresets:
 ---
 
 <h1>
-Backlog.md <br>
+Backlog.md<br>
 <div class="text-3xl pb-4">Markdown tasks power the 3-way review from spec to PR</div>
 </h1>
 

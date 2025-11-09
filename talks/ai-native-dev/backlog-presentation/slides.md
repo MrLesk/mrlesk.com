@@ -1,6 +1,6 @@
 ---
 theme: penguin
-title: "Backlog - AI Engineer Code Summit"
+title: "Backlog - From zero to success with AI Agents"
 author: Alex Gavrilescu
 colorSchema: "light"
 drawings:
