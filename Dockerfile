@@ -14,8 +14,10 @@ COPY slidev-theme-penguin ./slidev-theme-penguin
 # We need to adjust the path in package.json since we're copying it to root
 COPY talks/devoxx/backlog-success/package.json ./package.json
 RUN sed -i 's|file:../../../slidev-theme-penguin|file:./slidev-theme-penguin|g' package.json
+
 # Skip Playwright browser downloads to speed up builds (browsers not needed for slidev build)
 ENV PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1
+
 RUN --mount=type=cache,target=/root/.bun/install/cache \
     bun install --no-save
 
