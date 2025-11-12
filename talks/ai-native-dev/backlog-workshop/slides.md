@@ -44,6 +44,10 @@ src: ./pages/presenter.md
 ---
 
 ---
+src: ./pages/disclaimer.md
+---
+
+---
 src: ./pages/toc.md
 ---
 
