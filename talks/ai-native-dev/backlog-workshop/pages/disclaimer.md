@@ -3,7 +3,7 @@ layout: new-section
 ---
 
 
-<h1 style="font-size:6rem; z-index:1" >Disclamer</h1>
+<h1 style="font-size:6rem; z-index:1" >Disclaimer</h1>
 
 <h3 class="mt-8">This presentation was made with the help of CatGPT</h3>
 
