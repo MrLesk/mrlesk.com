@@ -7,7 +7,7 @@ drawings:
     persist: false
 mdc: true
 transition: slide-left
-layout: intro
+layout: intro-ai-native
 section: Introduction
 hideIndicator: true
 timelinePresets:
@@ -27,24 +27,15 @@ timelinePresets:
         color: "#c9b5ff"
 ---
 
-<h1>
+<h1 class="pt-2">
 Backlog.md<br>
-<div class="text-3xl pb-4">Markdown tasks power the 3-way review from spec to PR</div>
+<div class="text-2xl mt-4 pb-4">Markdown tasks power the 3-way review from spec to PR</div>
 </h1>
 
 <IdleScreensaver image-src="/backlog-logo.png" />
 
-
-### AI Native Dev - NYC
-
-#### November 18, 2025
-
 ---
 src: ./pages/presenter.md
----
-
----
-src: ./pages/disclaimer.md
 ---
 
 ---

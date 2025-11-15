@@ -7,7 +7,7 @@ drawings:
   persist: false
 mdc: true
 transition: slide-left
-layout: intro
+layout: intro-ai-native
 css: unocss
 timelinePresets:
   backlog-flow:
@@ -20,16 +20,12 @@ timelinePresets:
         label: Task Execution
 ---
 
-<h1>
+<h1 class="pt-2">
 Backlog.md <br>
-<div class="text-4xl pb-4">From zero to success with AI Agents</div>
+<div class="text-2xl mt-4 pb-4">From zero to success with AI Agents</div>
 </h1>
 
 <IdleScreensaver image-src="/backlog-logo.png" />
-
-### AI Native Dev - NYC
-
-#### November 19, 2025
 
 ---
 src: ./pages/presenter.md
