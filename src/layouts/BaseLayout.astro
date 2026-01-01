@@ -1,0 +1,36 @@
+---
+import "../styles/main.css";
+
+const {
+  title,
+  description,
+  colorScheme = "light",
+  themeColor,
+  canonical,
+  og,
+  lang = "en",
+  bodyClass,
+} = Astro.props;
+---
+
+<html lang={lang}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <meta name="color-scheme" content={colorScheme} />
+    {themeColor ? <meta name="theme-color" content={themeColor} /> : null}
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    {canonical ? <link rel="canonical" href={canonical} /> : null}
+    {og?.type ? <meta property="og:type" content={og.type} /> : null}
+    {og?.title ? <meta property="og:title" content={og.title} /> : null}
+    {og?.description ? <meta property="og:description" content={og.description} /> : null}
+    {og?.url ? <meta property="og:url" content={og.url} /> : null}
+    {og?.image ? <meta property="og:image" content={og.image} /> : null}
+    <slot name="head" />
+  </head>
+  <body class={bodyClass}>
+    <slot />
+  </body>
+</html>

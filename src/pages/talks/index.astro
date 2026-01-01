@@ -1,106 +1,25 @@
 ---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { getCollection, render } from "astro:content";
+import "../../styles/talks.css";
+
 const pageTitle = "Talks — Alex Gavrilescu";
 const description = "A visual wall of recent talks, starting with the Vienna AI Engineering series.";
 
-const talksData = [
-  {
-    title: "Backlog.md — From zero to success with AI Agents",
-    tagline: "A journey from 50% success rate with raw prompting to reliable software delivery using Backlog.md.",
-    event: "AI Native DevCon",
-    dateISO: "2025-11-19",
-    dateLabel: "November 19, 2025",
-    focus:
-      "This talk shares the journey from early AI coding struggles to a reliable workflow using Backlog.md. We explore why Markdown tasks with clear acceptance criteria are the missing link for effective agent collaboration, enabling a 3-way review process (Spec, Plan, Code) that keeps agents on track.",
-    url: "/talks/ai-native-dev/backlog-presentation/",
-    logo: {
-      src: "/talks/ai-native-logo.svg",
-      alt: "AI Native DevCon logo",
-      width: 156,
-    },
-  },
-    {
-        title: "Backlog.md Workshop: Spec-driven AI Development",
-        tagline: "Markdown tasks power the 3-way review from spec to PR: A hands-on workshop on Spec-driven AI Development.",
-        event: "AI Native DevCon",
-        dateISO: "2025-11-18",
-        dateLabel: "November 18, 2025",
-        focus: "In this workshop, we explore the 'Spec-driven AI Development' methodology. We'll see how defining tasks in Markdown with clear Acceptance Criteria and Implementation Plans allows AI agents to work reliably. Participants will get hands-on experience initializing Backlog.md, creating tasks, and guiding agents through the 3-way review process (Spec, Plan, Code) to achieve a high success rate.",
-        url: "/talks/ai-native-dev/backlog-workshop/",
-        logo: {
-            src: "/talks/ai-native-logo.svg",
-            alt: "AI Native DevCon logo",
-            width: 156,
-        },
-    },
-  {
-    title: "Hands-on: Backlog.md — Plan Tasks with AI",
-    tagline: "Live walkthrough of Backlog.md as your Git-native task partner at Devoxx Belgium.",
-    event: "Devoxx Belgium 2025",
-    dateISO: "2025-10-06",
-    dateLabel: "October 6, 2025",
-    focus:
-      "Backlog.md is a lightweight, Git-native CLI tool for managing project tasks offline using Markdown files. Designed for solo developers and small teams, it enables seamless collaboration between humans and AI agents without extra infrastructure. Features include a terminal Kanban board, offline web UI, and cross-platform support.",
-    url: "/talks/devoxx/hands-on-backlog",
-    videoUrl: "https://www.youtube.com/watch?v=FIZbQbkgRG0&pp=ygUKYmFja2xvZy5tZA%3D%3D",
-    logo: {
-      src: "/talks/devoxx-logo.png",
-      alt: "Devoxx Belgium logo",
-      width: 156,
-    },
-  },
-  {
-    title: "Backlog.md - Reaching 95% Task Success Rate with AI Agents",
-    tagline: "From early AI coding missteps to a 95% success loop powered by Backlog.md at Devoxx Belgium.",
-    event: "Devoxx Belgium 2025",
-    dateISO: "2025-10-09",
-    dateLabel: "October 9, 2025",
-    focus:
-      "This talk traces the journey from initial struggles with AI coding assistants to mastering effective workflows using Backlog.md. It shares best practices for organizing tasks, maximizing AI success rates, and safely integrating code contributions, giving developers repeatable checklists for agent-driven delivery.",
-    url: "/talks/devoxx/backlog-success",
-    videoUrl: "https://www.youtube.com/watch?v=LSoDQU_9MMA&pp=ygUKYmFja2xvZy5tZA%3D%3D",
-    logo: {
-      src: "/talks/devoxx-logo.png",
-      alt: "Devoxx Belgium logo",
-      width: 156,
-    },
-  },
-  {
-    title: "From zero to Backlog.md",
-    tagline: "In this first session I share the practical tips that took me from zero to productive with AI agents like Claude Code, OpenAI Codex, and Cursor.",
-    event: "Vienna AI Engineering Meetup",
-    dateISO: "2025-10-02",
-    dateLabel: "October 2, 2025",
-    focus:
-      "We move from vibe coding slop to a simple spec-driven loop and see why Backlog.md (tasks as markdown in your repo) gives agents the right understanding and context. No prior agent experience needed.",
-    url: "/talks/vienna-ai-engineering/from-zero-to-backlog",
-    logo: {
-      src: "/talks/vienna-ai-engineering-logo.jpeg",
-      alt: "Vienna AI Engineering logo",
-      width: 140,
-    },
-  },
-  {
-    title: "From Backlog.md to repeatable success with AI Agents",
-    tagline: "Hands-on. We use Backlog.md live to spec and ship a small app end to end: write the one-pager, add tasks with acceptance criteria, let agents build, and review the PR.",
-    event: "Vienna AI Engineering Meetup",
-    dateISO: "2025-10-02",
-    dateLabel: "October 2, 2025",
-    focus:
-      "This is the same loop that built Backlog.md (99% agent-written) and pushed it past 3k GitHub stars.",
-    url: "/talks/vienna-ai-engineering/from-backlog-to-success",
-    logo: {
-      src: "/talks/vienna-ai-engineering-logo.jpeg",
-      alt: "Vienna AI Engineering logo",
-      width: 140,
-    },
-  },
-];
+const talksEntries = await getCollection("talks");
 
 // Interpret YYYY-MM-DD strings in local time so we don't surface talks a day early.
 const toLocalDate = (isoDate) => {
   const [year, month, day] = isoDate.split("-").map(Number);
   return new Date(year, month - 1, day);
 };
+
+const formatDateLabel = (isoDate) =>
+  new Intl.DateTimeFormat("en-US", {
+    month: "long",
+    day: "numeric",
+    year: "numeric",
+  }).format(toLocalDate(isoDate));
 
 const today = new Date();
 const todayLocal = new Date(today.getFullYear(), today.getMonth(), today.getDate());
@@ -109,8 +28,18 @@ tomorrowLocal.setDate(todayLocal.getDate() + 1);
 
 const isDev = import.meta.env.DEV;
 
-const talks = talksData
-  .slice()
+const talks = await Promise.all(
+  talksEntries.map(async (entry) => {
+    const { Content } = await render(entry);
+    return {
+      ...entry.data,
+      Content,
+      dateLabel: formatDateLabel(entry.data.dateISO),
+    };
+  }),
+);
+
+const filteredTalks = talks
   .sort((a, b) => toLocalDate(b.dateISO).getTime() - toLocalDate(a.dateISO).getTime())
   // Hide future talks only in builds so local dev shows full list.
   .filter((talk) =>
@@ -118,396 +47,78 @@ const talks = talksData
   );
 ---
 
-<html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>{pageTitle}</title>
-    <meta name="description" content={description} />
-    <meta name="color-scheme" content="light" />
-    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
-    <style>
-      *,
-      *::before,
-      *::after {
-        box-sizing: border-box;
-      }
-      @font-face {
-        font-family: "Virgil";
-        src: url("/talks/virgil.woff2") format("woff2");
-        font-display: swap;
-      }
-      :root {
-        --ink: #1f2933;
-        --ink-soft: #3e5166;
-        --ink-muted: #63758b;
-        --paper: #ffffff;
-        --paper-muted: #f7f9fb;
-        --accent: #34d399;
-        --accent-strong: #1f9c73;
-        --accent-soft: rgba(52, 211, 153, 0.18);
-        --accent-outline: rgba(31, 156, 115, 0.32);
-        --sun: #f5d38b;
-        --sun-soft: rgba(245, 211, 139, 0.42);
-        --peach: #fdf0dc;
-        --border: rgba(62, 81, 102, 0.14);
-        --shadow: 0 38px 70px -50px rgba(34, 48, 61, 0.55);
-        --radius: 26px;
-        --wall-gap: clamp(32px, 5vw, 52px);
-      }
-      html,
-      body {
-        height: 100%;
-      }
-      body {
-        margin: 0;
-        font-family:
-          "Inter",
-          "SF Pro Display",
-          -apple-system,
-          BlinkMacSystemFont,
-          "Segoe UI",
-          sans-serif;
-        color: var(--ink);
-        background: #f6f9fb;
-        overflow-y: auto;
-      }
-      .bg-grain {
-        position: relative;
-        min-height: 100%;
-        padding: clamp(56px, 11vw, 104px) clamp(24px, 7vw, 88px) clamp(98px, 13vw, 150px);
-        z-index: 2;
-      }
-      .bg-grain::before {
-        content: "";
-        position: absolute;
-        inset: 0;
-        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 600 600'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.7' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.2'/%3E%3C/svg%3E");
-        mix-blend-mode: soft-light;
-        pointer-events: none;
-        z-index: 0;
-      }
-      .bg-grain::after {
-        content: "";
-        position: fixed;
-        top: -60vh;
-        left: -25vw;
-        width: 160vw;
-        height: 260vh;
-        background:
-          radial-gradient(circle at 18% 20%, rgba(52, 211, 153, 0.3), transparent 60%),
-          radial-gradient(circle at 80% 60%, rgba(245, 211, 139, 0.4), transparent 68%);
-        filter: blur(110px);
-        opacity: 0.65;
-        pointer-events: none;
-        z-index: 0;
-      }
-      .bg-grain > * {
-        position: relative;
-        z-index: 1;
-      }
-      .wrap {
-        position: relative;
-        z-index: 3;
-        max-width: 1180px;
-        margin: 0 auto;
-      }
-      header {
-        display: grid;
-        gap: 14px;
-        margin-bottom: clamp(42px, 7vw, 88px);
-        max-width: 780px;
-      }
-      header h1 {
-        position: relative;
-        font-size: clamp(44px, 6.1vw, 78px);
-        line-height: 1.04;
-        letter-spacing: -0.03em;
-        margin: 0;
-        color: var(--ink-soft);
-      }
-      header h1 span {
-        position: relative;
-        display: inline-block;
-        padding: 0 0.08em;
-      }
-      header h1 span::after {
-        content: "";
-        position: absolute;
-        inset: 58% -10% 0 -8%;
-        background: var(--peach);
-        border-radius: 999px;
-        transform: rotate(-2deg);
-        z-index: -1;
-      }
-      .wall {
-        display: grid;
-        gap: var(--wall-gap);
-        grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
-        justify-items: stretch;
-      }
-      .card {
-        position: relative;
-        display: flex;
-        flex-direction: column;
-        gap: 18px;
-        padding: clamp(28px, 3vw, 36px);
-        background: linear-gradient(135deg, rgba(255, 255, 255, 0.98), rgba(247, 251, 250, 0.96));
-        border: 1px solid var(--border);
-        border-radius: var(--radius);
-        box-shadow: var(--shadow);
-        transition: transform 260ms ease, box-shadow 260ms ease, border-color 260ms ease;
-        overflow: hidden;
-      }
-      .card::before {
-        content: "";
-        position: absolute;
-        inset: 0;
-        background:
-          linear-gradient(130deg, rgba(62, 81, 102, 0.08) 0%, transparent 68%),
-          radial-gradient(circle at 18% -20%, rgba(245, 211, 139, 0.55), transparent 58%);
-        opacity: 0.7;
-        pointer-events: none;
-      }
-      .card::after {
-        content: "";
-        position: absolute;
-        inset: -60% 30% auto -38%;
-        height: 70%;
-        background: radial-gradient(circle, rgba(52, 211, 153, 0.28), transparent 60%);
-        opacity: 0;
-        transition: opacity 260ms ease;
-        pointer-events: none;
-      }
-      .card > * {
-        position: relative;
-        z-index: 1;
-      }
-      .card:hover,
-      .card:focus-within {
-        transform: translateY(-10px);
-        box-shadow: 0 36px 70px -36px rgba(34, 48, 61, 0.46);
-        border-color: var(--accent-outline);
-      }
-      .card:hover::after,
-      .card:focus-within::after {
-        opacity: 1;
-      }
-      .logo {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 18px;
-      }
-      .logo img {
-        width: auto;
-        max-width: clamp(104px, 12vw, 168px);
-        height: auto;
-        border: none;
-        background: transparent;
-        padding: 0;
-        box-shadow: none;
-      }
-      .logo-detail {
-        display: inline-flex;
-        flex-direction: column;
-        align-items: flex-end;
-        gap: 6px;
-        text-align: right;
-      }
-      .logo-date {
-        font-size: 0.88rem;
-        font-weight: 600;
-        letter-spacing: 0.04em;
-        text-transform: uppercase;
-        color: var(--ink-soft);
-        background: rgba(62, 81, 102, 0.12);
-        border-radius: 999px;
-        padding: 6px 14px;
-        border: 1px solid rgba(62, 81, 102, 0.18);
-      }
-      .card h2 {
-        margin: 0;
-        font-size: clamp(1.55rem, 2.8vw, 2rem);
-        line-height: 1.2;
-        color: var(--ink-soft);
-      }
-      .card h2::after {
-        content: "";
-        display: block;
-        width: 68px;
-        height: 3px;
-        margin-top: 14px;
-        background: linear-gradient(90deg, var(--accent) 0%, rgba(52, 211, 153, 0) 100%);
-      }
-      .card p {
-        margin: 0;
-        color: var(--ink-muted);
-        line-height: 1.7;
-      }
-      .meta {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 10px;
-        margin-top: auto;
-      }
-      .pill {
-        display: inline-flex;
-        align-items: center;
-        gap: 6px;
-        padding: 7px 14px;
-        border-radius: 999px;
-        font-size: 0.85rem;
-        letter-spacing: 0.02em;
-        background: var(--accent-soft);
-        border: 1px solid var(--accent-outline);
-        color: var(--accent-strong);
-      }
-      .pill::before {
-        content: "";
-        width: 6px;
-        height: 6px;
-        border-radius: 999px;
-        background: var(--accent);
-      }
-      .pill-status {
-        background: rgba(52, 211, 153, 0.14);
-        border-color: rgba(31, 156, 115, 0.3);
-      }
-      .pill-event {
-        background: rgba(52, 211, 153, 0.18);
-        border-color: var(--accent-outline);
-      }
-      .cta {
-        font-size: 0.86rem;
-        display: inline-flex;
-        align-items: center;
-        gap: 8px;
-      }
-      .cta-group {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 12px;
-        align-items: center;
-        margin-top: 8px;
-      }
-      .cta-link {
-        color: rgba(47, 75, 62, 0.78);
-        text-decoration: none;
-        transition: color 160ms ease;
-      }
-      .cta-link::before {
-        content: "→";
-        font-family: "Virgil", "Inter", sans-serif;
-        font-size: 1.1em;
-        color: var(--accent-strong);
-      }
-      .cta-link strong {
-        color: var(--accent-strong);
-        font-weight: 600;
-      }
-      .cta-link:hover strong,
-      .cta-link:focus-visible strong {
-        text-decoration: underline;
-      }
-      .cta-link-video::before {
-        margin-left:14px;
-        content: "▶";
-      }
-      .cta-status {
-        color: rgba(74, 84, 104, 0.78);
-        background: var(--paper-muted);
-        border-radius: 999px;
-        padding: 8px 16px;
-        border: 1px dashed rgba(62, 81, 102, 0.2);
-        letter-spacing: 0.01em;
-        font-weight: 600;
-      }
-      @media (max-width: 640px) {
-        .card {
-          padding: 26px;
-        }
-        .logo img {
-          width: 100px;
-        }
-        header h1 {
-          font-size: clamp(36px, 12vw, 52px);
-        }
-      }
-      @media (max-width: 520px) {
-        .wall {
-          grid-template-columns: 1fr;
-          justify-items: center;
-        }
-        .card {
-          width: 100%;
-          max-width: 420px;
-        }
-      }
-    </style>
-  </head>
-  <body>
-    <div class="bg-grain">
-      <main class="wrap">
-        <header>
-          <h1><span>Talk</span> Wall</h1>
-        </header>
-        <section aria-label="Talks" class="wall">
-          {talks.map((talk) => {
-            const trimmedUrl = talk.url ? talk.url.trim() : "";
-            const hasSlides = trimmedUrl.length > 0;
-            const trimmedVideoUrl = talk.videoUrl ? talk.videoUrl.trim() : "";
-            const hasVideo = trimmedVideoUrl.length > 0;
-            const logo = talk.logo ?? {
-              src: "/talks/vienna-ai-engineering-logo.jpeg",
-              alt: "Vienna AI Engineering logo",
-              width: 140,
-            };
-            return (
-              <article class="card">
-                <div class="logo">
-                  <img
-                    src={logo.src}
-                    alt={logo.alt}
-                    width={logo.width ?? 140}
-                    height="118"
-                    loading="lazy"
-                    style={`width: ${logo.width ?? 140}px;`}
-                  />
-                  <span class="logo-detail">
-                    <span class="logo-date">{talk.dateLabel}</span>
-                  </span>
-                </div>
-                <div>
-                  <h2>{talk.title}</h2>
-                  <p>{talk.tagline}</p>
-                </div>
-                <p>{talk.focus}</p>
-                <div class="meta">
-                  <span class="pill pill-event">{talk.event}</span>
-                  <span class="pill pill-status">
-                    {hasSlides ? "Slides ready" : "Slides coming soon"}
-                  </span>
-                </div>
-                <div class="cta-group">
-                  {hasSlides ? (
+<BaseLayout title={pageTitle} description={description}>
+  <div class="bg-grain">
+    <main class="wrap">
+      <header>
+        <h1><span>Talk</span> Wall</h1>
+      </header>
+      <section aria-label="Talks" class="wall">
+        {filteredTalks.map((talk) => {
+          const trimmedUrl = talk.url ? talk.url.trim() : "";
+          const hasSlides = trimmedUrl.length > 0;
+          const slidesStatus = talk.slidesStatus ?? (hasSlides ? "ready" : "soon");
+          const showSlides = slidesStatus !== "none";
+          const slidesLabel = slidesStatus === "ready" ? "Slides ready" : "Slides coming soon";
+          const trimmedVideoUrl = talk.videoUrl ? talk.videoUrl.trim() : "";
+          const hasVideo = trimmedVideoUrl.length > 0;
+          const Focus = talk.Content;
+          const logo = talk.logo ?? {
+            src: "/talks/vienna-ai-engineering-logo.jpeg",
+            alt: "Vienna AI Engineering logo",
+            width: 140,
+          };
+          return (
+            <article class="card">
+              <div class="logo">
+                <img
+                  src={logo.src}
+                  alt={logo.alt}
+                  width={logo.width ?? 140}
+                  height="118"
+                  loading="lazy"
+                  style={`width: ${logo.width ?? 140}px;`}
+                />
+                <span class="logo-detail">
+                  <span class="logo-date">{talk.dateLabel}</span>
+                </span>
+              </div>
+              <div>
+                <h2>{talk.title}</h2>
+                <p>{talk.tagline}</p>
+              </div>
+              <div class="focus">
+                <Focus />
+              </div>
+              <div class="meta">
+                <span class="pill pill-event">{talk.event}</span>
+                {showSlides ? <span class="pill pill-status">{slidesLabel}</span> : null}
+              </div>
+              <div class="cta-group">
+                {showSlides ? (
+                  hasSlides ? (
                     <a class="cta cta-link" href={trimmedUrl} target="_blank" rel="noopener noreferrer">
                       <strong>View slides</strong>
                     </a>
                   ) : (
                     <span class="cta cta-status">Slides not available yet.</span>
-                  )}
-                  {hasVideo ? (
-                    <a class="cta cta-link cta-link-video" href={trimmedVideoUrl} target="_blank" rel="noopener noreferrer">
-                      <strong>Watch video</strong>
-                    </a>
-                  ) : null}
-                </div>
-              </article>
-            );
-          })}
-        </section>
-      </main>
-    </div>
-  </body>
-</html>
+                  )
+                ) : null}
+                {hasVideo ? (
+                  <a
+                    class="cta cta-link cta-link-video"
+                    href={trimmedVideoUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <strong>Watch video</strong>
+                  </a>
+                ) : null}
+              </div>
+            </article>
+          );
+        })}
+      </section>
+    </main>
+  </div>
+</BaseLayout>
