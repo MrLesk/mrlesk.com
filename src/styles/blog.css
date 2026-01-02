@@ -1,0 +1,50 @@
+.wall-header {
+  max-width: 680px;
+  margin-bottom: clamp(32px, 6vw, 68px);
+}
+
+.wall-header p {
+  margin: 0;
+  max-width: 58ch;
+  color: var(--ink-muted);
+  font-size: 1.05rem;
+  line-height: 1.7;
+}
+
+.card-subtitle {
+  color: var(--ink-soft);
+  font-weight: 600;
+  margin-top: 6px;
+}
+
+.card-link {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  height: 100%;
+  text-decoration: none;
+  color: inherit;
+}
+
+.card-summary {
+  color: var(--ink-muted);
+}
+
+.meta {
+  gap: 8px;
+}
+
+.meta .pill {
+  padding: 6px 11px;
+  font-size: 0.78rem;
+  letter-spacing: 0.015em;
+  background: rgba(52, 211, 153, 0.1);
+  border-color: rgba(31, 156, 115, 0.22);
+  color: rgba(31, 156, 115, 0.9);
+}
+
+.card::after,
+.card:hover::after,
+.card:focus-within::after {
+  opacity: 0;
+}

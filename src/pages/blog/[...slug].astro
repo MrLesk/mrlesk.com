@@ -1,0 +1,82 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { getCollection, render } from "astro:content";
+import "../../styles/wall.css";
+import "../../styles/blog-article.css";
+
+export async function getStaticPaths() {
+  const posts = await getCollection("blog");
+  return posts.map((post) => ({
+    params: { slug: post.id },
+    props: { post },
+  }));
+}
+
+const { post } = Astro.props;
+
+const toLocalDate = (isoDate) => {
+  const [year, month, day] = isoDate.split("-").map(Number);
+  return new Date(year, month - 1, day);
+};
+
+const formatDateLabel = (isoDate) =>
+  new Intl.DateTimeFormat("en-US", {
+    month: "long",
+    day: "numeric",
+    year: "numeric",
+  }).format(toLocalDate(isoDate));
+
+const estimateReadingTime = (body = "") => {
+  const words = body.trim().split(/\s+/).filter(Boolean).length;
+  return Math.max(1, Math.round(words / 200));
+};
+
+const { Content } = await render(post);
+const dateLabel = formatDateLabel(post.data.dateISO);
+const readingTime = estimateReadingTime(post.body);
+const tags = post.data.tags ?? [];
+
+const pageTitle = `${post.data.title} — Alex Gavrilescu`;
+const description = post.data.summary;
+const canonical = `https://mrlesk.com/blog/${post.id}`;
+const og = {
+  type: "article",
+  title: post.data.title,
+  description,
+  url: canonical,
+};
+---
+
+<BaseLayout title={pageTitle} description={description} canonical={canonical} og={og}>
+  <div class="bg-grain bg-grain-tight">
+    <main class="post">
+      <nav class="post-nav" aria-label="Blog">
+        <a class="post-back" href="/blog">Back to blog</a>
+      </nav>
+      <header class="post-header">
+        <div class="post-heading">
+          <div class="post-meta">
+            <span class="pill">{dateLabel}</span>
+            <span class="pill">{readingTime} min read</span>
+            {tags.map((tag) => (
+              <span class="pill pill-tag">{tag}</span>
+            ))}
+          </div>
+          <h1 class="post-title">{post.data.title}</h1>
+          <div class="post-intro">
+            {post.data.subtitle ? (
+              <p class="post-subtitle">{post.data.subtitle}</p>
+            ) : null}
+            <p class="post-summary">{post.data.summary}</p>
+          </div>
+        </div>
+      </header>
+      <article class="post-content">
+        <Content />
+      </article>
+      <footer class="post-footer">
+        <a class="post-back" href="/blog">Back to blog</a>
+      </footer>
+    </main>
+  </div>
+</BaseLayout>

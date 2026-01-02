@@ -22,4 +22,16 @@ const talks = defineCollection({
   }),
 });
 
-export const collections = { talks };
+const blog = defineCollection({
+  loader: glob({ pattern: '**/*.md', base: './src/content/blog' }),
+  schema: z.object({
+    title: z.string(),
+    subtitle: z.string().optional(),
+    summary: z.string(),
+    dateISO: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
+    tags: z.array(z.string()).optional(),
+    draft: z.boolean().optional(),
+  }),
+});
+
+export const collections = { talks, blog };

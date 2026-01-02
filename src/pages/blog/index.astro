@@ -1,0 +1,84 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { getCollection } from "astro:content";
+import "../../styles/wall.css";
+import "../../styles/blog.css";
+
+const pageTitle = "Blog — Alex Gavrilescu";
+const description = "Essays on AI agents, developer workflows, and shipping real software.";
+const intro = "Notes on AI agents, workflow design, and the craft of shipping software.";
+
+const posts = await getCollection("blog");
+
+const toLocalDate = (isoDate) => {
+  const [year, month, day] = isoDate.split("-").map(Number);
+  return new Date(year, month - 1, day);
+};
+
+const formatDateLabel = (isoDate) =>
+  new Intl.DateTimeFormat("en-US", {
+    month: "long",
+    day: "numeric",
+    year: "numeric",
+  }).format(toLocalDate(isoDate));
+
+const estimateReadingTime = (body = "") => {
+  const words = body.trim().split(/\s+/).filter(Boolean).length;
+  return Math.max(1, Math.round(words / 200));
+};
+
+const isDev = import.meta.env.DEV;
+
+const entries = posts
+  .filter((entry) => (isDev ? true : !entry.data.draft))
+  .map((entry) => ({
+    entry,
+    dateLabel: formatDateLabel(entry.data.dateISO),
+    readingTime: estimateReadingTime(entry.body),
+  }))
+  .sort((a, b) =>
+    toLocalDate(b.entry.data.dateISO).getTime() - toLocalDate(a.entry.data.dateISO).getTime(),
+  );
+---
+
+<BaseLayout title={pageTitle} description={description}>
+  <div class="bg-grain">
+    <main class="wrap">
+      <header class="wall-header">
+        <h1><span>Blog</span> Notes</h1>
+        <p>{intro}</p>
+      </header>
+      <section aria-label="Blog posts" class="wall">
+        {entries.map(({ entry, dateLabel, readingTime }) => {
+          const href = `/blog/${entry.id}`;
+          const tags = entry.data.tags ?? [];
+          return (
+            <article class="card">
+              <a class="card-link" href={href} aria-label={`Read article: ${entry.data.title}`}>
+                <div>
+                  <h2>{entry.data.title}</h2>
+                  {entry.data.subtitle ? (
+                    <p class="card-subtitle">{entry.data.subtitle}</p>
+                  ) : null}
+                </div>
+                <p class="card-summary">{entry.data.summary}</p>
+                <div class="meta">
+                  <span class="pill">{dateLabel}</span>
+                  <span class="pill">{readingTime} min read</span>
+                  {tags.map((tag) => (
+                    <span class="pill pill-tag">{tag}</span>
+                  ))}
+                </div>
+                <div class="cta-group">
+                  <span class="cta cta-link">
+                    <strong>Read article</strong>
+                  </span>
+                </div>
+              </a>
+            </article>
+          );
+        })}
+      </section>
+    </main>
+  </div>
+</BaseLayout>

@@ -1,6 +1,7 @@
 ---
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import { getCollection, render } from "astro:content";
+import "../../styles/wall.css";
 import "../../styles/talks.css";
 
 const pageTitle = "Talks — Alex Gavrilescu";
@@ -50,7 +51,7 @@ const filteredTalks = talks
 <BaseLayout title={pageTitle} description={description}>
   <div class="bg-grain">
     <main class="wrap">
-      <header>
+      <header class="wall-header">
         <h1><span>Talk</span> Wall</h1>
       </header>
       <section aria-label="Talks" class="wall">
