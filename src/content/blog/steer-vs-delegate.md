@@ -69,5 +69,5 @@ Developer skillsets will continue to evolve: while 2024 was the year of **Prompt
 
 I expect two primary shifts:
 
-1. **Advanced Verification Ecosystems:** Moving beyond automated visual testing toward deep system integration—including memory and CPU profiling, autonomous debugging, and connecting AI agents directly to live logs for real-time troubleshooting.
+1. **Advanced Verification Ecosystems:** Moving beyond automated visual testing toward deep system integration, including memory and CPU profiling, autonomous debugging, and connecting AI agents directly to live logs for real-time troubleshooting.
 2. **High-Level Observability:** As AI takes over the bulk of code generation, the human role will shift toward maintaining architectural integrity through tools that provide a high-level overview of complex, agent-generated systems.
