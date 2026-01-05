@@ -13,7 +13,7 @@ From simple code completion with GitHub Copilot to the recent rise of autonomous
 
 The evolution of coding assistants in recent years looks more or less like this:
 
-![The evolution of AI coding assistants](/blog/diagrams/context.svg)
+![The evolution of AI coding assistants](./diagrams/context.svg)
 
 ## Steer Mode
 
@@ -44,7 +44,7 @@ In this scenario, the developer becomes less familiar with the specific lines of
 
 When using Delegate Mode, we must be realistic about current AI limits. A rough view of autonomy across the SDLC looks like this:
 
-![Autonomy across the SDLC](/blog/diagrams/ai-autonomy.svg)
+![Autonomy across the SDLC](./diagrams/ai-autonomy.svg)
 
 To achieve the best results, developers should shift their effort from writing code to **cleaning up specs** and building plans *with* the AI, as these specs act as the foundation for the verification phase. Tools such as the [Chrome DevTools MCP](https://github.com/ChromeDevTools/chrome-devtools-mcp) allow AI agents to test their own changes directly, particularly for web-related features.
 

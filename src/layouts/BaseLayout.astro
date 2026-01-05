@@ -28,6 +28,13 @@ const {
     {og?.description ? <meta property="og:description" content={og.description} /> : null}
     {og?.url ? <meta property="og:url" content={og.url} /> : null}
     {og?.image ? <meta property="og:image" content={og.image} /> : null}
+    <link
+      rel="preload"
+      href="/talks/virgil.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
     <slot name="head" />
   </head>
   <body class={bodyClass}>
