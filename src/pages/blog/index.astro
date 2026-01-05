@@ -54,7 +54,12 @@ const entries = posts
           const tags = entry.data.tags ?? [];
           return (
             <article class="card">
-              <a class="card-link" href={href} aria-label={`Read article: ${entry.data.title}`}>
+              <a
+                class="card-link"
+                href={href}
+                data-astro-prefetch
+                aria-label={`Read article: ${entry.data.title}`}
+              >
                 <div>
                   <h2>{entry.data.title}</h2>
                   {entry.data.subtitle ? (

@@ -4,6 +4,7 @@ import { defineConfig } from 'astro/config';
 export default defineConfig({
   site: 'https://mrlesk.com',
   output: 'static',
+  prefetch: true,
   build: {
     inlineStylesheets: 'always',
   },
