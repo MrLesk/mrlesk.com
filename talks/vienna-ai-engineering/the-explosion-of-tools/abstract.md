@@ -29,14 +29,14 @@ This talk aims to ground us. I will guide you through this explosion of tools, s
 ### Coding
 * The 'YOLO' approach
 * Ensure that agents have access to the docs
-* Don't run out of context window
+* Don't run out of context window (MCP vs CLI)
 * Improve your Agent instructions: code builds, test pass, lint/format pass, definition of done
 * Single or parallel tasks (depends on your budget) and your capacity to coordinate agents
 * Conductor or Claude Desktop for Git Worktrees
 
 ### Verification
 * Maximize agent self-verification
-* If web use: Chrome dev tools MCP
+* If web use: Chrome dev tools MCP (NO) -> agent browser
 * Others: connect the agent to logs, traces, debug tools
 
 ### Conclusion
