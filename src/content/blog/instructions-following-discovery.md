@@ -28,6 +28,8 @@ The AI is a genius, but it is often an isolated genius. It has tools to find fil
 
 ## The Three Stages of Evolution
 
+![From Prompt Engineering to Active Interrogation](./diagrams/senior-ai-agents.png)
+
 To understand where we are going, we need to map the evolution of "Agentic" capability not by how much code they write, but by how much context they can find on their own.
 
 ### 1. The Copy-Paste Junior
