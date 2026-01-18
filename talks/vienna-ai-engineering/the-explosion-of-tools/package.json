@@ -1,0 +1,16 @@
+{
+  "name": "cambrian-ai-explosion",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "dev": "slidev --open",
+    "build": "slidev build",
+    "export": "slidev export"
+  },
+  "dependencies": {
+    "@slidev/cli": "52.11.3",
+    "@vueuse/core": "14.1.0",
+    "slidev-theme-penguin": "file:../../../slidev-theme-penguin",
+    "vue": "3.5.26"
+  }
+}
