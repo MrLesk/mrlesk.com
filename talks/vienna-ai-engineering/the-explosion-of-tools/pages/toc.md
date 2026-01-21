@@ -5,7 +5,7 @@ section: Introduction
 
 # Table of Contents
 
-1. My journey with AI Agents
-2. Backlog.md introduction
-3. A glimpse into the future of AI Software Development
-4. QR code to these slides
+1. Context
+2. AI and the Software Development Lifecycle
+3. Conclusion
+4. Q&A & QR code to these slides

@@ -1,7 +1,6 @@
 ---
 layout: default
 section: Context
-clicks: 3
 ---
 
 # The current scene
