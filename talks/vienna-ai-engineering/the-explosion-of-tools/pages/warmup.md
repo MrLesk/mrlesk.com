@@ -1,5 +1,7 @@
 ---
 layout: default
+section: Introduction
+hideIndicator: true
 ---
 
 # Warmup

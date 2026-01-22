@@ -9,6 +9,8 @@ mdc: true
 transition: slide-left
 layout: intro
 section: Introduction
+sectionIndicator:
+    enabled: true
 hideIndicator: true
 timelinePresets:
     sdlc:
@@ -21,8 +23,8 @@ timelinePresets:
               label: Implementation
             - id: verification
               label: Verification
-            - id: production
-              label: Production
+            - id: maintenance
+              label: Maintenance
 ---
 
 <IdleScreensaver image-src="/vienna-ai-engineering-logo.jpeg" />
@@ -30,6 +32,10 @@ timelinePresets:
 # The Cambrian Explosion of Agentic AI
 
 #### 27 January 2026, Vienna AI Engineering
+
+---
+src: ./pages/cambrian.md
+---
 
 ---
 src: ./pages/presenter.md
@@ -108,5 +114,13 @@ src: ./pages/sdlc.6.md
 ---
 
 ---
-src: ./pages/end.md
+src: ./pages/conclusions.md
+---
+
+---
+src: ./pages/conclusions.1.md
+---
+
+---
+src: ./pages/questions.md
 ---

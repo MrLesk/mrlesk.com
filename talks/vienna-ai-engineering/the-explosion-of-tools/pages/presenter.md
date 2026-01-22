@@ -2,6 +2,7 @@
 layout: presenter
 presenterImage: '/presenter.jpg'
 section: Introduction
+hideIndicator: true
 ---
 
 # Alex Gavrilescu

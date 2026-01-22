@@ -49,7 +49,7 @@ const props = withDefaults(
     min: 0,
     max: 100,
     height: '100%',
-    labels: () => ['Idea', 'Planning', 'Implementation', 'Verification', 'Production Troubleshooting'],
+    labels: () => ['Idea', 'Planning', 'Implementation', 'Verification', 'Maintenance'],
     initial: () => [],
     autoFocus: true,
     title: 'AI Autonomy',

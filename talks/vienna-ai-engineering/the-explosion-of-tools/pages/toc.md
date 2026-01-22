@@ -1,6 +1,7 @@
 ---
 layout: default
 section: Introduction
+hideIndicator: true
 ---
 
 # Table of Contents
