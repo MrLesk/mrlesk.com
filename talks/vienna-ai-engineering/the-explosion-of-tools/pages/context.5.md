@@ -6,7 +6,7 @@ transition: slide-up
 
 # Skills
 
-Skills are specific instructions that help customize Agent's behavior
+Skills are specific instructions that help customize an Agent's behavior
 
 <div class="flex gap-x-20">
 <div v-click="1">
@@ -15,7 +15,7 @@ Skills are specific instructions that help customize Agent's behavior
 
 <v-clicks at="2">
 
-- Consists of a main markdown file **SKILL.md**
+- Consist of a main markdown file **SKILL.md**
 - Can contain nested scripts
 - Can contain references to other skills
 - They are automatically discovered at startup
@@ -38,7 +38,7 @@ Skills are specific instructions that help customize Agent's behavior
 </v-clicks>
 
 <card class="w-92 mt-6" v-click="13">
-Skills are becoming popular because they don't waste too much <strong>context window</strong>
+Skills are becoming popular because they don't consume too much <strong>context window</strong>
 </card>
 
 </div>

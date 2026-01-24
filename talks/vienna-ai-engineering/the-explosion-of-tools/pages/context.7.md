@@ -6,7 +6,7 @@ transition: slide-up
 
 # Protocols
 
-There is an explosion of protocols each of them claiming to be the standard
+There is an explosion of protocols, each claiming to be the standard
 
 <v-clicks>
 

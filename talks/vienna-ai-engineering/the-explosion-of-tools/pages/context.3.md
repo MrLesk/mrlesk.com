@@ -6,7 +6,7 @@ transition: slide-up
 
 # LLM
 
-Modern LLM Models are trained for effective tool usage. With each generation they become more and more successful in engineering tasks
+Modern LLMs are trained for effective tool usage. With each generation they become more and more proficient at engineering tasks
 
 <img src="/open-closed.svg">
 

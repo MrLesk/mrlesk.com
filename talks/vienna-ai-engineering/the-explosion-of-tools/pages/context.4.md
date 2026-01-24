@@ -6,7 +6,7 @@ transition: slide-up
 
 # Agent Harness (local)
 
-This is the interface between LLM models and your machine.
+This is the interface between LLMs and your machine.
 
 <div class="h-80 relative [&_li]:leading-3 [&_li]:text-sm">
 <img src="/harness-local.svg" class="absolute">

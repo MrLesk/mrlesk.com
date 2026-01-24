@@ -6,7 +6,7 @@ transition: slide-up
 
 # Agent Harness (cloud)
 
-An alternative to local Agents, you can use Cloud based ones
+As an alternative to local Agents, you can use Cloud-based ones
 
 <img src="/harness-cloud.svg" class="mt-6">
 

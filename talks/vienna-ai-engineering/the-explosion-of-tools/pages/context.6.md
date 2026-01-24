@@ -6,7 +6,7 @@ transition: slide-up
 
 # AGENTS.md
 
-Contains general instructions for the AI Agents that is loaded at startup
+Contains general instructions for the AI Agents that are loaded at startup
 
 <ClickableSvg
   src="/agents.md.svg"

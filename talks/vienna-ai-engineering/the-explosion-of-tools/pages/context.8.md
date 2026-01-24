@@ -25,7 +25,7 @@ class=""
 ]"/>
 
 <div class="mt-12" v-click="12">
-<span>Recommended read: </span>
+<span>Recommended reading: </span>
 <a target="_blank" class="mt-4 inline-block font-semibold link-primary" href="https://factory.ai/news/agent-readiness">
 https://factory.ai/news/agent-readiness
 </a>
