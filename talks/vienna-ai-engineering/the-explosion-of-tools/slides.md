@@ -70,6 +70,10 @@ src: ./pages/context.4.md
 ---
 
 ---
+src: ./pages/context.4.1.md
+---
+
+---
 src: ./pages/context.5.md
 ---
 
@@ -119,6 +123,18 @@ src: ./pages/conclusions.md
 
 ---
 src: ./pages/conclusions.1.md
+---
+
+---
+src: ./pages/conclusions.2.md
+---
+
+---
+src: ./pages/conclusions.3.md
+---
+
+---
+src: ./pages/conclusions.4.md
 ---
 
 ---

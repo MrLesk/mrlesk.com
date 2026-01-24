@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg style="fill:none;stroke:none;fill-rule:evenodd;clip-rule:evenodd;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:1.5;" version="1.1"
+     xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="741" height="84" viewBox="28 6 741 84">
+    <style class="text-font-style fontImports" data-font-family="Inter">@font-face {font-family: 'Inter Regular';src:
+        url(https://fonts.napkin.ai/google-fonts/20250207/inter/inter_regular.ttf) format("truetype");font-weight: normal;font-style: normal;}
+    </style>
+    <g id="items" style="isolation: isolate">
+        <g id="blend" style="mix-blend-mode: normal">
+            <g id="g-root-ic_face_93dpia9i43yj-fill" data-item-order="1000000000" transform="translate(325, 3)"></g>
+            <g id="g-root-ic_face_93dpia9i43yj-stroke" data-item-order="1000000000" transform="translate(325, 3)">
+                <g id="ic_face_93dpia9i43yj-stroke" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="4" stroke="#484848"
+                   stroke-width="2" stroke-opacity="1">
+                    <g>
+                        <path d="M 46.599998 39.681999C 43.599998 36.681999 37.599998 35.181999 34.599998 38.181999M 16.9 45.681999C 16.6 44.482002 16.6 43.281998 16.6 41.781998C 16.6 25.581999 29.799999 12.382 46 12.382C 62.199997 12.382 75.399994 25.581999 75.399994 41.781998C 75.399994 52.582001 69.699997 61.882004 61 66.981995M 40.449997 77.800003C 46.449997 75.399994 45.324997 70.111 44.125 65.311005L 53.677002 61.612C 55.891281 60.755096 57.049278 58.316589 56.314003 56.059002L 56.313999 56.058998C 55.93375 54.891376 55.08989 53.931606 53.980541 53.405022C 52.871193 52.878433 51.594067 52.831413 50.449001 53.275002L 32.875 60.084999C 31.375 60.685001 29.575001 59.485001 29.575001 57.985001L 29.458 55.144001C 29.410076 53.986492 28.88414 52.900726 28.005583 52.145561C 27.127028 51.390404 25.974579 51.03352 24.823002 51.160004L 24.823 51.16C 22.704519 51.393932 21.100885 53.183647 21.1 55.315002L 21.1 67.584999C 21.1 75.385002 28.299999 81.084999 35.800003 79.284996C 35.800003 79.284996 38.949997 78.399994 40.449997 77.800003ZM 31.825001 27.681999C 31.20368 27.681999 30.700001 27.178322 30.700001 26.556999C 30.700001 25.93568 31.20368 25.431999 31.825001 25.431999M 31.825001 27.681999C 32.44632 27.681999 32.950001 27.178322 32.950001 26.556999C 32.950001 25.93568 32.44632 25.431999 31.825001 25.431999M 47.800003 27.681999C 47.17868 27.681999 46.675003 27.178322 46.675003 26.556999C 46.675003 25.93568 47.17868 25.431999 47.800003 25.431999M 47.800003 27.681999C 48.421322 27.681999 48.925003 27.178322 48.925003 26.556999C 48.925003 25.93568 48.421322 25.431999 47.800003 25.431999"></path>
+                    </g>
+                </g>
+            </g>
+            <g id="g-root-ic_safe_mdlg0y9idzpi-fill" data-item-order="1000000000" transform="translate(263, 21)"></g>
+            <g id="g-root-ic_safe_mdlg0y9idzpi-stroke" data-item-order="1000000000" transform="translate(263, 21)">
+                <g id="ic_safe_mdlg0y9idzpi-stroke" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="4" stroke="#fd6a65"
+                   stroke-width="2" stroke-opacity="1">
+                    <g>
+                        <path d="M 13.756 10.75L 42.256001 10.75C 42.256001 10.75 45.256001 10.75 45.256001 13.75L 45.256001 40.75C 45.256001 40.75 45.256001 43.75 42.256001 43.75L 13.756 43.75C 13.756 43.75 10.756 43.75 10.756 40.75L 10.756 13.75C 10.756 13.75 10.756 10.75 13.756 10.75M 13.756 43.75L 13.756 45.25M 42.256001 43.75L 42.256001 45.25M 15.25 34.75L 15.25 36.25C 15.25 37.906857 16.593145 39.25 18.25 39.25L 37.75 39.25C 39.406857 39.25 40.75 37.906857 40.75 36.25L 40.75 18.25C 40.75 16.593145 39.406857 15.25 37.75 15.25L 18.25 15.25C 16.593145 15.25 15.25 16.593145 15.25 18.25L 15.25 19.75M 15.256 24.25L 15.256 30.25M 13.756 19.75L 16.756001 19.75L 16.756001 24.25L 13.756 24.25ZM 13.756 30.25L 16.756001 30.25L 16.756001 34.75L 13.756 34.75ZM 22.006001 27.25C 22.006001 30.977921 25.028078 34 28.756001 34C 32.483921 34 35.506001 30.977921 35.506001 27.25C 35.506001 23.522079 32.483921 20.5 28.756001 20.5C 25.028078 20.5 22.006001 23.522079 22.006001 27.25M 25.006001 27.25C 25.006001 29.321068 26.684933 31 28.756001 31C 30.827068 31 32.506001 29.321068 32.506001 27.25C 32.506001 25.178932 30.827068 23.5 28.756001 23.5C 26.684933 23.5 25.006001 25.178932 25.006001 27.25M 28.756001 20.5L 28.756001 23.5M 23.983 22.476999L 26.104 24.599499M 22.006001 27.25L 25.006001 27.25M 23.983 32.022999L 26.104 29.902M 28.756001 34L 28.756001 31M 33.528999 32.024498L 31.408001 29.902M 35.506001 27.25L 32.506001 27.25M 33.528999 22.476999L 31.408001 24.599499"></path>
+                    </g>
+                </g>
+            </g>
+            <g id="g-root-ic_acce_18hki1u9imex6-fill" data-item-order="1000000000" transform="translate(416, 21)"></g>
+            <g id="g-root-ic_acce_18hki1u9imex6-stroke" data-item-order="1000000000" transform="translate(416, 21)">
+                <g id="ic_acce_18hki1u9imex6-stroke" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="4" stroke="#3da47f"
+                   stroke-width="2" stroke-opacity="1">
+                    <g>
+                        <path d="M 18.25 35.125C 18.25 40.509777 22.615225 44.875 28 44.875C 33.384777 44.875 37.75 40.509777 37.75 35.125C 37.75 29.740225 33.384777 25.375002 28 25.375002C 22.615225 25.375002 18.25 29.740225 18.25 35.125M 25 35.125C 25 36.781857 26.343145 38.125 28 38.125C 29.656855 38.125 31 36.781857 31 35.125C 31 33.468147 29.656855 32.125 28 32.125C 26.343145 32.125 25 33.468147 25 35.125M 35.5 28.900002L 35.5 18.625C 35.5 14.482864 32.142136 11.125 28 11.125C 23.857864 11.125 20.5 14.482864 20.5 18.625L 20.5 20.875"></path>
+                    </g>
+                </g>
+            </g>
+            <g id="g-root-tx_closedso_hz0z8i9i5j48-fill" data-item-order="1000000000" transform="translate(5.40887451171875, 15)">
+                <g id="tx_closedso_hz0z8i9i5j48-fill-merged" stroke="none" fill="#fd6a65" fill-opacity="1">
+                    <g>
+                        <text style="font: bold 20px &quot;Inter Regular&quot;, sans-serif; white-space: pre;" transform="translate(246.59112548828125, 34)"
+                              font-weight="bold" font-size="20px" font-family="'Inter Regular', sans-serif">
+                            <tspan x="-215.47" y="12" dominant-baseline="ideographic">Closed Source Models</tspan>
+                        </text>
+                    </g>
+                </g>
+            </g>
+            <g id="g-root-tx_closedso_hz0z8i9i5j48-stroke" data-item-order="1000000000" transform="translate(5.40887451171875, 15)"></g>
+            <g id="g-root-tx_opensour_147zx429i9rm2-fill" data-item-order="1000000000" transform="translate(464, 27)">
+                <g id="tx_opensour_147zx429i9rm2-fill-merged" stroke="none" fill="#3da47f" fill-opacity="1">
+                    <g>
+                        <text style="font: bold 20px &quot;Inter Regular&quot;, sans-serif; white-space: pre;" transform="translate(10, 22)" font-weight="bold"
+                              font-size="20px" font-family="'Inter Regular', sans-serif">
+                            <tspan x="2" y="12" dominant-baseline="ideographic">Open Source Models</tspan>
+                        </text>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

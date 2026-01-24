@@ -3,6 +3,6 @@ layout: default
 section: Conclusion
 ---
 
-# You need practice
+# 1. Make sure your project is AI ready
 
 
