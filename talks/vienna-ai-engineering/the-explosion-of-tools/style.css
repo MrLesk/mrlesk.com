@@ -23,3 +23,7 @@
 .slidev-presenter .grid-container.layout1 .grid-section.next {
     width: auto !important;
 }
+
+.slidev-layout h1{
+    margin-bottom: 2rem;
+}

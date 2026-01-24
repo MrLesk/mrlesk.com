@@ -6,11 +6,11 @@ transition: slide-up
 
 # Agent Harness (cloud)
 
-An alternative to local Agents, you can Cloud based ones
+An alternative to local Agents, you can use Cloud based ones
 
-<img src="/harness-cloud.svg" class="mt-10">
+<img src="/harness-cloud.svg" class="mt-6">
 
-<div class="ml-2 flex gap-x-76">
+<div class="-mt-4 flex gap-x-81 [&_li]:leading-3 [&_li]:text-sm">
 <div>
 
 - Codex Web

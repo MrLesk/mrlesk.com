@@ -38,24 +38,3 @@ Claude Code tools: <br>
 <em class="text-xs">Bash, Glob, Grep, LS, exit_plan_mode, Read, Edit, MultiEdit, Write, NotebookRead, NotebookEdit,
 WebFetch, TodoRead, TodoWrite, WebSearch</em>
 </div>
-
-<div class="hidden">
-These agentic harnesses can be divided into 3 categories:
-
-- IDE based:
-    - Cursor
-    - Github Copilot
-    - Google Antigravity
-
-- Terminal based:
-    - Claude Code
-    - Codex
-    - Pi
-
-- Desktop apps:
-    - Conductor
-    - Claude Desktop
-    - Commander AI
-
-</div>
-
