@@ -7,7 +7,7 @@ import "../../styles/blog-article.css";
 export async function getStaticPaths() {
   const posts = await getCollection("blog");
   return posts.map((post) => ({
-    params: { slug: post.id },
+    params: { slug: post.id.replace(/\\.md$/, "") },
     props: { post },
   }));
 }
@@ -32,19 +32,22 @@ const estimateReadingTime = (body = "") => {
 };
 
 const { Content } = await render(post);
+const slug = post.id.replace(/\\.md$/, "");
 const dateLabel = formatDateLabel(post.data.dateISO);
 const readingTime = estimateReadingTime(post.body);
 const tags = post.data.tags ?? [];
 
 const pageTitle = `${post.data.title} — Alex Gavrilescu`;
 const description = post.data.summary;
-const canonical = `https://mrlesk.com/blog/${post.id}`;
+const canonical = `https://mrlesk.com/blog/${slug}`;
 const og = {
   type: "article",
   title: post.data.title,
   description,
   url: canonical,
-  image: new URL("/blog/diagrams/ai-autonomy.svg", Astro.site).toString(),
+  image: post.data.ogImage
+    ? new URL(post.data.ogImage, Astro.site).toString()
+    : new URL("/content/ai-autonomy.svg", Astro.site).toString(),
 };
 ---
 

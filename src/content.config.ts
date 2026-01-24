@@ -31,6 +31,7 @@ const blog = defineCollection({
     dateISO: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
     tags: z.array(z.string()).optional(),
     draft: z.boolean().optional(),
+    ogImage: z.string().optional(),
   }),
 });
 

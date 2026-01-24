@@ -50,7 +50,7 @@ const entries = posts
       </header>
       <section aria-label="Blog posts" class="wall">
         {entries.map(({ entry, dateLabel, readingTime }) => {
-          const href = `/blog/${entry.id}`;
+          const href = `/blog/${entry.id.replace(/\\.md$/, "")}`;
           const tags = entry.data.tags ?? [];
           return (
             <article class="card">

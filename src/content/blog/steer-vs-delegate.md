@@ -2,6 +2,7 @@
 title: "Steer vs Delegate: Two Approaches to AI-Assisted Engineering"
 summary: "An analysis of two distinct AI interaction models, 'Steer' and 'Delegate,' and how they impact developer cognition and software quality."
 dateISO: "2026-01-03"
+ogImage: "/content/steer-delegate.png"
 tags:
     - "AI Agents"
     - "Workflow"
