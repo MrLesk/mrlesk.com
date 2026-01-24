@@ -5,6 +5,7 @@
         <div
           class="step-card"
           :class="{ 'is-visible': clicks >= index }"
+          :style="{ '--card-color': cardColors[index] }"
         >
           <div class="step-title">{{ step.title }}</div>
           <div class="step-subtitle">{{ step.subtitle }}</div>
@@ -34,6 +35,8 @@ const steps = [
   { title: 'IDE Extensions', subtitle: '(GitHub Copilot)' },
   { title: 'IDE/CLI Agents', subtitle: '(Cursor, Claude Code)' },
 ]
+
+const cardColors = ['#15cd89', '#30dc9d', '#4cebb0', '#67fac4']
 </script>
 
 <style scoped>
@@ -55,12 +58,12 @@ const steps = [
   min-width: 160px;
   padding: 12px 18px;
   border-radius: 14px;
-  border: 2px solid #d4dbe6;
-  background: #ffffff;
+  border: none;
+  background: var(--card-color);
   color: var(--slidev-theme-primary, #3e5166);
   font-weight: 600;
   text-align: center;
-  box-shadow: 0 8px 18px rgba(62, 81, 102, 0.08);
+  box-shadow: 0 8px 18px rgba(21, 205, 137, 0.15);
   opacity: 0;
   transform: translateY(12px);
   transition: opacity 0.3s ease, transform 0.3s ease;
