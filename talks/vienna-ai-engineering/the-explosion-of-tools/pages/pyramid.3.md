@@ -9,7 +9,7 @@ transition: slide-up
 This is the interface between LLMs and your machine.
 
 <div class="h-80 relative [&_li]:leading-3 [&_li]:text-sm">
-<img src="/harness-local.svg" class="absolute">
+<img src="/harness-local.svg" class="absolute" />
 
 <div class="absolute top-24 left-0">
 

@@ -8,7 +8,7 @@ transition: slide-up
 
 Modern LLMs are trained for effective tool usage. With each generation they become more and more proficient at engineering tasks
 
-<img src="/open-closed.svg">
+<img src="/open-closed.svg" />
 
 <div class=" ml-2 flex gap-x-60">
 <div>

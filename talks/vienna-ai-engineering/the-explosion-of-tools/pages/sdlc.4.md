@@ -17,4 +17,4 @@ class="-mt-20 -ml-5 "
   ['steer1', 'steer2', 'delegate1', 'delegate2'],
 ]"/>
 
-<img src="/steer-delegate-comparison.svg" class="mt-9" v-click="3">
+<img src="/steer-delegate-comparison.svg" class="mt-9" v-click="3" />

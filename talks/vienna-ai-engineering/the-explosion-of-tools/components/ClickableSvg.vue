@@ -15,11 +15,15 @@ const props = defineProps<{
   groups: string[][]  // Array of arrays - each inner array contains IDs to reveal on that click
 }>()
 
+const BASE_URL = import.meta.env.BASE_URL || '/'
+
 const { $clicks } = useSlideContext()
 const svgContent = ref('')
 
 onMounted(async () => {
-  const response = await fetch(props.src)
+  // Handle absolute paths by prepending BASE_URL
+  const url = props.src.startsWith('/') ? `${BASE_URL}${props.src.slice(1)}` : props.src
+  const response = await fetch(url)
   svgContent.value = await response.text()
 })
 

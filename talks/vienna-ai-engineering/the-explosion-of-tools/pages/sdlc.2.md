@@ -18,7 +18,7 @@ transition: slide-up
 
 </v-clicks>
 
-<img src="/idea.png" class="h-50 mt-4" v-click="5">
+<img src="/idea.png" class="h-50 mt-4" v-click="5" />
 
 <div class="text-sm -mt-1 ml-1" v-click="6">
 <span>Paper: </span>

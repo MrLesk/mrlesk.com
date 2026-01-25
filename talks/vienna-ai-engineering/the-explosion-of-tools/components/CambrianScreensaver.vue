@@ -76,7 +76,7 @@ const props = withDefaults(
   },
 )
 
-const { $page } = useSlideContext()
+const { $page, $renderContext } = useSlideContext()
 const { currentSlideNo } = useNav()
 
 const thisSlideNo = computed(() => {
@@ -87,6 +87,9 @@ const thisSlideNo = computed(() => {
 })
 
 const isCurrentSlide = computed(() => Number(currentSlideNo?.value ?? 1) === thisSlideNo.value)
+
+// Only show screensaver on main slide view, not presenter/overview
+const isMainSlideView = computed(() => $renderContext.value === 'slide')
 
 const isActive = ref(false)
 const overlayRef = ref<HTMLElement | null>(null)
@@ -336,9 +339,9 @@ function removeActivityListeners() {
 onMounted(() => {
   if (typeof window === 'undefined') return
   watch(
-    isCurrentSlide,
-    (active) => {
-      if (active) {
+    [isCurrentSlide, isMainSlideView],
+    ([onCurrentSlide, onMainView]) => {
+      if (onCurrentSlide && onMainView) {
         measureBounds()
         addActivityListeners()
         startIdleTimer()

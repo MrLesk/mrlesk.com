@@ -4,4 +4,4 @@ section: Introduction
 hideIndicator: true
 ---
 
-<img src="/cambrian.png">
+<img src="/cambrian.png" />
