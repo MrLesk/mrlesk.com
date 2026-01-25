@@ -6,7 +6,7 @@ const talks = defineCollection({
   loader: glob({ pattern: '**/*.md', base: './src/content/talks' }),
   schema: z.object({
     title: z.string(),
-    tagline: z.string(),
+    tagline: z.string().optional(),
     event: z.string(),
     dateISO: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
     slidesStatus: z.enum(["ready", "soon", "none"]).optional(),

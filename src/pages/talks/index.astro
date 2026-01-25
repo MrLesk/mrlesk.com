@@ -86,7 +86,7 @@ const filteredTalks = talks
               </div>
               <div>
                 <h2>{talk.title}</h2>
-                <p>{talk.tagline}</p>
+                {talk.tagline ? <p>{talk.tagline}</p> : null}
               </div>
               <div class="focus">
                 <Focus />
