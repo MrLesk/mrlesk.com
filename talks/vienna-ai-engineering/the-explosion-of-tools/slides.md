@@ -27,11 +27,13 @@ timelinePresets:
               label: Maintenance
 ---
 
-<IdleScreensaver image-src="/vienna-ai-engineering-logo.jpeg" />
+<CambrianScreensaver />
 
-# The Cambrian Explosion of Agentic AI
+<h1 class="pt-22">The Cambrian Explosion <br> of Agentic AI</h1>
 
-#### 27 January 2026, Vienna AI Engineering
+<img src="/vienna-ai-engineering-logo.jpeg" class="h-26 mx-auto mt-12" alt="Vienna AI Engineering" />
+
+<p class="text-xl opacity-60 mt-4">27 January 2026</p>
 
 ---
 src: ./pages/cambrian.md
