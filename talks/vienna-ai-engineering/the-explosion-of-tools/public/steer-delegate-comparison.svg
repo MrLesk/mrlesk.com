@@ -361,7 +361,8 @@
                     <g>
                         <text style="font: bold 11.3px &quot;Inter Regular&quot;, sans-serif; white-space: pre;" transform="translate(57, 17)"
                               font-weight="bold" font-size="11.3px" font-family="'Inter Regular', sans-serif">
-                            <tspan x="-45" y="7" dominant-baseline="ideographic">Devs on the loop</tspan>
+                            <tspan x="-45" y="0" dominant-baseline="ideographic">Devs on the loop</tspan>
+                            <tspan x="-41" y="14" dominant-baseline="ideographic">("YOLO" mode)</tspan>
                         </text>
                     </g>
                 </g>

@@ -8,10 +8,13 @@ section: SDLC
 
 # Create a plan before writing code
 
-LLMs function as "autocomplete" by nature. Our goal is to make them gather context and virtually navigate the entire path to the goal to verify they are heading in
-the right direction. This can be achieved by asking our Agents to create a plan for their changes that we can review.
+LLMs function as "autocomplete" and struggle when context is **too scarce or overwhelming**.
+To verify the direction before writing code:
 
-<div v-click>
+- Define clear **Acceptance Criteria**
+- Ask for a **Plan** to validate the path
+
+<div v-click class="mt-3">
 Some approaches that can help you achieve this goal:
 </div>
 

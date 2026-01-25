@@ -1,10 +1,7 @@
 ---
-layout: default
+layout: new-section
 section: Conclusion
+transition: slide-up
 ---
 
-# 3. Get ready to surf the Cambrian AI wave
-
-Tools change frequently
-
-Keep an eye on AI creators
+<h1> 3. Get ready to surf the <br> Cambrian AI wave </h1>
