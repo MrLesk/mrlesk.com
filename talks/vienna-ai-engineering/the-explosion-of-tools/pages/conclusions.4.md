@@ -3,6 +3,8 @@ layout: default
 section: Conclusion
 ---
 
-# 4. Come to Vienna AI Engineering Meetups
+# 3. Get ready to surf the Cambrian AI wave
 
-to learn and share experiences with people with similar interests
+Tools change frequently
+
+Keep an eye on AI creators
