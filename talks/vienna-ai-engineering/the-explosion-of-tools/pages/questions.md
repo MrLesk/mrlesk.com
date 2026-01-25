@@ -3,7 +3,9 @@ layout: new-section
 section: Q&A
 ---
 
-# Questions?
+# Thank you!
+
+#### - Q&A Time -
 
 <div class="mt-8 flex flex-col items-center">
 

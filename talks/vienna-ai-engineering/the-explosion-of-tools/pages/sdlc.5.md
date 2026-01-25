@@ -4,6 +4,7 @@ timeline:
     preset: sdlc
     current: verification
 section: SDLC
+transition: slide-up
 ---
 
 # Create a self-verification loop for your Agents

@@ -4,6 +4,7 @@ timeline:
     preset: sdlc
     current: planning
 section: SDLC
+transition: slide-up
 ---
 
 # Create a plan before writing code

@@ -4,6 +4,7 @@ timeline:
     preset: sdlc
     current: idea
 section: SDLC
+transition: slide-up
 ---
 
 # Can AI help us develop our Ideas?

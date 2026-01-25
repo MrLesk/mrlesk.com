@@ -7,6 +7,7 @@ hideIndicator: true
 # Table of Contents
 
 1. Context
-2. AI and the Software Development Lifecycle
-3. Conclusion
-4. Q&A & QR code to these slides
+2. The pyramid of Agentic AI
+3. AI and the Software Development Lifecycle
+4. Conclusion
+5. Q&A & QR code to these slides

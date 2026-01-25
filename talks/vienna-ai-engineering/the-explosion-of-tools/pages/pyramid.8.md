@@ -1,6 +1,6 @@
 ---
 layout: default
-section: Context
+section: Pyramid
 ---
 
 # Data

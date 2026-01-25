@@ -1,6 +1,7 @@
 ---
 layout: default
 section: SDLC
+transition: slide-up
 ---
 
 # What do we want to achieve?

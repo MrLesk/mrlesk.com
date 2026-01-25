@@ -1,9 +1,9 @@
 ---
-layout: default
-section: Context
+layout: new-section
+section: Pyramid
 transition: slide-up
 ---
 
-# The current scene
+# The Pyramid of Agentic AI
 
 <img class="h-100" src="/pyramid.png">

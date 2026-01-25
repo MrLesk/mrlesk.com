@@ -4,6 +4,7 @@ timeline:
     preset: sdlc
     current: implementation
 section: SDLC
+transition: slide-up
 ---
 
 # 2 ways of writing Code with AI
