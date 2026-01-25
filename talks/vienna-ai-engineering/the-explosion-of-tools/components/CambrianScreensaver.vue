@@ -29,6 +29,9 @@ import { computed, onBeforeUnmount, onMounted, reactive, ref, watch } from 'vue'
 
 defineOptions({ name: 'CambrianScreensaver' })
 
+// Get base URL for assets
+const BASE_URL = import.meta.env.BASE_URL || '/'
+
 // Each creature has its own sprite sheet with 4 frames horizontally
 const FRAME_COUNT = 4
 const ANIMATION_FPS = 8
@@ -63,12 +66,12 @@ const props = withDefaults(
     idleDelay: 15_000,
     baseSpeed: 80,
     creatures: () => [
-      { name: 'Trilobite', sprite: '/sprites/trilobite.png', count: 2, size: 90 },
-      { name: 'Anomalocaris', sprite: '/sprites/anomalocaris.png', count: 1, size: 110 },
-      { name: 'Hallucigenia', sprite: '/sprites/hallucigenia.png', count: 1, size: 85 },
-      { name: 'Opabinia', sprite: '/sprites/opabinia.png', count: 1, size: 95 },
-      { name: 'Wiwaxia', sprite: '/sprites/wiwaxia.png', count: 1, size: 90 },
-      { name: 'Pikaia', sprite: '/sprites/pikaia.png', count: 1, size: 80 },
+      { name: 'Trilobite', sprite: 'sprites/trilobite.png', count: 2, size: 90 },
+      { name: 'Anomalocaris', sprite: 'sprites/anomalocaris.png', count: 1, size: 110 },
+      { name: 'Hallucigenia', sprite: 'sprites/hallucigenia.png', count: 1, size: 85 },
+      { name: 'Opabinia', sprite: 'sprites/opabinia.png', count: 1, size: 95 },
+      { name: 'Wiwaxia', sprite: 'sprites/wiwaxia.png', count: 1, size: 90 },
+      { name: 'Pikaia', sprite: 'sprites/pikaia.png', count: 1, size: 80 },
     ],
   },
 )
@@ -110,8 +113,9 @@ function getSpriteStyle(creature: Creature) {
   const frameIndex = creature.frame % FRAME_COUNT
   // For 4 frames: 0%, 33.33%, 66.66%, 100%
   const posX = FRAME_COUNT > 1 ? (frameIndex / (FRAME_COUNT - 1)) * 100 : 0
+  const spriteUrl = `${BASE_URL}${creature.sprite}`
   return {
-    backgroundImage: `url(${creature.sprite})`,
+    backgroundImage: `url(${spriteUrl})`,
     backgroundPosition: `${posX}% center`,
     backgroundSize: `${FRAME_COUNT * 100}% auto`,
   }
