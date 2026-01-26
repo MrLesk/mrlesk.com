@@ -173,6 +173,18 @@ const handleKey = (event: KeyboardEvent) => {
   values.value[selectedIndex.value] = clamp(current + delta)
 }
 
+const handleStorage = (event: StorageEvent) => {
+  if (event.key !== props.storageKey || !event.newValue) return
+  try {
+    const parsed = JSON.parse(event.newValue)
+    if (Array.isArray(parsed)) {
+      values.value = normalizeValues(parsed)
+    }
+  } catch {
+    // Ignore malformed storage.
+  }
+}
+
 const chartData = computed(() => {
   const data = values.value.map((value) => value)
   const activeIndex = props.interactive ? selectedIndex.value : -1
@@ -275,12 +287,14 @@ onMounted(() => {
   if (props.interactive) {
     window.addEventListener('keydown', handleKey)
   }
+  window.addEventListener('storage', handleStorage)
 })
 
 onBeforeUnmount(() => {
   if (props.interactive) {
     window.removeEventListener('keydown', handleKey)
   }
+  window.removeEventListener('storage', handleStorage)
 })
 
 watch(
