@@ -22,6 +22,6 @@ Modern LLMs are trained for effective tool usage. With each generation they beco
 - MiniMax: M2.1
 - Z.ai: GLM-4.7
 - DeepSeek: v3.2
-- Moonshot AI: Kimi K2
+- Moonshot AI: Kimi K2.5
 </div>
 </div>

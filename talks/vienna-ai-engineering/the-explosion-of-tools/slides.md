@@ -60,6 +60,10 @@ src: ./pages/context.1.md
 ---
 
 ---
+src: ./pages/context.2.md
+---
+
+---
 src: ./pages/pyramid.md
 ---
 
