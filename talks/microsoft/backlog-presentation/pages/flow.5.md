@@ -6,7 +6,7 @@ timeline:
   current: build
 ---
 
-<h1 class="pt-4">4) Implementation & final review</h1>
+<h1 class="pt-4">4) Implementation and final review</h1>
 
 <v-clicks>
 

@@ -29,7 +29,7 @@ hideIndicator: true
     title="Step 02"
     :gradient="false"
     v-click="2">
-    <h4 >Tasks creation &amp; decomposition</h4>
+    <h4 >Task creation &amp; decomposition</h4>
     <div class="text-sm mt-2">Break intent into atomic Backlog.md tasks</div>
   </Card>
 
@@ -49,7 +49,7 @@ hideIndicator: true
     title="Step 03"
     :gradient="false"
     v-click="3">
-    <h4 >Research + Implementation plan</h4>
+    <h4 >Research + implementation plan</h4>
     <div class="text-sm mt-2">Build context for AI Agents</div>
 </Card>
 </div>

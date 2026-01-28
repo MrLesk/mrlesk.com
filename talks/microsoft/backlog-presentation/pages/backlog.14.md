@@ -8,9 +8,9 @@ section: Backlog.md
 
 <v-clicks>
 
-* It's free and open source (MIT License)
+* It's free and open-source (MIT License)
 * Works offline (no data is sent to any server)
-* Works on Windows, macOS, Linux
+* Works on Windows, macOS, and Linux
 * Uses Git commands to keep tasks in sync between local and remote branches
 
 </v-clicks>

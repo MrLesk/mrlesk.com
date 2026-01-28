@@ -196,9 +196,5 @@ src: ./pages/conclusions.5.md
 ---
 
 ---
-src: ./pages/phone.md
----
-
----
 src: ./pages/questions.md
 ---

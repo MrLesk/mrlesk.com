@@ -6,7 +6,7 @@ timeline:
   current: spec
 ---
 
-<h1 class="pt-4">1) Start with an idea & create a PRD</h1>
+<h1 class="pt-4">1) Start with an idea and create a PRD</h1>
 
 <v-clicks>
 

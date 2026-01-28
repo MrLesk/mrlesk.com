@@ -4,7 +4,7 @@ transition: slide-up
 section: Backlog.md
 ---
 
-# Via CLI or MCP instructions
+# Via the CLI or MCP instructions
 
 
 <div class="mt-16 flex flex-col gap-30 items-center">

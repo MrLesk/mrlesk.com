@@ -4,13 +4,13 @@ transition: slide-up
 section: My journey
 ---
 
-# Why this approach works so well?
+# Why does this approach work so well?
 
 <v-clicks>
 
-* Agents can easily read markdown files → _it's just text_
-* Tasks act as persistent context → _allow better context engineering_
-* Scope is well defined → _Agents are less likely to implement features outside of scope_
+* Agents can easily read Markdown files → _it's just text_
+* Tasks act as persistent context → _allows better context engineering_
+* Scope is well-defined → _Agents are less likely to implement features outside of scope_
 * You can easily switch between models for different tasks
 * You can work on multiple tasks in parallel using Git Worktrees
 
@@ -21,5 +21,5 @@ section: My journey
 
 <div v-click >
 
-You are less likely to run out of context window when implementing tasks **if you do a good task splitting**
+You are less likely to run out of context window space when implementing tasks **if you split them well**
 </div>

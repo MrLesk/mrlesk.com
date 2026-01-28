@@ -6,7 +6,7 @@ section: My journey
 
 # Add Agent instructions (AGENTS.md)
 
-After each task agents must run type checks + tests → _they now have a basic feedback loop of their changes_
+After each task, agents must run type checks and tests → _they now have a basic feedback loop for their changes_
 
 <div class="mt-8 flex justify-between">
     <div class="flex flex-col gap-10 items-center justify-center w-140 text-center" >

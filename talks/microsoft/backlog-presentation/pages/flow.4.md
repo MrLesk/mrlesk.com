@@ -11,7 +11,7 @@ timeline:
 <v-clicks>
 
 * Ask AI to understand the task requirements and research how to implement them
-* Store it on the Backlog.md task for persistent access
+* Store it in the Backlog.md task for persistent access
 * Do this right before starting the implementation, not when you create the tasks → _avoid unnecessary conflicts_
 * Review the plan and adjust if needed
 

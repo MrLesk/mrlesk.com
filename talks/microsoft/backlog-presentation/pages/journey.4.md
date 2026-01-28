@@ -8,9 +8,9 @@ section: My journey
 
 <v-clicks>
 
-* With a pre-defined structure: **why** (description), **what** (acceptance criteria), **how** (plan)
-* In a format that both humans and agents could easily understand: **markdown files**
-* Checked-in in the **git repository** so that agents can easily read them
+* With a predefined structure: **why** (description), **what** (acceptance criteria), **how** (plan)
+* In a format that both humans and agents could easily understand: **Markdown files**
+* Checked in to the **Git repository** so that agents can easily read them
 * Instruct agents (via AGENTS.md) about our workflow
 
 </v-clicks>
@@ -20,7 +20,7 @@ section: My journey
 <div v-click class="mt-8 flex justify-between">
     <div class="flex flex-col gap-10 w-120" >
         <card icon="😁" title="Result" variant="success">
-            <h3>Great Success (>95%)</h3>
+            <h3>Great success (>95%)</h3>
         </card>
     </div>
      <div>

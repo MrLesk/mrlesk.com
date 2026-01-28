@@ -5,7 +5,7 @@ section: Backlog.md
 hideIndicator: true
 ---
 
-# It has a TUI - Terminal User Interface
+# It has a TUI (Terminal User Interface)
 
 <v-switch>
 <template #1>
@@ -14,7 +14,7 @@ hideIndicator: true
   Have you ever seen a terminal Kanban board?
 </card>
 <card v-click="2" class="text-lg font-bold text-center">
-  In June 2025 there were none, so I made one.
+  In June 2025, there were none, so I made one.
 </card>
 </div>
 </template>

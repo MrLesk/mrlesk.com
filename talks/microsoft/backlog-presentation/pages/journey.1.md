@@ -15,9 +15,9 @@ section: My journey
             <h3>50% success rate</h3>
         </card>
         <card v-click class="w-62">
-            <h2>Success Rate</h2>
+            <h2>Success rate</h2>
             <hr class="py-2">
-            tasks that are merged <br>
+            Tasks that are merged <br>
             with small changes
         </card>
     </div>

@@ -9,7 +9,7 @@ section: My journey
 <v-clicks>
 
 * You tell the agent the **why** and **what** and ask it to come up with the **how** → _verify understanding_
-* You write clear and **verifiable Acceptance Criteria** and **Definition of done** → _easier to review_
+* You write clear and **verifiable Acceptance Criteria** and **definition of done** → _easier to review_
 
 </v-clicks>
 
@@ -17,7 +17,7 @@ section: My journey
 
 <div  class="font-medium mt-10">
 
-<h3 v-click class="mb-4"> Most important: context window was a major problem </h3>
+<h3 v-click class="mb-4"> Most important: the context window was a major problem </h3>
 
 <div v-click>
 
@@ -25,5 +25,4 @@ section: My journey
 </div>
 
 </div>
-
 
