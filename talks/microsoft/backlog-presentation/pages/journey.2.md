@@ -1,6 +1,7 @@
 ---
 layout: default
 transition: slide-up
+section: My journey
 ---
 
 # Add Agent instructions (AGENTS.md)
@@ -16,7 +17,7 @@ transition: slide-up
         </card>
     </div>
      <div v-click class="text-center">
-        <img class="" src="/journey.2.png">
+        <img class="" src="/journey.2.1.png">
         <em>No point fighting the non-deterministic LLMs</em>
      </div>
 </div>

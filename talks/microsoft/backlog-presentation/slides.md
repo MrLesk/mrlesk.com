@@ -8,7 +8,9 @@ drawings:
 mdc: true
 transition: slide-left
 layout: intro
-css: unocss
+sectionIndicator:
+    enabled: true
+hideIndicator: true
 timelinePresets:
   backlog-flow:
     steps:
@@ -35,6 +37,38 @@ src: ./pages/presenter.md
 
 ---
 src: ./pages/toc.md
+---
+
+---
+src: ./pages/context.md
+---
+
+---
+src: ./pages/context.1.md
+---
+
+---
+src: ./pages/context.2.md
+---
+
+---
+src: ./pages/context.3.md
+---
+
+---
+src: ./pages/context.4.md
+---
+
+---
+src: ./pages/context.5.md
+---
+
+---
+src: ./pages/context.6.md
+---
+
+---
+src: ./pages/context.7.md
 ---
 
 ---
@@ -70,65 +104,129 @@ src: ./pages/backlog.md
 ---
 
 ---
-src: ./pages/backlog.1.md
+src: ./pages/backlog.2.md
 ---
 
 ---
-src: ./pages/task.1.md
+src: ./pages/backlog.3.md
 ---
 
 ---
-src: ./pages/task.2.md
+src: ./pages/backlog.3.5.md
 ---
 
 ---
-src: ./pages/task.3.md
+src: ./pages/backlog.4.md
 ---
 
 ---
-src: ./pages/plan.1.md
+src: ./pages/backlog.5.md
 ---
 
 ---
-src: ./pages/plan.2.md
+src: ./pages/backlog.6.md
 ---
 
 ---
-src: ./pages/plan.3.md
+src: ./pages/backlog.7.md
 ---
 
 ---
-src: ./pages/plan.4.md
+src: ./pages/backlog.8.md
 ---
 
 ---
-src: ./pages/execution.1.md
+src: ./pages/backlog.9.md
 ---
 
 ---
-src: ./pages/execution.2.md
+src: ./pages/backlog.10.md
 ---
 
 ---
-src: ./pages/execution.3.md
+src: ./pages/backlog.11.md
 ---
 
 ---
-src: ./pages/execution.4.md
+src: ./pages/backlog.12.md
 ---
 
 ---
-src: ./pages/execution.5.md
+src: ./pages/backlog.13.md
 ---
 
 ---
-src: ./pages/why.md
+src: ./pages/backlog.14.md
 ---
 
 ---
-src: ./pages/next.md
+src: ./pages/backlog.16.md
 ---
 
 ---
-src: ./pages/end.md
+src: ./pages/backlog.17.md
+---
+
+---
+src: ./pages/backlog.18.md
+---
+
+---
+src: ./pages/flow.md
+---
+
+---
+src: ./pages/flow.1.md
+---
+
+---
+src: ./pages/flow.2.md
+---
+
+---
+src: ./pages/flow.3.md
+---
+
+---
+src: ./pages/flow.4.md
+---
+
+---
+src: ./pages/flow.5.md
+---
+
+---
+src: ./pages/flow.6.md
+---
+
+---
+src: ./pages/conclusions.md
+---
+
+---
+src: ./pages/conclusions.1.md
+---
+
+---
+src: ./pages/conclusions.2.md
+---
+
+---
+src: ./pages/conclusions.3.md
+---
+
+---
+src: ./pages/conclusions.4.md
+---
+
+---
+src: ./pages/conclusions.5.md
+---
+
+---
+src: ./pages/phone.md
+---
+
+---
+src: ./pages/questions.md
 ---
