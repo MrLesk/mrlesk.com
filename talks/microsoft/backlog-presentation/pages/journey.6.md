@@ -3,12 +3,12 @@ layout: default
 section: My journey
 ---
 
-# There are some problems with this approach
+# There are some limitations with this approach
 
 <v-clicks>
 
-* Asking AI to create tasks can lead to inconsistent task structures
-* It's not easy to keep track of what tasks have been done and what is next
-* If will miss some features like (labels, dependencies, update/create date)
+* Agents not always follow instructions correctly and this could lead to **inconsistent task structures**
+* It's not easy to have an overview of what tasks are completed and what are in "**To Do**"
+* It's not easy to track **dependencies** and hierarchy between tasks
 
 </v-clicks>

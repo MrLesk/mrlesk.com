@@ -48,18 +48,6 @@ src: ./pages/context.1.md
 ---
 
 ---
-src: ./pages/context.2.md
----
-
----
-src: ./pages/context.3.md
----
-
----
-src: ./pages/context.4.md
----
-
----
 src: ./pages/context.5.md
 ---
 
@@ -136,14 +124,6 @@ src: ./pages/backlog.8.md
 ---
 
 ---
-src: ./pages/backlog.9.md
----
-
----
-src: ./pages/backlog.10.md
----
-
----
 src: ./pages/backlog.11.md
 ---
 
@@ -152,15 +132,7 @@ src: ./pages/backlog.12.md
 ---
 
 ---
-src: ./pages/backlog.13.md
----
-
----
 src: ./pages/backlog.14.md
----
-
----
-src: ./pages/backlog.16.md
 ---
 
 ---

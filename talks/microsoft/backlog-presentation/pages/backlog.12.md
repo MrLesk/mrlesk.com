@@ -2,12 +2,19 @@
 layout: default
 transition: slide-up
 section: Backlog.md
-terminalSrc: http://localhost:7681/
 ---
 
-# Humans can easily use Backlog.md TUI
+<h1>It has a <span class="line-through">WUI</span> Web interface</h1>
 
-<TtydFrame
-class="mt-8 max-w-186 h-103"
-:src="$frontmatter.terminalSrc"
-/>
+<div class="flex justify-start">
+  <v-switch class="inline-block">
+    <template #1>
+      <img class="h-100 border-2" src="/backlog.5.dark.png">
+    </template>
+    <template #2>
+        <img class="h-100 border-2" src="/backlog.5.light.png">
+    </template>
+  </v-switch>
+</div>
+
+<!-- Jira get out of here -->

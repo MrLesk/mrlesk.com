@@ -4,13 +4,13 @@ transition: slide-up
 section: My journey
 ---
 
-# Why markdown tasks work so well with AI Agents?
+# Why this approach works so well?
 
 <v-clicks>
 
-* Agents can easily read markdown files → it's just text
-* Tasks act as persistent context → allow better context engineering
-* Scope is well defined → Claude is less likely to implement features outside of scope
+* Agents can easily read markdown files → _it's just text_
+* Tasks act as persistent context → _allow better context engineering_
+* Scope is well defined → _Agents are less likely to implement features outside of scope_
 * You can easily switch between models for different tasks
 * You can work on multiple tasks in parallel using Git Worktrees
 
@@ -19,8 +19,7 @@ section: My journey
 
 <h3 v-click class="mt-10 mb-4"> Most important </h3>
 
-<ul>
-<li v-click >
-You are less likely to run out of context window when implementing tasks
-</li>
-</ul>
+<div v-click >
+
+You are less likely to run out of context window when implementing tasks **if you do a good task splitting**
+</div>

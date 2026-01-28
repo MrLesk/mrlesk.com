@@ -3,31 +3,18 @@ layout: default
 section: Context
 ---
 
-# Ways to interact with AI Agents
+# How do we use AI?
 
 
 <v-switch>
     <template #1>
-        <div class="flex">
-            <Excalidraw
-            drawFilePath="/context.7.1.json"
-            class="w-[460px] max-w-full mt-6"
-            :background="false" />
-             <div class="mt-16" >
-                <img class="w-40" src="/matt.png" />
-            </div>
-        </div>
+        <img class="h-110" src="/context.7.1.svg" />
     </template>
     <template #2>
-        <div class="flex">
-            <Excalidraw
-            drawFilePath="/context.7.2.json"
-            class="w-[460px] max-w-full mt-6"
-            :background="false" />
-             <div class="mt-16" >
-                <img class="w-40" src="/matt.png" />
-            </div>
-        </div>
+        <img class="h-110" src="/context.7.2.svg" />
+    </template>
+    <template #3>
+        <img class="h-110" src="/context.7.3.svg" />
     </template>
 </v-switch>
 

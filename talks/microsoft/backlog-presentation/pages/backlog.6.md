@@ -4,23 +4,16 @@ transition: slide-up
 section: Backlog.md
 ---
 
-# Via AGENTS.md or CLAUDE.md instructions
+# Via CLI or MCP instructions
 
 
-<div class="mt-16 flex gap-40 items-center">
+<div class="mt-16 flex flex-col gap-30 items-center">
     <div >
-        <img class="h-60" src="/instructions.1.png">
+        <img class="" src="/backlog.6.png">
     </div>
-    <card v-click="1" class="text-center font-bold w-40">
-        The magic <br>
-        is here
+    <card v-click="1" class="text-center font-bold w-60">
+        The magic is here!
     </card>
 </div>
 
-
-<Arrow v-click="1" x1="718" y1="226" x2="480" y2="290"  color="darkred"/>
-
-<!--
-They are files in the root folder of the repository containing instructions for the agent.
-Backlog.md injects custom CLAUDE.md or AGENTS.md instructions during initialization
--->
+<Arrow v-click="1" x1="436" y1="339" x2="436" y2="220" />

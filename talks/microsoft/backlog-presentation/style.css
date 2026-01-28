@@ -27,3 +27,45 @@
 .slidev-layout h1{
     margin-bottom: 2rem;
 }
+
+.task-structure-block {
+    border-radius: 0.5rem;
+    background: var(--shiki-color-background);
+    overflow: hidden !important;
+    scrollbar-width: none;
+}
+
+.task-structure-block::-webkit-scrollbar {
+    width: 0;
+    height: 0;
+}
+
+.task-structure-block pre.shiki {
+  margin: 0;
+  padding: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.task-structure-block.slidev-code-wrapper {
+    overflow: hidden !important;
+}
+
+.task-structure-block.slidev-code-wrapper::-webkit-scrollbar {
+    width: 0;
+    height: 0;
+}
+
+.task-structure-block pre.shiki code {
+  display: block !important;
+  padding: 1rem 1.25rem 1rem 1rem !important;
+  box-sizing: border-box;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.task-structure-block pre.shiki code > span.line {
+  display: inline;
+}

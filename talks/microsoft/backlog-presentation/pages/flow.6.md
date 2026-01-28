@@ -1,10 +1,13 @@
 ---
-layout: default
+layout: intro
 section: Spec-driven flow
 ---
 
 # Repeat!
 
-<Card variant="success"  icon="💡" title="Hint">
-  Update the agent instructions files when needed.
+<div class="flex justify-center ">
+
+<Card variant="success"  icon="💡" title="Hint" class="w-120" >
+  Update the agent instructions with lessons learned
 </Card>
+</div>

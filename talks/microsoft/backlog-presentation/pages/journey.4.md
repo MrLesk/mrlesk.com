@@ -4,24 +4,18 @@ transition: slide-up
 section: My journey
 ---
 
-# We need a structure for this: markdown files
+# How can we make the process more repeatable?
 
 <v-clicks>
 
-* With a pre-defined structure
-* And stored in your git repo
+* With a pre-defined structure: **why** (description), **what** (acceptance criteria), **how** (plan)
+* In a format that both humans and agents could easily understand: **markdown files**
+* Checked-in in the **git repository** so that agents can easily read them
+* Instruct agents (via AGENTS.md) about our workflow
 
 </v-clicks>
 
-<h3 v-click class=mt-10 mb-4>So that we can achieve a successful loop</h3>
-
-<v-clicks >
-
-* Use Agent Instructions effectively
-* Can use specialized agents for planning/execution
-
-
-</v-clicks>
+<h3 class="mt-10">This keeps the delivery loop predictable</h3>
 
 <div v-click class="mt-8 flex justify-between">
     <div class="flex flex-col gap-10 w-120" >
@@ -30,6 +24,6 @@ section: My journey
         </card>
     </div>
      <div>
-        <img class="-mt-34" src="/journey.3.1.png">
+        <img class="-mt-36" src="/journey.3.1.png">
      </div>
 </div>

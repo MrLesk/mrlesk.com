@@ -4,29 +4,25 @@ transition: slide-up
 section: My journey
 ---
 
-# How to make the flow more deterministic?
+# How to make the process more deterministic?
 
 <v-clicks>
 
-* Always include important details (Why, What and How)
-* Ubiquitous Acceptance Criteria and Definition of done
+* You tell the agent the **why** and **what** and ask it to come up with the **how** → _verify understanding_
+* You write clear and **verifiable Acceptance Criteria** and **Definition of done** → _easier to review_
 
 </v-clicks>
 
 
 
-<div  class="w-160 font-medium mt-10">
+<div  class="font-medium mt-10">
 
-<h3 v-click class="mb-4"> Most important </h3>
+<h3 v-click class="mb-4"> Most important: context window was a major problem </h3>
 
-<ul>
-<li v-click >
-Ask AI to create smaller tasks that can fit in a single context window session
-</li>
-<li v-click >
-Ask AI to create implementation plan for each task and understand their intent
-</li>
-</ul>
+<div v-click>
+
+**Solution**: work with smaller tasks that can fit in the context window → compaction was really bad
+</div>
 
 </div>
 

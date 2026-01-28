@@ -39,9 +39,7 @@ function ensurePortFree(port: string) {
   if (!pids.length) return
 
   log('dev', `terminating processes on port ${port}: ${pids.join(', ')}`)
-  for (const pid of pids) {
-    Bun.spawnSync({ cmd: ['kill', '-TERM', pid] })
-  }
+
 
   const verify = Bun.spawnSync({
     cmd: ['lsof', '-ti', `tcp:${port}`],
@@ -54,17 +52,12 @@ function ensurePortFree(port: string) {
     .map((pid) => pid.trim())
     .filter(Boolean)
 
-  if (stillBusy.length) {
-    log('dev', `force killing stubborn processes on port ${port}: ${stillBusy.join(', ')}`)
-    for (const pid of stillBusy) {
-      Bun.spawnSync({ cmd: ['kill', '-KILL', pid] })
-    }
-  }
+
 }
 
 const backlogDir = join(homedir(), 'projects', 'Backlog.md')
 const backlogStartupCommand = process.env.BACKLOG_START_COMMAND ?? 'bun run cli board'
-const backlogTtydPort = process.env.TTYD_BACKLOG_PORT ?? process.env.TTYD_PORT ?? '7681'
+const backlogTtydPort = process.env.TTYD_BACKLOG_PORT ?? process.env.TTYD_PORT ?? '7691'
 
 const commands: Command[] = [
   {
@@ -84,7 +77,7 @@ const commands: Command[] = [
   },
   {
     name: 'slidev',
-    cmd: ['bun', 'x', 'slidev', '--open'],
+    cmd: ['bun', 'x', 'slidev', '--open', '--port', '3050'],
     cwd: process.cwd(),
   },
 ]
@@ -126,7 +119,7 @@ function shutdown(code = 0) {
   log('dev', 'shutting down child processes...')
   for (const { proc } of running) {
     try {
-      proc.kill()
+
     } catch {
       // ignore - process may already be closed
     }
