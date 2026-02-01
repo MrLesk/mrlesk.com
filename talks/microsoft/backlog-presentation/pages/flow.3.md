@@ -17,6 +17,6 @@ timeline:
 
 <img class="mt-6" v-click="3" src="/flow.3.svg"/>
 
-<Card v-click="4" icon="💡" title="Hint" class="w-192 mt-5">
-Use a model that's good at planning and can research the latest best practices on the internet
-</Card>
+<card icon="🤔" title="Important" class="mt-10" v-click="4" >
+ <h3>#1 review step!</h3>
+</card>

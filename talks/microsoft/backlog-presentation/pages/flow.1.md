@@ -5,7 +5,7 @@ section: Spec-driven flow
 hideIndicator: true
 ---
 
-# What is Spec-driven AI Development?
+# Spec-driven AI Development with Backlog.md
 
 <Arrow v-click="2" x1="350" y1="160" x2="512" y2="160" />
 <Arrow v-click="3" x1="700" y1="218" x2="700" y2="336" />

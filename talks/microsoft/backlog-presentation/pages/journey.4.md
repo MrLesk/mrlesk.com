@@ -15,9 +15,9 @@ section: My journey
 
 </v-clicks>
 
-<h3 class="mt-10">This keeps the delivery loop predictable</h3>
+<h3 class="mt-10" v-click="5">This keeps the delivery loop predictable</h3>
 
-<div v-click class="mt-8 flex justify-between">
+<div v-click="6" class="mt-8 flex justify-between">
     <div class="flex flex-col gap-10 w-120" >
         <card icon="😁" title="Result" variant="success">
             <h3>Great success (>95%)</h3>

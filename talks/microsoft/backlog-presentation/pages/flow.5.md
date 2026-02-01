@@ -16,3 +16,7 @@ timeline:
 </v-clicks>
 
 <img class="mt-4" v-click="3" src="/flow.5.svg"/>
+
+<card icon="🕵" title="Important" class="absolute bottom-20 left-110" v-click="4" >
+ <h3>#3 review step!</h3>
+</card>

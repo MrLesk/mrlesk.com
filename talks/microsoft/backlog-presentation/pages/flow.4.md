@@ -17,6 +17,6 @@ timeline:
 
 </v-clicks>
 
-<Card v-click="4" icon="💡" title="IMPORTANT" class="w-192 mt-5">
-This is the most important step. If the plan is great, the execution will be smooth.
-</Card>
+<card icon="🧐" title="Important" class="mt-10" v-click="5" >
+ <h3>#2 review step!</h3>
+</card>

@@ -10,7 +10,7 @@ section: Backlog.md
 <div class="flex gap-8 mt-10">
 <div class="w-140">
 
-```markdown {|1-15|16-19|20-30|31-40|41-48|49-70}{maxHeight:'24rem',class:'task-structure-block'}
+```markdown {|1-15|16-19|20-30|31-40|41-49|50-70}{maxHeight:'24rem',class:'task-structure-block'}
 ---
 id: task-264
 title: 'TUI: Fix regression in task popup scrolling with arrow keys'
@@ -58,11 +58,11 @@ Changes:
 - src/ui/task-viewer.ts: Replace popup content area from box({ scrollable: true }) to scrollabletext({...}) to use built-in scrolling handlers (up/down/j/k/PageUp/PageDown/Home/End).
 - src/ui/board.ts: Remove redundant manual up/down handlers and rely on scrollabletext defaults.
 
-
-## Final Summary
-
 Rationale:
 - Detail pane already used scrollabletext and still worked. Popup regressed after switching to a plain box, which doesn't reliably handle arrow key scrolling; also avoid double-scroll and any casts.
+
+
+## Final Summary
 
 Verification:
 - Build with `bun run build` or run dev CLI.
@@ -104,8 +104,5 @@ Implementation Notes
 Final Summary
 </li>
 </ul>
-<card v-click="7" class="mt-10">
-    #1 review step!
-</card>
 </div>
 </div>
