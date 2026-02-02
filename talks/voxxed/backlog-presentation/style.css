@@ -1,0 +1,25 @@
+/* Presentation-specific style overrides */
+
+.slidev-presenter .grid-section.note {
+    display: none !important;
+}
+
+.slidev-presenter .grid-container.layout1 {
+    grid-template-columns: 3fr 2fr !important;
+    grid-template-rows: minmax(0, 1fr) min-content !important;
+    grid-template-areas:
+        'main next'
+        'bottom bottom' !important;
+    width: 100vw;
+    margin: 0;
+    column-gap: 2rem;
+}
+
+.slidev-presenter .grid-container.layout1 .grid-section.next {
+    max-width: 100%;
+}
+
+.slidev-presenter .grid-container.layout1 .grid-section.main,
+.slidev-presenter .grid-container.layout1 .grid-section.next {
+    width: auto !important;
+}
