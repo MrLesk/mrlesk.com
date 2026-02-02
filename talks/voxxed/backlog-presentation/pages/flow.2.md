@@ -6,13 +6,16 @@ timeline:
   current: spec
 ---
 
-<h1 class="pt-4">1) Start with an idea and create a PRD</h1>
+<h1 class="pt-4">1) Start with the idea</h1>
+
+**Goal:** We want to add the possibility to schedule some tasks to be started at a certain time
 
 <v-clicks>
 
-* PRDs are a standard way to describe product features
-* They tell the why and the what of a feature, not the how
-* Ask AI to create a PRD from your idea
+* Add a virtual status for Backlog.md tasks: "Scheduled"
+* Tasks should have a new "StartAfter" field
+* When backlog starts, we create a timer for each task with StartAfter field move them to "In progress"
+* This should trigger the existing onStatusChange command if present
 
 </v-clicks>
 
