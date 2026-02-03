@@ -14,6 +14,8 @@ hideIndicator: true
 timelinePresets:
   backlog-flow:
     steps:
+      - id: prd
+        label: PRD
       - id: task-creation
         label: Task Creation
       - id: implementation-plan
@@ -24,12 +26,12 @@ timelinePresets:
 
 <h1 class="pt-2">
 Backlog.md <br>
-<div class="text-2xl mt-4 pb-4">The simplest project management tool for the AI Era</div>
+<div class="text-3xl mt-4 pb-4">The simplest project management tool for the AI Era</div>
 </h1>
 
 ### Voxxed Days Ticino 2026
 
-#### 06 February 2026
+#### 06 February
 
 <IdleScreensaver image-src="/backlog-logo.png" />
 

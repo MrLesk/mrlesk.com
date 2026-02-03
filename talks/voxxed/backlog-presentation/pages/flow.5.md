@@ -2,21 +2,31 @@
 layout: default
 section: Spec-driven flow
 timeline:
-  preset: spec-flow
-  current: build
+  preset: backlog-flow
+  current: task-execution
+hideIndicator: true
 ---
 
-<h1 class="pt-4">4) Implementation and final review</h1>
-
-<v-clicks>
-
-* Ask AI to implement the task by following Backlog.md's guidelines
-* Review the code and the acceptance criteria
-
-</v-clicks>
-
-<img class="mt-4" v-click="3" src="/flow.5.svg"/>
-
-<card icon="🕵" title="Important" class="absolute bottom-20 left-110" v-click="4" >
- <h3>#3 review step!</h3>
-</card>
+<v-switch>
+<template #0>
+  <TtydFrame
+  class="max-w-220 h-104 mt-2"
+  src="http://localhost:7682"
+  fallback-image="/task-creation.png">
+    <template #paste>
+      <div v-pre>
+          You can now have the agents execute the plans and finish the tasks.
+          <br>
+          Make sure they follow Backlog.md workflows until the end.
+      </div>
+    </template>
+  </TtydFrame>
+</template>
+<template #3>
+  <TtydFrame
+  class="max-w-220 h-104 mt-2"
+  src="http://localhost:7681"
+  :allow-inputs="true"
+  fallback-image="/task-creation.png"></TtydFrame>
+</template>
+</v-switch>

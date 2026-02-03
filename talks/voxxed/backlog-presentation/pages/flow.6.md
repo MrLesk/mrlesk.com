@@ -1,6 +1,10 @@
 ---
 layout: intro
 section: Spec-driven flow
+timeline:
+  preset: backlog-flow
+  current: task-execution
+hideIndicator: true
 ---
 
 # Repeat!

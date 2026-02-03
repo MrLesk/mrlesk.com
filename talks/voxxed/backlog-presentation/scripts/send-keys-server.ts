@@ -34,8 +34,14 @@ Bun.serve({
 
         // Use tmux send-keys to inject text into the session (if text provided)
         if (text) {
+          const normalized = String(text).replace(/\r\n/g, '\n')
+          const needsBracketedPaste = normalized.includes('\n')
+          const payload = needsBracketedPaste
+            ? `\u001b[200~${normalized}\u001b[201~`
+            : normalized
+
           const result = Bun.spawnSync({
-            cmd: ['tmux', 'send-keys', '-t', session, '-l', text],
+            cmd: ['tmux', 'send-keys', '-t', session, '-l', payload],
             stdout: 'pipe',
             stderr: 'pipe',
           })
@@ -48,10 +54,24 @@ Bun.serve({
               { status: 500, headers: { ...headers, 'Content-Type': 'application/json' } }
             )
           }
-        }
 
-        // Send Enter key only if requested
-        if (sendEnter) {
+          if (sendEnter) {
+            const enterResult = Bun.spawnSync({
+              cmd: ['tmux', 'send-keys', '-t', session, 'Enter'],
+              stdout: 'pipe',
+              stderr: 'pipe',
+            })
+
+            if (enterResult.exitCode !== 0) {
+              const error = new TextDecoder().decode(enterResult.stderr)
+              console.error(`[send-keys-api] Failed to send Enter to session ${session}:`, error)
+              return new Response(
+                JSON.stringify({ error: `tmux error: ${error}` }),
+                { status: 500, headers: { ...headers, 'Content-Type': 'application/json' } }
+              )
+            }
+          }
+        } else if (sendEnter) {
           const enterResult = Bun.spawnSync({
             cmd: ['tmux', 'send-keys', '-t', session, 'Enter'],
             stdout: 'pipe',

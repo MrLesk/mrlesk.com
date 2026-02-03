@@ -5,7 +5,7 @@ section: Spec-driven flow
 hideIndicator: true
 ---
 
-# Spec-driven AI Development with Backlog.md
+# The flow that built Backlog.md using Backlog.md
 
 <Arrow v-click="2" x1="350" y1="160" x2="512" y2="160" />
 <Arrow v-click="3" x1="700" y1="218" x2="700" y2="336" />
@@ -20,7 +20,7 @@ hideIndicator: true
     :gradient="false"
     v-click="1">
     <h4>Know what to build</h4>
-    <div class="text-sm mt-2">Idea, PRD, deliverables</div>
+    <div class="text-sm mt-2">Idea, PRD, milestones</div>
   </Card>
 
   <Card

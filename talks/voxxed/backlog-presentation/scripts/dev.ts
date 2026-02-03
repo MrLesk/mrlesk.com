@@ -86,6 +86,22 @@ function configureTmux(session: string, cwd: string) {
   })
 }
 
+function killTmuxSession(session: string) {
+  const hasSession = Bun.spawnSync({
+    cmd: ['tmux', 'has-session', '-t', session],
+    stdout: 'ignore',
+    stderr: 'ignore',
+  })
+
+  if (hasSession.exitCode !== 0) return
+
+  Bun.spawnSync({
+    cmd: ['tmux', 'kill-session', '-t', session],
+    stdout: 'ignore',
+    stderr: 'ignore',
+  })
+}
+
 function ensurePortFree(port: string) {
   const result = Bun.spawnSync({
     cmd: ['lsof', '-ti', `tcp:${port}`],
@@ -242,6 +258,9 @@ function shutdown(code = 0) {
     } catch {
       // ignore - process may already be closed
     }
+  }
+  for (const terminal of terminals) {
+    killTmuxSession(terminal.session)
   }
   process.exit(code)
 }

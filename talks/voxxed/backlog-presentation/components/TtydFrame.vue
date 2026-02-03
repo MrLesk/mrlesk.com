@@ -1,5 +1,5 @@
 <template>
-  <div class="ttyd-frame" :class="{ 'ttyd-frame--no-inputs': !shouldAllowInputs }">
+  <div ref="rootRef" class="ttyd-frame" :class="{ 'ttyd-frame--no-inputs': !shouldAllowInputs }">
     <iframe
       v-if="!shouldUseFallback && isClient"
       ref="frameRef"
@@ -21,19 +21,20 @@
     <!-- Register clicks with Slidev by creating invisible v-click elements -->
     <div
       v-for="i in clickSlotCount"
-      :key="`click-${i}`"
-      v-click="clickOffset + i"
+      :key="`click-${markerKey}-${i}`"
+      ref="clickMarkers"
+      v-click="markerAt(i)"
       class="ttyd-click-marker"
     ></div>
     <!-- Hidden slots container for extracting click content -->
-    <div style="display: none;">
-      <slot />
+    <div ref="pasteSlotRef" class="ttyd-slot-extract">
+      <slot name="paste" />
     </div>
   </div>
 </template>
 
 <script setup>
-import { computed, onMounted, ref, useSlots, watch } from 'vue'
+import { computed, nextTick, onMounted, onUnmounted, ref, useSlots, watch } from 'vue'
 import { useSlideContext } from '@slidev/client'
 
 // Global state to track what has been sent (persists across slide navigation, resets on page reload)
@@ -52,10 +53,6 @@ const props = defineProps({
   title: {
     type: String,
     default: 'ttyd session',
-  },
-  clickOffset: {
-    type: Number,
-    default: 0,
   },
   tmuxSession: {
     type: String,
@@ -81,17 +78,23 @@ const isDev = import.meta.env?.DEV ?? false
 const sessionName = computed(() => {
   if (props.tmuxSession) return props.tmuxSession
 
-  // Map port to session name
-  if (props.src.includes(':7681')) return 'ai-engineer-backlog-shell'
-  if (props.src.includes(':7682')) return 'ai-engineer-claude-shell'
-  if (props.src.includes(':7683')) return 'ai-engineer-backlog-refresh'
+  // Map port to session name (see scripts/dev.ts)
+  if (props.src.includes(':7681')) return 'voxxed-backlog-shell'
+  if (props.src.includes(':7682')) return 'voxxed-claude-shell'
+  if (props.src.includes(':7683')) return 'voxxed-backlog-refresh'
 
-  return 'ai-engineer-claude-shell' // default
+  return 'voxxed-claude-shell' // default
 })
 
 const slots = useSlots()
 const frameRef = ref(null)
+const pasteSlotRef = ref(null)
+const rootRef = ref(null)
+const clickMarkers = ref([])
+const clickBase = ref(null)
+const markerKey = ref(0)
 const isClient = ref(false)
+const isVisible = ref(true)
 const { $clicks, $nav, $page } = useSlideContext()
 const shouldUseFallback = computed(() => Boolean(props.fallbackImage) && !isDev)
 const resolvedFallbackImage = computed(() => {
@@ -157,18 +160,84 @@ const frameState = computed(() => {
   return window.__ttydFrameState.slides.get(key)
 })
 
-// Count how many click-N slots are defined, +1 for the Enter key
-const clickSlotCount = computed(() => {
-  const slotNames = Object.keys(slots)
-  const clickSlots = slotNames.filter(name => /^click-\d+$/.test(name))
-  // Add 1 extra click for sending Enter after the text
-  return clickSlots.length > 0 ? clickSlots.length + 1 : 0
-})
+const hasPasteSlot = computed(() => Boolean(slots.paste))
 
-const currentClick = computed(() => {
-  const clicks = $clicks?.value ?? 0
-  return clicks - props.clickOffset
-})
+const shouldRegisterClicks = computed(() => (
+  isClient.value && isActiveSlide.value && isVisible.value
+    && hasPasteSlot.value
+))
+
+// Reserve two clicks (paste + enter) when paste slot is provided
+const clickSlotCount = computed(() => (
+  shouldRegisterClicks.value ? 2 : 0
+))
+
+function updateVisibility() {
+  const el = rootRef.value
+  if (!el) {
+    isVisible.value = false
+    return
+  }
+  const hasRects = el.getClientRects().length > 0
+  isVisible.value = hasRects && el.offsetParent !== null
+}
+
+function updateClickBase() {
+  const el = rootRef.value
+  if (!el) {
+    clickBase.value = null
+    return
+  }
+
+  let current = el
+  let found = null
+  while (current) {
+    const start = current.dataset?.slidevClicksStart
+    if (start != null && start !== '') {
+      const parsed = Number.parseInt(start, 10)
+      if (Number.isFinite(parsed)) {
+        found = parsed
+        break
+      }
+    }
+    current = current.parentElement
+  }
+
+  clickBase.value = found
+}
+
+function markerAt(index) {
+  if (clickBase.value == null) return undefined
+  return clickBase.value + index
+}
+
+let clickObserver = null
+
+function isMarkerActive(marker) {
+  if (!marker) return false
+  return marker.classList.contains('slidev-vclick-current')
+    || marker.classList.contains('slidev-vclick-prior')
+}
+
+function handleMarkerClicks() {
+  if (shouldUseFallback.value) return
+  if (!isActiveSlide.value || !isVisible.value) return
+  const markers = clickMarkers.value
+  if (!markers || markers.length < 1) return
+
+  if (isMarkerActive(markers[0]) && !frameState.value.textSent) {
+    const text = resolvePasteText()
+    if (!text) return
+
+    injectTextToTerminal(text, false)
+    frameState.value.textSent = true
+  }
+
+  if (markers.length > 1 && isMarkerActive(markers[1]) && !frameState.value.enterSent) {
+    sendEnterKey()
+    frameState.value.enterSent = true
+  }
+}
 
 
 function onIframeLoad() {
@@ -224,59 +293,61 @@ watch(isActiveSlide, (active) => {
   frameState.value.enterSent = true
 })
 
-// Watch for clicks to send text on first click, Enter on subsequent clicks
-watch(currentClick, (newClick, oldClick) => {
-  if (shouldUseFallback.value) return
-  // Only trigger on click increment (not decrement/navigation back)
-  if (newClick <= oldClick || newClick < 1) return
-
-  // First click: send text without Enter (if not already sent)
-  if (newClick === 1 && !frameState.value.textSent) {
-    const slotContent = slots['click-1']
-    if (!slotContent) return
-
-    const text = extractTextFromSlot(slotContent)
-    if (!text) return
-
-    injectTextToTerminal(text, false) // Don't send Enter yet
-    frameState.value.textSent = true
-    return
-  }
-
-  // Second click: send Enter key (if not already sent)
-  if (newClick === 2 && !frameState.value.enterSent) {
-    sendEnterKey()
-    frameState.value.enterSent = true
-    return
-  }
+watch(() => currentSlideNo.value, () => {
+  nextTick(handleMarkerClicks)
+  nextTick(updateClickBase)
 })
 
-function extractTextFromSlot(slotFn) {
-  if (!slotFn) return ''
+watch(isActiveSlide, () => {
+  nextTick(updateVisibility)
+  nextTick(updateClickBase)
+})
 
-  try {
-    const vnodes = slotFn()
-    if (!vnodes || vnodes.length === 0) return ''
+watch(() => $clicks?.value, () => {
+  nextTick(updateVisibility)
+  nextTick(updateClickBase)
+})
 
-    // Extract text content from VNode children
-    return vnodes
-      .map(vnode => {
-        if (typeof vnode.children === 'string') {
-          return vnode.children
-        }
-        if (Array.isArray(vnode.children)) {
-          return vnode.children.map(child =>
-            typeof child === 'string' ? child : child.children
-          ).join('')
-        }
-        return ''
-      })
-      .join('')
-      .trim()
-  } catch (e) {
-    console.error('Failed to extract slot text:', e)
-    return ''
+watch(clickMarkers, () => {
+  if (!isClient.value) return
+  clickObserver?.disconnect()
+  clickObserver = null
+  if (!clickMarkers.value?.length) return
+  clickObserver = new MutationObserver(handleMarkerClicks)
+  for (const marker of clickMarkers.value) {
+    clickObserver.observe(marker, { attributes: true, attributeFilter: ['class'] })
   }
+  nextTick(handleMarkerClicks)
+}, { deep: true })
+
+watch(clickBase, (next, prev) => {
+  if (next === prev) return
+  markerKey.value += 1
+})
+
+function resolvePasteText() {
+  if (hasPasteSlot.value && pasteSlotRef.value) {
+    const text = pasteSlotRef.value.innerText ?? ''
+    return stripIndent(text)
+      .replace(/\r\n/g, '\n')
+      .replace(/\n{3,}/g, '\n\n')
+      .trim()
+  }
+  return ''
+}
+
+function stripIndent(text) {
+  const normalized = text.replace(/\r\n/g, '\n')
+  const lines = normalized.split('\n')
+  const nonEmpty = lines.filter(line => line.trim().length > 0)
+  if (!nonEmpty.length) return normalized
+  const indent = nonEmpty.reduce((min, line) => {
+    const match = line.match(/^[ \t]*/)
+    const size = match ? match[0].length : 0
+    return Math.min(min, size)
+  }, Number.POSITIVE_INFINITY)
+  if (!Number.isFinite(indent) || indent <= 0) return normalized
+  return lines.map(line => line.slice(indent)).join('\n')
 }
 
 async function injectTextToTerminal(text, sendEnter = false) {
@@ -327,6 +398,12 @@ onMounted(() => {
   if (shouldUseFallback.value) return
   isClient.value = true
 
+  nextTick(() => {
+    updateVisibility()
+    updateClickBase()
+    handleMarkerClicks()
+  })
+
   // Aggressively prevent focus for 2 seconds after mount
   // This handles the case where iframe loads before slide number updates
   const preventFocusInterval = setInterval(() => {
@@ -339,6 +416,11 @@ onMounted(() => {
   setTimeout(() => {
     clearInterval(preventFocusInterval)
   }, 2000) // Stop after 2 seconds
+})
+
+onUnmounted(() => {
+  clickObserver?.disconnect()
+  clickObserver = null
 })
 </script>
 
@@ -380,5 +462,15 @@ onMounted(() => {
   pointer-events: none;
   width: 0;
   height: 0;
+}
+
+.ttyd-slot-extract {
+  position: absolute;
+  left: -9999px;
+  top: 0;
+  width: 1px;
+  opacity: 0;
+  pointer-events: none;
+  white-space: pre-wrap;
 }
 </style>
