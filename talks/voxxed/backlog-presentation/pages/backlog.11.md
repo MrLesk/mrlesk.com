@@ -19,10 +19,11 @@ hideIndicator: true
 </div>
 </template>
  <template #3>
-<TtydFrame class="mt-8 w-200 h-100"
+<EmbeddedTerminalFrame class="mt-8 w-200 h-100"
 :src="$frontmatter.terminalSrc"
 fallback-image="/backlog-board.png"
-:allow-inputs="true"/>
+:allow-inputs="true">
+</EmbeddedTerminalFrame>
 </template>
 
 </v-switch>

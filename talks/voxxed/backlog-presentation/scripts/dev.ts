@@ -151,8 +151,6 @@ function ensurePortFree(port: string) {
 const backlogDir = join(homedir(), 'projects', 'Backlog.md')
 const backlogDirConference = backlogDir//join(homedir(), 'projects', 'Backlog.md-conference')
 const backlogStartupCommand = process.env.BACKLOG_START_COMMAND ?? 'bun run cli board'
-const sendKeysPort = process.env.SEND_KEYS_PORT ?? '3099'
-
 const terminals: TerminalConfig[] = [
   {
     name: 'ttyd-backlog-shell',
@@ -208,19 +206,9 @@ commands.push({
   cwd: process.cwd(),
 })
 
-// Add simple HTTP server for tmux send-keys API
-ensurePortFree(sendKeysPort)
-commands.push({
-  name: 'send-keys-api',
-  cmd: ['bun', 'run', join(process.cwd(), 'scripts', 'send-keys-server.ts')],
-  cwd: process.cwd(),
-  env: {
-    SEND_KEYS_PORT: sendKeysPort,
-  },
-})
-
 const running: { name: string; proc: Bun.Subprocess }[] = []
 let shuttingDown = false
+let cleanedUp = false
 
 function log(name: string, message: string) {
   console.log(`\x1b[2m[${name}]\x1b[0m ${message}`)
@@ -251,6 +239,13 @@ async function start(command: Command) {
 function shutdown(code = 0) {
   if (shuttingDown) return
   shuttingDown = true
+  cleanup()
+  process.exit(code)
+}
+
+function cleanup() {
+  if (cleanedUp) return
+  cleanedUp = true
   log('dev', 'shutting down child processes...')
   for (const { proc } of running) {
     try {
@@ -262,10 +257,18 @@ function shutdown(code = 0) {
   for (const terminal of terminals) {
     killTmuxSession(terminal.session)
   }
-  process.exit(code)
+  if (process.env.TMUX_KILL_SERVER === '1') {
+    Bun.spawnSync({ cmd: ['tmux', 'kill-server'], stdout: 'ignore', stderr: 'ignore' })
+  }
 }
 
 process.on('SIGINT', () => shutdown(0))
 process.on('SIGTERM', () => shutdown(0))
+process.on('SIGHUP', () => shutdown(0))
+process.on('exit', () => cleanup())
+process.on('uncaughtException', (error) => {
+  console.error(error)
+  shutdown(1)
+})
 
 await Promise.all(commands.map(start))

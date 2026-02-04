@@ -15,7 +15,7 @@ hideIndicator: true
 
 </v-clicks>
 
-<TtydFrame
+<EmbeddedTerminalFrame
 v-click
 class="max-w-220 h-76 mt-4"
 src="http://localhost:7682"
@@ -31,4 +31,4 @@ fallback-image="/plan.png">
           3. When all tasks have an implementation plan, let me know and I will do a final review and approve task execution
       </div>
     </template>
-</TtydFrame>
+</EmbeddedTerminalFrame>

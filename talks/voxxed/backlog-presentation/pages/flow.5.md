@@ -9,7 +9,7 @@ hideIndicator: true
 
 <v-switch>
 <template #0>
-  <TtydFrame
+  <EmbeddedTerminalFrame
   class="max-w-220 h-104 mt-2"
   src="http://localhost:7682"
   fallback-image="/task-creation.png">
@@ -20,13 +20,13 @@ hideIndicator: true
           Make sure they follow Backlog.md workflows until the end.
       </div>
     </template>
-  </TtydFrame>
+  </EmbeddedTerminalFrame>
 </template>
 <template #3>
-  <TtydFrame
+  <EmbeddedTerminalFrame
   class="max-w-220 h-104 mt-2"
   src="http://localhost:7681"
   :allow-inputs="true"
-  fallback-image="/task-creation.png"></TtydFrame>
+  fallback-image="/task-creation.png"></EmbeddedTerminalFrame>
 </template>
 </v-switch>

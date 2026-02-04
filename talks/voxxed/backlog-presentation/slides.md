@@ -1,6 +1,6 @@
 ---
 theme: penguin
-title: "Backlog - Manage and delegate tasks to AI Agents"
+title: "Backlog - The simplest project management tool for the AI Era"
 author: Alex Gavrilescu
 colorSchema: "light"
 drawings:

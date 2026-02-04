@@ -9,7 +9,7 @@ hideIndicator: true
 
 <img class="w-180 m-auto -mt-4" src="/flow.2.svg"/>
 
-<TtydFrame
+<EmbeddedTerminalFrame
   v-click
   class="max-w-220 h-76 mt-2"
   src="http://localhost:7682"
@@ -28,4 +28,4 @@ hideIndicator: true
       Write a very minimal PRD document in the root of the project.
     </div>
   </template>
-</TtydFrame>
+</EmbeddedTerminalFrame>
