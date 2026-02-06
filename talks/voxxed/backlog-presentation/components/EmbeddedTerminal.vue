@@ -3,7 +3,6 @@
     ref="containerRef"
     class="embedded-terminal"
     :class="{ 'embedded-terminal--disabled': !allowInputs }"
-    :style="maskStyle"
     role="application"
     :aria-label="title"
     tabindex="0"
@@ -29,10 +28,6 @@ const props = defineProps({
   maxCols: {
     type: Number,
     default: null,
-  },
-  maskRight: {
-    type: Number,
-    default: 0,
   },
   allowInputs: {
     type: Boolean,
@@ -64,13 +59,16 @@ let escapeDownAt = null
 let socketOpen = false
 const encoder = new TextEncoder()
 const decoder = new TextDecoder()
-
-const maskWidth = ref(0)
-
-const maskStyle = computed(() => {
-  if (!maskWidth.value) return null
-  return { '--terminal-mask-right': `${maskWidth.value}px` }
-})
+const CLIENT_MESSAGE_TYPE = {
+  INPUT: 0,
+  RESIZE: 1,
+}
+const SERVER_MESSAGE_TYPE = {
+  OUTPUT: 0,
+  SET_TITLE: 1,
+  PREFERENCES: 2,
+}
+let serverTypeEncoding = null
 
 function focusTerminal() {
   if (!props.allowInputs) return
@@ -120,7 +118,12 @@ function clearEscapeHold() {
 function buildPayload(type, data) {
   const encoded = typeof data === 'string' ? encoder.encode(data) : data
   const payload = new Uint8Array(encoded.length + 1)
-  payload[0] = type.charCodeAt(0)
+  let typeByte = typeof type === 'number' ? type : Number.parseInt(type, 10)
+  if (!Number.isFinite(typeByte)) typeByte = 0
+  if (serverTypeEncoding === 'ascii') {
+    typeByte += 48
+  }
+  payload[0] = typeByte
   payload.set(encoded, 1)
   return payload
 }
@@ -131,21 +134,20 @@ function sendResize() {
     columns: term.cols,
     rows: term.rows,
   })
-  socket.send(buildPayload('1', payload))
+  socket.send(buildPayload(CLIENT_MESSAGE_TYPE.RESIZE, payload))
 }
 
 function fitTerminal() {
   if (!term || !fitAddon) return
   fitAddon.fit()
   applyMaxCols()
-  updateMaskOffset()
   sendResize()
 }
 
 function sendInput(data) {
   if (!socket || socket.readyState !== WebSocket.OPEN || !data) return
   const payload = typeof data === 'string' ? data : String(data)
-  socket.send(buildPayload('0', payload))
+  socket.send(buildPayload(CLIENT_MESSAGE_TYPE.INPUT, payload))
 }
 
 function send(text, options = {}) {
@@ -164,43 +166,6 @@ function applyMaxCols() {
   if (!props.maxCols) return
   if (term.cols <= props.maxCols) return
   term.resize(props.maxCols, term.rows)
-}
-
-function updateMaskOffset() {
-  const root = containerRef.value
-  if (!root) return
-  const screen = root.querySelector('.xterm-screen')
-  if (!screen) return
-  const gap = root.getBoundingClientRect().width - screen.getBoundingClientRect().width
-  const rows = root.querySelectorAll('.xterm-rows > div')
-  let row = null
-  for (const candidate of rows) {
-    const text = candidate.textContent ?? ''
-    if (text.includes('│') && text.includes('·')) {
-      row = candidate
-      break
-    }
-  }
-  let panelWidth = 0
-  const screenRect = screen.getBoundingClientRect()
-  if (row) {
-    const text = row.textContent ?? ''
-    const pipeIndex = text.indexOf('│')
-    if (pipeIndex >= 0) {
-      const cols = text.length
-      if (cols > 0) {
-        const cellWidth = screenRect.width / cols
-        const panelCols = cols - pipeIndex
-        panelWidth = Math.round(panelCols * cellWidth)
-      }
-    }
-  }
-  if (!panelWidth) {
-    maskWidth.value = 0
-    return
-  }
-  const width = panelWidth + Math.max(0, gap) + 2
-  maskWidth.value = Math.max(0, Math.round(width))
 }
 
 function connect() {
@@ -249,21 +214,35 @@ function connect() {
 
 function handleServerMessage(bytes) {
   if (!term || bytes.length < 1) return
-  const messageType = String.fromCharCode(bytes[0])
+  const messageType = bytes[0]
+  let normalizedType = messageType
+  let nextEncoding = serverTypeEncoding
+  if (messageType >= 48 && messageType <= 50) {
+    normalizedType = messageType - 48
+    nextEncoding = 'ascii'
+  } else if (messageType >= 0 && messageType <= 2) {
+    nextEncoding = 'binary'
+  }
+  if (nextEncoding && nextEncoding !== serverTypeEncoding) {
+    serverTypeEncoding = nextEncoding
+    if (nextEncoding === 'ascii') {
+      sendResize()
+    }
+  }
   const payload = bytes.subarray(1)
 
-  if (messageType === '0') {
+  if (normalizedType === SERVER_MESSAGE_TYPE.OUTPUT) {
     term.write(payload)
     return
   }
 
-  if (messageType === '1') {
+  if (normalizedType === SERVER_MESSAGE_TYPE.SET_TITLE) {
     const title = decoder.decode(payload)
     if (title) document.title = title
     return
   }
 
-  if (messageType === '2') {
+  if (normalizedType === SERVER_MESSAGE_TYPE.PREFERENCES) {
     // preferences payload; ignored for now
   }
 }
@@ -287,9 +266,6 @@ function initTerminal() {
   term.loadAddon(fitAddon)
   term.open(containerRef.value)
   fitTerminal()
-  term.onRender(() => {
-    updateMaskOffset()
-  })
   term.attachCustomKeyEventHandler((event) => {
     if (!props.allowInputs) return true
     if (event.key !== 'Escape') return true
@@ -445,10 +421,6 @@ watch(() => props.wsSrc, () => {
   connect()
 })
 
-watch(() => props.maskRight, () => {
-  updateMaskOffset()
-})
-
 watch(() => props.fontSize, (size) => {
   if (!term) return
   term.setOption('fontSize', size ?? 14)
@@ -488,14 +460,4 @@ defineExpose({ focus: focusTerminal, fit: fitTerminal, send })
   background: #000 !important;
 }
 
-.embedded-terminal::after {
-  content: "";
-  position: absolute;
-  top: 0;
-  right: 0;
-  width: var(--terminal-mask-right, 0px);
-  height: 100%;
-  background: #000;
-  pointer-events: none;
-}
 </style>

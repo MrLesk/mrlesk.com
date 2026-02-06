@@ -12,7 +12,6 @@
       :allow-inputs="shouldAllowInputs"
       :title="title"
       :font-size="resolvedFontSize"
-      :mask-right="resolvedMaskRight"
       @error="handleEmbeddedError"
       @connected="handleEmbeddedConnected"
       @disconnected="handleEmbeddedDisconnected"
@@ -77,10 +76,6 @@ const props = defineProps({
     type: Number,
     default: null,
   },
-  maskRight: {
-    type: Number,
-    default: null,
-  },
 })
 
 const isDev = import.meta.env?.DEV ?? false
@@ -132,16 +127,6 @@ const resolvedEmbeddedSrc = computed(() => {
   }
 
   return null
-})
-
-const defaultMaskRight = computed(() => {
-  if (props.src?.includes(':7682')) return 140
-  return null
-})
-
-const resolvedMaskRight = computed(() => {
-  if (props.maskRight != null) return props.maskRight
-  return defaultMaskRight.value
 })
 
 const defaultFontSize = computed(() => {
@@ -203,6 +188,7 @@ const frameState = computed(() => {
       textSent: false,
       enterSent: false,
       lastClicks: null,
+      lastPasteClick: null,
     })
   }
   return window.__embeddedTerminalFrameState.slides.get(key)
@@ -348,6 +334,9 @@ function handleMarkerClicks() {
   const sharedStage = readSharedStage()
   if (sharedStage >= 1) frameState.value.textSent = true
   if (sharedStage >= 2) frameState.value.enterSent = true
+  if (typeof frameState.value.lastPasteClick !== 'number') {
+    frameState.value.lastPasteClick = null
+  }
   if (sharedLast != null) {
     if (frameState.value.lastClicks == null || sharedLast > frameState.value.lastClicks) {
       frameState.value.lastClicks = sharedLast
@@ -365,9 +354,13 @@ function handleMarkerClicks() {
   } else if (current < frameState.value.lastClicks) {
     frameState.value.lastClicks = current
     writeSharedLastClicks(frameState.value.lastClicks)
-    frameState.value.textSent = false
-    frameState.value.enterSent = false
-    writeSharedStage(0)
+    // Only reset auto-run state when rewinding before this component's click range.
+    if (current <= start) {
+      frameState.value.textSent = false
+      frameState.value.enterSent = false
+      frameState.value.lastPasteClick = null
+      writeSharedStage(0)
+    }
     return
   }
   if (current === frameState.value.lastClicks) return
@@ -377,18 +370,20 @@ function handleMarkerClicks() {
   if (step < 0) return
 
   if (hasPasteSlot.value && !frameState.value.textSent && step >= 0) {
+    if (frameState.value.lastPasteClick === current) return
     const text = resolvePasteText()
     if (!text) return
-    injectTextToTerminal(text, false)
     frameState.value.textSent = true
+    frameState.value.lastPasteClick = current
     writeSharedStage(1)
+    injectTextToTerminal(text, false)
     return
   }
 
   if (frameState.value.textSent && !frameState.value.enterSent && step >= 1) {
-    sendEnterKey()
     frameState.value.enterSent = true
     writeSharedStage(2)
+    sendEnterKey()
   }
 }
 

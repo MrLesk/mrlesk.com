@@ -45,6 +45,10 @@ RUN cd ai-native-dev-presentation && mkdir -p dist && bun run build -- --base /t
 COPY talks/ai-native-dev/backlog-workshop/ ./ai-native-dev-workshop/
 RUN cd ai-native-dev-workshop && mkdir -p dist && bun run build -- --base /talks/ai-native-dev/backlog-workshop/
 
+# Build Voxxed Days Ticino - Backlog Presentation
+COPY talks/voxxed/backlog-presentation/ ./voxxed-backlog-presentation/
+RUN cd voxxed-backlog-presentation && mkdir -p dist && bun run build -- --base /voxxed/backlog-presentation/
+
 # Build Vienna AI Engineering - The Explosion of Tools
 COPY talks/vienna-ai-engineering/the-explosion-of-tools/ ./vienna-explosion/
 RUN cd vienna-explosion && mkdir -p dist && bun run build -- --base /talks/vienna-ai-engineering/the-explosion-of-tools/
@@ -80,6 +84,7 @@ COPY --from=slidev-builds /app/devoxx-backlog/dist /usr/share/nginx/html/talks/d
 COPY --from=slidev-builds /app/devoxx-success/dist /usr/share/nginx/html/talks/devoxx/backlog-success
 COPY --from=slidev-builds /app/ai-native-dev-presentation/dist /usr/share/nginx/html/talks/ai-native-dev/backlog-presentation
 COPY --from=slidev-builds /app/ai-native-dev-workshop/dist /usr/share/nginx/html/talks/ai-native-dev/backlog-workshop
+COPY --from=slidev-builds /app/voxxed-backlog-presentation/dist /usr/share/nginx/html/voxxed/backlog-presentation
 COPY --from=slidev-builds /app/vienna-explosion/dist /usr/share/nginx/html/talks/vienna-ai-engineering/the-explosion-of-tools
 
 # Copy custom nginx config
