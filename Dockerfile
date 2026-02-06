@@ -10,9 +10,9 @@ WORKDIR /app
 # Copy the theme submodule first (required by all talks)
 COPY slidev-theme-penguin ./slidev-theme-penguin
 
-# Install dependencies once (all talks use same dependencies)
+# Install dependencies once from a talk manifest that includes the superset of Slidev deps
 # We need to adjust the path in package.json since we're copying it to root
-COPY talks/devoxx/backlog-success/package.json ./package.json
+COPY talks/voxxed/backlog-presentation/package.json ./package.json
 RUN sed -i 's|file:../../../slidev-theme-penguin|file:./slidev-theme-penguin|g' package.json
 
 # Skip Playwright browser downloads to speed up builds (browsers not needed for slidev build)
