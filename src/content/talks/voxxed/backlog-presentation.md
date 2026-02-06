@@ -3,7 +3,7 @@ title: "Backlog.md: The simplest project management tool for the AI Era"
 tagline: "From AI troubleshooting chaos to a predictable, spec-driven workflow with Backlog.md."
 event: "Voxxed Days Ticino 2026"
 dateISO: "2026-02-06"
-url: "/voxxed/backlog-presentation"
+url: "/talks/voxxed/backlog-presentation"
 logo:
   src: "/talks/voxxed-ticino-logo.png"
   alt: "Voxxed Days Ticino logo"
