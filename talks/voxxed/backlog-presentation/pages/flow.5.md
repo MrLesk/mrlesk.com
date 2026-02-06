@@ -12,7 +12,7 @@ hideIndicator: true
   <EmbeddedTerminalFrame
   class="max-w-220 h-104 mt-2"
   src="http://localhost:7682"
-  fallback-image="/task-creation.png">
+  fallback-image="/task-execution.png">
     <template #paste>
       <div v-pre>
           You can now have the agents execute the plans and finish the tasks.
@@ -22,11 +22,11 @@ hideIndicator: true
     </template>
   </EmbeddedTerminalFrame>
 </template>
-<template #3>
+<template #2>
   <EmbeddedTerminalFrame
   class="max-w-220 h-104 mt-2"
   src="http://localhost:7681"
   :allow-inputs="true"
-  fallback-image="/task-creation.png"></EmbeddedTerminalFrame>
+  fallback-image="/backlog-final.png"></EmbeddedTerminalFrame>
 </template>
 </v-switch>
