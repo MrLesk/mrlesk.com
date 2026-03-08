@@ -1,0 +1,76 @@
+@font-face {
+  font-family: "OpenAI Sans Local";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src:
+    local("OpenAI Sans"),
+    local("OpenAI Sans Regular"),
+    local("OpenAISans-Regular");
+}
+
+@font-face {
+  font-family: "OpenAI Sans Local";
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src:
+    local("OpenAI Sans Italic"),
+    local("OpenAI Sans Regular Italic"),
+    local("OpenAISans-RegularItalic");
+}
+
+@font-face {
+  font-family: "OpenAI Sans Local";
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src:
+    local("OpenAI Sans Medium"),
+    local("OpenAISans-Medium");
+}
+
+@font-face {
+  font-family: "OpenAI Sans Local";
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src:
+    local("OpenAI Sans Semibold"),
+    local("OpenAISans-Semibold");
+}
+
+@font-face {
+  font-family: "OpenAI Sans Local";
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src:
+    local("OpenAI Sans Bold"),
+    local("OpenAISans-Bold");
+}
+
+* {
+  font-family: "OpenAI Sans Local", "OpenAI Sans", "Open Sans", Lato, sans-serif;
+}
+
+.slidev-layout{
+  padding: 2.4rem !important;
+}
+
+.slidev-layout.codex-portrait-stage{
+  padding: 0 !important;
+}
+
+.slidev-layout.codex-cover h1{
+  font-size: 4rem;
+  font-weight: 500;
+  line-height: 4rem;
+}
+
+.slidev-layout.codex-cover h3{
+  font-size: 2rem;
+  font-weight: 500;
+  line-height: 2rem;
+  color: #3442E0;
+}

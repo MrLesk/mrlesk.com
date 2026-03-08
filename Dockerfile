@@ -53,6 +53,10 @@ RUN cd voxxed-backlog-presentation && mkdir -p dist && bun run build -- --base /
 COPY talks/vienna-ai-engineering/the-explosion-of-tools/ ./vienna-explosion/
 RUN cd vienna-explosion && mkdir -p dist && bun run build -- --base /talks/vienna-ai-engineering/the-explosion-of-tools/
 
+# Build Vienna AI Engineering - The Explosion of Tools
+COPY talks/codex/meetup-10-march/ ./codex-meetup-10-march/
+RUN cd codex-meetup-10-march && mkdir -p dist && bun run build -- --base /talks/codex/meetup-10-march/
+
 # ========================================
 # Stage X: Build Main Astro Site
 # ========================================
@@ -86,6 +90,7 @@ COPY --from=slidev-builds /app/ai-native-dev-presentation/dist /usr/share/nginx/
 COPY --from=slidev-builds /app/ai-native-dev-workshop/dist /usr/share/nginx/html/talks/ai-native-dev/backlog-workshop
 COPY --from=slidev-builds /app/voxxed-backlog-presentation/dist /usr/share/nginx/html/talks/voxxed/backlog-presentation
 COPY --from=slidev-builds /app/vienna-explosion/dist /usr/share/nginx/html/talks/vienna-ai-engineering/the-explosion-of-tools
+COPY --from=slidev-builds /app/codex-meetup-10-march/dist /usr/share/nginx/html/talks/codex/meetup-10-march
 
 # Copy custom nginx config
 COPY nginx.conf /etc/nginx/conf.d/default.conf
