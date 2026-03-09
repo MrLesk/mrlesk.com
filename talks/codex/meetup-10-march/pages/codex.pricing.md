@@ -10,6 +10,7 @@ layout: landscape
 
 <v-clicks class="ml-8 mt-2 [&>li]:pb-1">
 
+* Free Plan
 * 20$/month (Plus plan)
 * 30$/month (Business plan)
 * 200$/month (Pro plan)
