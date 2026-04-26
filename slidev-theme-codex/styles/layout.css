@@ -449,6 +449,21 @@
   margin-bottom: calc(4 * var(--pt));
 }
 
+/* Tinted SVG icon — for <div class="card-icon card-icon-mask"
+   style="--icon: url('/foo.svg')"></div>. Uses CSS mask so the SVG fill
+   becomes the codex accent regardless of the file's own stroke colors. */
+.cards-grid .card .card-icon-mask {
+  background-color: var(--codex-accent);
+  -webkit-mask-image: var(--icon);
+          mask-image: var(--icon);
+  -webkit-mask-repeat: no-repeat;
+          mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+          mask-position: center;
+  -webkit-mask-size: contain;
+          mask-size: contain;
+}
+
 .cards-grid .card .card-eyebrow {
   font-size: calc(11 * var(--pt));
   text-transform: uppercase;
