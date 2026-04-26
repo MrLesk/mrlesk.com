@@ -36,15 +36,16 @@ defineProps<{ eyebrow?: string }>()
 }
 
 .slidev-layout.toc .toc-content .slidev-toc {
-  font-size: 1.4rem;
-  line-height: 1.6;
+  font-size: 1.2rem;
+  line-height: 1.45;
 }
 
 .slidev-layout.toc .slidev-toc-item {
   display: flex;
+  flex-wrap: wrap;
   align-items: baseline;
   gap: 0.9rem;
-  padding: 0.45rem 0;
+  padding: 0.3rem 0;
   border-bottom: 1px solid var(--codex-border);
   color: var(--codex-fg);
   transition: color 0.2s ease;
@@ -63,8 +64,20 @@ defineProps<{ eyebrow?: string }>()
   min-width: 2ch;
 }
 
-.slidev-layout.toc .slidev-toc {
+.slidev-layout.toc .slidev-toc-list {
   counter-reset: toc-counter;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+/* Nested children inherit the parent style — numbered, dividered, big —
+   just indented to show hierarchy. */
+.slidev-layout.toc .slidev-toc-list-level-2 {
+  flex-basis: 100%;
+  margin-left: 2.5rem;
+  margin-top: 0.3rem;
+  border-top: 1px solid var(--codex-border);
 }
 
 .slidev-layout.toc .slidev-toc-item a {

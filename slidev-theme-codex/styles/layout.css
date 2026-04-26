@@ -149,15 +149,15 @@
   margin: 0;
 }
 
-/* Subtitle anchored at pptx Shape 199 origin (y=215pt) to preserve the
-   exact title-to-subtitle gap from the source deck. */
+/* Subtitle flows below the title with a margin equal to the original
+   pptx gap (Shape 199 y=215 minus 1-line title bottom ≈ 162) so single-line
+   titles keep the source layout, and wrapped titles push the subtitle down
+   naturally instead of overlapping. */
 .slidev-layout.cover .cover-body p {
-  position: absolute;
-  top: calc((215 - 107) * var(--pt));
   font-size: calc(22 * var(--pt));
   font-weight: 600;
   color: var(--codex-accent);
-  margin: 0;
+  margin: calc(53 * var(--pt)) 0 0 0;
 }
 
 .slidev-layout.cover .cover-footer {
@@ -228,6 +228,350 @@
   grid-template-columns: 1fr 1fr;
   gap: 2.5rem;
   align-items: start;
+}
+
+/* Thanks layout — full-bleed gradient, bookends the cover. */
+.slidev-layout.thanks {
+  padding: calc(40 * var(--pt));
+  position: relative;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  background-image: url('/cover-bg.png');
+  background-size: 224.1% 100%;
+  background-position: 64.55% 0%;
+  background-repeat: no-repeat;
+  background-color: var(--codex-grad-2);
+  color: #ffffff;
+}
+
+.slidev-layout.thanks .thanks-mark {
+  position: absolute;
+  top: calc(26 * var(--pt));
+  right: calc(26 * var(--pt));
+  width: calc(64 * var(--pt));
+  height: calc(64 * var(--pt));
+  filter: drop-shadow(0 calc(4 * var(--pt)) calc(12 * var(--pt)) rgba(20, 14, 80, 0.4));
+}
+
+.slidev-layout.thanks .thanks-body h1 {
+  font-size: calc(96 * var(--pt));
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: -0.03em;
+  color: #ffffff;
+  margin: 0 0 calc(20 * var(--pt)) 0;
+}
+
+.slidev-layout.thanks .thanks-body p {
+  font-size: calc(28 * var(--pt));
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.85);
+  margin: 0;
+  letter-spacing: -0.005em;
+}
+
+.slidev-layout.thanks .thanks-contact {
+  position: absolute;
+  left: calc(40 * var(--pt));
+  bottom: calc(36 * var(--pt));
+  font-size: calc(18 * var(--pt));
+  color: rgba(255, 255, 255, 0.85);
+  display: flex;
+  gap: calc(20 * var(--pt));
+  flex-wrap: wrap;
+}
+
+/* Install/Auth panel — gradient bg with white floating cards (slide13 style) */
+.install-panel {
+  background-image: url('/cover-bg.png');
+  background-size: 224.1% 100%;
+  background-position: 64.55% 0%;
+  background-repeat: no-repeat;
+  background-color: var(--codex-grad-2);
+  border-radius: calc(12 * var(--pt));
+  padding: calc(32 * var(--pt)) calc(28 * var(--pt));
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: calc(20 * var(--pt));
+  margin-top: calc(8 * var(--pt));
+  min-height: calc(360 * var(--pt));
+}
+
+.install-card {
+  background: #ffffff;
+  border-radius: calc(14 * var(--pt));
+  padding: calc(20 * var(--pt));
+  display: flex;
+  flex-direction: column;
+  gap: calc(12 * var(--pt));
+  box-shadow: 0 calc(4 * var(--pt)) calc(20 * var(--pt)) rgba(20, 14, 80, 0.18);
+  position: relative;
+}
+
+.install-card .install-icon {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: calc(56 * var(--pt));
+  margin-top: calc(-44 * var(--pt));
+}
+
+.install-card .install-icon svg,
+.install-card .install-icon img {
+  height: calc(56 * var(--pt));
+  width: auto;
+}
+
+.install-card .install-icon-row {
+  gap: calc(8 * var(--pt));
+}
+
+.install-card .install-icon-row > * {
+  height: calc(48 * var(--pt));
+  width: calc(48 * var(--pt));
+  font-size: calc(48 * var(--pt));
+}
+
+.install-card .install-card-title {
+  text-align: center;
+  font-size: calc(24 * var(--pt));
+  font-weight: 600;
+  letter-spacing: -0.015em;
+  color: var(--codex-fg);
+}
+
+.install-card pre.shiki {
+  font-size: calc(11 * var(--pt)) !important;
+  margin: 0;
+  padding: calc(12 * var(--pt)) !important;
+}
+
+.install-card ul {
+  list-style: disc;
+  padding-left: calc(18 * var(--pt));
+  margin: 0;
+  font-size: calc(14 * var(--pt));
+  color: var(--codex-fg);
+}
+
+.install-card ul li + li {
+  margin-top: calc(8 * var(--pt));
+}
+
+.install-card ul a {
+  color: var(--codex-accent);
+  border-bottom: 1px solid rgba(52, 66, 224, 0.3);
+}
+
+.install-card .install-meta {
+  font-size: calc(13 * var(--pt));
+  color: var(--codex-fg);
+  display: flex;
+  flex-direction: column;
+  gap: calc(6 * var(--pt));
+}
+
+.install-card .install-meta code {
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+  color: #1c7c54;
+  background: transparent;
+  border: none;
+  padding: 0;
+  font-size: calc(13 * var(--pt));
+}
+
+/* Reusable card grid — usable inside any layout via .cards-grid wrapper */
+.cards-grid {
+  display: grid;
+  gap: calc(16 * var(--pt));
+  margin-top: calc(8 * var(--pt));
+}
+
+.cards-grid.cols-2 { grid-template-columns: repeat(2, 1fr); }
+.cards-grid.cols-3 { grid-template-columns: repeat(3, 1fr); }
+.cards-grid.cols-4 { grid-template-columns: repeat(4, 1fr); }
+
+.cards-grid .card {
+  background: #ffffff;
+  border: 1px solid var(--codex-border);
+  border-radius: calc(12 * var(--pt));
+  padding: calc(20 * var(--pt));
+  display: flex;
+  flex-direction: column;
+  gap: calc(8 * var(--pt));
+}
+
+.cards-grid .card .card-icon {
+  width: calc(36 * var(--pt));
+  height: calc(36 * var(--pt));
+  color: var(--codex-accent);
+  margin-bottom: calc(4 * var(--pt));
+}
+
+.cards-grid .card .card-eyebrow {
+  font-size: calc(11 * var(--pt));
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  color: var(--codex-fg-muted);
+  font-weight: 500;
+}
+
+.cards-grid .card .card-title {
+  font-size: calc(20 * var(--pt));
+  font-weight: 600;
+  letter-spacing: -0.015em;
+  color: var(--codex-fg);
+  line-height: 1.2;
+}
+
+.cards-grid .card .card-price {
+  font-size: calc(36 * var(--pt));
+  font-weight: 500;
+  color: var(--codex-accent);
+  letter-spacing: -0.025em;
+  line-height: 1;
+}
+
+.cards-grid .card .card-meta {
+  font-size: calc(13 * var(--pt));
+  color: var(--codex-fg-muted);
+}
+
+.cards-grid .card .card-body {
+  font-size: calc(13 * var(--pt));
+  color: var(--codex-fg);
+  line-height: 1.45;
+}
+
+.cards-grid .card .card-body ul {
+  list-style: disc;
+  padding-left: calc(16 * var(--pt));
+  margin: 0;
+}
+
+.cards-grid .card .card-body ul li + li {
+  margin-top: calc(4 * var(--pt));
+}
+
+.cards-grid .card.featured {
+  background: linear-gradient(135deg, var(--codex-grad-1) 0%, var(--codex-grad-2) 100%);
+  border-color: transparent;
+  color: #ffffff;
+}
+
+.cards-grid .card.featured .card-eyebrow,
+.cards-grid .card.featured .card-meta { color: rgba(255,255,255,0.85); }
+
+.cards-grid .card.featured .card-title,
+.cards-grid .card.featured .card-price,
+.cards-grid .card.featured .card-body { color: #ffffff; }
+
+/* Hero callout — for slides where the URL/highlight is the main attraction */
+.codex-callout {
+  display: inline-block;
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+  font-size: calc(18 * var(--pt));
+  color: var(--codex-accent);
+  background: var(--codex-accent-soft);
+  border: 1px solid rgba(52, 66, 224, 0.18);
+  border-radius: calc(8 * var(--pt));
+  padding: calc(8 * var(--pt)) calc(14 * var(--pt));
+  margin-top: calc(12 * var(--pt));
+}
+
+/* Feature list — icon-led rows for product update slides */
+.feature-list {
+  display: flex;
+  flex-direction: column;
+  gap: calc(20 * var(--pt));
+  margin-top: calc(16 * var(--pt));
+}
+
+.feature-list .feature {
+  display: grid;
+  grid-template-columns: calc(48 * var(--pt)) 1fr;
+  gap: calc(20 * var(--pt));
+  align-items: start;
+}
+
+.feature-list .feature .feature-num {
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+  font-size: calc(14 * var(--pt));
+  color: var(--codex-accent);
+  background: var(--codex-accent-soft);
+  border-radius: 50%;
+  width: calc(40 * var(--pt));
+  height: calc(40 * var(--pt));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+}
+
+.feature-list .feature .feature-title {
+  font-size: calc(20 * var(--pt));
+  font-weight: 600;
+  letter-spacing: -0.015em;
+  margin: 0 0 calc(4 * var(--pt)) 0;
+}
+
+.feature-list .feature .feature-meta {
+  font-size: calc(13 * var(--pt));
+  color: var(--codex-fg-muted);
+}
+
+.feature-list .feature .feature-body {
+  font-size: calc(15 * var(--pt));
+  color: var(--codex-fg);
+  margin: 0;
+}
+
+/* Panel/screensaver — gigantic centered text on full-bleed gradient */
+.slidev-layout.panel {
+  padding: 0;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  background-image: url('/cover-bg.png');
+  background-size: 224.1% 100%;
+  background-position: 64.55% 0%;
+  background-repeat: no-repeat;
+  background-color: var(--codex-grad-2);
+  color: #ffffff;
+  overflow: hidden;
+}
+
+.slidev-layout.panel .panel-mark {
+  position: absolute;
+  bottom: calc(36 * var(--pt));
+  right: calc(36 * var(--pt));
+  width: calc(120 * var(--pt));
+  height: calc(120 * var(--pt));
+  filter: drop-shadow(0 calc(8 * var(--pt)) calc(20 * var(--pt)) rgba(20, 14, 80, 0.45));
+}
+
+.slidev-layout.panel .panel-text {
+  z-index: 1;
+}
+
+.slidev-layout.panel h1 {
+  color: #ffffff;
+  font-size: calc(96 * var(--pt));
+  font-weight: 500;
+  letter-spacing: -0.03em;
+  line-height: 1;
+  margin: 0;
+}
+
+.slidev-layout.panel p {
+  color: rgba(255,255,255,0.85);
+  font-size: calc(24 * var(--pt));
+  font-weight: 400;
+  margin: calc(16 * var(--pt)) 0 0 0;
 }
 
 /* Quote layout */

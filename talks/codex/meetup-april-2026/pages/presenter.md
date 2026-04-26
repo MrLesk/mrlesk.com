@@ -13,4 +13,4 @@ hideInToc: true
 - 14+ years as software developer
 - K8s, .NET & Vue by day, AI agents by night
 - Building [Backlog.md](https://backlog.md) since June 2025
-- Say hi on [@h3xx3n](https://x.com/H3xx3n)
+- Say hi on [@mrlesk](https://x.com/mrlesk)
