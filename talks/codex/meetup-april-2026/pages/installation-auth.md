@@ -30,6 +30,10 @@ brew install --cask codex
     <img src="/codex-logo.gif" alt="Codex" />
   </div>
   <div class="install-card-title">Codex App</div>
+  <div class="install-os-badges">
+    <span class="install-os-badge"><logos-apple /> macOS<small>Intel · Apple Silicon</small></span>
+    <span class="install-os-badge"><logos-microsoft-windows-icon /> Windows<small>11 · 10</small></span>
+  </div>
   <ul>
     <li><a href="https://openai.com/codex/" target="_blank">openai.com/codex/</a></li>
     <li>Download</li>

@@ -373,6 +373,45 @@
   gap: calc(6 * var(--pt));
 }
 
+.install-card .install-os-badges {
+  display: flex;
+  justify-content: center;
+  gap: calc(8 * var(--pt));
+  margin-top: calc(2 * var(--pt));
+}
+
+.install-card .install-os-badge {
+  display: inline-grid;
+  grid-template-columns: auto 1fr;
+  align-items: center;
+  column-gap: calc(8 * var(--pt));
+  background: var(--codex-accent-soft);
+  border: 1px solid rgba(52, 66, 224, 0.18);
+  border-radius: calc(8 * var(--pt));
+  padding: calc(6 * var(--pt)) calc(12 * var(--pt));
+  font-size: calc(13 * var(--pt));
+  font-weight: 600;
+  color: var(--codex-fg);
+  line-height: 1.15;
+  white-space: nowrap;
+}
+
+.install-card .install-os-badge svg {
+  width: calc(18 * var(--pt));
+  height: calc(18 * var(--pt));
+  grid-row: 1 / span 2;
+}
+
+.install-card .install-os-badge small {
+  display: block;
+  grid-column: 2;
+  margin-top: calc(2 * var(--pt));
+  font-size: calc(10 * var(--pt));
+  font-weight: 400;
+  color: var(--codex-fg-muted);
+  letter-spacing: 0;
+}
+
 .install-card .install-meta code {
   font-family: 'JetBrains Mono', ui-monospace, monospace;
   color: #1c7c54;
