@@ -7,13 +7,17 @@
 FROM oven/bun:latest AS slidev-builds
 WORKDIR /app
 
-# Copy the theme submodule first (required by all talks)
+# Copy the theme submodules first (required by all talks)
 COPY slidev-theme-penguin ./slidev-theme-penguin
+COPY slidev-theme-codex ./slidev-theme-codex
 
 # Install dependencies once from a talk manifest that includes the superset of Slidev deps
-# We need to adjust the path in package.json since we're copying it to root
+# We need to adjust the file: paths in package.json since we're copying it to root
 COPY talks/voxxed/backlog-presentation/package.json ./package.json
-RUN sed -i 's|file:../../../slidev-theme-penguin|file:./slidev-theme-penguin|g' package.json
+RUN sed -i \
+    -e 's|file:../../../slidev-theme-penguin|file:./slidev-theme-penguin|g' \
+    -e 's|file:../../../slidev-theme-codex|file:./slidev-theme-codex|g' \
+    package.json
 
 # Skip Playwright browser downloads to speed up builds (browsers not needed for slidev build)
 ENV PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1
@@ -53,9 +57,9 @@ RUN cd voxxed-backlog-presentation && mkdir -p dist && bun run build -- --base /
 COPY talks/vienna-ai-engineering/the-explosion-of-tools/ ./vienna-explosion/
 RUN cd vienna-explosion && mkdir -p dist && bun run build -- --base /talks/vienna-ai-engineering/the-explosion-of-tools/
 
-# Build Vienna AI Engineering - The Explosion of Tools
-COPY talks/codex/meetup-10-march/ ./codex-meetup-10-march/
-RUN cd codex-meetup-10-march && mkdir -p dist && bun run build -- --base /talks/codex/meetup-10-march/
+# Build Codex Community Meetup Vienna - April 27, 2026 (unlisted; reachable by URL only)
+COPY talks/codex/meetup-april-2026/ ./codex-meetup-april-2026/
+RUN cd codex-meetup-april-2026 && mkdir -p dist && bun run build -- --base /talks/codex/meetup-april-2026/
 
 # ========================================
 # Stage X: Build Main Astro Site
@@ -90,7 +94,7 @@ COPY --from=slidev-builds /app/ai-native-dev-presentation/dist /usr/share/nginx/
 COPY --from=slidev-builds /app/ai-native-dev-workshop/dist /usr/share/nginx/html/talks/ai-native-dev/backlog-workshop
 COPY --from=slidev-builds /app/voxxed-backlog-presentation/dist /usr/share/nginx/html/talks/voxxed/backlog-presentation
 COPY --from=slidev-builds /app/vienna-explosion/dist /usr/share/nginx/html/talks/vienna-ai-engineering/the-explosion-of-tools
-COPY --from=slidev-builds /app/codex-meetup-10-march/dist /usr/share/nginx/html/talks/codex/meetup-10-march
+COPY --from=slidev-builds /app/codex-meetup-april-2026/dist /usr/share/nginx/html/talks/codex/meetup-april-2026
 
 # Copy custom nginx config
 COPY nginx.conf /etc/nginx/conf.d/default.conf
