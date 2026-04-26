@@ -1,10 +1,10 @@
 ---
 layout: thanks
 title: Thank you
-contact: '@mrlesk  ·  backlog.md  ·  funstage.com'
+contact: 'Codex Community'
 hideInToc: true
 ---
 
 # Thank you
 
-Questions? Let's chat after the talk.
+Codex - You can just build things!
