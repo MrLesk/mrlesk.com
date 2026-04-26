@@ -6,9 +6,9 @@ const logo = `${trimmed}/codex-logo.gif`
 
 <template>
   <div class="slidev-layout panel">
-    <img class="panel-mark" :src="logo" alt="Codex" />
     <div class="panel-text">
       <slot></slot>
     </div>
+    <img class="panel-mark" :src="logo" alt="Codex" />
   </div>
 </template>

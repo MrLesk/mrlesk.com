@@ -569,11 +569,12 @@
 
 /* Panel/screensaver — gigantic centered text on full-bleed gradient */
 .slidev-layout.panel {
-  padding: 0;
+  padding: calc(140 * var(--pt)) 0 0 0;
   position: relative;
   display: flex;
+  flex-direction: column;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   text-align: center;
   background-image: url('/cover-bg.png');
   background-size: 224.1% 100%;
@@ -585,11 +586,9 @@
 }
 
 .slidev-layout.panel .panel-mark {
-  position: absolute;
-  bottom: calc(36 * var(--pt));
-  right: calc(36 * var(--pt));
   width: calc(120 * var(--pt));
   height: calc(120 * var(--pt));
+  margin-top: calc(28 * var(--pt));
   filter: drop-shadow(0 calc(8 * var(--pt)) calc(20 * var(--pt)) rgba(20, 14, 80, 0.45));
 }
 
