@@ -1,0 +1,36 @@
+{
+  "name": "slidev-theme-codex",
+  "type": "module",
+  "version": "0.1.0",
+  "private": true,
+  "description": "A Codex theme for Slidev",
+  "author": "Alex Gavrilescu",
+  "license": "MIT",
+  "keywords": [
+    "slidev-theme",
+    "slidev",
+    "codex"
+  ],
+  "slidev": {
+    "colorSchema": "light",
+    "highlighter": "shiki",
+    "default": {
+      "aspectRatio": "16/9"
+    }
+  },
+  "scripts": {
+    "dev": "slidev example.md --open",
+    "build": "slidev build example.md",
+    "export": "slidev export example.md"
+  },
+  "dependencies": {
+    "@fontsource/inter": "5.2.8",
+    "@fontsource/jetbrains-mono": "5.2.8",
+    "@slidev/types": "52.14.2"
+  },
+  "devDependencies": {
+    "@iconify-json/logos": "1.2.11",
+    "@iconify-json/simple-icons": "1.2.79",
+    "@slidev/cli": "52.14.2"
+  }
+}

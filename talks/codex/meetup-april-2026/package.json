@@ -1,0 +1,15 @@
+{
+  "name": "codex-meetup-april-2026",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "dev": "slidev --open",
+    "build": "slidev build",
+    "export": "slidev export"
+  },
+  "dependencies": {
+    "@slidev/cli": "52.14.2",
+    "slidev-theme-codex": "file:../../../slidev-theme-codex",
+    "vue": "3.5.33"
+  }
+}

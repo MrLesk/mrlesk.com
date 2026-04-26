@@ -1,0 +1,12 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "codex-meetup-april-2026",
+      "runtimeExecutable": "bun",
+      "runtimeArgs": ["run", "slidev", "--port", "3939"],
+      "cwd": "talks/codex/meetup-april-2026",
+      "port": 3939
+    }
+  ]
+}
