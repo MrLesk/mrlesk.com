@@ -45,6 +45,16 @@ src: ./pages/gpt55-demo.md
 ---
 
 ---
+layout: iframe
+url: http://localhost:8787
+title: GPT-5.5 demo
+level: 2
+hideInToc: true
+---
+
+GPT-5.5 live demo
+
+---
 src: ./pages/section-hackathon.md
 ---
 
