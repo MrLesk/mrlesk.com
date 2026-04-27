@@ -17,6 +17,10 @@ src: ./pages/presenter.md
 ---
 
 ---
+src: ./pages/sponsor.md
+---
+
+---
 src: ./pages/toc.md
 ---
 

@@ -52,5 +52,5 @@ level: 2
 </div>
 
 <p style="margin-top: calc(20 * var(--pt)); font-size: calc(13 * var(--pt)); color: var(--codex-fg-muted);">
-  Also available: Go ($8), Business, Enterprise &amp; Edu.
+  Also available: Go ($8), Business, Enterprise &amp; Edu. Your subscription also works with 3rd-party harnesses — Pi, Hermes, OpenClaw.
 </p>

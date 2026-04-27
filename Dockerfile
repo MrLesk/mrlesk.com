@@ -1,6 +1,13 @@
 # syntax=docker/dockerfile:1
 # This Dockerfile includes Slidev presentations build
 
+# ⚠️  WHEN ADDING A NEW TALK, REMEMBER ALL FOUR PLACES:
+#     1. Add a build step in Stage 1 below
+#     2. Add a COPY --from=slidev-builds line in Stage Y (production)
+#     3. Add a `location` block in nginx.conf
+#     4. (Optional) Add a content-collection entry in src/content/talks/ to list it
+#        on the public Talks page — skip to keep the talk unlisted/URL-only
+
 # ========================================
 # Stage 1: Build All Slidev Presentations
 # ========================================

@@ -627,6 +627,91 @@
   margin: calc(16 * var(--pt)) 0 0 0;
 }
 
+/* Sponsor / host slide — text on the left, QR card on the right */
+.sponsor-grid {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr;
+  gap: calc(40 * var(--pt));
+  align-items: center;
+  margin-top: calc(8 * var(--pt));
+}
+
+.sponsor-grid .sponsor-text .sponsor-eyebrow {
+  font-size: calc(11 * var(--pt));
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  color: var(--codex-accent);
+  font-weight: 500;
+  margin-bottom: calc(8 * var(--pt));
+}
+
+.sponsor-grid .sponsor-text h2 {
+  font-size: calc(48 * var(--pt));
+  font-weight: 600;
+  letter-spacing: -0.025em;
+  margin: 0 0 calc(16 * var(--pt)) 0;
+  color: var(--codex-fg);
+}
+
+.sponsor-grid .sponsor-text .sponsor-logo {
+  height: calc(56 * var(--pt));
+  width: auto;
+  display: block;
+  margin: calc(2 * var(--pt)) 0 calc(20 * var(--pt)) 0;
+}
+
+.sponsor-grid .sponsor-text p {
+  font-size: calc(16 * var(--pt));
+  line-height: 1.5;
+  margin: 0 0 calc(12 * var(--pt)) 0;
+  color: var(--codex-fg);
+}
+
+.sponsor-grid .sponsor-text p.sponsor-thanks {
+  font-size: calc(15 * var(--pt));
+  color: var(--codex-fg-muted);
+  margin-top: calc(8 * var(--pt));
+}
+
+.sponsor-grid .sponsor-qr {
+  background: #ffffff;
+  border: 1px solid var(--codex-border);
+  border-radius: calc(14 * var(--pt));
+  padding: calc(20 * var(--pt));
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: calc(12 * var(--pt));
+  box-shadow: 0 calc(8 * var(--pt)) calc(24 * var(--pt)) rgba(20, 14, 80, 0.08);
+}
+
+.sponsor-grid .sponsor-qr img {
+  width: calc(180 * var(--pt));
+  height: calc(180 * var(--pt));
+  display: block;
+  image-rendering: pixelated;
+}
+
+.sponsor-grid .sponsor-qr .sponsor-qr-caption {
+  text-align: center;
+  font-size: calc(13 * var(--pt));
+  color: var(--codex-fg);
+  display: flex;
+  flex-direction: column;
+  gap: calc(2 * var(--pt));
+}
+
+.sponsor-grid .sponsor-qr .sponsor-qr-caption strong {
+  font-weight: 600;
+}
+
+.sponsor-grid .sponsor-qr .sponsor-qr-caption a {
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+  font-size: calc(12 * var(--pt));
+  color: var(--codex-accent);
+  border-bottom: none;
+}
+
 /* Quote layout */
 .slidev-layout.quote {
   display: flex;
@@ -649,6 +734,70 @@
   margin-top: 1.5rem;
   font-size: 1rem;
   color: var(--codex-fg-muted);
+}
+
+/* Presenters (plural) layout — two profile cards side-by-side */
+.slidev-layout.presenters {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.slidev-layout.presenters .presenters-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: calc(40 * var(--pt));
+  width: 100%;
+  align-items: start;
+}
+
+.slidev-layout.presenters .presenter-col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: calc(8 * var(--pt));
+}
+
+.slidev-layout.presenters .presenter-photo {
+  width: calc(160 * var(--pt));
+  height: calc(160 * var(--pt));
+  border-radius: 50%;
+  object-fit: cover;
+  box-shadow: 0 calc(8 * var(--pt)) calc(24 * var(--pt)) rgba(20, 14, 80, 0.18);
+  margin-bottom: calc(4 * var(--pt));
+}
+
+.slidev-layout.presenters .presenter-col h2 {
+  font-size: calc(28 * var(--pt));
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  margin: 0;
+  color: var(--codex-fg);
+}
+
+.slidev-layout.presenters .presenter-role {
+  font-size: calc(14 * var(--pt));
+  color: var(--codex-accent);
+  font-weight: 500;
+  margin: 0 0 calc(8 * var(--pt)) 0;
+}
+
+.slidev-layout.presenters .presenter-bio {
+  width: 100%;
+  font-size: calc(14 * var(--pt));
+  color: var(--codex-fg);
+  text-align: left;
+}
+
+.slidev-layout.presenters .presenter-bio ul {
+  list-style: disc;
+  padding-left: calc(20 * var(--pt));
+  margin: 0;
+}
+
+.slidev-layout.presenters .presenter-bio ul li + li {
+  margin-top: calc(6 * var(--pt));
 }
 
 /* Presenter layout */
