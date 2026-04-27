@@ -56,5 +56,7 @@ const right = computed(() => {
       </div>
 
     </div>
+
+    <slot name="footer"></slot>
   </div>
 </template>

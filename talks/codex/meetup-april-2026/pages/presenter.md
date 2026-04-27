@@ -22,6 +22,21 @@ rightRole: 'Principal Data Scientist at <a href="https://www.dynatrace.com" targ
 
 - Background in Theoretical Physics
 - Data Platforms · ML · Agentic AI
-- Builds and leads high-performing data teams
-- Pragmatic, entrepreneurial problem-solver
+- Leads high-performing data teams
+- Pragmatic, entrepreneurial mindset
 - 1st place — Codex Hackathon Vienna
+
+::footer::
+
+<div class="team-affiliation">
+  <span class="vaie-mark">
+    <span class="vaie-text">
+      <span class="vaie-line-1">
+        <span class="vaie-vienna">Vienna</span>
+        <span class="vaie-ai">AI</span>
+      </span>
+      <span class="vaie-eng">Engineering</span>
+    </span>
+    <img class="vaie-logo" src="/vaie-logo.png" alt="" />
+  </span>
+</div>

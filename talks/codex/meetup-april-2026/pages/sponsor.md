@@ -28,7 +28,7 @@ hideInToc: true
 <div class="sponsor-qr">
   <img src="/greentube-careers-qr.png" alt="QR code to careers.greentube.com" />
   <div class="sponsor-qr-caption">
-    <strong>They're hiring</strong>
+    <strong>We're hiring</strong>
     <a href="https://careers.greentube.com" target="_blank">careers.greentube.com</a>
   </div>
 </div>
