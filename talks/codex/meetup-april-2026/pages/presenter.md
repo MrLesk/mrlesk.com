@@ -1,6 +1,6 @@
 ---
 layout: presenters
-title: About us
+title: Hosts
 hideInToc: true
 leftImage: '/presenter.jpg'
 leftName: Alex Gavrilescu
@@ -16,27 +16,12 @@ rightRole: 'Principal Data Scientist at <a href="https://www.dynatrace.com" targ
 - 14+ years as software developer
 - K8s, .NET & Vue by day, AI agents by night
 - Building [Backlog.md](https://backlog.md) since June 2025
-- Say hi on [@mrlesk](https://x.com/mrlesk)
+- Say hi on X ([@mrlesk](https://x.com/mrlesk))
 
 ::right::
 
-- Background in Theoretical Physics
-- Data Platforms · ML · Agentic AI
-- Leads high-performing data teams
-- Pragmatic, entrepreneurial mindset
-- 1st place — Codex Hackathon Vienna
-
-::footer::
-
-<div class="team-affiliation">
-  <span class="vaie-mark">
-    <span class="vaie-text">
-      <span class="vaie-line-1">
-        <span class="vaie-vienna">Vienna</span>
-        <span class="vaie-ai">AI</span>
-      </span>
-      <span class="vaie-eng">Engineering</span>
-    </span>
-    <img class="vaie-logo" src="/vaie-logo.png" alt="" />
-  </span>
-</div>
+- Meetup Organizer since 2015
+- Background in Theoretical Physics, SW Development & Data Science
+- Currently working on Agentic AI in the Dynatrace AI Squad
+- Pragmatic, entrepreneurial problem-solver · 1st place @ Codex Hackathon Vienna
+- Say hi on X ([@bpirvu](https://x.com/bpirvu)) or LinkedIn ([@bogdan-pirvu](https://www.linkedin.com/in/bogdan-pirvu))

@@ -35,6 +35,7 @@ const right = computed(() => {
 
 <template>
   <div class="slidev-layout presenters">
+    <h1 v-if="frontmatter?.title" class="presenters-title">{{ frontmatter.title }}</h1>
     <div class="presenters-grid">
 
       <div class="presenter-col">

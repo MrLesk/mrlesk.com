@@ -3,7 +3,7 @@ title: Our host
 hideInToc: true
 ---
 
-# Tonight's host
+# Tonight's sponsor
 
 <div class="sponsor-grid">
 
@@ -14,9 +14,10 @@ hideInToc: true
   <img class="sponsor-logo" src="/greentube-logo.svg" alt="Greentube" />
 
   <p>
-    Digital gaming division of NOVOMATIC, headquartered right here in Vienna —
-    they're hosting us tonight and bringing the food. Sponsoring this meetup is
-    part of their commitment to growing the AI engineering community in the city.
+    A leading full-service provider in the online and mobile gaming sector —
+    they're hosting us tonight and bringing the food. Sponsoring this meetup
+    is part of their effort to grow a vibrant tech and AI engineering
+    community in Vienna.
   </p>
 
   <p class="sponsor-thanks">

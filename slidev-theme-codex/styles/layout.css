@@ -777,9 +777,41 @@
   display: block;
 }
 
+/* Large variant — used on the Hosts slide */
+.vaie-mark.vaie-mark-lg {
+  gap: calc(20 * var(--pt));
+  margin: calc(8 * var(--pt)) 0 calc(28 * var(--pt)) 0;
+}
+
+.vaie-mark.vaie-mark-lg .vaie-line-1,
+.vaie-mark.vaie-mark-lg .vaie-eng {
+  font-size: calc(40 * var(--pt));
+}
+
+.vaie-mark.vaie-mark-lg .vaie-text {
+  gap: calc(6 * var(--pt));
+}
+
+.vaie-mark.vaie-mark-lg .vaie-logo {
+  height: calc(96 * var(--pt));
+}
+
+.vaie-tagline {
+  font-size: calc(20 * var(--pt));
+  font-weight: 500;
+  line-height: 1.35;
+  color: #00275c;
+  letter-spacing: -0.005em;
+  margin: 0;
+}
+
+.vaie-tagline .vaie-tagline-muted {
+  color: #6c6d70;
+}
+
 /* "Part of the …" team line — used in the presenters slide footer */
 .team-affiliation {
-  margin-top: calc(28 * var(--pt));
+  margin-top: calc(56 * var(--pt));
   display: flex;
   align-items: center;
   justify-content: center;
@@ -795,12 +827,26 @@
   flex-direction: column;
   align-items: stretch;
   justify-content: center;
+  padding-left: calc(8 * var(--pt));
+  padding-right: calc(8 * var(--pt));
+}
+
+.slidev-layout.presenters .presenters-title {
+  /* Match the default slide padding (3.5rem ≈ 55pt) so the title aligns
+     with titles on other slides. The layout itself has only 8pt of
+     left padding, so the rest comes from this margin. */
+  margin: 0 0 calc(20 * var(--pt)) calc(48 * var(--pt));
+  font-size: calc(36 * var(--pt));
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  color: var(--codex-fg);
 }
 
 .slidev-layout.presenters .presenters-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: calc(40 * var(--pt));
+  grid-template-columns: auto auto;
+  justify-content: center;
+  gap: calc(64 * var(--pt));
   width: 100%;
   align-items: start;
 }

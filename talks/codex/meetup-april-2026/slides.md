@@ -17,6 +17,10 @@ src: ./pages/presenter.md
 ---
 
 ---
+src: ./pages/vaie.md
+---
+
+---
 src: ./pages/sponsor.md
 ---
 

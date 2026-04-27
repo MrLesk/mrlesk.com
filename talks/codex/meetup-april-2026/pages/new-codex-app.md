@@ -5,7 +5,7 @@ level: 2
 
 # What's new in the Codex app
 
-<div class="cards-grid cols-3" style="margin-top: calc(20 * var(--pt));">
+<div class="cards-grid cols-4" style="margin-top: calc(20 * var(--pt));">
 
 <div class="card">
   <div class="card-icon card-icon-mask" style="--icon: url('/computer-use-icon.svg')"></div>
@@ -28,6 +28,14 @@ level: 2
   <div class="card-eyebrow">Image generation</div>
   <div class="card-body">
     Built-in image generation powered by the new image-2 model.
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-icon card-icon-mask" style="--icon: url('/voice-mode-icon.svg')"></div>
+  <div class="card-eyebrow">Voice dictation</div>
+  <div class="card-body">
+    Use your voice to prompt Codex. Hold <kbd>Ctrl+M</kbd> while the composer is visible and start talking — your voice is transcribed. Edit the transcript or hit send to have Codex start work.
   </div>
 </div>
 
