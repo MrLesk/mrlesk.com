@@ -184,13 +184,13 @@ const itemStyle = (index: number) => {
   left: 0;
   right: 0;
   display: grid;
-  grid-template-columns: calc(68 * var(--pt)) calc(126 * var(--pt)) 1fr calc(78 * var(--pt));
+  grid-template-columns: calc(68 * var(--pt)) calc(126 * var(--pt)) 1fr;
   align-items: center;
   gap: calc(14 * var(--pt));
   min-height: calc(60 * var(--pt));
   border: 1px solid var(--codex-border);
   border-radius: calc(8 * var(--pt));
-  padding: calc(11 * var(--pt)) calc(16 * var(--pt));
+  padding: calc(11 * var(--pt)) calc(102 * var(--pt)) calc(11 * var(--pt)) calc(16 * var(--pt));
   background: #ffffff;
   opacity: var(--agenda-opacity);
   z-index: var(--agenda-z);
@@ -221,13 +221,6 @@ const itemStyle = (index: number) => {
 .agenda-item.has-coffee-art.is-active {
   min-height: calc(84 * var(--pt));
   padding-right: calc(220 * var(--pt));
-}
-
-.agenda-item.has-coffee-art.is-active .agenda-state {
-  position: absolute;
-  right: calc(16 * var(--pt));
-  top: 50%;
-  transform: translateY(-50%);
 }
 
 .agenda-item.is-done {
@@ -291,7 +284,13 @@ const itemStyle = (index: number) => {
 }
 
 .agenda-state {
-  justify-self: end;
+  position: absolute;
+  right: calc(16 * var(--pt));
+  top: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: calc(66 * var(--pt));
   border-radius: calc(999 * var(--pt));
   border: 1px solid rgba(52, 66, 224, 0.18);
   padding: calc(4 * var(--pt)) calc(10 * var(--pt));
@@ -301,6 +300,8 @@ const itemStyle = (index: number) => {
   letter-spacing: 0;
   color: var(--codex-accent);
   background: var(--codex-accent-soft);
+  transform: translateY(-50%);
+  white-space: nowrap;
   transition:
     background 220ms ease,
     border-color 220ms ease,
