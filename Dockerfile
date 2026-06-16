@@ -68,6 +68,10 @@ RUN cd vienna-explosion && mkdir -p dist && bun run build -- --base /talks/vienn
 COPY talks/codex/meetup-april-2026/ ./codex-meetup-april-2026/
 RUN cd codex-meetup-april-2026 && mkdir -p dist && bun run build -- --base /talks/codex/meetup-april-2026/
 
+# Build Codex Build - June 20, 2026 (unlisted; reachable by URL only)
+COPY talks/codex/build-june-2026/ ./codex-build-june-2026/
+RUN cd codex-build-june-2026 && mkdir -p dist && bun run build -- --base /talks/codex/build-june-2026/
+
 # ========================================
 # Stage X: Build Main Astro Site
 # ========================================
@@ -102,6 +106,7 @@ COPY --from=slidev-builds /app/ai-native-dev-workshop/dist /usr/share/nginx/html
 COPY --from=slidev-builds /app/voxxed-backlog-presentation/dist /usr/share/nginx/html/talks/voxxed/backlog-presentation
 COPY --from=slidev-builds /app/vienna-explosion/dist /usr/share/nginx/html/talks/vienna-ai-engineering/the-explosion-of-tools
 COPY --from=slidev-builds /app/codex-meetup-april-2026/dist /usr/share/nginx/html/talks/codex/meetup-april-2026
+COPY --from=slidev-builds /app/codex-build-june-2026/dist /usr/share/nginx/html/talks/codex/build-june-2026
 
 # Copy custom nginx config
 COPY nginx.conf /etc/nginx/conf.d/default.conf

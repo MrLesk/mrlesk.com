@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Codex Meetup — wayfinding sign</title>
+  <style>
+    @page { size: A4 portrait; margin: 0; }
+
+    :root {
+      --codex-fg: #030a18;
+      --codex-fg-muted: #5a6275;
+      --codex-accent: #3442e0;
+      --codex-accent-soft: #eef0ff;
+      --codex-border: rgba(3, 10, 24, 0.10);
+      /* A4 portrait: 210mm × 297mm. */
+      --pad: 18mm;
+    }
+
+    * { box-sizing: border-box; }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      background: #fff;
+    }
+
+    body {
+      font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif;
+      color: var(--codex-fg);
+      -webkit-font-smoothing: antialiased;
+      letter-spacing: -0.01em;
+    }
+
+    .sheet {
+      width: 210mm;
+      height: 297mm;
+      padding: var(--pad);
+      display: grid;
+      grid-template-rows: auto 1fr auto;
+      gap: 0;
+      page-break-after: always;
+    }
+
+    /* Header */
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 14mm;
+    }
+
+    .header img {
+      width: 52mm;
+      height: 52mm;
+      border-radius: 11mm;
+      filter: drop-shadow(0 4mm 8mm rgba(20, 14, 80, 0.18));
+      align-self: center;
+    }
+
+    .header .title-block {
+      display: flex;
+      flex-direction: column;
+      gap: 1mm;
+    }
+
+    .header .eyebrow {
+      font-size: 14pt;
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+      color: var(--codex-accent);
+      font-weight: 600;
+    }
+
+    .header h1 {
+      font-size: 48pt;
+      font-weight: 600;
+      letter-spacing: -0.025em;
+      line-height: 1.02;
+      margin: 0;
+    }
+
+    .header .date {
+      font-size: 16pt;
+      color: var(--codex-fg-muted);
+      margin-top: 2mm;
+    }
+
+    /* Big arrow + label fills the middle */
+    .stage {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 8mm;
+      padding: 8mm 0;
+    }
+
+    .stage .arrow-box {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .stage svg {
+      width: 150mm;
+      height: auto;
+      color: var(--codex-accent);
+      filter: drop-shadow(0 4mm 8mm rgba(52, 66, 224, 0.18));
+    }
+
+    .stage .label {
+      font-size: 64pt;
+      font-weight: 600;
+      letter-spacing: -0.03em;
+      line-height: 1;
+      color: var(--codex-fg);
+      text-transform: uppercase;
+    }
+
+    .stage .sublabel {
+      font-size: 14pt;
+      color: var(--codex-fg-muted);
+      letter-spacing: 0.02em;
+    }
+
+    /* Footer: VAIE + Greentube */
+    .footer {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      align-items: end;
+      gap: 8mm;
+      padding-top: 8mm;
+      border-top: 0.4mm solid var(--codex-border);
+    }
+
+    .footer .credit {
+      font-size: 9pt;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      color: var(--codex-fg-muted);
+      font-weight: 500;
+    }
+
+    .footer .vaie-block {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 2.5mm;
+    }
+
+    .footer .vaie-mark {
+      display: inline-flex;
+      align-items: center;
+      gap: 2.5mm;
+    }
+
+    .footer .vaie-mark .vaie-text {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      font-weight: 300;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      line-height: 1;
+      gap: 0.6mm;
+    }
+
+    .footer .vaie-mark .vaie-line-1 {
+      display: inline-flex;
+      align-items: baseline;
+      gap: 1.2mm;
+      font-size: 13pt;
+    }
+
+    .footer .vaie-mark .vaie-vienna { color: #6c6d70; }
+    .footer .vaie-mark .vaie-ai,
+    .footer .vaie-mark .vaie-eng    { color: #00275c; font-size: 13pt; }
+
+    .footer .vaie-mark img {
+      height: 11mm;
+      width: auto;
+    }
+
+    .footer .greentube-block {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 2.5mm;
+    }
+
+    .footer .greentube-block img {
+      height: 9mm;
+      width: auto;
+    }
+
+    @media screen {
+      body {
+        background: #e9ecf2;
+        padding: 24px;
+        display: flex;
+        justify-content: center;
+        min-height: 100vh;
+      }
+      .sheet {
+        background: #fff;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="sheet">
+
+    <header class="header">
+      <img src="./public/codex-logo.gif" alt="Codex" />
+      <div class="title-block">
+        <div class="eyebrow">Tonight</div>
+        <h1>Codex Community Meetup</h1>
+        <div class="date">Monday, April 27, 2026</div>
+      </div>
+    </header>
+
+    <section class="stage">
+      <div class="arrow-box">
+        <!-- A clean, custom arrow SVG. Stroke uses currentColor so it picks
+             up .stage svg's color: var(--codex-accent). -->
+        <svg viewBox="0 0 600 200" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="20" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="40" y1="100" x2="520" y2="100" />
+          <polyline points="420,30 540,100 420,170" />
+        </svg>
+      </div>
+      <div class="label">This way</div>
+    </section>
+
+    <footer class="footer">
+      <div class="vaie-block">
+        <span class="credit">Powered by</span>
+        <div class="vaie-mark">
+          <span class="vaie-text">
+            <span class="vaie-line-1">
+              <span class="vaie-vienna">Vienna</span>
+              <span class="vaie-ai">AI</span>
+            </span>
+            <span class="vaie-eng">Engineering</span>
+          </span>
+          <img src="./public/vaie-logo.png" alt="" />
+        </div>
+      </div>
+
+      <div class="greentube-block">
+        <span class="credit">Hosted by</span>
+        <img src="./public/greentube-logo.svg" alt="Greentube" />
+      </div>
+    </footer>
+
+  </div>
+</body>
+</html>

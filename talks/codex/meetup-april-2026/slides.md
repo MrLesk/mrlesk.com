@@ -4,7 +4,7 @@ title: Codex Community Meetup — Vienna, April 2026
 info: Codex Community Meetup, Vienna — April 27, 2026
 author: Alex Gavrilescu
 layout: cover
-presenter: Alex Gavrilescu, Codex Ambassador
+presenter: Codex Community Vienna
 hideInToc: true
 ---
 
