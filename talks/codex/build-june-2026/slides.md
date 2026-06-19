@@ -19,10 +19,23 @@ layout: default
     color: var(--codex-accent);
     margin: calc(53 * var(--pt)) 0 0 0;
 }
+
+.cards-grid .card .card-eyebrow,
+.cards-grid .card .card-title {
+    font-weight: 700;
+}
 </style>
 
 ---
 src: ./pages/cover.md
+---
+
+---
+src: ./pages/vaie.md
+---
+
+---
+src: ./pages/WU.md
 ---
 
 ---
@@ -42,19 +55,11 @@ src: ./pages/surfaces-map.md
 ---
 
 ---
-src: ./pages/surface-router.md
+src: ./pages/pricing.md
 ---
 
 ---
 src: ./pages/work-modes-section.md
----
-
----
-src: ./pages/local-modes.md
----
-
----
-src: ./pages/remote-modes.md
 ---
 
 ---
@@ -63,10 +68,6 @@ src: ./pages/plan-goal-modes.md
 
 ---
 src: ./pages/context-section.md
----
-
----
-src: ./pages/context-surfaces.md
 ---
 
 ---
@@ -79,10 +80,6 @@ src: ./pages/tooling-section.md
 
 ---
 src: ./pages/tooling-map.md
----
-
----
-src: ./pages/delivery-loop.md
 ---
 
 ---
@@ -99,4 +96,12 @@ src: ./pages/thanks.md
 
 ---
 src: ./pages/final-agenda.md
+---
+
+---
+src: ./pages/final-thanks.md
+---
+
+---
+src: ./pages/next-meetup-save-the-date.md
 ---

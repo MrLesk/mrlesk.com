@@ -23,17 +23,17 @@ const agenda = [
     meta: 'Agenda for the day, Staff and Codex expert introductions.',
   },
   {
-    time: '11:00 AM - 12:00 PM',
+    time: '11:00 AM - 12:30 PM',
     title: 'Build time',
-    meta: 'Move into tracks and start the first focused build block.',
+    meta: 'Move together to the Classroom and join your pre-selected track group.',
   },
   {
-    time: '12:00 PM - 12:30 PM',
+    time: '12:30 PM - 1:00 PM',
     title: 'Lunch break',
     meta: 'Reset, compare progress, and find the next blocker.',
   },
   {
-    time: '12:30 PM - 03:00 PM',
+    time: '1:00 PM - 03:00 PM',
     title: 'Build time',
     meta: 'Long-form implementation, review, and iteration.',
   },

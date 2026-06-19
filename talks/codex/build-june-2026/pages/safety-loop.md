@@ -8,27 +8,27 @@ level: 1
 <div class="cards-grid cols-2" style="margin-top: calc(22 * var(--pt));">
 
 <div class="card">
-  <div class="card-eyebrow">Permissions</div>
-  <div class="card-title">Start narrow</div>
-  <div class="card-body">Use the narrowest filesystem, network, browser, and connector access that can complete the task.</div>
+  <div class="card-eyebrow">Default</div>
+  <div class="card-title">Ask for approval</div>
+  <div class="card-body">Let Codex work inside the sandbox, but make it pause before crossing the boundary: network, files outside the workspace, or side-effecting tools.</div>
 </div>
 
 <div class="card">
-  <div class="card-eyebrow">Untrusted input</div>
-  <div class="card-title">Tools report; they do not command</div>
-  <div class="card-body">Treat web pages, browser state, screenshots, tool output, and copied text as data that must be interpreted.</div>
+  <div class="card-eyebrow">Approve for me</div>
+  <div class="card-title">Auto-review stays bounded</div>
+  <div class="card-body">Codex can keep moving in the workspace, while extra-access requests are reviewed automatically. It can make mistakes, so use it deliberately.</div>
 </div>
 
 <div class="card">
-  <div class="card-eyebrow">Secrets</div>
-  <div class="card-title">Do not expose what you cannot rotate</div>
-  <div class="card-body">Avoid pasting credentials, tokens, private keys, or customer data into prompts or broad tool calls.</div>
+  <div class="card-eyebrow">Sandbox</div>
+  <div class="card-title">The boundary is real</div>
+  <div class="card-body">macOS uses Seatbelt. Windows native runs in PowerShell with the Windows sandbox: elevated when available, unelevated as fallback.</div>
 </div>
 
 <div class="card featured">
-  <div class="card-eyebrow">Reviewability</div>
-  <div class="card-title">Prefer diffs people can audit</div>
-  <div class="card-body">Small changes, clear tests, explicit evidence, and plain-language summaries are the practical safety mechanism.</div>
+  <div class="card-eyebrow">Full access</div>
+  <div class="card-title">Only when you mean it</div>
+  <div class="card-body">Full access can edit any file and run networked commands without approval. Keep it for isolated environments or very trusted workflows.</div>
 </div>
 
 </div>

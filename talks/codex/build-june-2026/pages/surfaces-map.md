@@ -1,9 +1,9 @@
 ---
-title: Codex surfaces
+title: Ways to use Codex
 level: 2
 ---
 
-# Codex surfaces
+# Ways to use Codex
 
 <div class="cards-grid cols-3" style="margin-top: calc(18 * var(--pt));">
 
@@ -34,7 +34,7 @@ level: 2
 
 <div class="card featured">
   <div class="card-eyebrow">Product idea</div>
-  <div class="card-body">The surface is not the strategy. The strategy is keeping context, permissions, and review close to the task.</div>
+  <div class="card-body">The way you start is not the strategy. The strategy is keeping context, permissions, and review close to the task.</div>
 </div>
 
 </div>

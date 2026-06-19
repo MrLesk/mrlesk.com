@@ -1,8 +1,7 @@
 ---
 layout: section
-title: Surfaces
+title: Ways to use Codex
 level: 1
-eyebrow: Part 1
 ---
 
-# Choose the right surface for the job
+<h1 class="text-center"> Choose the right Codex for the job </h1>

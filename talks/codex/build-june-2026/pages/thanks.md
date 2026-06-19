@@ -5,6 +5,6 @@ contact: 'Codex Build - June 20, 2026'
 hideInToc: true
 ---
 
-# Build well
+# Build time!
 
-Small context. Narrow tools. Reviewable diffs.
+Let's head towards our classroom.

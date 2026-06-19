@@ -1,12 +1,11 @@
 ---
-layout: two-cols
 title: Persistent context
 level: 2
 ---
 
 # Persistent context
 
-<div class="feature-list">
+<div class="feature-list persistent-context-grid">
 
 <div class="feature">
   <div class="feature-num">01</div>
@@ -24,17 +23,11 @@ level: 2
   </div>
 </div>
 
-</div>
-
-::right::
-
-<div class="feature-list">
-
 <div class="feature">
   <div class="feature-num">03</div>
   <div>
     <div class="feature-title">Memories</div>
-    <p class="feature-body">Preferences, workflows, tech stacks, and repo conventions that can survive across sessions when the user enables them.</p>
+    <p class="feature-body">Durable user and workspace context: preferences, recurring decisions, tech stacks, and caveats that should survive the next thread.</p>
   </div>
 </div>
 
@@ -42,8 +35,26 @@ level: 2
   <div class="feature-num">04</div>
   <div>
     <div class="feature-title">The discipline</div>
-    <p class="feature-body">Persistent context should be reviewable, specific, and easy to override when the current task is different.</p>
+    <p class="feature-body">When something goes wrong, improve the loop: update AGENTS.md for repo rules, or turn the workflow into a skill.</p>
   </div>
 </div>
 
 </div>
+
+<style>
+.persistent-context-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  column-gap: calc(42 * var(--pt));
+  row-gap: calc(30 * var(--pt));
+  margin-top: calc(26 * var(--pt));
+}
+
+.persistent-context-grid .feature {
+  min-height: calc(112 * var(--pt));
+}
+
+.persistent-context-grid .feature .feature-title {
+  font-weight: 700;
+}
+</style>

@@ -1,9 +1,9 @@
 ---
-title: Tooling surfaces
+title: Tools and connectors
 level: 2
 ---
 
-# Tooling surfaces
+# Tools and connectors
 
 <div class="cards-grid cols-4" style="margin-top: calc(18 * var(--pt));">
 

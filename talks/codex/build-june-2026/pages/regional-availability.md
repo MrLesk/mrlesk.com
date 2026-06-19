@@ -4,11 +4,9 @@ title: June 16 availability update
 level: 1
 ---
 
-# New this week: the app reaches more builders
+# New this week: more features for EU builders
 
-On June 16, 2026, Codex app capabilities began rolling out to users in the EEA, the UK, and Switzerland.
-
-<div class="codex-callout">Regional access is now part of the build story.</div>
+<div class="codex-callout">Computer Use, Chrome Extension and Memories are available in EU!</div>
 
 ::right::
 
@@ -35,6 +33,14 @@ On June 16, 2026, Codex app capabilities began rolling out to users in the EEA, 
   <div>
     <div class="feature-title">Memories and Chronicle</div>
     <p class="feature-body">Memories are off by default in these regions. Chronicle is an opt-in research preview for ChatGPT Pro subscribers on macOS.</p>
+  </div>
+</div>
+
+<div class="feature">
+  <div class="feature-num">04</div>
+  <div>
+    <div class="feature-title">Invite a friend</div>
+    <p class="feature-body">Eligible Plus and Pro users can invite friends during the June promotion. When a friend sends their first Codex message, both people get a banked rate-limit reset.</p>
   </div>
 </div>
 

@@ -1,25 +1,34 @@
 ---
-layout: two-cols
-title: Plan mode and goal mode
+title: Four ways to chat with Codex
 level: 2
 ---
 
-# Plan mode
+# 4 great ways to chat with Codex
 
-Use plan mode when the shape of the change is still being negotiated.
+<div class="cards-grid cols-2" style="margin-top: calc(22 * var(--pt));">
 
-- Identify files and owners
-- Decide sequencing
-- Surface risk before edits
-- Preserve the option to stop
+<div class="card featured">
+  <div class="card-eyebrow">/Plan mode</div>
+  <div class="card-title">Think before edits</div>
+  <div class="card-body">Use it when the shape of the change is still being negotiated: files, owners, sequence, risks, and the option to stop.</div>
+</div>
 
-::right::
+<div class="card">
+  <div class="card-eyebrow">/Goal mode</div>
+  <div class="card-title">Stay with the outcome</div>
+  <div class="card-body">Use it when the target is known and persistence matters: keep the objective explicit, continue through checks, and finish only when done.</div>
+</div>
 
-# Goal mode
+<div class="card">
+  <div class="card-eyebrow">/Fork chat</div>
+  <div class="card-title">Explore a branch of thought</div>
+  <div class="card-body">Use it when the current thread is useful, but one idea needs a separate path before you decide whether to bring it back.</div>
+</div>
 
-Use goal mode when the target is known and persistence matters.
+<div class="card">
+  <div class="card-eyebrow">/Side chat</div>
+  <div class="card-title">Ask without derailing</div>
+  <div class="card-body">Use it for explanations, critique, options, or quick checks while the main implementation thread keeps its direction.</div>
+</div>
 
-- Keep objective and budget explicit
-- Continue through implementation and checks
-- Mark complete only when the work is done
-- Mark blocked only at a real impasse
+</div>

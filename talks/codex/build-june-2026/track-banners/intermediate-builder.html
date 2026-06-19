@@ -1,0 +1,201 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Intermediate Builder - Codex Build Track</title>
+  <style>
+    @page { size: 420mm 297mm; margin: 0; }
+    * { box-sizing: border-box; }
+
+    :root {
+      --codex-fg: #030a18;
+      --codex-muted: #5a6275;
+      --codex-accent: #3442e0;
+      --track-accent: #3a44cf;
+      --track-accent-2: #8a5bff;
+    }
+
+    html,
+    body {
+      margin: 0;
+      width: 420mm;
+      height: 297mm;
+      min-height: 297mm;
+      overflow: hidden;
+      background:
+        radial-gradient(circle at 22% 24%, rgba(255, 255, 255, 0.62), transparent 28%),
+        linear-gradient(135deg, var(--track-accent-2), var(--track-accent));
+      color: var(--codex-fg);
+      font-family: "Inter", "Helvetica Neue", Arial, sans-serif;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+
+    body {
+      display: block;
+    }
+
+    .banner {
+      position: relative;
+      width: 420mm;
+      height: 297mm;
+      overflow: hidden;
+      background:
+        radial-gradient(circle at 22% 24%, rgba(255, 255, 255, 0.62), transparent 28%),
+        linear-gradient(135deg, var(--track-accent-2), var(--track-accent));
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+
+    .banner::before {
+      content: "03";
+      position: absolute;
+      right: 22mm;
+      bottom: -14mm;
+      color: rgba(255, 255, 255, 0.13);
+      font-family: "JetBrains Mono", "IBM Plex Mono", ui-monospace, monospace;
+      font-size: 104mm;
+      line-height: 1;
+      font-weight: 800;
+      letter-spacing: -0.08em;
+    }
+
+    .topline {
+      position: absolute;
+      inset: 23mm 28mm auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      color: #ffffff;
+    }
+
+    .wordmark {
+      font-size: 11mm;
+      line-height: 1;
+      font-weight: 700;
+      letter-spacing: -0.045em;
+    }
+
+    .track-chip {
+      display: flex;
+      align-items: center;
+      gap: 5mm;
+      font-size: 7mm;
+      font-weight: 700;
+    }
+
+    .track-chip span {
+      display: grid;
+      place-items: center;
+      width: 18mm;
+      height: 18mm;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.18);
+      border: 0.45mm solid rgba(255, 255, 255, 0.28);
+      font-family: "JetBrains Mono", "IBM Plex Mono", ui-monospace, monospace;
+    }
+
+    main {
+      position: absolute;
+      inset: 68mm 30mm 46mm;
+      display: grid;
+      align-content: center;
+      justify-items: center;
+      text-align: center;
+      color: #ffffff;
+    }
+
+    .eyebrow {
+      margin: 0 0 14mm;
+      font-family: "JetBrains Mono", "IBM Plex Mono", ui-monospace, monospace;
+      font-size: 7mm;
+      font-weight: 800;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: rgba(255, 255, 255, 0.78);
+    }
+
+    h1 {
+      max-width: 345mm;
+      margin: 0;
+      color: #ffffff;
+      font-size: 47mm;
+      line-height: 0.92;
+      font-weight: 650;
+      letter-spacing: -0.055em;
+    }
+
+    .join {
+      margin-top: 18mm;
+      display: inline-flex;
+      align-items: center;
+      gap: 6mm;
+      padding: 7mm 11mm;
+      border-radius: 999px;
+      background: #ffffff;
+      color: var(--codex-accent);
+      font-family: "JetBrains Mono", "IBM Plex Mono", ui-monospace, monospace;
+      font-size: 9mm;
+      line-height: 1;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .join span {
+      font-size: 11mm;
+      letter-spacing: 0;
+    }
+
+    .footer {
+      position: absolute;
+      left: 28mm;
+      right: 28mm;
+      bottom: 22mm;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      color: rgba(255, 255, 255, 0.78);
+      font-size: 6mm;
+      font-weight: 600;
+    }
+
+    @media print {
+      html,
+      body {
+        width: 100%;
+        height: 100%;
+      }
+
+      body { display: block; }
+
+      .banner {
+        position: fixed;
+        inset: 0;
+        width: auto;
+        height: auto;
+      }
+    }
+  </style>
+</head>
+<body>
+  <section class="banner" aria-label="Intermediate Builder track sign">
+    <header class="topline">
+      <div class="wordmark">Codex Community</div>
+      <div class="track-chip"><span>03</span> Track</div>
+    </header>
+
+    <main>
+      <p class="eyebrow">Codex Build Vienna</p>
+      <h1>Intermediate<br>Builder</h1>
+      <div class="join"><span>&gt;</span> Join this track</div>
+    </main>
+
+    <footer class="footer">
+      <span>Codex Community Build</span>
+      <span>June 20, 2026</span>
+    </footer>
+  </section>
+</body>
+</html>
