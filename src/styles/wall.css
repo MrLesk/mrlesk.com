@@ -32,7 +32,7 @@ body {
 .bg-grain {
   position: relative;
   min-height: 100%;
-  padding: clamp(40px, 9vw, 86px) clamp(24px, 7vw, 88px) clamp(98px, 13vw, 150px);
+  padding: clamp(12px, 4vw, 48px) clamp(24px, 7vw, 88px) clamp(98px, 13vw, 150px);
   z-index: 2;
 }
 
@@ -134,6 +134,27 @@ body {
   gap: 14px;
   margin-bottom: clamp(42px, 7vw, 88px);
   max-width: 780px;
+}
+
+.wall-brand {
+  display: inline-flex;
+  width: clamp(124px, 14vw, 164px);
+  max-width: 42vw;
+  margin-bottom: clamp(8px, 1.6vw, 16px);
+  border-radius: 8px;
+  line-height: 0;
+  text-decoration: none;
+}
+
+.wall-brand img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.wall-brand:focus-visible {
+  outline: 3px solid rgba(52, 211, 153, 0.38);
+  outline-offset: 6px;
 }
 
 .wall-header h1 {
@@ -315,8 +336,15 @@ body {
 }
 
 @media (max-width: 640px) {
+  .bg-grain {
+    padding: 12px 10px 56px;
+  }
+
   .card {
-    padding: 26px;
+    padding: 16px;
+  }
+  .wall-brand {
+    width: 120px;
   }
   .wall-header h1 {
     font-size: clamp(36px, 12vw, 52px);

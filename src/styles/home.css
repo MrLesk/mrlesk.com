@@ -2,12 +2,15 @@
   /* Tailwind stone-100 */
   --bg: #f5f5f4; /* page background */
   --card: #ffffff; /* surface */
-  --ink: #0b1220; /* main text */
-  --muted: #49536a; /* secondary */
-  --border: #e5e7eb; /* subtle lines */
-  --accent: #0369a1; /* sky-700 */
-  --shadow: 0 1px 2px rgba(15, 23, 42, 0.06),
-    0 6px 18px rgba(2, 6, 23, 0.06);
+  --ink: #263d50; /* main text */
+  --muted: #5a6b7b; /* secondary */
+  --border: rgba(57, 82, 104, 0.16); /* subtle lines */
+  --navy: #395268;
+  --accent: #00d183;
+  --accent-strong: #00885d;
+  --accent-soft: rgba(0, 209, 131, 0.14);
+  --shadow: 0 1px 2px rgba(57, 82, 104, 0.08),
+    0 8px 22px rgba(57, 82, 104, 0.08);
   --radius: 14px;
 }
 /* Grain background utility */
@@ -36,12 +39,17 @@
   display: grid;
   justify-items: center;
   text-align: center;
-  gap: 16px;
+  gap: 14px;
   margin-bottom: 26px;
 }
+.brand-logo {
+  display: block;
+  width: 146px;
+  height: auto;
+}
 .avatar {
-  width: 128px;
-  height: 128px;
+  width: 112px;
+  height: 112px;
   border-radius: 999px;
   object-fit: cover;
   background: #fff;
@@ -49,10 +57,26 @@
   box-shadow: var(--shadow);
 }
 h1 {
-  font-size: clamp(28px, 5vw, 40px);
+  font-size: 2.4rem;
   line-height: 1.1;
-  letter-spacing: -0.02em;
+  letter-spacing: 0;
   margin: 0;
+  color: var(--navy);
+  font-weight: 800;
+}
+.name-lockup {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0 0.2em;
+  max-width: 100%;
+}
+.name-alias {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.08em;
+  color: var(--navy);
 }
 .tag {
   color: var(--muted);
@@ -76,7 +100,7 @@ h1 {
   background: var(--card);
   color: var(--ink);
   text-decoration: none;
-  font-weight: 600;
+  font-weight: 700;
   border: 1px solid var(--border);
   box-shadow: var(--shadow);
   transition:
@@ -86,8 +110,8 @@ h1 {
     box-shadow 0.2s ease;
 }
 .btn:hover {
-  background: #f8fafc;
-  border-color: #dbe1ea;
+  background: #f9fbfb;
+  border-color: rgba(57, 82, 104, 0.26);
 }
 .btn:active {
   transform: translateY(1px);
@@ -98,14 +122,15 @@ h1 {
   display: block;
 }
 .btn.accent {
-  background: #eaf6fd;
-  border-color: #cae9f8;
+  background: var(--accent-soft);
+  border-color: rgba(0, 209, 131, 0.4);
+  color: var(--navy);
 }
 .btn.accent:hover {
-  background: #dff0fb;
+  background: rgba(0, 209, 131, 0.2);
 }
 .btn:focus-visible {
-  outline: 3px solid rgba(14, 165, 233, 0.35);
+  outline: 3px solid rgba(0, 209, 131, 0.38);
   outline-offset: 2px;
 }
 
@@ -117,17 +142,29 @@ h1 {
 }
 .about h2 {
   font-size: 0.95rem;
-  letter-spacing: 0.06em;
+  letter-spacing: 0;
   text-transform: uppercase;
-  color: var(--muted);
+  color: var(--navy);
+  font-weight: 800;
   margin: 0 0 10px;
 }
 .about p {
   margin: 0 0 14px;
 }
 .about a {
-  color: var(--accent);
+  color: var(--accent-strong);
   text-underline-offset: 3px;
+  text-decoration-thickness: 2px;
+}
+
+@media (max-width: 520px) {
+  .brand-logo {
+    width: 94px;
+  }
+
+  h1 {
+    font-size: 1.8rem;
+  }
 }
 
 footer {

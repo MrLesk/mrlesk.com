@@ -3,7 +3,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 import "../styles/home.css";
 
 const title = "Alex Gavrilescu — MrLesk";
-const description = "Minimal, elegant profile with About and public links.";
+const description = "Personal site for Alex Gavrilescu, also known as MrLesk.";
 const year = new Date().getFullYear();
 const canonical = "https://mrlesk.com";
 const og = {
@@ -18,7 +18,7 @@ const og = {
 <BaseLayout
   title={title}
   description={description}
-  themeColor="#ffffff"
+  themeColor="#f5f5f4"
   canonical={canonical}
   og={og}
   bodyClass="bg-grain"
@@ -34,7 +34,23 @@ const og = {
           loading="eager"
           decoding="async"
         />
-        <h1>Alex Gavrilescu</h1>
+        <h1 class="name-lockup">
+          <span>Alex Gavrilescu</span>
+          <span class="name-alias">
+            <span>(</span>
+            <img
+              class="brand-logo"
+              src="/mrlesk-logo.svg"
+              alt="MrLesk"
+              width="1715"
+              height="320"
+              loading="eager"
+              decoding="async"
+              fetchpriority="high"
+            />
+            <span>)</span>
+          </span>
+        </h1>
         <p class="tag">
           Engineering lead &mdash; Backend &amp; Web &mdash; Funstage GmbH
         </p>

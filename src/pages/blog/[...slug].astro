@@ -59,19 +59,19 @@ const og = {
       </nav>
       <header class="post-header">
         <div class="post-heading">
-          <div class="post-meta">
-            <span class="pill">{dateLabel}</span>
-            <span class="pill">{readingTime} min read</span>
-            {tags.map((tag) => (
-              <span class="pill pill-tag">{tag}</span>
-            ))}
-          </div>
           <h1 class="post-title">{post.data.title}</h1>
           <div class="post-intro">
             {post.data.subtitle ? (
               <p class="post-subtitle">{post.data.subtitle}</p>
             ) : null}
             <p class="post-summary">{post.data.summary}</p>
+          </div>
+          <div class="post-meta">
+            <span class="pill">{dateLabel}</span>
+            <span class="pill">{readingTime} min read</span>
+            {tags.map((tag) => (
+              <span class="pill pill-tag">{tag}</span>
+            ))}
           </div>
         </div>
       </header>

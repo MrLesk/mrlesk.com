@@ -61,7 +61,18 @@
 }
 
 @media (max-width: 640px) {
+  .logo {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 12px;
+  }
+
   .logo img {
     width: 100px;
+  }
+
+  .logo-detail {
+    align-items: flex-start;
+    text-align: left;
   }
 }
