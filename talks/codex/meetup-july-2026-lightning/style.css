@@ -1,0 +1,86 @@
+/* Deck-level helpers for the Schanigarten lightning talk */
+
+.lede {
+  max-width: calc(760 * var(--pt));
+  color: var(--codex-fg-muted);
+  font-size: calc(16 * var(--pt));
+  margin: 0;
+}
+
+.lede strong {
+  color: var(--codex-fg);
+}
+
+/* Image placeholder — swap for the real photo by dropping the named file
+   into ./public and replacing the div with an <img class="shot">. */
+.ph {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: calc(6 * var(--pt));
+  min-height: calc(220 * var(--pt));
+  border: calc(2 * var(--pt)) dashed rgba(3, 10, 24, 0.22);
+  border-radius: calc(12 * var(--pt));
+  background: rgba(238, 240, 255, 0.35);
+  color: var(--codex-fg-muted);
+  font-size: calc(13 * var(--pt));
+}
+
+.ph code {
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+  font-size: calc(12 * var(--pt));
+  color: var(--codex-accent);
+  background: transparent;
+  border: none;
+}
+
+/* Framed photo/screenshot */
+.shot {
+  display: block;
+  width: 100%;
+  border: 1px solid var(--codex-border);
+  border-radius: calc(12 * var(--pt));
+  box-shadow: 0 calc(10 * var(--pt)) calc(30 * var(--pt)) rgba(20, 14, 80, 0.14);
+}
+
+/* Stat chips row */
+.stat-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: calc(10 * var(--pt));
+  margin-top: calc(14 * var(--pt));
+}
+
+.stat {
+  border: 1px solid var(--codex-border);
+  border-radius: calc(10 * var(--pt));
+  background: #ffffff;
+  padding: calc(8 * var(--pt)) calc(14 * var(--pt));
+  box-shadow: 0 calc(4 * var(--pt)) calc(14 * var(--pt)) rgba(20, 14, 80, 0.06);
+}
+
+.stat strong {
+  display: block;
+  color: var(--codex-accent);
+  font-size: calc(20 * var(--pt));
+  font-weight: 650;
+  line-height: 1.1;
+}
+
+.stat span {
+  color: var(--codex-fg-muted);
+  font-size: calc(11.5 * var(--pt));
+}
+
+/* Full-width video frame */
+.street-video {
+  display: block;
+  width: auto;
+  max-width: 100%;
+  max-height: calc(400 * var(--pt));
+  margin: calc(10 * var(--pt)) auto 0;
+  border-radius: calc(14 * var(--pt));
+  border: 1px solid var(--codex-border);
+  box-shadow: 0 calc(12 * var(--pt)) calc(36 * var(--pt)) rgba(20, 14, 80, 0.18);
+}
