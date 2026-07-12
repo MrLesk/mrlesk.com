@@ -1,8 +1,12 @@
 ---
 layout: section
 title: What's new
-eyebrow: Since Codex Build · June 20
+eyebrow: Since our last meetup
 level: 1
 ---
 
-# Three weeks. A lot shipped.
+# A lot shipped recently
+
+<!--
+Last meetup talk was April 27. The build event in June was a workshop, so the update window here reaches back to spring.
+-->

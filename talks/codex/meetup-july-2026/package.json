@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "@slidev/cli": "52.14.2",
+    "qrcode": "1.5.4",
     "slidev-theme-codex-dark": "file:../../../slidev-theme-codex-dark",
     "vue": "3.5.33"
   }

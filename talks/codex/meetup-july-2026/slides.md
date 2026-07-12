@@ -25,6 +25,10 @@ src: ./pages/build-week.md
 ---
 
 ---
+src: ./pages/challenge.md
+---
+
+---
 src: ./pages/section-updates.md
 ---
 
@@ -46,14 +50,6 @@ src: ./pages/codex-sites.md
 
 ---
 src: ./pages/quick-hits.md
----
-
----
-src: ./pages/challenge.md
----
-
----
-src: ./pages/judges.md
 ---
 
 ---

@@ -8,7 +8,7 @@ level: 2
 <div class="uni-diagram">
 
 <div class="uni-col">
-  <div class="diagram-label">Before July 9</div>
+  <div class="diagram-label">Before</div>
   <div class="old-stack">
     <div class="mini-win">
       <div class="win-bar">
@@ -38,7 +38,7 @@ level: 2
 <div class="uni-arrow">→</div>
 
 <div class="uni-col">
-  <div class="diagram-label">Now: one ChatGPT</div>
+  <div class="diagram-label">After</div>
   <div class="new-win">
     <div class="win-bar">
       <span class="win-dots"><i></i><i></i><i></i></span>
@@ -76,33 +76,15 @@ level: 2
 
 </div>
 
-<div class="cards-grid cols-3 uni-facts">
-
-<div class="card">
-  <div class="card-eyebrow">One shared space</div>
-  <div class="card-body">Your chats and history now live together. Switch between Work and Codex, and Chat is right there in both.</div>
-</div>
-
-<div class="card">
-  <div class="card-eyebrow">Work = agent with Codex inside</div>
-  <div class="card-body">On chatgpt.com and mobile, selecting <strong>Work</strong> is how you tap Codex: an agent that ships docs, decks, sheets, and sites.</div>
-</div>
-
-<div class="card">
-  <div class="card-eyebrow">Classic sticks around</div>
-  <div class="card-body">The old app remains as <strong>ChatGPT Classic</strong> with updates and security fixes. New agent features land only in the new app.</div>
-</div>
-
-</div>
-
 <style>
-/* Before → after diagram */
+/* Before → after diagram, the only content on the slide */
 .uni-diagram {
   display: grid;
   grid-template-columns: minmax(0, 0.8fr) auto minmax(0, 1.25fr);
-  gap: calc(22 * var(--pt));
+  gap: calc(26 * var(--pt));
   align-items: stretch;
-  margin-top: calc(14 * var(--pt));
+  margin-top: calc(38 * var(--pt));
+  min-height: calc(310 * var(--pt));
 }
 
 .diagram-label {
@@ -138,6 +120,8 @@ level: 2
 
 .mini-win {
   flex: 1;
+  display: flex;
+  flex-direction: column;
   opacity: 0.78;
 }
 
@@ -201,6 +185,8 @@ level: 2
   display: flex;
   flex-direction: column;
   gap: calc(7 * var(--pt));
+  flex: 1;
+  justify-content: center;
 }
 
 .skel {
@@ -337,18 +323,12 @@ level: 2
   padding-top: calc(14 * var(--pt));
 }
 
-/* Compact fact cards */
-.uni-facts {
-  margin-top: calc(14 * var(--pt));
-}
-
-.uni-facts .card {
-  padding: calc(13 * var(--pt)) calc(15 * var(--pt));
-  gap: calc(5 * var(--pt));
-}
-
-.uni-facts .card-body {
-  font-size: calc(11.5 * var(--pt));
-  line-height: 1.4;
-}
 </style>
+
+<!--
+Two apps became one ChatGPT in early July, macOS and Windows, worldwide.
+- One shared space: your chats and history live together. Switch between Work and Codex; Chat is right there in both.
+- Work is the agent with Codex inside: on chatgpt.com and mobile, selecting Work is how you tap Codex. It ships docs, decks, sheets, and sites.
+- Classic sticks around: the old app remains as ChatGPT Classic with updates and security fixes. New agent features land only in the new app.
+- Existing users keep their projects, settings, and workflows.
+-->

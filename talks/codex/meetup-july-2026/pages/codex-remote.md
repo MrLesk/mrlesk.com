@@ -1,16 +1,11 @@
 ---
-layout: two-cols
 title: Codex Remote
 level: 2
 ---
 
 # Codex Remote is GA
 
-<div class="codex-callout">codex remote-control pair</div>
-
-::right::
-
-<div class="feature-list">
+<div class="feature-list remote-list">
 
 <div class="feature">
   <div class="feature-num">01</div>
@@ -37,6 +32,16 @@ level: 2
 </div>
 
 </div>
+
+<div class="codex-callout float">codex remote-control pair</div>
+
+<style>
+/* Left column only: keeps the text over the dark treeline, away from the
+   low-contrast sunset glow on the right of the background. */
+.remote-list {
+  max-width: calc(520 * var(--pt));
+}
+</style>
 
 <!--
 Since June 25, your phone is a first-class Codex surface, on every paid plan.

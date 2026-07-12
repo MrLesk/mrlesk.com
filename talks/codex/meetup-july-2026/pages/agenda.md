@@ -57,8 +57,8 @@ hideInToc: true
   display: flex;
   flex-direction: column;
   gap: calc(8 * var(--pt));
-  margin-top: calc(12 * var(--pt));
-  height: calc(374 * var(--pt));
+  /* Fits under the theme's 38pt title gap without touching the footer. */
+  height: calc(350 * var(--pt));
 }
 
 .agenda-row {

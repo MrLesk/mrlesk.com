@@ -10,32 +10,32 @@ level: 2
 <div class="feature">
   <div class="feature-num">01</div>
   <div>
-    <div class="feature-title">Prompt → app</div>
-    <p class="feature-body">Dashboards, trackers, portals, prototypes. Type <code>@sites</code> in any chat.</p>
+    <div class="feature-title">Describe it</div>
+    <p class="feature-body">A dashboard, a tracker, a portal. Type <code>@sites</code> in any chat.</p>
   </div>
 </div>
 
 <div class="feature">
   <div class="feature-num">02</div>
   <div>
-    <div class="feature-title">Hosted for you</div>
-    <p class="feature-body">A real URL on OpenAI's hosting, with database and storage included.</p>
+    <div class="feature-title">Codex builds & hosts it</div>
+    <p class="feature-body">You get a live URL, with database and storage included.</p>
   </div>
 </div>
 
 <div class="feature">
   <div class="feature-num">03</div>
   <div>
-    <div class="feature-title">Share it your way</div>
-    <p class="feature-body">Invite-only, workspace, or anyone with the link.</p>
+    <div class="feature-title">Share it</div>
+    <p class="feature-body">Invite-only, your workspace, or anyone with the link.</p>
   </div>
 </div>
 
 <div class="feature">
   <div class="feature-num">04</div>
   <div>
-    <div class="feature-title">Out of beta July 9</div>
-    <p class="feature-body">Now on all paid plans, rolling out. It started as a Business preview three weeks ago.</p>
+    <div class="feature-title">Open beta since July 9</div>
+    <p class="feature-body">Rolling out to all paid plans.</p>
   </div>
 </div>
 
@@ -58,4 +58,5 @@ level: 2
 
 <!--
 Describe the tool you need. Codex builds it, deploys it, and hosts it.
+Timeline: closed beta for Business since June 2, open beta on all paid plans since July 9. Still beta, still not in the EEA/CH/UK.
 -->

@@ -22,33 +22,27 @@ level: 1
 <div class="bw-cards">
   <div class="bw-card bw-card-start">
     <div class="bw-eyebrow">Jul 13</div>
-    <div class="bw-title">Build Week begins</div>
+    <div class="bw-title">Build Week<br />begins</div>
   </div>
 
   <div class="bw-card bw-card-tonight">
     <div class="bw-eyebrow">Tonight · Jul 16</div>
     <div class="bw-title">Vienna</div>
-    <div class="bw-body">One of 40+ community events worldwide</div>
+    <div class="bw-body">One of 60+ community events worldwide</div>
   </div>
 
   <div class="bw-card bw-card-end">
     <div class="bw-eyebrow">Jul 21</div>
-    <div class="bw-title">Challenge deadline</div>
+    <div class="bw-title">Challenge<br />deadline</div>
     <div class="bw-tag">5 days left</div>
   </div>
-</div>
-
-<div class="bw-teaser">
-  The Build Week Challenge: real prizes, judged at OpenAI. Details before the lightning talks.
 </div>
 
 </div>
 
 <style>
 .bw-wrap {
-  /* Bleed past the layout padding so the week spans nearly the full slide,
-     like the moon and sun spanning the night sky on the cover. */
-  margin: calc(104 * var(--pt)) calc(-30 * var(--pt)) 0;
+  margin: calc(104 * var(--pt)) 0 0;
 }
 
 .bw-track {
@@ -56,7 +50,6 @@ level: 1
   height: calc(4 * var(--pt));
   border-radius: calc(4 * var(--pt));
   background: linear-gradient(90deg, rgba(134, 146, 255, 0.3), rgba(134, 146, 255, 0.7) 40%, rgba(255, 190, 110, 0.75));
-  margin: 0 calc(6 * var(--pt));
 }
 
 .bw-tick {
@@ -81,14 +74,18 @@ level: 1
 .bw-dot-start {
   width: calc(26 * var(--pt));
   height: calc(26 * var(--pt));
-  background: url('/luna.png') center / cover no-repeat;
+  /* Oversized inside the circular clip: the render's rough outer pixels fall
+     outside the circle, leaving the browser's clean antialiased edge. */
+  background: url('/luna.png') center / 120% no-repeat;
   box-shadow: 0 0 calc(14 * var(--pt)) rgba(220, 228, 248, 0.45);
+  /* Left edge flush with the Jul 13 card below. */
+  transform: translate(0, -50%);
 }
 
 .bw-dot-tonight {
   width: calc(46 * var(--pt));
   height: calc(46 * var(--pt));
-  background: url('/terra.png') center / cover no-repeat;
+  background: url('/terra.png') center / 120% no-repeat;
   border: calc(2 * var(--pt)) solid rgba(255, 255, 255, 0.85);
   box-shadow: 0 0 calc(32 * var(--pt)) rgba(134, 146, 255, 0.85);
 }
@@ -96,13 +93,17 @@ level: 1
 .bw-dot-end {
   width: calc(30 * var(--pt));
   height: calc(30 * var(--pt));
-  background: url('/sol.png') center / cover no-repeat;
+  background: url('/sol.png') center / 120% no-repeat;
   box-shadow: 0 0 calc(24 * var(--pt)) rgba(255, 150, 60, 0.7);
+  /* Right edge flush with the deadline card below. */
+  transform: translate(-100%, -50%);
 }
 
 .bw-cards {
   position: relative;
-  margin-top: calc(26 * var(--pt));
+  /* Clear air below the Luna/Terra/Sol markers: Terra alone reaches ~23pt
+     under the track line. */
+  margin-top: calc(48 * var(--pt));
   height: calc(150 * var(--pt));
 }
 
@@ -116,10 +117,11 @@ level: 1
   backdrop-filter: blur(14px);
   -webkit-backdrop-filter: blur(14px);
   text-align: center;
-  width: calc(200 * var(--pt));
+  /* Outer cards hug their content; explicit br tags keep the two-line titles. */
+  width: max-content;
 }
 
-.bw-card-start { left: 0; text-align: left; width: calc(165 * var(--pt)); }
+.bw-card-start { left: 0; text-align: left; }
 
 .bw-card-tonight {
   left: 37.5%;
@@ -175,12 +177,6 @@ level: 1
   padding: calc(2 * var(--pt)) calc(10 * var(--pt));
 }
 
-.bw-teaser {
-  margin-top: calc(10 * var(--pt));
-  text-align: center;
-  font-size: calc(15 * var(--pt));
-  color: var(--codex-fg-muted);
-}
 </style>
 
 <!--
@@ -189,5 +185,5 @@ Build Week: a global week for exploring what's possible with Codex. We are right
 Livestreams all week: Greg Brockman, Thibault Sottiaux, Corey Ching and the Codex team.
 OpenAI Academy sessions: Codex Sites streams tonight at 21:00 our time, Creative Building follows July 21.
 Discord office hours running through the week. Everything at openai.com/build-week.
-And the one thing to remember: the Build Week Challenge closes Tuesday. Details before the lightning talks.
+And the one thing to remember: the Build Week Challenge closes Tuesday. Real prizes, judged at OpenAI. Details on the next slides.
 -->

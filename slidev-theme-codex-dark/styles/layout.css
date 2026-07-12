@@ -48,6 +48,79 @@
   color: var(--codex-fg);
 }
 
+/* Sharp night render for full-bleed layouts (cover, thanks, panel). Rendered
+   by global-bottom under the star layer; the layout on top keeps only its
+   translucent text scrim. Slide wrappers stay keep-alive mounted, so this is
+   driven by the nav state in global-bottom.vue rather than CSS :has(). */
+.night-bg-sharp {
+  position: absolute;
+  inset: 0;
+  background-image: url('/prater-night.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  pointer-events: none;
+}
+
+/* Shooting stars: pure transform/opacity keyframes, GPU-composited. Tracks
+   stay in the top ~40% of the slide (the sky in the render); each streak is
+   pre-rotated and travels along its own axis. */
+.night-sky {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  transition: opacity 0.4s ease;
+}
+
+/* Content slides carry the dark ambient overlay, so the stars under it drop
+   to a faint glimmer. Full-bleed night layouts get them at full strength. */
+.night-sky.dim {
+  opacity: 0.18;
+}
+
+.night-sky .star {
+  position: absolute;
+  width: calc(120 * var(--pt));
+  height: 2px;
+  border-radius: 2px;
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0) 0%, rgba(214, 225, 255, 0.55) 62%, #ffffff 100%);
+  /* drop-shadow (not box-shadow): the glow must follow the gradient's alpha,
+     otherwise the transparent tail renders as a forked box outline. */
+  filter: drop-shadow(0 0 3px rgba(214, 225, 255, 0.45));
+  opacity: 0;
+  transform: rotate(var(--tilt)) translate3d(0, 0, 0);
+  animation: star-shoot var(--dur) linear var(--delay) infinite;
+  will-change: transform, opacity;
+}
+
+/* Tracks are plotted inside the clear-sky trapezoid of the render: they end
+   by x ≈ 77% (before the tall right-side trees) and y ≤ 30% at the center
+   (left canopy tops sit near 38%, right ones reach up to ~20%). The flight
+   itself is only ~10% of each long cycle, so streaks stay rare but quick. */
+.night-sky .star-1 { top: 6%;  left: 10%; --tilt: 12deg; --dur: 14s; --delay: 1s;    --travel: calc(340 * var(--pt)); }
+.night-sky .star-2 { top: 10%; left: 48%; --tilt: 16deg; --dur: 17s; --delay: 5.5s;  --travel: calc(260 * var(--pt)); }
+.night-sky .star-3 { top: 4%;  left: 58%; --tilt: 9deg;  --dur: 15s; --delay: 9s;    --travel: calc(180 * var(--pt)); width: calc(90 * var(--pt)); }
+.night-sky .star-4 { top: 18%; left: 6%;  --tilt: 14deg; --dur: 19s; --delay: 12.5s; --travel: calc(220 * var(--pt)); width: calc(90 * var(--pt)); }
+.night-sky .star-5 { top: 8%;  left: 30%; --tilt: 11deg; --dur: 16s; --delay: 15s;   --travel: calc(300 * var(--pt)); }
+.night-sky .star-6 { top: 20%; left: 50%; --tilt: 18deg; --dur: 22s; --delay: 7.8s;  --travel: calc(180 * var(--pt)); width: calc(80 * var(--pt)); height: 1.5px; }
+.night-sky .star-7 { top: 2%;  left: 34%; --tilt: 7deg;  --dur: 18s; --delay: 18s;   --travel: calc(310 * var(--pt)); }
+
+@keyframes star-shoot {
+  0%    { transform: rotate(var(--tilt)) translate3d(0, 0, 0); opacity: 0; }
+  2%    { opacity: 0; }
+  4.5%  { opacity: 0.9; }
+  9%    { opacity: 0.8; }
+  12%   { transform: rotate(var(--tilt)) translate3d(var(--travel), 0, 0); opacity: 0; }
+  100%  { transform: rotate(var(--tilt)) translate3d(var(--travel), 0, 0); opacity: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .night-sky {
+    display: none;
+  }
+}
+
 .slidev-layout {
   position: relative;
   height: 100%;
@@ -83,6 +156,14 @@
 .slidev-layout h3 {
   font-size: 1.5rem;
   line-height: 1.2;
+}
+
+/* Content layouts: the title owns its line and the body starts one clear band
+   below it. Slide-level body margins under 38pt collapse into this default,
+   so individually tuned slides keep their spacing. */
+.slidev-layout.default h1,
+.slidev-layout.two-cols h1 {
+  margin-bottom: calc(38 * var(--pt));
 }
 
 .slidev-layout p {
@@ -137,12 +218,8 @@
   padding: calc(26 * var(--pt));
   position: relative;
   height: 100%;
-  background-image:
-    linear-gradient(199deg, rgba(4, 7, 15, 0) 46%, rgba(4, 7, 15, 0.55) 74%, rgba(3, 5, 12, 0.86) 100%),
-    url('/prater-night.jpg');
-  background-size: cover, cover;
-  background-position: center, center;
-  background-repeat: no-repeat;
+  /* Image is on #slide-content, under the star layer; only the scrim here. */
+  background-image: linear-gradient(199deg, rgba(4, 7, 15, 0) 46%, rgba(4, 7, 15, 0.55) 74%, rgba(3, 5, 12, 0.86) 100%);
 }
 
 .slidev-layout.cover .cover-wordmark {
@@ -249,12 +326,8 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
-  background-image:
-    linear-gradient(180deg, rgba(4, 7, 15, 0.32) 0%, rgba(4, 7, 15, 0.62) 100%),
-    url('/prater-night.jpg');
-  background-size: cover, cover;
-  background-position: center, center;
-  background-repeat: no-repeat;
+  /* Image is on #slide-content, under the star layer; only the scrim here. */
+  background-image: linear-gradient(180deg, rgba(4, 7, 15, 0.32) 0%, rgba(4, 7, 15, 0.62) 100%);
   color: #ffffff;
 }
 
@@ -560,18 +633,30 @@
   -webkit-backdrop-filter: blur(10px);
 }
 
+/* Floating variant: pins the chip to the upper right, below the title band,
+   so nothing shares the h1 line. */
+.codex-callout.float {
+  position: absolute;
+  top: calc(150 * var(--pt));
+  right: calc(56 * var(--pt));
+  margin-top: 0;
+}
+
 /* Warning callout — for regional availability / plan disclaimers */
 .codex-disclaimer {
-  display: flex;
+  /* Shrink-wraps to its text; it should read as a chip, not a banner. */
+  display: inline-flex;
   align-items: center;
   gap: calc(10 * var(--pt));
-  font-size: calc(14 * var(--pt));
+  /* Same size as .feature-body / card body copy: the warning is content,
+     not a footnote. */
+  font-size: calc(15 * var(--pt));
   font-weight: 500;
   color: #ffd9a3;
   background: rgba(255, 170, 64, 0.12);
   border: 1px solid rgba(255, 190, 110, 0.36);
   border-radius: calc(10 * var(--pt));
-  padding: calc(10 * var(--pt)) calc(16 * var(--pt));
+  padding: calc(12 * var(--pt)) calc(18 * var(--pt));
   margin-top: calc(14 * var(--pt));
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
@@ -634,12 +719,8 @@
   align-items: center;
   justify-content: flex-start;
   text-align: center;
-  background-image:
-    linear-gradient(180deg, rgba(4, 7, 15, 0.3), rgba(4, 7, 15, 0.55)),
-    url('/prater-night.jpg');
-  background-size: cover, cover;
-  background-position: center, center;
-  background-repeat: no-repeat;
+  /* Image is on #slide-content, under the star layer; only the scrim here. */
+  background-image: linear-gradient(180deg, rgba(4, 7, 15, 0.3), rgba(4, 7, 15, 0.55));
   color: #ffffff;
   overflow: hidden;
 }
