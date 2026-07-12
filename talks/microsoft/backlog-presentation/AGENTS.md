@@ -56,10 +56,9 @@ The slides cover:
 ## Working Guidelines
 
 ### ALWAYS
-1. Read https://sli.dev/llms.txt before making any Slidev-related changes
-2. Preserve the existing slide structure and flow
-3. Test with `npm run dev` before finalizing changes
-4. Maintain consistency with the presentation's narrative
+1. Preserve the existing slide structure and flow
+2. Test with `npm run dev` before finalizing changes
+3. Maintain consistency with the presentation's narrative
 
 ### NEVER
 1. Treat this as an application codebase
@@ -68,10 +67,9 @@ The slides cover:
 4. Break the slide import chain in `slides.md`
 
 ## Quick Start for New Agents
-1. `curl https://sli.dev/llms.txt` - Read Slidev documentation
-2. `npm run dev` - Start the development server
-3. Review `slides.md` for presentation structure
-4. Check `pages/` directory for individual slides
+1. `npm run dev` - Start the development server
+2. Review `slides.md` for presentation structure
+3. Check `pages/` directory for individual slides
 
 ## Remember
 This is a presentation about AI task management, not the task management system itself. Your role is to maintain and enhance the presentation slides while preserving their educational value and flow.
