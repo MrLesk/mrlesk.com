@@ -1,0 +1,1026 @@
+/* Slidev v0.51 beta workaround: the nav goto-search autocomplete renders even
+   when its parent search bar is in the hidden (-top-20) state. Clip it. */
+.fixed.transition-all[class*='-top-20'] {
+  overflow: hidden;
+  height: 0;
+}
+
+:root {
+  /* PowerPoint→Slidev unit: 1 pptx point = (1.333px × 980/1280) / 16 ≈ 0.0638rem.
+     Use as: font-size: calc(54 * var(--pt)); — drop pptx values directly. */
+  --pt: 0.0638rem;
+
+  /* Night-sky palette — inverted from slidev-theme-codex. Ambient background is
+     a pre-blurred render of the Prater cover art; surfaces are dark glass. */
+  --codex-bg: #060a16;
+  --codex-fg: #f3f5fc;
+  --codex-fg-muted: #a8b0c6;
+  --codex-accent: #9aa6ff;
+  --codex-accent-deep: #3442e0;
+  --codex-accent-soft: rgba(134, 146, 255, 0.16);
+  --codex-border: rgba(255, 255, 255, 0.14);
+  --codex-glass: rgba(11, 16, 34, 0.6);
+  --codex-glass-strong: rgba(8, 12, 26, 0.82);
+  --codex-grad-1: #6e7bff;
+  --codex-grad-2: #3442e0;
+  --codex-grad-3: #8a5bff;
+
+  --slidev-theme-primary: var(--codex-accent);
+  --slidev-inline-code-color: var(--codex-accent);
+  --slidev-inline-code-bg: var(--codex-accent-soft);
+  --slidev-inline-code-border: rgba(134, 146, 255, 0.28);
+}
+
+#slide-container {
+  height: 100% !important;
+}
+
+/* Every slide sits on the blurred Prater night — codex-events.com style:
+   near-black, with the sunset and sky bleeding through softly. */
+#slide-content {
+  background-color: var(--codex-bg);
+  background-image:
+    linear-gradient(180deg, rgba(5, 8, 18, 0.5) 0%, rgba(5, 8, 18, 0.34) 55%, rgba(4, 6, 14, 0.62) 100%),
+    url('/prater-night-blur.jpg');
+  background-size: cover, cover;
+  background-position: center, center;
+  background-repeat: no-repeat;
+  color: var(--codex-fg);
+}
+
+.slidev-layout {
+  position: relative;
+  height: 100%;
+  font-family: 'OpenAI Sans', 'Inter', 'Helvetica Neue', Arial, sans-serif;
+  font-size: 1rem;
+  line-height: 1.5;
+  letter-spacing: -0.005em;
+  color: var(--codex-fg);
+  padding: 3rem 3.5rem;
+}
+
+.slidev-layout h1,
+.slidev-layout h2,
+.slidev-layout h3,
+.slidev-layout h4 {
+  font-family: 'OpenAI Sans', 'Inter', 'Helvetica Neue', Arial, sans-serif;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  color: var(--codex-fg);
+  margin: 0 0 1rem 0;
+}
+
+.slidev-layout h1 {
+  font-size: 2.75rem;
+  line-height: 1.1;
+}
+
+.slidev-layout h2 {
+  font-size: 2rem;
+  line-height: 1.15;
+}
+
+.slidev-layout h3 {
+  font-size: 1.5rem;
+  line-height: 1.2;
+}
+
+.slidev-layout p {
+  margin: 0 0 0.85rem 0;
+}
+
+.slidev-layout a {
+  color: var(--codex-accent);
+  text-decoration: none;
+  border-bottom: 1px solid rgba(154, 166, 255, 0.35);
+  transition: border-color 0.15s ease;
+}
+
+.slidev-layout a:hover {
+  border-bottom-color: var(--codex-accent);
+}
+
+.slidev-layout ul {
+  list-style: disc;
+  padding-left: 1.25rem;
+}
+
+.slidev-layout ul li + li {
+  margin-top: 0.4rem;
+}
+
+.slidev-layout :not(pre) > code {
+  font-family: 'JetBrains Mono', 'IBM Plex Mono', ui-monospace, monospace;
+  color: var(--slidev-inline-code-color);
+  background-color: var(--slidev-inline-code-bg);
+  border: 1px solid var(--slidev-inline-code-border);
+  padding: 0.05rem 0.4rem;
+  border-radius: 4px;
+  font-size: 0.92em;
+}
+
+.slidev-layout pre.shiki {
+  border-radius: 0.5rem;
+  padding: 1rem 1.25rem !important;
+  font-size: 0.85rem;
+  border: 1px solid var(--codex-border);
+  background-color: rgba(4, 7, 16, 0.72) !important;
+}
+
+.slidev-layout code {
+  font-family: 'JetBrains Mono', 'IBM Plex Mono', ui-monospace, monospace;
+}
+
+/* Cover layout — full-bleed Prater night render. Text sits in the lower-left
+   over the dark treeline; the Riesenrad sunset stays clear on the right. */
+.slidev-layout.cover {
+  padding: calc(26 * var(--pt));
+  position: relative;
+  height: 100%;
+  background-image:
+    linear-gradient(199deg, rgba(4, 7, 15, 0) 46%, rgba(4, 7, 15, 0.55) 74%, rgba(3, 5, 12, 0.86) 100%),
+    url('/prater-night.jpg');
+  background-size: cover, cover;
+  background-position: center, center;
+  background-repeat: no-repeat;
+}
+
+.slidev-layout.cover .cover-wordmark {
+  position: absolute;
+  top: calc(26 * var(--pt));
+  left: calc(26 * var(--pt));
+  height: calc(20 * var(--pt));
+  width: auto;
+  filter: brightness(0) invert(1);
+  opacity: 0.95;
+}
+
+/* "Codex" wordmark — plain text, mirroring the official key art where the
+   OpenAI blossom sits left and the word "Codex" sits right. */
+.slidev-layout.cover .cover-mark {
+  position: absolute;
+  top: calc(19 * var(--pt));
+  right: calc(26 * var(--pt));
+  font-size: calc(24 * var(--pt));
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  line-height: 1.1;
+  color: #ffffff;
+  text-shadow: 0 calc(2 * var(--pt)) calc(16 * var(--pt)) rgba(0, 0, 0, 0.6);
+}
+
+.slidev-layout.cover .cover-text {
+  position: absolute;
+  left: calc(34 * var(--pt));
+  top: calc(316 * var(--pt));
+  width: calc(600 * var(--pt));
+}
+
+.slidev-layout.cover .cover-body h1 {
+  font-size: calc(54 * var(--pt));
+  font-weight: 500;
+  line-height: 1.04;
+  letter-spacing: -0.022em;
+  margin: 0;
+  color: #ffffff;
+  text-shadow: 0 calc(2 * var(--pt)) calc(26 * var(--pt)) rgba(0, 0, 0, 0.6);
+}
+
+.slidev-layout.cover .cover-body p {
+  font-size: calc(21 * var(--pt));
+  font-weight: 600;
+  color: var(--codex-accent);
+  margin: calc(18 * var(--pt)) 0 0 0;
+  text-shadow: 0 calc(2 * var(--pt)) calc(18 * var(--pt)) rgba(0, 0, 0, 0.7);
+}
+
+.slidev-layout.cover .cover-footer {
+  position: absolute;
+  left: calc(34 * var(--pt));
+  bottom: calc(26 * var(--pt));
+  font-size: calc(15 * var(--pt));
+  color: rgba(232, 236, 250, 0.82);
+  text-shadow: 0 calc(1 * var(--pt)) calc(12 * var(--pt)) rgba(0, 0, 0, 0.7);
+}
+
+/* Section divider layout — translucent indigo wash over the ambient night. */
+.slidev-layout.section-divider {
+  background:
+    radial-gradient(ellipse at 18% 120%, rgba(110, 123, 255, 0.3), transparent 58%),
+    radial-gradient(ellipse at 88% -12%, rgba(138, 91, 255, 0.22), transparent 52%),
+    linear-gradient(180deg, rgba(6, 9, 19, 0.4), rgba(6, 9, 19, 0.58));
+  color: #ffffff;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 4rem 5rem;
+}
+
+.slidev-layout.section-divider .eyebrow {
+  font-size: 0.95rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  color: var(--codex-accent);
+  margin-bottom: 1rem;
+}
+
+.slidev-layout.section-divider h1,
+.slidev-layout.section-divider h2 {
+  color: #ffffff;
+  font-size: 3.25rem;
+  line-height: 1.05;
+  text-shadow: 0 2px 30px rgba(0, 0, 0, 0.55);
+}
+
+/* Two-cols layout */
+.slidev-layout.two-cols {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2.5rem;
+  align-items: start;
+}
+
+/* Thanks layout — full-bleed night render, bookends the cover. */
+.slidev-layout.thanks {
+  padding: calc(40 * var(--pt));
+  position: relative;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  background-image:
+    linear-gradient(180deg, rgba(4, 7, 15, 0.32) 0%, rgba(4, 7, 15, 0.62) 100%),
+    url('/prater-night.jpg');
+  background-size: cover, cover;
+  background-position: center, center;
+  background-repeat: no-repeat;
+  color: #ffffff;
+}
+
+.slidev-layout.thanks .thanks-mark {
+  position: absolute;
+  top: calc(26 * var(--pt));
+  right: calc(26 * var(--pt));
+  width: calc(64 * var(--pt));
+  height: calc(64 * var(--pt));
+  filter: drop-shadow(0 calc(4 * var(--pt)) calc(12 * var(--pt)) rgba(0, 0, 0, 0.5));
+}
+
+.slidev-layout.thanks .thanks-body h1 {
+  font-size: calc(96 * var(--pt));
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: -0.03em;
+  color: #ffffff;
+  margin: 0 0 calc(20 * var(--pt)) 0;
+  text-shadow: 0 calc(3 * var(--pt)) calc(34 * var(--pt)) rgba(0, 0, 0, 0.65);
+}
+
+.slidev-layout.thanks .thanks-body p {
+  font-size: calc(28 * var(--pt));
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.88);
+  margin: 0;
+  letter-spacing: -0.005em;
+  text-shadow: 0 calc(2 * var(--pt)) calc(20 * var(--pt)) rgba(0, 0, 0, 0.7);
+}
+
+.slidev-layout.thanks .thanks-contact {
+  position: absolute;
+  left: calc(40 * var(--pt));
+  bottom: calc(36 * var(--pt));
+  font-size: calc(18 * var(--pt));
+  color: rgba(255, 255, 255, 0.85);
+  display: flex;
+  gap: calc(20 * var(--pt));
+  flex-wrap: wrap;
+  text-shadow: 0 calc(1 * var(--pt)) calc(12 * var(--pt)) rgba(0, 0, 0, 0.7);
+}
+
+/* Install/Auth panel — night render behind floating glass cards */
+.install-panel {
+  background-image:
+    linear-gradient(180deg, rgba(5, 8, 18, 0.3), rgba(5, 8, 18, 0.5)),
+    url('/prater-night.jpg');
+  background-size: cover, cover;
+  background-position: center, center;
+  background-repeat: no-repeat;
+  border-radius: calc(12 * var(--pt));
+  border: 1px solid var(--codex-border);
+  padding: calc(32 * var(--pt)) calc(28 * var(--pt));
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: calc(20 * var(--pt));
+  margin-top: calc(8 * var(--pt));
+  min-height: calc(360 * var(--pt));
+}
+
+.install-card {
+  background: var(--codex-glass-strong);
+  border: 1px solid var(--codex-border);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-radius: calc(14 * var(--pt));
+  padding: calc(20 * var(--pt));
+  display: flex;
+  flex-direction: column;
+  gap: calc(12 * var(--pt));
+  box-shadow: 0 calc(6 * var(--pt)) calc(24 * var(--pt)) rgba(0, 0, 0, 0.4);
+  position: relative;
+}
+
+.install-card .install-icon {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: calc(56 * var(--pt));
+  margin-top: calc(-44 * var(--pt));
+}
+
+.install-card .install-icon svg,
+.install-card .install-icon img {
+  height: calc(56 * var(--pt));
+  width: auto;
+}
+
+.install-card .install-icon-row {
+  gap: calc(8 * var(--pt));
+}
+
+.install-card .install-icon-row > * {
+  height: calc(48 * var(--pt));
+  width: calc(48 * var(--pt));
+  font-size: calc(48 * var(--pt));
+}
+
+.install-card .install-card-title {
+  text-align: center;
+  font-size: calc(24 * var(--pt));
+  font-weight: 600;
+  letter-spacing: -0.015em;
+  color: var(--codex-fg);
+}
+
+.install-card pre.shiki {
+  font-size: calc(11 * var(--pt)) !important;
+  margin: 0;
+  padding: calc(12 * var(--pt)) !important;
+}
+
+.install-card ul {
+  list-style: disc;
+  padding-left: calc(18 * var(--pt));
+  margin: 0;
+  font-size: calc(14 * var(--pt));
+  color: var(--codex-fg);
+}
+
+.install-card ul li + li {
+  margin-top: calc(8 * var(--pt));
+}
+
+.install-card ul a {
+  color: var(--codex-accent);
+  border-bottom: 1px solid rgba(154, 166, 255, 0.35);
+}
+
+.install-card .install-meta {
+  font-size: calc(13 * var(--pt));
+  color: var(--codex-fg);
+  display: flex;
+  flex-direction: column;
+  gap: calc(6 * var(--pt));
+}
+
+.install-card .install-os-badges {
+  display: flex;
+  justify-content: center;
+  gap: calc(8 * var(--pt));
+  margin-top: calc(2 * var(--pt));
+}
+
+.install-card .install-os-badge {
+  display: inline-grid;
+  grid-template-columns: auto 1fr;
+  align-items: center;
+  column-gap: calc(8 * var(--pt));
+  background: var(--codex-accent-soft);
+  border: 1px solid rgba(134, 146, 255, 0.28);
+  border-radius: calc(8 * var(--pt));
+  padding: calc(6 * var(--pt)) calc(12 * var(--pt));
+  font-size: calc(13 * var(--pt));
+  font-weight: 600;
+  color: var(--codex-fg);
+  line-height: 1.15;
+  white-space: nowrap;
+}
+
+.install-card .install-os-badge svg {
+  width: calc(18 * var(--pt));
+  height: calc(18 * var(--pt));
+  grid-row: 1 / span 2;
+}
+
+.install-card .install-os-badge small {
+  display: block;
+  grid-column: 2;
+  margin-top: calc(2 * var(--pt));
+  font-size: calc(10 * var(--pt));
+  font-weight: 400;
+  color: var(--codex-fg-muted);
+  letter-spacing: 0;
+}
+
+.install-card .install-meta code {
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+  color: #7fe0b2;
+  background: transparent;
+  border: none;
+  padding: 0;
+  font-size: calc(13 * var(--pt));
+}
+
+/* Reusable card grid — dark glass over the night ambient */
+.cards-grid {
+  display: grid;
+  gap: calc(16 * var(--pt));
+  margin-top: calc(8 * var(--pt));
+}
+
+.cards-grid.cols-2 { grid-template-columns: repeat(2, 1fr); }
+.cards-grid.cols-3 { grid-template-columns: repeat(3, 1fr); }
+.cards-grid.cols-4 { grid-template-columns: repeat(4, 1fr); }
+
+.cards-grid .card {
+  background: var(--codex-glass);
+  border: 1px solid var(--codex-border);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border-radius: calc(12 * var(--pt));
+  padding: calc(20 * var(--pt));
+  display: flex;
+  flex-direction: column;
+  gap: calc(8 * var(--pt));
+  box-shadow: 0 calc(8 * var(--pt)) calc(26 * var(--pt)) rgba(0, 0, 0, 0.35);
+}
+
+.cards-grid .card .card-icon {
+  width: calc(36 * var(--pt));
+  height: calc(36 * var(--pt));
+  color: var(--codex-accent);
+  margin-bottom: calc(4 * var(--pt));
+}
+
+/* Tinted SVG icon — for <div class="card-icon card-icon-mask"
+   style="--icon: url('/foo.svg')"></div>. Uses CSS mask so the SVG fill
+   becomes the codex accent regardless of the file's own stroke colors. */
+.cards-grid .card .card-icon-mask {
+  background-color: var(--codex-accent);
+  -webkit-mask-image: var(--icon);
+          mask-image: var(--icon);
+  -webkit-mask-repeat: no-repeat;
+          mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+          mask-position: center;
+  -webkit-mask-size: contain;
+          mask-size: contain;
+}
+
+.cards-grid .card .card-eyebrow {
+  font-size: calc(11 * var(--pt));
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  color: var(--codex-accent);
+  font-weight: 500;
+}
+
+.cards-grid .card .card-title {
+  font-size: calc(20 * var(--pt));
+  font-weight: 600;
+  letter-spacing: -0.015em;
+  color: var(--codex-fg);
+  line-height: 1.2;
+}
+
+.cards-grid .card .card-price {
+  font-size: calc(36 * var(--pt));
+  font-weight: 500;
+  color: var(--codex-accent);
+  letter-spacing: -0.025em;
+  line-height: 1;
+}
+
+.cards-grid .card .card-meta {
+  font-size: calc(13 * var(--pt));
+  color: var(--codex-fg-muted);
+}
+
+.cards-grid .card .card-body {
+  font-size: calc(13 * var(--pt));
+  color: rgba(233, 237, 249, 0.92);
+  line-height: 1.45;
+}
+
+.cards-grid .card .card-body ul {
+  list-style: disc;
+  padding-left: calc(16 * var(--pt));
+  margin: 0;
+}
+
+.cards-grid .card .card-body ul li + li {
+  margin-top: calc(4 * var(--pt));
+}
+
+.cards-grid .card.featured {
+  background: linear-gradient(135deg, rgba(110, 123, 255, 0.92) 0%, rgba(52, 66, 224, 0.92) 100%);
+  border-color: rgba(255, 255, 255, 0.22);
+  color: #ffffff;
+}
+
+.cards-grid .card.featured .card-eyebrow,
+.cards-grid .card.featured .card-meta { color: rgba(255,255,255,0.85); }
+
+.cards-grid .card.featured .card-title,
+.cards-grid .card.featured .card-price,
+.cards-grid .card.featured .card-body { color: #ffffff; }
+
+/* Hero callout — for slides where the URL/highlight is the main attraction */
+.codex-callout {
+  display: inline-block;
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+  font-size: calc(18 * var(--pt));
+  color: var(--codex-accent);
+  background: var(--codex-accent-soft);
+  border: 1px solid rgba(134, 146, 255, 0.28);
+  border-radius: calc(8 * var(--pt));
+  padding: calc(8 * var(--pt)) calc(14 * var(--pt));
+  margin-top: calc(12 * var(--pt));
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+/* Warning callout — for regional availability / plan disclaimers */
+.codex-disclaimer {
+  display: flex;
+  align-items: center;
+  gap: calc(10 * var(--pt));
+  font-size: calc(14 * var(--pt));
+  font-weight: 500;
+  color: #ffd9a3;
+  background: rgba(255, 170, 64, 0.12);
+  border: 1px solid rgba(255, 190, 110, 0.36);
+  border-radius: calc(10 * var(--pt));
+  padding: calc(10 * var(--pt)) calc(16 * var(--pt));
+  margin-top: calc(14 * var(--pt));
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+/* Feature list — icon-led rows for product update slides */
+.feature-list {
+  display: flex;
+  flex-direction: column;
+  gap: calc(20 * var(--pt));
+  margin-top: calc(16 * var(--pt));
+}
+
+.feature-list .feature {
+  display: grid;
+  grid-template-columns: calc(48 * var(--pt)) 1fr;
+  gap: calc(20 * var(--pt));
+  align-items: start;
+}
+
+.feature-list .feature .feature-num {
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+  font-size: calc(14 * var(--pt));
+  color: var(--codex-accent);
+  background: var(--codex-accent-soft);
+  border: 1px solid rgba(134, 146, 255, 0.22);
+  border-radius: 50%;
+  width: calc(40 * var(--pt));
+  height: calc(40 * var(--pt));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+}
+
+.feature-list .feature .feature-title {
+  font-size: calc(20 * var(--pt));
+  font-weight: 600;
+  letter-spacing: -0.015em;
+  margin: 0 0 calc(4 * var(--pt)) 0;
+}
+
+.feature-list .feature .feature-meta {
+  font-size: calc(13 * var(--pt));
+  color: var(--codex-fg-muted);
+}
+
+.feature-list .feature .feature-body {
+  font-size: calc(15 * var(--pt));
+  color: rgba(233, 237, 249, 0.92);
+  margin: 0;
+}
+
+/* Panel/screensaver — gigantic centered text on the full night render */
+.slidev-layout.panel {
+  padding: calc(140 * var(--pt)) 0 0 0;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  text-align: center;
+  background-image:
+    linear-gradient(180deg, rgba(4, 7, 15, 0.3), rgba(4, 7, 15, 0.55)),
+    url('/prater-night.jpg');
+  background-size: cover, cover;
+  background-position: center, center;
+  background-repeat: no-repeat;
+  color: #ffffff;
+  overflow: hidden;
+}
+
+.slidev-layout.panel .panel-mark {
+  width: calc(120 * var(--pt));
+  height: calc(120 * var(--pt));
+  margin-top: calc(28 * var(--pt));
+  filter: drop-shadow(0 calc(8 * var(--pt)) calc(20 * var(--pt)) rgba(0, 0, 0, 0.5));
+}
+
+.slidev-layout.panel .panel-text {
+  z-index: 1;
+}
+
+.slidev-layout.panel h1 {
+  color: #ffffff;
+  font-size: calc(96 * var(--pt));
+  font-weight: 500;
+  letter-spacing: -0.03em;
+  line-height: 1;
+  margin: 0;
+  text-shadow: 0 calc(3 * var(--pt)) calc(34 * var(--pt)) rgba(0, 0, 0, 0.65);
+}
+
+.slidev-layout.panel p {
+  color: rgba(255,255,255,0.88);
+  font-size: calc(24 * var(--pt));
+  font-weight: 400;
+  margin: calc(16 * var(--pt)) 0 0 0;
+  text-shadow: 0 calc(2 * var(--pt)) calc(20 * var(--pt)) rgba(0, 0, 0, 0.7);
+}
+
+/* Sponsor / host slide — text on the left, QR card on the right.
+   The QR card stays WHITE on purpose: QR codes need a light quiet zone
+   to scan reliably from a distance. */
+.sponsor-grid {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr;
+  gap: calc(40 * var(--pt));
+  align-items: center;
+  margin-top: calc(8 * var(--pt));
+}
+
+.sponsor-grid .sponsor-text .sponsor-eyebrow {
+  font-size: calc(11 * var(--pt));
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  color: var(--codex-accent);
+  font-weight: 500;
+  margin-bottom: calc(8 * var(--pt));
+}
+
+.sponsor-grid .sponsor-text h2 {
+  font-size: calc(48 * var(--pt));
+  font-weight: 600;
+  letter-spacing: -0.025em;
+  margin: 0 0 calc(16 * var(--pt)) 0;
+  color: var(--codex-fg);
+}
+
+.sponsor-grid .sponsor-text .sponsor-logo {
+  height: calc(56 * var(--pt));
+  width: auto;
+  display: block;
+  margin: calc(2 * var(--pt)) 0 calc(20 * var(--pt)) 0;
+}
+
+.sponsor-grid .sponsor-text p {
+  font-size: calc(16 * var(--pt));
+  line-height: 1.5;
+  margin: 0 0 calc(12 * var(--pt)) 0;
+  color: var(--codex-fg);
+}
+
+.sponsor-grid .sponsor-text p.sponsor-thanks {
+  font-size: calc(15 * var(--pt));
+  color: var(--codex-fg-muted);
+  margin-top: calc(8 * var(--pt));
+}
+
+.sponsor-grid .sponsor-qr {
+  background: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  border-radius: calc(14 * var(--pt));
+  padding: calc(20 * var(--pt));
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: calc(12 * var(--pt));
+  box-shadow: 0 calc(10 * var(--pt)) calc(34 * var(--pt)) rgba(0, 0, 0, 0.5);
+}
+
+.sponsor-grid .sponsor-qr img {
+  width: calc(180 * var(--pt));
+  height: calc(180 * var(--pt));
+  display: block;
+  image-rendering: pixelated;
+}
+
+.sponsor-grid .sponsor-qr .sponsor-qr-caption {
+  text-align: center;
+  font-size: calc(13 * var(--pt));
+  color: #10162c;
+  display: flex;
+  flex-direction: column;
+  gap: calc(2 * var(--pt));
+}
+
+.sponsor-grid .sponsor-qr .sponsor-qr-caption strong {
+  font-weight: 600;
+}
+
+.sponsor-grid .sponsor-qr .sponsor-qr-caption a {
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+  font-size: calc(12 * var(--pt));
+  color: var(--codex-accent-deep);
+  border-bottom: none;
+}
+
+/* Quote layout */
+.slidev-layout.quote {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.slidev-layout.quote blockquote {
+  font-size: 2rem;
+  line-height: 1.3;
+  font-weight: 500;
+  letter-spacing: -0.015em;
+  border-left: 4px solid var(--codex-accent);
+  padding-left: 1.5rem;
+  margin: 0;
+  color: var(--codex-fg);
+  background: transparent;
+}
+
+.slidev-layout.quote .quote-attrib {
+  margin-top: 1.5rem;
+  font-size: 1rem;
+  color: var(--codex-fg-muted);
+}
+
+/* Vienna AI Engineering brand mark — lightened for the dark surface */
+.vaie-mark {
+  display: inline-flex;
+  align-items: center;
+  gap: calc(6 * var(--pt));
+  vertical-align: middle;
+  line-height: 1;
+}
+
+.vaie-mark .vaie-text {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: calc(2 * var(--pt));
+  font-weight: 300;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif;
+}
+
+.vaie-mark .vaie-line-1 {
+  display: inline-flex;
+  align-items: baseline;
+  gap: calc(4 * var(--pt));
+  font-size: calc(15 * var(--pt));
+}
+
+.vaie-mark .vaie-vienna { color: var(--codex-fg-muted); }
+.vaie-mark .vaie-ai,
+.vaie-mark .vaie-eng    { color: #dfe5ff; }
+
+.vaie-mark .vaie-eng {
+  font-size: calc(15 * var(--pt));
+}
+
+.vaie-mark .vaie-logo {
+  height: calc(28 * var(--pt));
+  width: auto;
+  display: block;
+}
+
+/* Large variant — used on the Hosts slide */
+.vaie-mark.vaie-mark-lg {
+  gap: calc(20 * var(--pt));
+  margin: calc(8 * var(--pt)) 0 calc(28 * var(--pt)) 0;
+}
+
+.vaie-mark.vaie-mark-lg .vaie-line-1,
+.vaie-mark.vaie-mark-lg .vaie-eng {
+  font-size: calc(40 * var(--pt));
+}
+
+.vaie-mark.vaie-mark-lg .vaie-text {
+  gap: calc(6 * var(--pt));
+}
+
+.vaie-mark.vaie-mark-lg .vaie-logo {
+  height: calc(96 * var(--pt));
+}
+
+.vaie-tagline {
+  font-size: calc(20 * var(--pt));
+  font-weight: 500;
+  line-height: 1.35;
+  color: #dfe5ff;
+  letter-spacing: -0.005em;
+  margin: 0;
+}
+
+.vaie-tagline .vaie-tagline-muted {
+  color: var(--codex-fg-muted);
+}
+
+/* "Part of the …" team line — used in the presenters slide footer */
+.team-affiliation {
+  margin-top: calc(56 * var(--pt));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: calc(10 * var(--pt));
+  font-size: calc(13 * var(--pt));
+  color: var(--codex-fg-muted);
+  letter-spacing: 0.01em;
+}
+
+/* Presenters (plural) layout — two profile cards side-by-side */
+.slidev-layout.presenters {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: center;
+  padding-left: calc(8 * var(--pt));
+  padding-right: calc(8 * var(--pt));
+}
+
+.slidev-layout.presenters .presenters-title {
+  margin: 0 0 calc(20 * var(--pt)) calc(48 * var(--pt));
+  font-size: calc(36 * var(--pt));
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  color: var(--codex-fg);
+}
+
+.slidev-layout.presenters .presenters-grid {
+  display: grid;
+  grid-template-columns: auto auto;
+  justify-content: center;
+  gap: calc(64 * var(--pt));
+  width: 100%;
+  align-items: start;
+}
+
+.slidev-layout.presenters .presenter-col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: calc(8 * var(--pt));
+}
+
+.slidev-layout.presenters .presenter-photo {
+  width: calc(160 * var(--pt));
+  height: calc(160 * var(--pt));
+  border-radius: 50%;
+  object-fit: cover;
+  box-shadow: 0 calc(8 * var(--pt)) calc(24 * var(--pt)) rgba(0, 0, 0, 0.5);
+  margin-bottom: calc(4 * var(--pt));
+}
+
+.slidev-layout.presenters .presenter-col h2 {
+  font-size: calc(28 * var(--pt));
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  margin: 0;
+  color: var(--codex-fg);
+}
+
+.slidev-layout.presenters .presenter-role {
+  font-size: calc(14 * var(--pt));
+  color: var(--codex-accent);
+  font-weight: 500;
+  margin: 0 0 calc(8 * var(--pt)) 0;
+}
+
+.slidev-layout.presenters .presenter-bio {
+  width: fit-content;
+  max-width: 100%;
+  margin: 0 auto;
+  font-size: calc(14 * var(--pt));
+  color: var(--codex-fg);
+  text-align: left;
+}
+
+.slidev-layout.presenters .presenter-bio ul {
+  list-style: disc;
+  padding-left: calc(20 * var(--pt));
+  margin: 0;
+}
+
+.slidev-layout.presenters .presenter-bio ul li + li {
+  margin-top: calc(6 * var(--pt));
+}
+
+/* Presenter layout */
+.slidev-layout.presenter {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
+  gap: 3rem;
+}
+
+.slidev-layout.presenter .presenter-photo-wrap {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.slidev-layout.presenter .presenter-photo {
+  width: 18rem;
+  height: 18rem;
+  border-radius: 50%;
+  object-fit: cover;
+  box-shadow: 0 18px 50px rgba(0, 0, 0, 0.5);
+}
+
+.slidev-layout.presenter h1 {
+  font-size: 2.6rem;
+  margin-bottom: 0.4rem;
+}
+
+.slidev-layout.presenter .presenter-role {
+  color: var(--codex-accent);
+  font-size: 1.1rem;
+  font-weight: 500;
+  margin-bottom: 1.2rem;
+}
+
+/* Footer brand bar */
+.codex-footer {
+  position: absolute;
+  bottom: 1.1rem;
+  left: 1.5rem;
+  right: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 0.75rem;
+  color: var(--codex-fg-muted);
+  pointer-events: none;
+}
+
+.codex-footer .codex-mark {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+}
+
+.codex-footer .codex-mark img {
+  width: 1.1rem;
+  height: 1.1rem;
+  border-radius: 4px;
+}
+
+/* Shiki dark theme tweaks */
+:root {
+  --shiki-color-text: #e8ecfa;
+  --shiki-color-background: rgba(4, 7, 16, 0.72);
+  --shiki-token-constant: #9aa6ff;
+  --shiki-token-string: #7fe0b2;
+  --shiki-token-comment: #6b7490;
+  --shiki-token-keyword: #b39dff;
+  --shiki-token-parameter: #ffb86b;
+  --shiki-token-function: #9aa6ff;
+  --shiki-token-string-expression: #7fe0b2;
+  --shiki-token-punctuation: #a8b0c6;
+  --shiki-token-link: #9aa6ff;
+}
