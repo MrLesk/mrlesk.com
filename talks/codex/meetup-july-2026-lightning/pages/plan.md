@@ -38,10 +38,14 @@ title: The approved plan
 <img class="shot plan-shot" src="/approved-plan.jpg" alt="Approved Schanigarten plan, stamped by the Magistrat on April 2, 2026" />
 
 <style>
+.slidev-layout.two-cols:has(.plan-shot) {
+  grid-template-columns: minmax(0, 1.35fr) minmax(0, 0.65fr);
+}
+
 .plan-shot {
   width: auto;
   max-height: calc(440 * var(--pt));
-  margin: 0 auto;
+  margin: 0 0 0 auto;
 }
 </style>
 

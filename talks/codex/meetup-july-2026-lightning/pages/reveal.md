@@ -2,26 +2,28 @@
 title: Render vs reality
 ---
 
-# Render vs reality
+# The render survived reality
 
 <div class="reveal-grid">
 
 <div>
   <div class="reveal-label">Codex render</div>
-  <div class="ph"><span>Imagen rendering</span><code>public/render.jpg</code></div>
+  <img class="shot reveal-shot reveal-shot-render" src="/codex-render.png" alt="Codex render of the finished Schanigarten" />
 </div>
 
 <div>
   <div class="reveal-label">Built by hand</div>
-  <div class="ph"><span>Finished terrace photo</span><code>public/real-terrace.jpg</code></div>
+  <img class="shot reveal-shot reveal-shot-real" src="/actual-build.png" alt="The timber Schanigarten built in front of Be Fresh in Vienna" />
 </div>
 
 </div>
+
+<p class="reveal-line">Same footprint. Same timber boundary. Same curb fit. Same safety markers.</p>
 
 <!--
 Left: what Codex rendered before we bought anything.
 Right: what actually stands in the street today.
-Almost identical, down to the planters and the red-white corner markers.
+The render sold the direction. The build stayed faithful to the approved geometry; furniture and finishing touches came next.
 -->
 
 <style>
@@ -32,8 +34,17 @@ Almost identical, down to the planters and the red-white corner markers.
   margin-top: calc(14 * var(--pt));
 }
 
-.reveal-grid .ph {
-  min-height: calc(340 * var(--pt));
+.reveal-shot {
+  height: calc(330 * var(--pt));
+  object-fit: cover;
+}
+
+.reveal-shot-render {
+  object-position: center 48%;
+}
+
+.reveal-shot-real {
+  object-position: center 50%;
 }
 
 .reveal-label {
@@ -43,5 +54,11 @@ Almost identical, down to the planters and the red-white corner markers.
   color: var(--codex-accent);
   font-weight: 500;
   margin-bottom: calc(8 * var(--pt));
+}
+
+.reveal-line {
+  margin: calc(14 * var(--pt)) 0 0;
+  color: var(--codex-fg-muted);
+  font-size: calc(14 * var(--pt));
 }
 </style>

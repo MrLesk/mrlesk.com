@@ -16,16 +16,14 @@ level: 1
 
 <div class="card">
   <div class="card-eyebrow">Lightning talk</div>
-  <div class="card-title">Speaker TBA</div>
-  <div class="card-meta">Talk title</div>
-  <div class="card-body">Short description coming soon.</div>
+  <div class="card-title">Julian</div>
+  <div class="card-meta">Self contained, personalized, codex models</div>
 </div>
 
 <div class="card">
   <div class="card-eyebrow">Lightning talk</div>
-  <div class="card-title">Speaker TBA</div>
-  <div class="card-meta">Talk title</div>
-  <div class="card-body">Short description coming soon.</div>
+  <div class="card-title">Ilia</div>
+  <div class="card-meta">Self inflicted wounds caused by human laziness</div>
 </div>
 
 </div>

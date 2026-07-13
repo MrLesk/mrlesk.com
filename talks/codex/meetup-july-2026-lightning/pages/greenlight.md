@@ -31,16 +31,34 @@ title: Green light
   </div>
 </div>
 
+<div class="feature">
+  <div class="feature-num">04</div>
+  <div>
+    <div class="feature-title">Come see it</div>
+    <p class="feature-body">Zentagasse 33, in Vienna’s 5th district.</p>
+  </div>
+</div>
+
 </div>
 
 ::right::
 
-<div class="ph" style="min-height: calc(400 * var(--pt));">
-  <span>The terrace in use</span>
-  <code>public/terrace-in-use.jpg</code>
-</div>
+<img class="shot greenlight-shot" src="/final-terrace.png" alt="The finished Be Fresh Schanigarten with painted timber fencing, tables, chairs, umbrellas, and planters" />
 
 <!--
 The last mile was all mom: paint, flowers, furniture, umbrellas.
 Then the Magistrat came, verified everything matched the stamped plan, and gave the green light.
 -->
+
+<style>
+.slidev-layout.two-cols:has(.greenlight-shot) .feature-list {
+  gap: calc(14 * var(--pt));
+  margin-top: calc(10 * var(--pt));
+}
+
+.greenlight-shot {
+  height: calc(430 * var(--pt));
+  object-fit: cover;
+  object-position: center 48%;
+}
+</style>

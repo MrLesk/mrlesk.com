@@ -5,6 +5,37 @@ contact: 'Volee · Vienna AI Engineering · OpenAI · thank you for making tonig
 hideInToc: true
 ---
 
-# Thank you
+<div class="thanks-share">
 
-Codex - you can just build things!
+<div class="thanks-copy">
+  <h1>Thank you</h1>
+  <p>Codex — you can just build things!</p>
+</div>
+
+<SlideQrCard class="thanks-slides-card" url="https://mrlesk.com/talks/codex/meetup-july-2026/" title="Scan for the slides" subtitle="mrlesk.com/talks/codex/meetup-july-2026" aria-label="Open the keynote slides" mono-subtitle></SlideQrCard>
+
+</div>
+
+<style>
+.thanks-share {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) calc(270 * var(--pt));
+  align-items: center;
+  gap: calc(60 * var(--pt));
+  width: 100%;
+}
+
+.thanks-copy {
+  min-width: 0;
+}
+
+.thanks-slides-card {
+  justify-self: end;
+  margin-right: calc(-14 * var(--pt));
+}
+</style>
+
+<!--
+The QR points to the deployed keynote, not the lightning talk:
+https://mrlesk.com/talks/codex/meetup-july-2026/
+-->

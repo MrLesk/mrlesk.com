@@ -6,15 +6,15 @@ title: The build plans
 
 <div class="plans-grid">
 
-<div class="ph">
-  <span>Build plan page: platform & cut schedule</span>
-  <code>public/plan-page-1.png</code>
-</div>
+<figure>
+  <figcaption><span>01</span> Level the platform</figcaption>
+  <img class="shot plan-page" src="/base-structure-plan.png" alt="Codex build plan showing the cross-beam grid, support heights, and connection details" />
+</figure>
 
-<div class="ph">
-  <span>Build plan page: walls & posts</span>
-  <code>public/plan-page-2.png</code>
-</div>
+<figure>
+  <figcaption><span>02</span> Cut the boundary</figcaption>
+  <img class="shot plan-page" src="/fence-layout-plan.png" alt="Codex build plan showing the fence layout, elevations, and panel cutting schedule" />
+</figure>
 
 </div>
 
@@ -29,10 +29,33 @@ I never had to figure out a step on my own.
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: calc(18 * var(--pt));
-  margin-top: calc(16 * var(--pt));
+  margin-top: calc(12 * var(--pt));
 }
 
-.plans-grid .ph {
-  min-height: calc(330 * var(--pt));
+.plans-grid figure {
+  margin: 0;
+}
+
+.plans-grid figcaption {
+  display: flex;
+  align-items: center;
+  gap: calc(8 * var(--pt));
+  margin-bottom: calc(8 * var(--pt));
+  color: var(--codex-fg);
+  font-size: calc(14 * var(--pt));
+  font-weight: 600;
+}
+
+.plans-grid figcaption span {
+  color: var(--codex-accent);
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+  font-size: calc(11 * var(--pt));
+  letter-spacing: 0.08em;
+}
+
+.plan-page {
+  height: calc(350 * var(--pt));
+  object-fit: contain;
+  background: #ffffff;
 }
 </style>

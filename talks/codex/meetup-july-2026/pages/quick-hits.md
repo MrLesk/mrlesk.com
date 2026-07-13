@@ -32,15 +32,15 @@ level: 2
 </div>
 
 <div class="card">
-  <div class="card-eyebrow">May 25 → Jun 9 · iOS</div>
-  <div class="card-title">/goal & /side on mobile</div>
-  <div class="card-body">Keep long-running work pointed at the outcome, and ask side questions without derailing the thread.</div>
+  <div class="card-eyebrow">Learn · build · ship</div>
+  <div class="card-title"><a href="https://learn.chatgpt.com" target="_blank">learn.chatgpt.com</a></div>
+  <div class="card-body">One place for Codex and API docs, use cases, videos, and resources for building with OpenAI.</div>
 </div>
 
 <div class="card">
-  <div class="card-eyebrow">Jul 8</div>
-  <div class="card-title">GPT-5.6 on Bedrock</div>
-  <div class="card-body">Sol, Terra & Luna on AWS with first-class reasoning effort. Codex goes multi-cloud.</div>
+  <div class="card-eyebrow">ChatGPT + Codex</div>
+  <div class="card-title">Unified Plugins Directory</div>
+  <div class="card-body">One place to discover, install, and manage plugins across ChatGPT and Codex.</div>
 </div>
 
 </div>
@@ -49,6 +49,11 @@ level: 2
 .quick-hits .card-eyebrow {
   font-family: 'JetBrains Mono', ui-monospace, monospace;
   letter-spacing: 0.08em;
+}
+
+.quick-hits .card-title a {
+  color: inherit;
+  border-bottom: none;
 }
 
 /* Positive availability chip — green counterpart to .codex-disclaimer amber.
@@ -68,5 +73,6 @@ level: 2
 </style>
 
 <!--
-Top row is the EU story: Computer Use (Windows since May 29, EEA since June 16), the Chrome extension (launched May 7, EEA June 16), and Memories & Chronicle (EEA opt-in June 16). Bottom row: Claude import (June 9), /side (May 25) and /goal (June 9) on iOS, GPT-5.6 on Bedrock (July 8).
+Top row is the EU story: Computer Use (Windows since May 29, EEA since June 16), the Chrome extension (launched May 7, EEA June 16), and Memories & Chronicle (EEA opt-in June 16). Bottom row: Claude import (June 9), learn.chatgpt.com as the new home for Codex and API learning resources, and the unified Plugins Directory shared by ChatGPT and Codex.
+Source for the learning center: https://learn.chatgpt.com
 -->
