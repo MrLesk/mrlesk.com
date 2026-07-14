@@ -56,7 +56,7 @@ level: 2
   border-bottom: none;
 }
 
-/* Positive availability chip — green counterpart to .codex-disclaimer amber.
+/* Positive availability chip: green counterpart to .codex-disclaimer amber.
    Always on its own line under the card copy. */
 .eu-yes {
   display: block;

@@ -327,7 +327,7 @@ level: 2
 
 <!--
 Two apps became one ChatGPT in early July, macOS and Windows, worldwide.
-Chat is for conversation, Work produces artifacts, and Codex produces software—all in one app.
+Chat is for conversation, Work produces artifacts, and Codex produces software. All in one app.
 - One shared space: your chats and history live together. Switch between Work and Codex; Chat is right there in both.
 - Work is the agent with Codex inside: on chatgpt.com and mobile, selecting Work is how you tap Codex. It ships docs, decks, sheets, and sites.
 - Classic sticks around: the old app remains as ChatGPT Classic with updates and security fixes. New agent features land only in the new app.

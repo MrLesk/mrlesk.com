@@ -4,7 +4,8 @@ title: OpenAI Build Week Meetup - Vienna, July 2026
 info: OpenAI Build Week Community Meetup, Vienna - July 16, 2026
 author: Alex Gavrilescu
 layout: cover
-presenter: Codex Community Vienna
+presenter: true
+presenterName: Codex Community Vienna
 hideInToc: true
 ---
 

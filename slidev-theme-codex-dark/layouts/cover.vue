@@ -4,7 +4,12 @@ const props = defineProps<{
   frontmatter?: Record<string, unknown>
 }>()
 
-const presenterName = (props.frontmatter?.presenter as string | undefined) ?? props.presenter
+// `presenter` is a Slidev feature flag. Older decks in this repository also
+// used it as the display name, so prefer the unambiguous custom field while
+// retaining backwards compatibility with those string-valued decks.
+const presenterName = (props.frontmatter?.presenterName as string | undefined)
+  ?? (typeof props.frontmatter?.presenter === 'string' ? props.frontmatter.presenter : undefined)
+  ?? props.presenter
 
 const base = (import.meta as ImportMeta).env?.BASE_URL || '/'
 const trimmed = base.endsWith('/') ? base.slice(0, -1) : base

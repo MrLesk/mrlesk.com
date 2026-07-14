@@ -9,7 +9,7 @@ hideInToc: true
 
 <div class="thanks-copy">
   <h1>Thank you</h1>
-  <p>Codex — you can just build things!</p>
+  <p>To our speakers and everyone who joined us tonight: thank you for the questions, ideas, and energy.</p>
 </div>
 
 <SlideQrCard class="thanks-slides-card" url="https://mrlesk.com/talks/codex/meetup-july-2026/" title="Scan for the slides" subtitle="mrlesk.com/talks/codex/meetup-july-2026" aria-label="Open the keynote slides" mono-subtitle></SlideQrCard>

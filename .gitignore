@@ -4,4 +4,6 @@ dist
 .DS_Store
 tmp
 /output
-
+.env
+.env.*
+!.env.example

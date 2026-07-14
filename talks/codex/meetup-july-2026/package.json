@@ -5,7 +5,9 @@
   "scripts": {
     "dev": "slidev --open",
     "build": "slidev build",
-    "export": "slidev export"
+    "export": "slidev export",
+    "control": "bun scripts/slidev-control-client.ts",
+    "test": "bun test"
   },
   "dependencies": {
     "@slidev/cli": "52.14.2",
