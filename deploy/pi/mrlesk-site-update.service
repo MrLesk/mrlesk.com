@@ -1,0 +1,14 @@
+[Unit]
+Description=Download and atomically activate the newest mrlesk.com release
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/libexec/mrlesk/update-site
+EnvironmentFile=-/etc/default/mrlesk-site-update
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectHome=true
+ProtectSystem=strict
+ReadWritePaths=/srv/mrlesk

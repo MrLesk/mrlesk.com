@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "astro dev",
     "build": "astro build",
-    "preview": "astro preview"
+    "preview": "astro preview",
+    "test:deploy": "bun test scripts/release-plan.test.ts scripts/assemble-site-release.test.ts && bash deploy/pi/update-site.test.sh"
   },
   "dependencies": {
     "astro": "6.1.9"

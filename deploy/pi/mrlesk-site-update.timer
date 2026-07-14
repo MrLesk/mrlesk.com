@@ -1,0 +1,11 @@
+[Unit]
+Description=Check GitHub Releases for a new mrlesk.com site
+
+[Timer]
+OnBootSec=2min
+OnUnitActiveSec=5min
+RandomizedDelaySec=30s
+Persistent=true
+
+[Install]
+WantedBy=timers.target

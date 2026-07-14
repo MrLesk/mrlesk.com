@@ -1,0 +1,113 @@
+{
+  "version": 1,
+  "site": {
+    "artifact": "component-site",
+    "watch": [
+      "astro.config.mjs",
+      "bun.lock",
+      "package.json",
+      "public/**",
+      "src/**"
+    ]
+  },
+  "fullRebuildWatch": [
+    ".github/workflows/publish-static-site.yml",
+    "deploy/talks.json",
+    "scripts/assemble-site-release.ts",
+    "scripts/release-plan.ts"
+  ],
+  "allTalksWatch": [
+    ".gitmodules",
+    "slidev-build.package.json"
+  ],
+  "talks": [
+    {
+      "id": "vienna-zero",
+      "source": "talks/vienna-ai-engineering/from-zero-to-backlog",
+      "target": "talks/vienna-ai-engineering/from-zero-to-backlog",
+      "base": "/talks/vienna-ai-engineering/from-zero-to-backlog/",
+      "artifact": "component-talk-vienna-zero",
+      "watch": ["slidev-theme-penguin/**"]
+    },
+    {
+      "id": "vienna-backlog",
+      "source": "talks/vienna-ai-engineering/from-backlog-to-success",
+      "target": "talks/vienna-ai-engineering/from-backlog-to-success",
+      "base": "/talks/vienna-ai-engineering/from-backlog-to-success/",
+      "artifact": "component-talk-vienna-backlog",
+      "watch": ["slidev-theme-penguin/**"]
+    },
+    {
+      "id": "devoxx-backlog",
+      "source": "talks/devoxx/hands-on-backlog",
+      "target": "talks/devoxx/hands-on-backlog",
+      "base": "/talks/devoxx/hands-on-backlog/",
+      "artifact": "component-talk-devoxx-backlog",
+      "watch": ["slidev-theme-penguin/**"]
+    },
+    {
+      "id": "devoxx-success",
+      "source": "talks/devoxx/backlog-success",
+      "target": "talks/devoxx/backlog-success",
+      "base": "/talks/devoxx/backlog-success/",
+      "artifact": "component-talk-devoxx-success",
+      "watch": ["slidev-theme-penguin/**"]
+    },
+    {
+      "id": "ai-native-presentation",
+      "source": "talks/ai-native-dev/backlog-presentation",
+      "target": "talks/ai-native-dev/backlog-presentation",
+      "base": "/talks/ai-native-dev/backlog-presentation/",
+      "artifact": "component-talk-ai-native-presentation",
+      "watch": ["slidev-theme-penguin/**"]
+    },
+    {
+      "id": "ai-native-workshop",
+      "source": "talks/ai-native-dev/backlog-workshop",
+      "target": "talks/ai-native-dev/backlog-workshop",
+      "base": "/talks/ai-native-dev/backlog-workshop/",
+      "artifact": "component-talk-ai-native-workshop",
+      "watch": ["slidev-theme-penguin/**"]
+    },
+    {
+      "id": "voxxed-backlog",
+      "source": "talks/voxxed/backlog-presentation",
+      "target": "talks/voxxed/backlog-presentation",
+      "base": "/talks/voxxed/backlog-presentation/",
+      "artifact": "component-talk-voxxed-backlog",
+      "watch": ["slidev-theme-penguin/**"]
+    },
+    {
+      "id": "vienna-explosion",
+      "source": "talks/vienna-ai-engineering/the-explosion-of-tools",
+      "target": "talks/vienna-ai-engineering/the-explosion-of-tools",
+      "base": "/talks/vienna-ai-engineering/the-explosion-of-tools/",
+      "artifact": "component-talk-vienna-explosion",
+      "watch": ["slidev-theme-penguin/**"]
+    },
+    {
+      "id": "codex-april-2026",
+      "source": "talks/codex/meetup-april-2026",
+      "target": "talks/codex/meetup-april-2026",
+      "base": "/talks/codex/meetup-april-2026/",
+      "artifact": "component-talk-codex-april-2026",
+      "watch": ["slidev-theme-codex/**"]
+    },
+    {
+      "id": "codex-build-june-2026",
+      "source": "talks/codex/build-june-2026",
+      "target": "talks/codex/build-june-2026",
+      "base": "/talks/codex/build-june-2026/",
+      "artifact": "component-talk-codex-build-june-2026",
+      "watch": ["slidev-theme-codex/**"]
+    },
+    {
+      "id": "codex-july-2026",
+      "source": "talks/codex/meetup-july-2026",
+      "target": "talks/codex/meetup-july-2026",
+      "base": "/talks/codex/meetup-july-2026/",
+      "artifact": "component-talk-codex-july-2026",
+      "watch": ["slidev-theme-codex-dark/**"]
+    }
+  ]
+}
