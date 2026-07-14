@@ -1,5 +1,5 @@
 ---
-title: The client
+title: My mom wanted a Schanigarten
 ---
 
 <div class="sponsor-grid">
@@ -27,8 +27,8 @@ title: The client
 
 <!--
 My mom runs Be Fresh, a small healthy food restaurant in Vienna.
-A Schanigarten is the classic Viennese sidewalk terrace. More seats in summer is a big deal for a place this size.
-She got the full-year permit this spring and asked me for help. I brought Codex.
+A Schanigarten is a sidewalk terrace. For a restaurant this size, a few more tables make a real difference.
+She got the permit this spring and asked me to help. I brought Codex.
 -->
 
 <style>

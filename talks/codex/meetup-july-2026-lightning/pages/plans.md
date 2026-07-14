@@ -1,27 +1,27 @@
 ---
-title: The build plans
+title: It also made the build plans
 ---
 
-# IKEA instructions, custom made
+# It also made the build plans
 
 <div class="plans-grid">
 
 <figure>
-  <figcaption><span>01</span> Level the platform</figcaption>
-  <img class="shot plan-page" src="/base-structure-plan.png" alt="Codex build plan showing the cross-beam grid, support heights, and connection details" />
+  <figcaption><span>01</span> How to level it</figcaption>
+  <img class="plan-page" src="/base-structure-plan.png" alt="Codex build plan showing the cross-beam grid, support heights, and connection details" />
 </figure>
 
 <figure>
-  <figcaption><span>02</span> Cut the boundary</figcaption>
-  <img class="shot plan-page" src="/fence-layout-plan.png" alt="Codex build plan showing the fence layout, elevations, and panel cutting schedule" />
+  <figcaption><span>02</span> Where to cut the fence</figcaption>
+  <img class="plan-page" src="/fence-layout-plan.png" alt="Codex build plan showing the fence layout, elevations, and panel cutting schedule" />
 </figure>
 
 </div>
 
 <!--
-Codex turned the requirements into step-by-step build plans: cut schedules, exploded views, fastening details.
-The details matter: 12 rows of boards, each row one 3 m plus one 2 m board. Support heights of 12 mm on the sidewalk side and 32 mm on the street side so the deck lands flush with the curb. Fence cut to 1800 + 1800 + 1400 in front and 1700 on each side.
-I never had to figure out a step on my own.
+Then I asked for build instructions.
+Codex worked out the board layout, support heights, cuts, and fastening details.
+The important part was that I could take these plans outside and actually build from them.
 -->
 
 <style>
@@ -54,8 +54,9 @@ I never had to figure out a step on my own.
 }
 
 .plan-page {
-  height: calc(350 * var(--pt));
-  object-fit: contain;
-  background: #ffffff;
+  display: block;
+  width: 100%;
+  height: auto;
+  border: 1px solid var(--codex-fg);
 }
 </style>

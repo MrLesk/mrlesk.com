@@ -10,6 +10,7 @@ hideInToc: true
 literally
 
 <!--
-If Codex can put a terrace on a Viennese street, it can build whatever you are putting off.
-Come by Be Fresh and see it in person.
+Codex is useful outside the laptop.
+If it can help me put a terrace on a Viennese street, what are you putting off because you do not know where to start?
+You can just build things. Literally.
 -->

@@ -1,9 +1,9 @@
 ---
 layout: two-cols
-title: The approved plan
+title: First, the rules
 ---
 
-# The Magistrat said yes
+# First, the rules
 
 <div class="feature-list">
 
@@ -50,7 +50,7 @@ title: The approved plan
 </style>
 
 <!--
-Everything starts with this stamped drawing: April 2, 2026, file MBA 1/8.
-These drawings are the layout authority. Whatever we build must stay inside them.
-I gave Codex the permit docs as the fixed baseline for everything that follows.
+This is the approved plan from the Magistrat.
+It gives us the exact size, which sides must stay open, and one important rule: we cannot drill into the street.
+I gave Codex the plan and the permit documents. These rules were fixed.
 -->

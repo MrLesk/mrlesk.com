@@ -1,6 +1,6 @@
 ---
 theme: codex
-title: Codex for DIY - Building mom's Schanigarten
+title: I built my mom a terrace with Codex
 info: Lightning talk - OpenAI Build Week Community Meetup, Vienna - July 16, 2026
 author: Alex Gavrilescu
 layout: cover
@@ -8,12 +8,13 @@ presenter: Alex Gavrilescu · @mrlesk
 hideInToc: true
 ---
 
-# Codex for DIY
+# I built my mom a terrace with Codex
 
-You can just build things!
+You can use it for more than code.
 
 <!--
-Five minutes: how Codex went from a city permit PDF to a real wooden terrace in front of my mom's restaurant.
+My mom needed a terrace for her restaurant. I had no idea how to build one, so I asked Codex.
+A few days later, people were eating on it.
 -->
 
 ---

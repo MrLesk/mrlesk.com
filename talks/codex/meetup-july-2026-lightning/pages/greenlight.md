@@ -1,33 +1,33 @@
 ---
 layout: two-cols
-title: Green light
+title: It passed inspection
 ---
 
-# Green light
+# It passed inspection
 
 <div class="feature-list">
 
 <div class="feature">
   <div class="feature-num">01</div>
   <div>
-    <div class="feature-title">CEO finishing touches</div>
-    <p class="feature-body">Mom painted the wall, added flowers and pots, picked tables, chairs, and umbrellas.</p>
+    <div class="feature-title">Mom did the finishing touches</div>
+    <p class="feature-body">Paint, flowers, pots, tables, chairs, and umbrellas.</p>
   </div>
 </div>
 
 <div class="feature">
   <div class="feature-num">02</div>
   <div>
-    <div class="feature-title">Magistrat inspection</div>
-    <p class="feature-body">Everything checked out against the approved plan.</p>
+    <div class="feature-title">The Magistrat checked it</div>
+    <p class="feature-body">It matched the approved plan.</p>
   </div>
 </div>
 
 <div class="feature">
   <div class="feature-num">03</div>
   <div>
-    <div class="feature-title">Open for guests</div>
-    <p class="feature-body">Serving on the new terrace ever since.</p>
+    <div class="feature-title">People eat there now</div>
+    <p class="feature-body">The terrace has been open ever since.</p>
   </div>
 </div>
 
@@ -46,8 +46,9 @@ title: Green light
 <img class="shot greenlight-shot" src="/final-terrace.png" alt="The finished Be Fresh Schanigarten with painted timber fencing, tables, chairs, umbrellas, and planters" />
 
 <!--
-The last mile was all mom: paint, flowers, furniture, umbrellas.
-Then the Magistrat came, verified everything matched the stamped plan, and gave the green light.
+Mom handled the paint, flowers, furniture, and umbrellas.
+Then the Magistrat came, checked the terrace against the approved plan, and signed it off.
+People have been eating there ever since.
 -->
 
 <style>

@@ -1,14 +1,14 @@
 ---
-title: The render
+title: Before buying anything, I showed my mom this
 ---
 
 <div class="render-grid">
 
 <div class="render-copy">
-  <div class="render-eyebrow">Before buying a single board</div>
-  <h1>Pitch the outcome, not the parts</h1>
-  <p class="lede">Codex used the approved plan and the real storefront to render the finished terrace.</p>
-  <div class="codex-callout">Mom approved the direction.</div>
+  <div class="render-eyebrow">Before buying anything</div>
+  <h1>Before buying anything, I showed my mom this</h1>
+  <p class="lede">Codex used the approved plan and a photo of the storefront to make this render.</p>
+  <div class="codex-callout">Mom said yes.</div>
 </div>
 
 <img class="shot render-shot" src="/codex-render.png" alt="Codex render of the planned Schanigarten with a timber deck, tables, chairs, and planters" />
@@ -16,8 +16,8 @@ title: The render
 </div>
 
 <!--
-Before spending a single euro, I asked Codex to render the final result with the imagen tool, based on the approved plan and the real storefront.
-That picture is what convinced my mom, the CEO of this project.
+Before spending any money, I asked Codex to render the terrace using the approved plan and a photo of the storefront.
+This was much easier to discuss than a list of boards. Mom said yes.
 -->
 
 <style>

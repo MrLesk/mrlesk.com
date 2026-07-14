@@ -11,7 +11,7 @@
   color: var(--codex-fg);
 }
 
-/* Image placeholder — swap for the real photo by dropping the named file
+/* Image placeholder: swap for the real photo by dropping the named file
    into ./public and replacing the div with an <img class="shot">. */
 .ph {
   display: flex;

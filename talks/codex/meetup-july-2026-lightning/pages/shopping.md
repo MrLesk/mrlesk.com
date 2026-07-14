@@ -1,8 +1,8 @@
 ---
-title: The shopping list
+title: Then Codex made the shopping list
 ---
 
-# Codex made the shopping cart
+# Then Codex made the shopping list
 
 <div class="shopping-proof">
 
@@ -22,19 +22,20 @@ title: The shopping list
 
   <div class="shopping-fact">
     <strong>30+ linked items</strong>
-    <span>Quantities, unit prices, alternatives—and a reason for every part.</span>
+    <span>Quantities, unit prices, alternatives, and a reason for every part.</span>
   </div>
 </div>
 
-<img class="shot materials-shot" src="/materials-list.png" alt="Codex-generated materials list with products, quantities, prices, links, and reasons" />
+<figure class="materials-proof">
+  <img class="shot materials-shot" src="/materials-list.png" alt="Codex-generated materials list with products, quantities, prices, links, and reasons" />
+  <figcaption class="shopping-note">Priced May 14 · availability checked across Vienna stores</figcaption>
+</figure>
 
 </div>
 
-<p class="shopping-note">Priced May 14 · availability checked across Vienna stores</p>
-
 <!--
-Codex researched every part with quantities, prices, direct product links, and which Vienna shops had stock: OBI, Hornbach, Bauhaus.
-It also explained why every item was there. When something was unavailable it found an alternative, like Bautenschutzmatte cut into pads when the small Auflagepads were gone.
+Codex found every board, screw, bracket, and support pad. It gave me quantities, prices, links, and which Vienna shops had stock.
+When something was unavailable, it found an alternative. That happened with the support pads.
 Delivery, cutting service, and tools were not included.
 -->
 
@@ -85,14 +86,19 @@ Delivery, cutting service, and tools were not included.
 }
 
 .materials-shot {
-  height: calc(365 * var(--pt));
+  height: calc(350 * var(--pt));
   object-fit: contain;
   background: #ffffff;
 }
 
+.materials-proof {
+  margin: 0;
+}
+
 .shopping-note {
-  margin: calc(12 * var(--pt)) 0 0;
+  margin: calc(10 * var(--pt)) 0 0;
   color: var(--codex-fg-muted);
   font-size: calc(12.5 * var(--pt));
+  text-align: center;
 }
 </style>

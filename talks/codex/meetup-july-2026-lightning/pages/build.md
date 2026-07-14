@@ -1,8 +1,8 @@
 ---
-title: The build
+title: Then we built it
 ---
 
-# A van, my mom, a few days
+# Then we built it
 
 <div class="build-grid">
 
@@ -26,9 +26,9 @@ title: The build
 <p class="build-line">Rented a van. Dry-fit everything. Then screwed it all down.</p>
 
 <!--
-I rented a van and unloaded every board right in front of the restaurant.
-Built it with my mom over a few days: frame, feet, leveling, deck boards, then the fence panels and posts.
-The plans said dry-fit before fastening. That advice saved us twice.
+I rented a van, picked up the materials, and unloaded everything in front of the restaurant.
+My mom and I built it over a few days: frame, leveling, deck boards, and then the fence.
+Codex told us to dry-fit everything before fastening it. That advice saved us twice.
 -->
 
 <style>

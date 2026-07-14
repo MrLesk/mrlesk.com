@@ -1,8 +1,8 @@
 ---
-title: Render vs reality
+title: This is surprisingly close
 ---
 
-# The render survived reality
+# This is surprisingly close
 
 <div class="reveal-grid">
 
@@ -18,12 +18,12 @@ title: Render vs reality
 
 </div>
 
-<p class="reveal-line">Same footprint. Same timber boundary. Same curb fit. Same safety markers.</p>
+<p class="reveal-line">Same size. Same basic structure. And it fit the curb.</p>
 
 <!--
-Left: what Codex rendered before we bought anything.
-Right: what actually stands in the street today.
-The render sold the direction. The build stayed faithful to the approved geometry; furniture and finishing touches came next.
+On the left is what Codex rendered before we bought anything.
+On the right is what we actually built.
+It is not pixel perfect, but the important parts are surprisingly close.
 -->
 
 <style>
@@ -60,5 +60,6 @@ The render sold the direction. The build stayed faithful to the approved geometr
   margin: calc(14 * var(--pt)) 0 0;
   color: var(--codex-fg-muted);
   font-size: calc(14 * var(--pt));
+  text-align: center;
 }
 </style>

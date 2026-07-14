@@ -1,42 +1,42 @@
 ---
-title: The options
+title: I asked Codex what we could build
 ---
 
-# Codex, price me a terrace
+# I asked Codex what we could build
 
-<p class="lede">Research request: every way to build this, from very cheap to very expensive.</p>
+<p class="lede">Every sensible option, from cheap and temporary to expensive and easy.</p>
 
 <div class="cards-grid cols-4" style="margin-top: calc(18 * var(--pt));">
 
 <div class="card">
   <div class="card-eyebrow">Cheapest</div>
-  <div class="card-title">Pallets & planters</div>
-  <div class="card-body">Fast and temporary. Looks like it.</div>
+  <div class="card-title">Pallets and planters</div>
+  <div class="card-body">Cheap and quick. It would also look cheap and quick.</div>
 </div>
 
 <div class="card featured">
-  <div class="card-eyebrow">The pick</div>
-  <div class="card-title">Wood deck, wood boundary</div>
-  <div class="card-body">Permanent deck planks on a real substructure. Affordable, and worth it for a full-year permit.</div>
+  <div class="card-eyebrow">The one we picked</div>
+  <div class="card-title">Wood</div>
+  <div class="card-body">A real deck, affordable enough, and made to stay all year.</div>
 </div>
 
 <div class="card">
-  <div class="card-eyebrow">Mid</div>
+  <div class="card-eyebrow">Less maintenance</div>
   <div class="card-title">WPC composite</div>
-  <div class="card-body">Low maintenance, noticeably pricier.</div>
+  <div class="card-body">Less maintenance. More money.</div>
 </div>
 
 <div class="card">
-  <div class="card-eyebrow">Premium</div>
-  <div class="card-title">Contractor build</div>
-  <div class="card-body">Zero effort. Multiples of the cost.</div>
+  <div class="card-eyebrow">Easiest</div>
+  <div class="card-title">Hire a contractor</div>
+  <div class="card-body">Easy. Also expensive.</div>
 </div>
 
 </div>
 
-<div class="codex-callout">Full-year permit: build once, keep it standing all year</div>
+<div class="codex-callout">Full-year permit: worth building it properly</div>
 
 <!--
-Codex compared build versions with rough budgets and the practical differences: durability, maintenance, weight, how the Magistrat rules apply.
-Because the permit runs the whole year, the second-cheapest option won: permanent wood deck planks instead of something temporary.
+I asked Codex for every sensible way to build it, including rough prices and the practical differences.
+Because the permit runs all year, the wood version made the most sense. It was affordable, but it would not feel temporary.
 -->
