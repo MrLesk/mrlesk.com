@@ -11,7 +11,18 @@ level: 1
   <div class="card-eyebrow">Lightning talk</div>
   <div class="card-title">Alex Gavrilescu</div>
   <div class="card-meta">Codex for DIY: mom's summer terrace</div>
-  <div class="card-body">How Codex planned, priced, and helped build a real sidewalk terrace for a Vienna restaurant.</div>
+</div>
+
+<div class="card">
+  <div class="card-eyebrow">Lightning talk</div>
+  <div class="card-title">Andreas Petersson</div>
+  <div class="card-meta">Patterns of Dark Software Factories</div>
+</div>
+
+<div class="card">
+  <div class="card-eyebrow">Lightning talk</div>
+  <div class="card-title">Anastasiia</div>
+  <div class="card-meta">Teaching Codex How I Work</div>
 </div>
 
 <div class="card">
@@ -26,17 +37,6 @@ level: 1
   <div class="card-meta">Intent Erosion: the bug you wrote in Markdown</div>
 </div>
 
-<div class="card">
-  <div class="card-eyebrow">Lightning talk</div>
-  <div class="card-title">Anastasiia</div>
-  <div class="card-meta">Teaching Codex How I Work</div>
-</div>
-
-<div class="card">
-  <div class="card-eyebrow">Lightning talk</div>
-  <div class="card-title">Andreas Petersson</div>
-  <div class="card-meta">Patterns of Dark Software Factories</div>
-</div>
 
 </div>
 

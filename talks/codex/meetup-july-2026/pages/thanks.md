@@ -31,7 +31,11 @@ hideInToc: true
 
 .thanks-slides-card {
   justify-self: end;
-  margin-right: calc(-14 * var(--pt));
+  margin-right: calc(16 * var(--pt));
+}
+
+:global(.slidev-layout.thanks .thanks-mark) {
+  right: calc(56 * var(--pt));
 }
 </style>
 
