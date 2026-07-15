@@ -3,6 +3,7 @@ import { useNav } from '@slidev/client'
 import { computed, nextTick, onBeforeUnmount, onMounted, ref, shallowRef, watch } from 'vue'
 import {
   RealtimeSlideDirector,
+  type SlideDirectorDebugEntry,
   type SlideDirectorStatus,
 } from './scripts/realtime-slide-director-client'
 import type { SlideDirectorToolName } from './scripts/slide-director'
@@ -17,13 +18,17 @@ interface SlideControlCommand {
 const COMMAND_EVENT = 'slidev-control:command'
 const ACK_EVENT = 'slidev-control:ack'
 const STATE_EVENT = 'slidev-control:state'
-const SILENCE_ADVANCE_MS = 3_000
 
 const nav = useNav()
 const hot = import.meta.hot
 const director = shallowRef<RealtimeSlideDirector | null>(null)
 const directorStatus = ref<SlideDirectorStatus>('off')
 const directorMessage = ref('Auto slides are off')
+const debugEnabled = ref(false)
+const debugEntries = ref<SlideDirectorDebugEntry[]>([])
+const liveTranscript = ref('')
+const liveTranscriptItemId = ref<string | null>(null)
+const debugSlideLabel = computed(() => `${nav.currentSlideNo.value}/${nav.total.value}`)
 
 const directorLabel = computed(() => {
   switch (directorStatus.value) {
@@ -127,7 +132,29 @@ async function toggleDirector() {
   const instance = new RealtimeSlideDirector({
     getState: currentState,
     executeTool: executeDirectorTool,
-    silenceAdvanceMs: SILENCE_ADVANCE_MS,
+    debug: debugEnabled.value,
+    onDebug(entry) {
+      const details = entry.details ?? {}
+      if (entry.type === 'transcription_delta') {
+        const itemId = typeof details.itemId === 'string' ? details.itemId : null
+        if (itemId !== liveTranscriptItemId.value) {
+          liveTranscriptItemId.value = itemId
+          liveTranscript.value = ''
+        }
+        liveTranscript.value += typeof details.delta === 'string' ? details.delta : ''
+        return
+      }
+
+      if (entry.type === 'speech_started') {
+        liveTranscript.value = ''
+        liveTranscriptItemId.value = null
+      }
+      else if (entry.type === 'transcription_completed') {
+        liveTranscript.value = typeof details.transcript === 'string' ? details.transcript : liveTranscript.value
+      }
+
+      debugEntries.value = [...debugEntries.value.slice(-49), entry]
+    },
     onStatus(status, message) {
       directorStatus.value = status
       directorMessage.value = message
@@ -141,6 +168,31 @@ async function toggleDirector() {
   catch {
     // The controller already exposes the useful error through its status.
   }
+}
+
+function formatDebugEntry(entry: SlideDirectorDebugEntry) {
+  const details = entry.details ?? {}
+
+  if (entry.type === 'transcription_completed')
+    return `heard: ${String(details.transcript ?? '')}`
+
+  if (entry.type === 'model_decision') {
+    const tools = Array.isArray(details.tools) ? details.tools : []
+    const first = tools[0] as { name?: unknown } | undefined
+    const latency = typeof details.decisionLatencyMs === 'number' ? ` · ${details.decisionLatencyMs}ms` : ''
+    return `decision: ${String(first?.name ?? 'no tool')}${latency}`
+  }
+
+  if (entry.type === 'tool_completed')
+    return `result: ${String(details.tool ?? '')} · ${String(details.beforeSlide ?? '?')} → ${String(details.afterSlide ?? '?')}`
+
+  if (entry.type === 'realtime_error' || entry.type === 'session_error' || entry.type === 'tool_failed')
+    return `${entry.type}: ${String(details.message ?? 'unknown error')}`
+
+  if (entry.type === 'slide_state_updated')
+    return `state: slide ${String(details.currentSlide ?? entry.state.currentSlide)}`
+
+  return entry.type.replaceAll('_', ' ')
 }
 
 function handleKeydown(event: KeyboardEvent) {
@@ -161,7 +213,10 @@ const stopStateSync = watch(
 
 hot?.on(COMMAND_EVENT, handleCommand)
 
-onMounted(() => window.addEventListener('keydown', handleKeydown))
+onMounted(() => {
+  debugEnabled.value = new URLSearchParams(window.location.search).get('slideDebug') === '1'
+  window.addEventListener('keydown', handleKeydown)
+})
 
 onBeforeUnmount(() => {
   stopStateSync()
@@ -172,6 +227,30 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
+  <details
+    v-if="debugEnabled && canUseDirector()"
+    class="slide-director-debug"
+    open
+  >
+    <summary>
+      Auto debug · slide {{ debugSlideLabel }}
+    </summary>
+    <div class="slide-director-debug-transcript">
+      {{ liveTranscript || 'Waiting for speech…' }}
+    </div>
+    <div class="slide-director-debug-events">
+      <div
+        v-for="(entry, index) in debugEntries"
+        :key="`${entry.timestamp}-${index}`"
+        :data-kind="entry.type.includes('error') || entry.type.includes('failed') ? 'error' : undefined"
+      >
+        <span>S{{ entry.state.currentSlide }}</span>
+        {{ formatDebugEntry(entry) }}
+      </div>
+    </div>
+    <footer>Saved locally to .slide-director-debug.jsonl</footer>
+  </details>
+
   <button
     v-if="canUseDirector()"
     class="slide-director-control"
@@ -188,11 +267,69 @@ onBeforeUnmount(() => {
 </template>
 
 <style scoped>
+.slide-director-debug {
+  position: fixed;
+  left: 16px;
+  bottom: 16px;
+  z-index: 1001;
+  width: min(430px, calc(100vw - 32px));
+  max-height: min(52vh, 430px);
+  overflow: hidden;
+  border: 1px solid rgba(98, 226, 161, 0.4);
+  border-radius: 10px;
+  background: rgba(5, 9, 19, 0.94);
+  color: rgba(255, 255, 255, 0.82);
+  box-shadow: 0 10px 34px rgba(0, 0, 0, 0.42);
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 10px;
+  line-height: 1.45;
+}
+
+.slide-director-debug summary {
+  padding: 8px 10px;
+  color: #62e2a1;
+  cursor: pointer;
+  user-select: none;
+}
+
+.slide-director-debug-transcript {
+  margin: 0 9px 8px;
+  padding: 8px;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.07);
+  color: white;
+  font-size: 11px;
+}
+
+.slide-director-debug-events {
+  max-height: 220px;
+  overflow: auto;
+  padding: 0 9px;
+}
+
+.slide-director-debug-events > div {
+  padding: 3px 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.slide-director-debug-events span {
+  color: #8d9abe;
+}
+
+.slide-director-debug-events [data-kind='error'] {
+  color: #ff8e8e;
+}
+
+.slide-director-debug footer {
+  padding: 7px 9px;
+  color: rgba(255, 255, 255, 0.42);
+}
+
 .slide-director-control {
   position: fixed;
   /* Leave room for the theme's current / total page counter. */
   right: 4.75rem;
-  bottom: 10px;
+  bottom: 16px;
   z-index: 1000;
   display: inline-flex;
   align-items: center;

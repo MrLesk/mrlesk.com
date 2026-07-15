@@ -12,7 +12,7 @@ hideInToc: true
   <p>To our speakers and everyone who joined us tonight: thank you for the questions, ideas, and energy.</p>
 </div>
 
-<SlideQrCard class="thanks-slides-card" url="https://mrlesk.com/talks/codex/meetup-july-2026/" title="Scan for the slides" subtitle="mrlesk.com/talks/codex/meetup-july-2026" aria-label="Open the keynote slides" mono-subtitle></SlideQrCard>
+<SlideQrCard class="thanks-slides-card" url="https://mrlesk.com/talks/codex/meetup-july-2026/" title="Scan for the slides" subtitle="Open the keynote in your browser" aria-label="Open the keynote slides"></SlideQrCard>
 
 </div>
 

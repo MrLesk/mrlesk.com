@@ -16,22 +16,22 @@ withDefaults(defineProps<{
 </script>
 
 <template>
-  <a
-    class="slide-qr-card"
-    :href="url"
-    target="_blank"
-    rel="noreferrer"
-    :aria-label="ariaLabel ?? title"
-  >
+  <div class="slide-qr-card">
     <span class="slide-qr-code">
-      <SlideQrCode :url="url" :size="size" />
+      <SlideQrCode :url="url" :size="size" :aria-label="ariaLabel ?? title" />
     </span>
     <span class="slide-qr-divider" aria-hidden="true"></span>
-    <span class="slide-qr-caption">
+    <a
+      class="slide-qr-caption"
+      :href="url"
+      target="_blank"
+      rel="noreferrer"
+      :aria-label="ariaLabel ?? title"
+    >
       <strong>{{ title }}</strong>
       <span :class="{ 'is-mono': monoSubtitle }">{{ subtitle }}</span>
-    </span>
-  </a>
+    </a>
+  </div>
 </template>
 
 <style scoped>
@@ -47,8 +47,6 @@ withDefaults(defineProps<{
   gap: calc(14 * var(--pt));
   color: #10162c;
   text-align: center;
-  text-decoration: none;
-  border-bottom: none !important;
   box-shadow: 0 calc(14 * var(--pt)) calc(44 * var(--pt)) rgba(0, 0, 0, 0.55);
 }
 
@@ -76,6 +74,9 @@ withDefaults(defineProps<{
   flex-direction: column;
   align-items: center;
   gap: calc(2 * var(--pt));
+  color: inherit;
+  text-decoration: none;
+  border-bottom: none !important;
 }
 
 .slide-qr-caption strong {

@@ -20,11 +20,10 @@ hideInToc: true
     </span>
   </div>
   <div class="host-qr">
-    <SlideQrCode url="https://www.meetup.com/vienna-ai-engineering/" :size="120" />
+    <SlideQrCode url="https://www.meetup.com/vienna-ai-engineering/" aria-label="Open the Vienna AI Engineering Meetup group" :size="120" />
   </div>
   <div class="host-footer">
     <strong>Join the group &amp; catch our next events</strong>
-    <a href="https://www.meetup.com/vienna-ai-engineering/" target="_blank">meetup.com/vienna-ai-engineering</a>
   </div>
 </div>
 
@@ -34,11 +33,10 @@ hideInToc: true
     <img class="volee-script" src="/volee-logo-white.svg" alt="Volee" />
   </div>
   <div class="host-qr">
-    <SlideQrCode url="https://www.volee.at" :size="120" />
+    <SlideQrCode url="https://www.volee.at" aria-label="Open the Volee website" :size="120" />
   </div>
   <div class="host-footer">
     <strong>Thank you for hosting us tonight</strong>
-    <a href="https://www.volee.at" target="_blank">volee.at</a>
   </div>
 </div>
 
@@ -94,12 +92,6 @@ hideInToc: true
   font-weight: 650;
 }
 
-.host-footer a {
-  font-family: 'JetBrains Mono', ui-monospace, monospace;
-  font-size: calc(12 * var(--pt));
-  border-bottom: none !important;
-}
-
 /* Left: VAIE on soft paper. */
 .hosts-panel {
   background: #edeff6;
@@ -135,10 +127,6 @@ hideInToc: true
   color: #10162c;
 }
 
-.hosts-panel .host-footer a {
-  color: #3442e0;
-}
-
 /* Right: Volee on their brand red (#B81516, sampled from their site). */
 .volee-panel {
   background: #b81516;
@@ -158,9 +146,6 @@ hideInToc: true
   color: rgba(255, 255, 255, 0.95);
 }
 
-.volee-panel .host-footer a {
-  color: #ffffff !important;
-}
 </style>
 
 <!--

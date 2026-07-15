@@ -1,5 +1,6 @@
 import {
   REALTIME_SESSION_PATH,
+  SLIDE_DIRECTOR_DEBUG_PATH,
   buildSlideDirectorInstructions,
   type SlideDirectorState,
   type SlideDirectorToolName,
@@ -7,10 +8,22 @@ import {
 
 export type SlideDirectorStatus = 'off' | 'connecting' | 'listening' | 'acting' | 'error'
 
+export interface SlideDirectorDebugEntry {
+  sessionId: string
+  timestamp: string
+  elapsedMs: number
+  type: string
+  state: SlideDirectorState
+  details?: Record<string, unknown>
+}
+
 interface RealtimeSlideDirectorOptions {
   getState: () => SlideDirectorState
   executeTool: (name: SlideDirectorToolName) => Promise<unknown>
   silenceAdvanceMs?: number | null
+  debug?: boolean
+  debugSessionId?: string
+  onDebug?: (entry: SlideDirectorDebugEntry) => void
   onStatus?: (status: SlideDirectorStatus, message: string) => void
 }
 
@@ -36,6 +49,18 @@ interface ErrorEvent {
 
 interface SpeechEvent {
   type: 'input_audio_buffer.speech_started' | 'input_audio_buffer.speech_stopped'
+}
+
+interface TranscriptionEvent {
+  type: 'conversation.item.input_audio_transcription.delta'
+    | 'conversation.item.input_audio_transcription.completed'
+    | 'conversation.item.input_audio_transcription.failed'
+  item_id?: string
+  delta?: string
+  transcript?: string
+  error?: {
+    message?: string
+  }
 }
 
 function isFunctionCallItem(value: unknown): value is FunctionCallItem {
@@ -83,14 +108,18 @@ export class RealtimeSlideDirector {
   private silenceTimer: ReturnType<typeof setTimeout> | null = null
   private lastSpeechStoppedAt: number | null = null
   private state: SlideDirectorState
+  private readonly debugSessionId: string
+  private readonly debugStartedAt = Date.now()
 
   constructor(options: RealtimeSlideDirectorOptions) {
     this.options = options
-    this.state = options.getState()
+    this.state = { ...options.getState() }
+    this.debugSessionId = options.debugSessionId ?? globalThis.crypto?.randomUUID?.() ?? `slide-debug-${Date.now()}`
   }
 
   async connect() {
     this.disconnect(false)
+    this.debug('session_connecting', { userAgent: navigator.userAgent })
     this.setStatus('connecting', 'Requesting microphone access…')
 
     if (!navigator.mediaDevices?.getUserMedia)
@@ -116,16 +145,19 @@ export class RealtimeSlideDirector {
       const dataChannel = peerConnection.createDataChannel('oai-events')
       this.dataChannel = dataChannel
       dataChannel.addEventListener('open', () => {
+        this.debug('session_open')
         this.setStatus('listening', 'Listening. Click to stop')
         this.updateSlideState(this.options.getState())
       })
       dataChannel.addEventListener('message', event => this.handleServerEvent(event.data))
       dataChannel.addEventListener('close', () => {
+        this.debug('data_channel_closed')
         if (this.peerConnection)
           this.setStatus('off', 'Auto slides are off')
       })
 
       peerConnection.addEventListener('connectionstatechange', () => {
+        this.debug('connection_state_changed', { connectionState: peerConnection.connectionState })
         if (peerConnection.connectionState === 'failed')
           this.setStatus('error', 'Realtime connection failed. Click to retry')
       })
@@ -133,10 +165,12 @@ export class RealtimeSlideDirector {
       const offer = await peerConnection.createOffer()
       await peerConnection.setLocalDescription(offer)
 
-      this.state = this.options.getState()
+      this.state = { ...this.options.getState() }
       const url = new URL(REALTIME_SESSION_PATH, window.location.origin)
       url.searchParams.set('currentSlide', String(this.state.currentSlide))
       url.searchParams.set('totalSlides', String(this.state.totalSlides))
+      if (this.options.debug)
+        url.searchParams.set('debug', '1')
 
       const response = await fetch(url, {
         method: 'POST',
@@ -156,6 +190,7 @@ export class RealtimeSlideDirector {
     }
     catch (error) {
       const message = error instanceof Error ? error.message : 'Could not start auto slides'
+      this.debug('session_error', { message })
       this.disconnect(false)
       this.setStatus('error', message)
       throw error
@@ -163,6 +198,8 @@ export class RealtimeSlideDirector {
   }
 
   disconnect(notify = true) {
+    if (this.peerConnection || this.dataChannel || this.mediaStream)
+      this.debug('session_disconnected', { notify })
     this.dataChannel?.close()
     this.peerConnection?.close()
     this.mediaStream?.getTracks().forEach(track => track.stop())
@@ -178,12 +215,19 @@ export class RealtimeSlideDirector {
   }
 
   updateSlideState(state: SlideDirectorState) {
+    const previousState = this.state
     if (state.currentSlide !== this.state.currentSlide) {
       this.clearSilenceAdvance()
       this.lastSpeechStoppedAt = null
     }
 
-    this.state = state
+    this.state = { ...state }
+    if (state.currentSlide !== previousState.currentSlide || state.totalSlides !== previousState.totalSlides) {
+      this.debug('slide_state_updated', {
+        previousSlide: previousState.currentSlide,
+        currentSlide: state.currentSlide,
+      })
+    }
     this.send({
       type: 'session.update',
       session: {
@@ -197,22 +241,25 @@ export class RealtimeSlideDirector {
     if (typeof raw !== 'string')
       return
 
-    let event: ResponseDoneEvent | ErrorEvent | SpeechEvent | { type?: string }
+    let event: ResponseDoneEvent | ErrorEvent | SpeechEvent | TranscriptionEvent | { type?: string }
     try {
-      event = JSON.parse(raw) as ResponseDoneEvent | ErrorEvent | SpeechEvent | { type?: string }
+      event = JSON.parse(raw) as ResponseDoneEvent | ErrorEvent | SpeechEvent | TranscriptionEvent | { type?: string }
     }
     catch {
+      this.debug('invalid_server_event', { raw: raw.slice(0, 500) })
       return
     }
 
     if (event.type === 'error') {
       const error = event as ErrorEvent
+      this.debug('realtime_error', { message: error.error?.message ?? 'Unknown Realtime error' })
       this.clearSilenceAdvance()
       this.setStatus('error', error.error?.message ?? 'OpenAI Realtime returned an error')
       return
     }
 
     if (event.type === 'input_audio_buffer.speech_started') {
+      this.debug('speech_started')
       this.clearSilenceAdvance()
       this.lastSpeechStoppedAt = null
       return
@@ -220,6 +267,34 @@ export class RealtimeSlideDirector {
 
     if (event.type === 'input_audio_buffer.speech_stopped') {
       this.lastSpeechStoppedAt = Date.now()
+      this.debug('speech_stopped')
+      return
+    }
+
+    if (event.type === 'conversation.item.input_audio_transcription.delta') {
+      const transcription = event as TranscriptionEvent
+      this.debug('transcription_delta', {
+        itemId: transcription.item_id,
+        delta: transcription.delta ?? '',
+      }, false)
+      return
+    }
+
+    if (event.type === 'conversation.item.input_audio_transcription.completed') {
+      const transcription = event as TranscriptionEvent
+      this.debug('transcription_completed', {
+        itemId: transcription.item_id,
+        transcript: transcription.transcript ?? '',
+      })
+      return
+    }
+
+    if (event.type === 'conversation.item.input_audio_transcription.failed') {
+      const transcription = event as TranscriptionEvent
+      this.debug('transcription_failed', {
+        itemId: transcription.item_id,
+        message: transcription.error?.message ?? 'Input transcription failed',
+      })
       return
     }
 
@@ -228,6 +303,15 @@ export class RealtimeSlideDirector {
 
     const response = event as ResponseDoneEvent
     const calls = (response.response?.output ?? []).filter(isFunctionCallItem)
+    if (calls.length > 0) {
+      this.debug('model_decision', {
+        tools: calls.map(call => ({ name: call.name, callId: call.call_id })),
+        decisionLatencyMs: this.lastSpeechStoppedAt === null ? null : Date.now() - this.lastSpeechStoppedAt,
+      })
+    }
+    else {
+      this.debug('model_continuation_completed')
+    }
     for (const call of calls)
       void this.handleFunctionCall(call)
   }
@@ -237,12 +321,24 @@ export class RealtimeSlideDirector {
       return
 
     this.handledCallIds.add(call.call_id)
+    const beforeState = { ...this.options.getState() }
+    const startedAt = Date.now()
+    this.debug('tool_started', {
+      tool: call.name,
+      callId: call.call_id,
+      beforeSlide: beforeState.currentSlide,
+    })
 
     if (!isToolName(call.name)) {
       this.sendToolOutput(call.call_id, {
         ok: false,
         error: `Unknown slide tool: ${call.name}`,
         state: this.options.getState(),
+      })
+      this.debug('tool_failed', {
+        tool: call.name,
+        callId: call.call_id,
+        message: `Unknown slide tool: ${call.name}`,
       })
       return
     }
@@ -254,7 +350,17 @@ export class RealtimeSlideDirector {
 
     try {
       const result = await this.options.executeTool(call.name)
+      const afterState = { ...this.options.getState() }
+      this.updateSlideState(afterState)
       this.sendToolOutput(call.call_id, result)
+      this.debug('tool_completed', {
+        tool: call.name,
+        callId: call.call_id,
+        beforeSlide: beforeState.currentSlide,
+        afterSlide: afterState.currentSlide,
+        changed: beforeState.currentSlide !== afterState.currentSlide,
+        durationMs: Date.now() - startedAt,
+      })
       this.setStatus('listening', 'Listening. Click to stop')
 
       if (call.name === 'hold_slide')
@@ -263,10 +369,17 @@ export class RealtimeSlideDirector {
         this.lastSpeechStoppedAt = null
     }
     catch (error) {
+      const message = error instanceof Error ? error.message : 'Slide tool failed'
       this.sendToolOutput(call.call_id, {
         ok: false,
-        error: error instanceof Error ? error.message : 'Slide tool failed',
+        error: message,
         state: this.options.getState(),
+      })
+      this.debug('tool_failed', {
+        tool: call.name,
+        callId: call.call_id,
+        message,
+        durationMs: Date.now() - startedAt,
       })
       this.clearSilenceAdvance()
       this.setStatus('error', 'A slide command failed. Click to retry')
@@ -299,13 +412,27 @@ export class RealtimeSlideDirector {
   }
 
   private async advanceAfterSilence() {
+    const beforeState = { ...this.options.getState() }
+    const startedAt = Date.now()
+    this.debug('silence_advance_started', { beforeSlide: beforeState.currentSlide })
     this.setStatus('acting', 'Pause detected, advancing…')
 
     try {
       await this.options.executeTool('next_slide')
+      const afterState = { ...this.options.getState() }
+      this.updateSlideState(afterState)
+      this.debug('silence_advance_completed', {
+        beforeSlide: beforeState.currentSlide,
+        afterSlide: afterState.currentSlide,
+        durationMs: Date.now() - startedAt,
+      })
       this.setStatus('listening', 'Listening. Click to stop')
     }
-    catch {
+    catch (error) {
+      this.debug('silence_advance_failed', {
+        message: error instanceof Error ? error.message : 'Pause-based slide command failed',
+        durationMs: Date.now() - startedAt,
+      })
       this.setStatus('error', 'Pause-based slide command failed. Click to retry')
     }
   }
@@ -325,11 +452,52 @@ export class RealtimeSlideDirector {
         output: JSON.stringify(output),
       },
     })
+    // A Realtime function-call turn is not complete after function_call_output
+    // alone. Trigger a short, text-only continuation with tools disabled so
+    // the session is ready for the next VAD-created presenter turn without
+    // recursively calling another slide tool.
+    this.send({
+      type: 'response.create',
+      response: {
+        instructions: 'Acknowledge the completed slide action with exactly OK. Do not call a tool.',
+        tool_choice: 'none',
+        max_output_tokens: 4,
+      },
+    })
   }
 
   private send(event: unknown) {
     if (this.dataChannel?.readyState === 'open')
       this.dataChannel.send(JSON.stringify(event))
+  }
+
+  private debug(type: string, details?: Record<string, unknown>, persist = true) {
+    if (!this.options.debug)
+      return
+
+    const entry: SlideDirectorDebugEntry = {
+      sessionId: this.debugSessionId,
+      timestamp: new Date().toISOString(),
+      elapsedMs: Date.now() - this.debugStartedAt,
+      type,
+      state: {
+        currentSlide: this.state.currentSlide,
+        totalSlides: this.state.totalSlides,
+      },
+      ...(details ? { details } : {}),
+    }
+
+    this.options.onDebug?.(entry)
+
+    if (!persist || typeof window === 'undefined')
+      return
+
+    void fetch(SLIDE_DIRECTOR_DEBUG_PATH, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(entry),
+      keepalive: true,
+    }).catch(error => console.warn('Could not persist slide-director debug event', error))
   }
 
   private setStatus(status: SlideDirectorStatus, message: string) {

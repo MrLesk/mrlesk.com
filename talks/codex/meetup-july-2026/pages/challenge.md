@@ -29,10 +29,8 @@ level: 1
 </div>
 
 <div class="challenge-cta">
-  <div class="codex-callout">openai.com/build-week → Register on Devpost</div>
-  <div class="challenge-qr">
-    <img src="/build-week-qr.png" alt="QR code to openai.com/build-week" />
-  </div>
+  <div class="codex-callout">Build Week Challenge → Register on Devpost</div>
+  <SlideQrCode class="challenge-qr" url="https://openai.com/build-week" aria-label="Open Build Week registration" :size="112" />
 </div>
 
 <style>
@@ -86,19 +84,9 @@ level: 1
   margin-top: 0;
 }
 
-/* White panel on purpose: QR codes want a light quiet zone to scan reliably. */
 .challenge-qr {
-  background: #ffffff;
   border-radius: calc(10 * var(--pt));
-  padding: calc(7 * var(--pt));
   box-shadow: 0 calc(8 * var(--pt)) calc(24 * var(--pt)) rgba(0, 0, 0, 0.45);
-  line-height: 0;
-}
-
-.challenge-qr img {
-  width: calc(80 * var(--pt));
-  height: calc(80 * var(--pt));
-  image-rendering: pixelated;
 }
 </style>
 

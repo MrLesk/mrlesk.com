@@ -1,8 +1,12 @@
 import { randomUUID } from 'node:crypto'
+import { appendFile } from 'node:fs/promises'
 import type { IncomingMessage, ServerResponse } from 'node:http'
+import { resolve } from 'node:path'
 import type { Plugin, ViteDevServer } from 'vite'
 import {
   REALTIME_SESSION_PATH,
+  SLIDE_DIRECTOR_DEBUG_FILE,
+  SLIDE_DIRECTOR_DEBUG_PATH,
   buildRealtimeSession,
   type RealtimeSessionOptions,
 } from './slide-director'
@@ -26,6 +30,7 @@ interface SlideControlAck extends SlideControlState {
 
 export interface SlidevControlPluginOptions extends RealtimeSessionOptions {
   apiKey?: string
+  debugLogPath?: string
 }
 
 const CONTROL_PATH = '/__slidev-control'
@@ -35,6 +40,7 @@ const ACK_EVENT = 'slidev-control:ack'
 const STATE_EVENT = 'slidev-control:state'
 const MAX_BODY_BYTES = 1_024
 const MAX_SDP_BYTES = 256 * 1_024
+const MAX_DEBUG_BODY_BYTES = 64 * 1_024
 const ACK_TIMEOUT_MS = 1_500
 
 function isLoopbackRequest(req: IncomingMessage) {
@@ -167,13 +173,52 @@ export function slidevControlPlugin(options: SlidevControlPluginOptions = {}): P
           return
         }
 
-        if (pathname !== CONTROL_PATH && pathname !== REALTIME_SESSION_PATH) {
+        if (pathname !== CONTROL_PATH && pathname !== REALTIME_SESSION_PATH && pathname !== SLIDE_DIRECTOR_DEBUG_PATH) {
           next()
           return
         }
 
         if (!isLoopbackRequest(req)) {
           sendJson(res, 403, { ok: false, error: 'Slide control accepts loopback requests only' })
+          return
+        }
+
+        if (pathname === SLIDE_DIRECTOR_DEBUG_PATH) {
+          if (req.method !== 'POST') {
+            res.setHeader('Allow', 'POST')
+            sendJson(res, 405, { ok: false, error: 'Method not allowed' })
+            return
+          }
+
+          let entry: unknown
+          try {
+            entry = JSON.parse(await readText(req, MAX_DEBUG_BODY_BYTES)) as unknown
+          }
+          catch (error) {
+            const message = error instanceof Error ? error.message : 'Invalid debug event'
+            sendJson(res, 400, { ok: false, error: message })
+            return
+          }
+
+          if (!entry || typeof entry !== 'object') {
+            sendJson(res, 400, { ok: false, error: 'Debug event must be a JSON object' })
+            return
+          }
+
+          const debugLogPath = options.debugLogPath ?? resolve(process.cwd(), SLIDE_DIRECTOR_DEBUG_FILE)
+          try {
+            await appendFile(debugLogPath, `${JSON.stringify({
+              ...entry,
+              receivedAt: new Date().toISOString(),
+            })}\n`, 'utf8')
+          }
+          catch (error) {
+            const message = error instanceof Error ? error.message : 'Could not write debug trace'
+            sendJson(res, 500, { ok: false, error: message })
+            return
+          }
+
+          sendJson(res, 202, { ok: true })
           return
         }
 
@@ -218,9 +263,10 @@ export function slidevControlPlugin(options: SlidevControlPluginOptions = {}): P
           const totalSlides = requestedTotal ?? latestState?.totalSlides ?? 14
           const requestedCurrent = parsePositiveInteger(requestUrl.searchParams.get('currentSlide'))
           const currentSlide = Math.min(requestedCurrent ?? latestState?.currentSlide ?? 1, totalSlides)
+          const debug = requestUrl.searchParams.get('debug') === '1'
           const session = buildRealtimeSession(
             { currentSlide, totalSlides },
-            { model: options.model, mode: options.mode, vadEagerness: options.vadEagerness },
+            { model: options.model, mode: options.mode, vadEagerness: options.vadEagerness, debug },
           )
           const form = new FormData()
           form.set('sdp', sdp)

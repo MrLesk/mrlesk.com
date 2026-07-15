@@ -7,6 +7,7 @@ defineOptions({ name: 'SlideQrCode' })
 const props = defineProps<{
   url?: string
   baseUrl?: string
+  ariaLabel?: string
   size?: number
 }>()
 
@@ -37,7 +38,28 @@ watch(
 </script>
 
 <template>
-  <div class="rounded-xl p-2" style="background: #edeff6">
-    <div v-html="svgMarkup" />
-  </div>
+  <a
+    class="slide-qr-link"
+    :href="qrCodeUrl"
+    target="_blank"
+    rel="noreferrer"
+    :aria-label="props.ariaLabel ?? `Open ${qrCodeUrl} in a new tab`"
+  >
+    <span class="rounded-xl p-2" style="background: #edeff6">
+      <span v-html="svgMarkup" />
+    </span>
+  </a>
 </template>
+
+<style scoped>
+.slide-qr-link {
+  display: block;
+  line-height: 0;
+  text-decoration: none;
+  border-bottom: none !important;
+}
+
+.slide-qr-link > span {
+  display: block;
+}
+</style>

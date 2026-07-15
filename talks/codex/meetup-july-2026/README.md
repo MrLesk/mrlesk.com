@@ -28,8 +28,9 @@ Open the play view at `http://localhost:3030/` or presenter mode at
 `http://localhost:3030/presenter/`. Click the small **Auto slides** control in
 the lower-right corner of the current slide and grant microphone access once.
 `Option+A` on macOS or `Alt+A` toggles it from the keyboard. A green dot means
-the model is listening. After the presenter has spoken, three seconds of
-continuous silence advances one slide if the model has not already done so.
+the model is listening. A pause never advances on its own: the model changes
+slides only after it detects that the presenter has begun the mapped next or
+previous slide topic.
 
 Fast mode is the default. It uses `gpt-realtime-1.5` with server VAD tuned to
 close a speech turn after 350 ms of silence. To favor reasoning quality over
