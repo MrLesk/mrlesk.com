@@ -46,7 +46,7 @@ jobs:
       previous_tag: ${{ steps.previous_release.outputs.tag }}
       release_tag: ${{ steps.release_tag.outputs.tag }}
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v7
         with:
           fetch-depth: 0
 
@@ -94,7 +94,7 @@ jobs:
             --output plan.json \
             --full "${{ steps.changes.outputs.full }}"
 
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: release-plan
           path: plan.json
@@ -105,13 +105,13 @@ jobs:
     if: needs.plan.outputs.build_site == 'true'
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v7
 
       - uses: oven-sh/setup-bun@v2
         with:
           bun-version: 1.3.14
 
-      - uses: actions/cache@v4
+      - uses: actions/cache@v6
         with:
           path: ~/.bun/install/cache
           key: bun-astro-${{ runner.os }}-${{ hashFiles('bun.lock') }}
@@ -119,7 +119,7 @@ jobs:
       - run: bun install --frozen-lockfile
       - run: bun run build
 
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: component-site
           path: dist
@@ -135,7 +135,7 @@ jobs:
       max-parallel: 4
       matrix: ${{ fromJSON(needs.plan.outputs.talk_matrix) }}
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v7
         with:
           submodules: recursive
 
@@ -143,7 +143,7 @@ jobs:
         with:
           bun-version: 1.3.14
 
-      - uses: actions/cache@v4
+      - uses: actions/cache@v6
         with:
           path: ~/.bun/install/cache
           key: bun-slidev-${{ runner.os }}-${{ hashFiles('slidev-build.package.json') }}
@@ -162,7 +162,7 @@ jobs:
         working-directory: ${{ matrix.source }}
         run: bun run build -- --base "${{ matrix.base }}"
 
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: ${{ matrix.artifact }}
           path: ${{ matrix.source }}/dist
@@ -179,13 +179,13 @@ jobs:
       (needs.build_talks.result == 'success' || needs.build_talks.result == 'skipped')
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v7
 
       - uses: oven-sh/setup-bun@v2
         with:
           bun-version: 1.3.14
 
-      - uses: actions/download-artifact@v5
+      - uses: actions/download-artifact@v8
         with:
           path: artifacts
 
