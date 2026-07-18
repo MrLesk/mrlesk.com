@@ -108,6 +108,14 @@
       "base": "/talks/codex/meetup-july-2026/",
       "artifact": "component-talk-codex-july-2026",
       "watch": ["slidev-theme-codex-dark/**"]
+    },
+    {
+      "id": "codex-july-2026-lightning",
+      "source": "talks/codex/meetup-july-2026-lightning",
+      "target": "talks/codex/meetup-july-2026-lightning",
+      "base": "/talks/codex/meetup-july-2026-lightning/",
+      "artifact": "component-talk-codex-july-2026-lightning",
+      "watch": ["slidev-theme-codex/**"]
     }
   ]
 }

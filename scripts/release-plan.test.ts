@@ -14,12 +14,22 @@ describe('createReleasePlan', () => {
     expect(plan.talks.map((talk) => talk.id)).toEqual(['codex-july-2026']);
   });
 
+  test('builds the lightning talk when one of its slides changes', () => {
+    const plan = createReleasePlan(manifest, [
+      'talks/codex/meetup-july-2026-lightning/pages/lightning-handoff.md',
+    ]);
+
+    expect(plan.buildSite).toBeFalse();
+    expect(plan.talks.map((talk) => talk.id)).toEqual(['codex-july-2026-lightning']);
+  });
+
   test('rebuilds talks which consume a changed theme', () => {
     const plan = createReleasePlan(manifest, ['slidev-theme-codex/styles/layout.css']);
 
     expect(plan.talks.map((talk) => talk.id)).toEqual([
       'codex-april-2026',
       'codex-build-june-2026',
+      'codex-july-2026-lightning',
     ]);
   });
 
