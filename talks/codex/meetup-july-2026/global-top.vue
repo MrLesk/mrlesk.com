@@ -27,7 +27,6 @@ const directorMessage = ref('Auto slides are off')
 const debugEnabled = ref(false)
 const debugEntries = ref<SlideDirectorDebugEntry[]>([])
 const liveTranscript = ref('')
-const liveTranscriptItemId = ref<string | null>(null)
 const debugSlideLabel = computed(() => `${nav.currentSlideNo.value}/${nav.total.value}`)
 
 const directorLabel = computed(() => {
@@ -136,22 +135,12 @@ async function toggleDirector() {
     onDebug(entry) {
       const details = entry.details ?? {}
       if (entry.type === 'transcription_delta') {
-        const itemId = typeof details.itemId === 'string' ? details.itemId : null
-        if (itemId !== liveTranscriptItemId.value) {
-          liveTranscriptItemId.value = itemId
-          liveTranscript.value = ''
-        }
-        liveTranscript.value += typeof details.delta === 'string' ? details.delta : ''
+        liveTranscript.value = `${liveTranscript.value}${typeof details.delta === 'string' ? details.delta : ''}`.slice(-3_000)
         return
       }
 
-      if (entry.type === 'speech_started') {
+      if (entry.type === 'slide_state_updated')
         liveTranscript.value = ''
-        liveTranscriptItemId.value = null
-      }
-      else if (entry.type === 'transcription_completed') {
-        liveTranscript.value = typeof details.transcript === 'string' ? details.transcript : liveTranscript.value
-      }
 
       debugEntries.value = [...debugEntries.value.slice(-49), entry]
     },
@@ -173,21 +162,19 @@ async function toggleDirector() {
 function formatDebugEntry(entry: SlideDirectorDebugEntry) {
   const details = entry.details ?? {}
 
-  if (entry.type === 'transcription_completed')
-    return `heard: ${String(details.transcript ?? '')}`
-
   if (entry.type === 'model_decision') {
-    const tools = Array.isArray(details.tools) ? details.tools : []
-    const first = tools[0] as { name?: unknown } | undefined
     const latency = typeof details.decisionLatencyMs === 'number' ? ` · ${details.decisionLatencyMs}ms` : ''
-    return `decision: ${String(first?.name ?? 'no tool')}${latency}`
+    return `decision: ${String(details.tool ?? 'no tool')}${latency}`
   }
 
   if (entry.type === 'tool_completed')
     return `result: ${String(details.tool ?? '')} · ${String(details.beforeSlide ?? '?')} → ${String(details.afterSlide ?? '?')}`
 
-  if (entry.type === 'realtime_error' || entry.type === 'session_error' || entry.type === 'tool_failed')
+  if (entry.type === 'live_error' || entry.type === 'session_error' || entry.type === 'decision_failed' || entry.type === 'tool_failed')
     return `${entry.type}: ${String(details.message ?? 'unknown error')}`
+
+  if (entry.type === 'stale_decision_ignored')
+    return `ignored stale ${String(details.tool ?? 'decision')} for slide ${String(details.requestedSlide ?? '?')}`
 
   if (entry.type === 'slide_state_updated')
     return `state: slide ${String(details.currentSlide ?? entry.state.currentSlide)}`

@@ -5,18 +5,16 @@ export interface SlideDirectorState {
   totalSlides: number
 }
 
-export interface RealtimeSessionOptions {
-  model?: string
-  mode?: SlideDirectorMode
-  vadEagerness?: 'low' | 'medium' | 'high' | 'auto'
-  debug?: boolean
+export interface LiveSessionOptions {
+  liveModel?: string
+  decisionModel?: string
+  decisionServiceTier?: 'auto' | 'default' | 'priority'
 }
 
-export type SlideDirectorMode = 'fast' | 'balanced'
-
-export const DEFAULT_REALTIME_MODEL = 'gpt-realtime-2.1-mini'
-export const BALANCED_REALTIME_MODEL = 'gpt-realtime-2.1'
-export const REALTIME_SESSION_PATH = '/__slidev-control/realtime-session'
+export const DEFAULT_LIVE_MODEL = 'gpt-live-1'
+export const DEFAULT_DECISION_MODEL = 'gpt-5.6-luna'
+export const LIVE_SESSION_PATH = '/__slidev-control/live-session'
+export const LIVE_DECISION_PATH = '/__slidev-control/live-decision'
 export const SLIDE_DIRECTOR_DEBUG_PATH = '/__slidev-control/debug'
 export const SLIDE_DIRECTOR_DEBUG_FILE = '.slide-director-debug.jsonl'
 
@@ -31,7 +29,7 @@ export const SLIDE_DIRECTOR_TOOLS = [
   {
     type: 'function',
     name: 'next_slide',
-    description: 'Advance the active Slidev presentation by exactly one slide when the presenter either begins the immediate next slide\'s mapped content or has sufficiently covered the current slide and ends a complete thought with a natural concluding pause. Do not wait for the next topic to begin.',
+    description: 'Advance the active Slidev presentation by exactly one slide when the presenter either begins the immediate next slide\'s mapped content or has sufficiently covered the current slide and reaches a semantically complete thought. Do not wait for silence or for the next topic to begin.',
     parameters: emptyParameters,
   },
   {
@@ -48,6 +46,28 @@ export const SLIDE_DIRECTOR_TOOLS = [
   },
 ] as const
 
+export function buildLiveFrontendInstructions(state: SlideDirectorState) {
+  return `You are the silent listening front end for an automatic presentation slide director.
+
+Never speak, play acknowledgements, or make backchannel sounds. The presenter must never hear you.
+Listen continuously to the close, dominant English-speaking presenter and ignore audience speech, music, applause, and background conversation.
+
+Current slide: ${state.currentSlide} of ${state.totalSlides}.
+
+Delegation policy:
+Backend tools:
+- Slide director: compares the live transcript with the current slide and can advance, go back, or hold.
+
+Delegate to the backend when:
+- The presenter adds a meaningful clause that could complete the current slide or begin the next or previous slide.
+- The presenter explicitly asks to move forward or back.
+- The presenter changes direction or corrects something said moments earlier.
+
+Delegate as soon as enough meaning is available, including while the presenter is still speaking. Do not wait for silence, a completed sentence, or an explicit "next slide" command. It is fine to delegate several times while one topic develops.
+
+Do not delegate for silence alone, breathing, applause, distant speech, or clearly unrelated audience conversation. Keep listening silently after every delegation.`
+}
+
 export function buildSlideDirectorInstructions(state: SlideDirectorState) {
   return `# Role and Objective
 
@@ -57,7 +77,7 @@ Listen continuously to the presenter and decide whether to advance one slide, re
 
 # Output Contract
 
-For every completed presenter utterance, call exactly one provided tool:
+For every transcript checkpoint, call exactly one provided tool:
 
 - next_slide
 - previous_slide
@@ -74,9 +94,9 @@ Tool results and later session instructions contain the authoritative slide numb
 
 # Decision Procedure
 
-For every completed presenter utterance, use its meaning plus the conversation since the current slide became visible. Compare that context with the mapped topic of the current slide and the immediate next slide.
+Use the supplied transcript since the current slide became visible. It may end in the middle of a sentence because this system evaluates speech while the presenter is still talking. Compare all available context with the mapped topic of the current slide and the immediate next slide.
 
-1. If the current slide's main idea has been sufficiently conveyed and the presenter finishes a complete thought with a natural concluding pause, call next_slide immediately, even if that utterance matches the current slide and the next topic has not started. This completed-topic rule takes priority over holding for a current-slide match. Do not require every detail or keyword. Slides explicitly marked as a dwell, QR-scanning, title-divider, or final slide are exceptions.
+1. If the current slide's main idea has been sufficiently conveyed and the transcript reaches a semantically complete thought, call next_slide immediately, even if the presenter is still speaking and the next topic has not started. This completed-topic rule takes priority over holding for a current-slide match. Do not require every detail or keyword. Slides explicitly marked as a dwell, QR-scanning, title-divider, or final slide are exceptions.
 2. If the next slide is the better semantic match, call next_slide immediately. A sentence, short phrase, or spoken slide title can be enough. No transition phrase, explicit command, or formal wrap-up of the current slide is required.
 3. If the current slide is still being explained or its mapped topics are not yet exhausted, call hold_slide.
 4. If the utterance matches neither slide because it is logistics, waiting, audience interaction, or an aside, call hold_slide.
@@ -84,7 +104,7 @@ For every completed presenter utterance, use its meaning plus the conversation s
 
 Treat the Presentation Map as a semantic topic map, not a checklist that must be completed. Topic match outranks transition wording. Never wait for the presenter to say "next slide."
 
-Judge topic exhaustion from the whole discussion since the current slide became visible, not from whether one utterance contains every mapped keyword. A natural breath, hesitation, unfinished thought, or short pause in the middle of an explanation is not an end-of-topic pause.
+Judge topic exhaustion from the whole discussion since the current slide became visible, not from whether one fragment contains every mapped keyword. An unfinished thought is not enough, but do not wait for silence once a complete idea is clear.
 
 Title-only slides and section dividers are intentional visual beats. When the immediate next slide is a title-only slide or section divider, speaking that slide's title or a close paraphrase requires next_slide. Do not wait for details from the slide after the divider. Once the divider is visible, hold while its title is repeated or the presenter pauses; advance again when a new utterance begins the following concrete topic.
 
@@ -92,7 +112,7 @@ A future-topic mention inside a preview, list, aside, or audience question does 
 
 After a slide change, change at most one slide for that utterance and wait for new presenter speech before changing again. Never skip multiple slides.
 
-A pause after an utterance supports advancing only when the current slide's mapped topics are already exhausted and the utterance sounds concluding. Silence or a pause by itself is never enough. Waiting for a speaker or audience member, meetup logistics, housekeeping, schedule coordination, technical troubleshooting, food or drink announcements, casual banter, and off-topic remarks require hold_slide.
+A partial sentence can be enough when it clearly starts the next mapped topic. If the evidence is incomplete or ambiguous, call hold_slide; another checkpoint will arrive soon. Never infer silence from a transcript ending. Waiting for a speaker or audience member, meetup logistics, housekeeping, schedule coordination, technical troubleshooting, food or drink announcements, casual banter, and off-topic remarks require hold_slide.
 
 Ignore applause, audience conversation, music, silence, and distant background speech. Treat the close, dominant microphone voice as the presenter.
 
@@ -101,12 +121,12 @@ Ignore applause, audience conversation, music, silence, and distant background s
 These examples demonstrate semantic matching; do not require these exact words.
 
 - Current Slide 3 -> "Build Week is happening globally this week, and Vienna is part of it." -> next_slide, because this mainly explains Slide 4.
-- Current Slide 1 -> "All right, welcome everyone to OpenAI's Build Week meetup today in Vienna here in Prater." followed by the utterance ending -> next_slide, because that one complete welcome sufficiently conveys Slide 1. Do not wait for Slide 2's agenda.
+- Current Slide 1 -> "All right, welcome everyone to OpenAI's Build Week meetup today in Vienna here in Prater." -> next_slide as soon as that complete welcome is clear, because it sufficiently conveys Slide 1. Do not wait for Slide 2's agenda or for silence.
 - Current Slide 5 -> "A lot shipped recently." -> next_slide, because speaking the title is enough to show the title-only Slide 6.
 - Current Slide 6 -> "GPT-five-point-six comes in Sol, Terra, and Luna." -> next_slide, because this begins the concrete topic on Slide 7.
 - Current Slide 7 -> "The desktop app now brings ChatGPT and Codex together in one place." -> next_slide, because this mainly explains Slide 8.
-- Current Slide 9, after QR pairing, mobile tasks, and SSH shortcuts were covered -> "That is remote control from your pocket." followed by a natural concluding pause -> next_slide, because the current topic is exhausted.
-- Any slide, while the current topic is only partly explained -> a breath, hesitation, or short pause -> hold_slide, because a pause alone is not enough.
+- Current Slide 9, after QR pairing, mobile tasks, and SSH shortcuts were covered -> "That is remote control from your pocket." -> next_slide as soon as that complete summary is clear, because the current topic is exhausted.
+- Any slide, while the current topic is only partly explained -> an unfinished transcript fragment -> hold_slide, because another checkpoint will arrive soon.
 - Current Slide 3 -> "Later I will explain Build Week, but first let me thank our hosts." -> hold_slide, because Build Week is only a preview and the main subject remains Slide 3.
 - Any slide -> "Let's wait for the speaker at the back to finish." -> hold_slide, because this is meetup logistics rather than presentation content.
 
@@ -114,7 +134,7 @@ These examples demonstrate semantic matching; do not require these exact words.
 
 ## Slide 1: OpenAI Build Week Vienna
 July 16, 2026. Volee, Prater.
-Completion cue: One complete welcome mentioning Build Week and Vienna or Prater is sufficient. Advance when that utterance ends.
+Completion cue: One complete welcome mentioning Build Week and Vienna or Prater is sufficient. Advance as soon as that meaning is clear.
 
 ## Slide 2: Tonight
 Welcome keynote: Codex updates. Lightning talks. Networking.
@@ -159,49 +179,39 @@ Final slide. Hold while discussing or scanning the redemption code; never call n
 `
 }
 
-export function buildRealtimeSession(
+export function buildLiveSession(
   state: SlideDirectorState,
-  options: RealtimeSessionOptions = {},
+  options: LiveSessionOptions = {},
 ) {
-  const mode = options.mode ?? 'fast'
-  const model = options.model ?? (mode === 'fast' ? DEFAULT_REALTIME_MODEL : BALANCED_REALTIME_MODEL)
-  const turnDetection = mode === 'fast'
-    ? {
-        type: 'server_vad',
-        threshold: 0.45,
-        prefix_padding_ms: 250,
-        silence_duration_ms: 350,
-        create_response: true,
-        interrupt_response: true,
-      }
-    : {
-        type: 'semantic_vad',
-        eagerness: options.vadEagerness ?? 'high',
-        create_response: true,
-        interrupt_response: true,
-      }
-
   return {
-    type: 'realtime',
-    model,
-    output_modalities: ['text'],
+    model: options.liveModel ?? DEFAULT_LIVE_MODEL,
+    instructions: buildLiveFrontendInstructions(state),
+    delegation: { type: 'client' },
+  }
+}
+
+export function buildSlideDecisionRequest(
+  state: SlideDirectorState,
+  transcript: string,
+  options: LiveSessionOptions = {},
+) {
+  return {
+    model: options.decisionModel ?? DEFAULT_DECISION_MODEL,
     instructions: buildSlideDirectorInstructions(state),
-    ...(model.startsWith('gpt-realtime-2') ? { reasoning: { effort: 'low' } } : {}),
-    audio: {
-      input: {
-        ...(options.debug
-          ? {
-              transcription: {
-                model: 'gpt-4o-mini-transcribe',
-                language: 'en',
-              },
-            }
-          : {}),
-        turn_detection: turnDetection,
-      },
-    },
+    input: [{
+      role: 'user',
+      content: [{
+        type: 'input_text',
+        text: `Transcript since slide ${state.currentSlide} became visible:\n\n${transcript}`,
+      }],
+    }],
     tools: SLIDE_DIRECTOR_TOOLS,
     tool_choice: 'required',
-    max_output_tokens: 256,
+    parallel_tool_calls: false,
+    reasoning: { effort: 'low' },
+    max_output_tokens: 64,
+    ...(options.decisionServiceTier && options.decisionServiceTier !== 'auto'
+      ? { service_tier: options.decisionServiceTier }
+      : {}),
   }
 }

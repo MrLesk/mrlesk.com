@@ -4,11 +4,14 @@ import type { IncomingMessage, ServerResponse } from 'node:http'
 import { resolve } from 'node:path'
 import type { Plugin, ViteDevServer } from 'vite'
 import {
-  REALTIME_SESSION_PATH,
+  LIVE_DECISION_PATH,
+  LIVE_SESSION_PATH,
   SLIDE_DIRECTOR_DEBUG_FILE,
   SLIDE_DIRECTOR_DEBUG_PATH,
-  buildRealtimeSession,
-  type RealtimeSessionOptions,
+  buildLiveSession,
+  buildSlideDecisionRequest,
+  type LiveSessionOptions,
+  type SlideDirectorToolName,
 } from './slide-director'
 
 export type SlideControlAction = 'next' | 'previous'
@@ -28,7 +31,7 @@ interface SlideControlAck extends SlideControlState {
   requestId: string
 }
 
-export interface SlidevControlPluginOptions extends RealtimeSessionOptions {
+export interface SlidevControlPluginOptions extends LiveSessionOptions {
   apiKey?: string
   debugLogPath?: string
 }
@@ -39,7 +42,8 @@ const COMMAND_EVENT = 'slidev-control:command'
 const ACK_EVENT = 'slidev-control:ack'
 const STATE_EVENT = 'slidev-control:state'
 const MAX_BODY_BYTES = 1_024
-const MAX_SDP_BYTES = 256 * 1_024
+const MAX_LIVE_SESSION_BODY_BYTES = 256 * 1_024
+const MAX_DECISION_BODY_BYTES = 64 * 1_024
 const MAX_DEBUG_BODY_BYTES = 64 * 1_024
 const ACK_TIMEOUT_MS = 1_500
 
@@ -53,13 +57,6 @@ function sendJson(res: ServerResponse, statusCode: number, payload: unknown) {
   res.setHeader('Content-Type', 'application/json; charset=utf-8')
   res.setHeader('Cache-Control', 'no-store')
   res.end(JSON.stringify(payload))
-}
-
-function sendSdp(res: ServerResponse, sdp: string) {
-  res.statusCode = 200
-  res.setHeader('Content-Type', 'application/sdp')
-  res.setHeader('Cache-Control', 'no-store')
-  res.end(sdp)
 }
 
 async function readText(req: IncomingMessage, maxBytes: number) {
@@ -79,12 +76,37 @@ async function readText(req: IncomingMessage, maxBytes: number) {
   return Buffer.concat(chunks).toString('utf8')
 }
 
-async function readJson(req: IncomingMessage) {
-  return JSON.parse(await readText(req, MAX_BODY_BYTES)) as unknown
+async function readJson(req: IncomingMessage, maxBytes = MAX_BODY_BYTES) {
+  return JSON.parse(await readText(req, maxBytes)) as unknown
 }
 
 function isAction(value: unknown): value is SlideControlAction {
   return value === 'next' || value === 'previous'
+}
+
+function isToolName(value: unknown): value is SlideDirectorToolName {
+  return value === 'next_slide' || value === 'previous_slide' || value === 'hold_slide'
+}
+
+function readFunctionCall(value: unknown) {
+  if (!value || typeof value !== 'object')
+    return null
+
+  const response = value as { output?: unknown[] }
+  for (const item of response.output ?? []) {
+    if (!item || typeof item !== 'object')
+      continue
+
+    const call = item as { type?: unknown, name?: unknown, call_id?: unknown }
+    if (call.type === 'function_call' && isToolName(call.name)) {
+      return {
+        tool: call.name,
+        callId: typeof call.call_id === 'string' ? call.call_id : randomUUID(),
+      }
+    }
+  }
+
+  return null
 }
 
 function isAck(value: unknown): value is SlideControlAck {
@@ -173,7 +195,10 @@ export function slidevControlPlugin(options: SlidevControlPluginOptions = {}): P
           return
         }
 
-        if (pathname !== CONTROL_PATH && pathname !== REALTIME_SESSION_PATH && pathname !== SLIDE_DIRECTOR_DEBUG_PATH) {
+        if (pathname !== CONTROL_PATH
+          && pathname !== LIVE_SESSION_PATH
+          && pathname !== LIVE_DECISION_PATH
+          && pathname !== SLIDE_DIRECTOR_DEBUG_PATH) {
           next()
           return
         }
@@ -222,7 +247,7 @@ export function slidevControlPlugin(options: SlidevControlPluginOptions = {}): P
           return
         }
 
-        if (pathname === REALTIME_SESSION_PATH) {
+        if (pathname === LIVE_SESSION_PATH) {
           if (req.method !== 'POST') {
             res.setHeader('Allow', 'POST')
             sendJson(res, 405, { ok: false, error: 'Method not allowed' })
@@ -239,23 +264,24 @@ export function slidevControlPlugin(options: SlidevControlPluginOptions = {}): P
           }
 
           const contentType = req.headers['content-type'] ?? ''
-          if (!contentType.startsWith('application/sdp')) {
-            sendJson(res, 415, { ok: false, error: 'Content-Type must be application/sdp' })
+          if (!contentType.startsWith('application/json')) {
+            sendJson(res, 415, { ok: false, error: 'Content-Type must be application/json' })
             return
           }
 
-          let sdp: string
+          let body: unknown
           try {
-            sdp = await readText(req, MAX_SDP_BYTES)
+            body = await readJson(req, MAX_LIVE_SESSION_BODY_BYTES)
           }
           catch (error) {
-            const message = error instanceof Error ? error.message : 'Could not read SDP offer'
+            const message = error instanceof Error ? error.message : 'Could not read live session request'
             sendJson(res, 400, { ok: false, error: message })
             return
           }
 
-          if (!sdp.trim()) {
-            sendJson(res, 400, { ok: false, error: 'SDP offer is empty' })
+          const sdp = (body as { sdp?: unknown } | null)?.sdp
+          if (typeof sdp !== 'string' || !sdp.trim()) {
+            sendJson(res, 400, { ok: false, error: 'An SDP offer is required' })
             return
           }
 
@@ -263,21 +289,27 @@ export function slidevControlPlugin(options: SlidevControlPluginOptions = {}): P
           const totalSlides = requestedTotal ?? latestState?.totalSlides ?? 14
           const requestedCurrent = parsePositiveInteger(requestUrl.searchParams.get('currentSlide'))
           const currentSlide = Math.min(requestedCurrent ?? latestState?.currentSlide ?? 1, totalSlides)
-          const debug = requestUrl.searchParams.get('debug') === '1'
-          const session = buildRealtimeSession(
+          const session = buildLiveSession(
             { currentSlide, totalSlides },
-            { model: options.model, mode: options.mode, vadEagerness: options.vadEagerness, debug },
+            {
+              liveModel: options.liveModel,
+              decisionModel: options.decisionModel,
+              decisionServiceTier: options.decisionServiceTier,
+            },
           )
-          const form = new FormData()
-          form.set('sdp', sdp)
-          form.set('session', JSON.stringify(session))
 
           let openAiResponse: Response
           try {
-            openAiResponse = await fetch('https://api.openai.com/v1/realtime/calls', {
+            openAiResponse = await fetch('https://api.openai.com/v1/live/sessions', {
               method: 'POST',
-              headers: { Authorization: `Bearer ${apiKey}` },
-              body: form,
+              headers: {
+                Authorization: `Bearer ${apiKey}`,
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({
+                session,
+                transport: { type: 'webrtc', sdp },
+              }),
             })
           }
           catch (error) {
@@ -290,13 +322,128 @@ export function slidevControlPlugin(options: SlidevControlPluginOptions = {}): P
           if (!openAiResponse.ok) {
             sendJson(res, openAiResponse.status, {
               ok: false,
-              error: 'OpenAI Realtime session creation failed',
+              error: 'OpenAI Live session creation failed',
               detail: responseBody.slice(0, 2_000),
             })
             return
           }
 
-          sendSdp(res, responseBody)
+          let responseJson: unknown
+          try {
+            responseJson = JSON.parse(responseBody) as unknown
+          }
+          catch {
+            sendJson(res, 502, { ok: false, error: 'OpenAI Live returned invalid JSON' })
+            return
+          }
+
+          sendJson(res, 201, responseJson)
+          return
+        }
+
+        if (pathname === LIVE_DECISION_PATH) {
+          if (req.method !== 'POST') {
+            res.setHeader('Allow', 'POST')
+            sendJson(res, 405, { ok: false, error: 'Method not allowed' })
+            return
+          }
+
+          const apiKey = options.apiKey?.trim()
+          if (!apiKey) {
+            sendJson(res, 503, {
+              ok: false,
+              error: 'OPENAI_API_KEY is not configured. Add it to .env or export it before starting Slidev.',
+            })
+            return
+          }
+
+          const contentType = req.headers['content-type'] ?? ''
+          if (!contentType.startsWith('application/json')) {
+            sendJson(res, 415, { ok: false, error: 'Content-Type must be application/json' })
+            return
+          }
+
+          let body: unknown
+          try {
+            body = await readJson(req, MAX_DECISION_BODY_BYTES)
+          }
+          catch (error) {
+            const message = error instanceof Error ? error.message : 'Invalid slide decision request'
+            sendJson(res, 400, { ok: false, error: message })
+            return
+          }
+
+          const decision = body as { currentSlide?: unknown, totalSlides?: unknown, transcript?: unknown } | null
+          if (!decision
+            || !Number.isInteger(decision.currentSlide)
+            || !Number.isInteger(decision.totalSlides)
+            || (decision.currentSlide as number) < 1
+            || (decision.totalSlides as number) < 1
+            || (decision.currentSlide as number) > (decision.totalSlides as number)
+            || typeof decision.transcript !== 'string'
+            || !decision.transcript.trim()) {
+            sendJson(res, 400, {
+              ok: false,
+              error: 'currentSlide, totalSlides, and a non-empty transcript are required',
+            })
+            return
+          }
+
+          const responseRequest = buildSlideDecisionRequest(
+            {
+              currentSlide: decision.currentSlide as number,
+              totalSlides: decision.totalSlides as number,
+            },
+            decision.transcript,
+            {
+              decisionModel: options.decisionModel,
+              decisionServiceTier: options.decisionServiceTier,
+            },
+          )
+
+          let openAiResponse: Response
+          try {
+            openAiResponse = await fetch('https://api.openai.com/v1/responses', {
+              method: 'POST',
+              headers: {
+                Authorization: `Bearer ${apiKey}`,
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify(responseRequest),
+            })
+          }
+          catch (error) {
+            const message = error instanceof Error ? error.message : 'Could not reach OpenAI'
+            sendJson(res, 502, { ok: false, error: message })
+            return
+          }
+
+          const responseBody = await openAiResponse.text()
+          if (!openAiResponse.ok) {
+            sendJson(res, openAiResponse.status, {
+              ok: false,
+              error: 'OpenAI slide decision failed',
+              detail: responseBody.slice(0, 2_000),
+            })
+            return
+          }
+
+          let responseJson: unknown
+          try {
+            responseJson = JSON.parse(responseBody) as unknown
+          }
+          catch {
+            sendJson(res, 502, { ok: false, error: 'OpenAI slide decision returned invalid JSON' })
+            return
+          }
+
+          const toolCall = readFunctionCall(responseJson)
+          if (!toolCall) {
+            sendJson(res, 502, { ok: false, error: 'OpenAI slide decision did not call a slide tool' })
+            return
+          }
+
+          sendJson(res, 200, toolCall)
           return
         }
 

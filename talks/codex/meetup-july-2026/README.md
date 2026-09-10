@@ -1,12 +1,12 @@
 # Codex Meetup: July 2026
 
-## Automatic Realtime slide director
+## Automatic Live slide director
 
-The play and presenter views can listen to the presenter's microphone and use OpenAI Realtime
-to infer slide transitions from the talk itself. It does not require spoken
-"next slide" commands and it never produces audible model output. This control
-is intentionally available only from the local Slidev development server; it
-does not appear in the statically deployed deck.
+The play and presenter views can listen to the presenter's microphone and use
+OpenAI models to infer slide transitions from the talk itself. It does not
+require spoken "next slide" commands and it never produces audible model
+output. This control is intentionally available only from the local Slidev
+development server; it does not appear in the statically deployed deck.
 
 Create a local environment file and add an OpenAI Platform API key:
 
@@ -28,20 +28,22 @@ Open the play view at `http://localhost:3030/` or presenter mode at
 `http://localhost:3030/presenter/`. Click the small **Auto slides** control in
 the lower-right corner of the current slide and grant microphone access once.
 `Option+A` on macOS or `Alt+A` toggles it from the keyboard. A green dot means
-the model is listening. A pause never advances on its own: the model changes
-slides only after it detects that the presenter has begun the mapped next or
-previous slide topic.
-
-Fast mode is the default. It uses `gpt-realtime-1.5` with server VAD tuned to
-close a speech turn after 350 ms of silence. To favor reasoning quality over
-latency, add `SLIDE_DIRECTOR_MODE=balanced` to `.env`; balanced mode uses
-`gpt-realtime-2.1` with high-eagerness semantic VAD.
-
-The browser sends microphone audio directly to OpenAI Realtime over WebRTC.
-The Vite server creates the session through OpenAI's unified Realtime endpoint,
-so `OPENAI_API_KEY` never enters the browser bundle. Every model turn is forced
-to choose exactly one silent function:
+the model is listening. A pause never advances on its own. GPT-Live transcribes
+speech continuously, and GPT-5.6 Luna checks the growing transcript while the
+presenter is still talking. Luna compares it with the deck map and chooses
 `next_slide`, `previous_slide`, or `hold_slide`.
+
+The defaults are `gpt-live-1` for listening and `gpt-5.6-luna` for slide
+decisions. You can override them with `OPENAI_LIVE_MODEL` and
+`OPENAI_SLIDE_DECISION_MODEL`. Set
+`OPENAI_SLIDE_DECISION_SERVICE_TIER=priority` if your project supports the
+priority processing tier and you want lower decision latency.
+
+The browser sends microphone audio directly to GPT-Live over WebRTC. The Vite
+server creates the Live session and sends transcript checkpoints to the
+Responses API, so `OPENAI_API_KEY` never enters the browser bundle. A late Luna
+decision is ignored if the visible slide changed while that request was
+running.
 
 The deck-aware system prompt and transition map live in
 `scripts/slide-director.ts`. The browser controller lives in
