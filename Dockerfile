@@ -63,6 +63,10 @@ RUN cd voxxed-backlog-presentation && mkdir -p dist && bun run build -- --base /
 COPY talks/vienna-ai-engineering/the-explosion-of-tools/ ./vienna-explosion/
 RUN cd vienna-explosion && mkdir -p dist && bun run build -- --base /talks/vienna-ai-engineering/the-explosion-of-tools/
 
+# Build groma.md introduction
+COPY talks/groma/introduction/ ./groma-introduction/
+RUN cd groma-introduction && mkdir -p dist && bun run build -- --base /talks/groma/introduction/
+
 # Build Codex Community Meetup Vienna - April 27, 2026 (unlisted; reachable by URL only)
 COPY talks/codex/meetup-april-2026/ ./codex-meetup-april-2026/
 RUN cd codex-meetup-april-2026 && mkdir -p dist && bun run build -- --base /talks/codex/meetup-april-2026/
@@ -112,6 +116,7 @@ COPY --from=slidev-builds /app/codex-meetup-april-2026/dist /usr/share/nginx/htm
 COPY --from=slidev-builds /app/codex-build-june-2026/dist /usr/share/nginx/html/talks/codex/build-june-2026
 COPY --from=slidev-builds /app/codex-meetup-july-2026/dist /usr/share/nginx/html/talks/codex/meetup-july-2026
 
+COPY --from=slidev-builds /app/groma-introduction/dist /usr/share/nginx/html/talks/groma/introduction
 # Copy custom nginx config
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 

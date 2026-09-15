@@ -86,6 +86,14 @@
       "watch": ["slidev-theme-penguin/**"]
     },
     {
+      "id": "groma-introduction",
+      "source": "talks/groma/introduction",
+      "target": "talks/groma/introduction",
+      "base": "/talks/groma/introduction/",
+      "artifact": "component-talk-groma-introduction",
+      "watch": ["slidev-theme-penguin/**"]
+    },
+    {
       "id": "codex-april-2026",
       "source": "talks/codex/meetup-april-2026",
       "target": "talks/codex/meetup-april-2026",

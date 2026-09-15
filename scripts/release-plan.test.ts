@@ -46,6 +46,7 @@ describe('createReleasePlan', () => {
       'voxxed-backlog',
       'vienna-explosion',
     ]);
+      'groma-introduction',
   });
 
   test('rebuilds every talk when shared Slidev dependencies change', () => {
