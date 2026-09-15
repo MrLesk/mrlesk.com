@@ -112,6 +112,7 @@ COPY --from=slidev-builds /app/ai-native-dev-presentation/dist /usr/share/nginx/
 COPY --from=slidev-builds /app/ai-native-dev-workshop/dist /usr/share/nginx/html/talks/ai-native-dev/backlog-workshop
 COPY --from=slidev-builds /app/voxxed-backlog-presentation/dist /usr/share/nginx/html/talks/voxxed/backlog-presentation
 COPY --from=slidev-builds /app/vienna-explosion/dist /usr/share/nginx/html/talks/vienna-ai-engineering/the-explosion-of-tools
+COPY --from=slidev-builds /app/groma-introduction/dist /usr/share/nginx/html/talks/groma/introduction
 COPY --from=slidev-builds /app/codex-meetup-april-2026/dist /usr/share/nginx/html/talks/codex/meetup-april-2026
 COPY --from=slidev-builds /app/codex-build-june-2026/dist /usr/share/nginx/html/talks/codex/build-june-2026
 COPY --from=slidev-builds /app/codex-meetup-july-2026/dist /usr/share/nginx/html/talks/codex/meetup-july-2026
