@@ -4,14 +4,58 @@
     {
       "name": "codex-meetup-april-2026",
       "runtimeExecutable": "bun",
-      "runtimeArgs": ["run", "slidev", "--port", "3939"],
+      "runtimeArgs": [
+        "run",
+        "slidev",
+        "--port",
+        "3939"
+      ],
       "cwd": "talks/codex/meetup-april-2026",
       "port": 3939
     },
     {
+      "name": "devoxx-in-the-loop",
+      "runtimeExecutable": "bun",
+      "runtimeArgs": [
+        "run",
+        "slidev",
+        "--port",
+        "3941"
+      ],
+      "cwd": "talks/devoxx/in-the-loop",
+      "port": 3941
+    },
+    {
+      "name": "groma-flash",
+      "runtimeExecutable": "bun",
+      "runtimeArgs": [
+        "run",
+        "slidev",
+        "--port",
+        "3942"
+      ],
+      "cwd": "talks/groma/flash",
+      "port": 3942
+    },
+    {
+      "name": "groma-web",
+      "runtimeExecutable": "bash",
+      "runtimeArgs": [
+        "-c",
+        "cd ~/projects/groma3 && groma web --port 4747"
+      ],
+      "port": 4747
+    },
+    {
       "name": "mrlesk-site",
       "runtimeExecutable": "bun",
-      "runtimeArgs": ["run", "dev", "--", "--port", "4321"],
+      "runtimeArgs": [
+        "run",
+        "dev",
+        "--",
+        "--port",
+        "4321"
+      ],
       "port": 4321
     }
   ]

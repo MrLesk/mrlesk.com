@@ -1,0 +1,16 @@
+{
+  "name": "devoxx-in-the-loop",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "dev": "slidev --open",
+    "build": "slidev build",
+    "export": "slidev export"
+  },
+  "dependencies": {
+    "@slidev/cli": "52.14.2",
+    "@vueuse/core": "14.2.1",
+    "slidev-theme-penguin": "file:../../../slidev-theme-penguin",
+    "vue": "3.5.33"
+  }
+}

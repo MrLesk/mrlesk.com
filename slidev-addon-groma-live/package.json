@@ -1,0 +1,14 @@
+{
+  "name": "slidev-addon-groma-live",
+  "type": "module",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Runs live Groma maps inside Slidev slides: starts the Groma servers with the deck and drives them from slide clicks",
+  "author": "Alex Gavrilescu",
+  "license": "MIT",
+  "keywords": [
+    "slidev-addon",
+    "slidev",
+    "groma"
+  ]
+}

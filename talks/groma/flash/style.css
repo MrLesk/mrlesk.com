@@ -1,0 +1,323 @@
+/*
+  groma.md flash talk: 80 seconds, product first.
+  Same drawing-sheet look as the Devoxx deck (talks/devoxx/in-the-loop): paper, grid,
+  chamfered frame, Groma green. `mood` still works (0 black to 4 paper) but this deck stays on paper.
+*/
+:root {
+  --slidev-theme-primary: #171b1a !important;
+  --slidev-theme-secondary: #1d9e75 !important;
+  --groma-green: #1d9e75;
+  --groma-paper: #f7f6f2;
+  --groma-ink: #171b1a;
+  --alarm: #ff5a4f;
+}
+
+.slidev-layout.sheet {
+  --bg: #f7f6f2;
+  --fg: #171b1a;
+  --muted: #66706d;
+  --line: #a7afac;
+  --grid: rgba(23, 27, 26, 0.035);
+  --frame: rgba(23, 27, 26, 0.28);
+  --panel: rgba(255, 255, 255, 0.55);
+}
+
+.slidev-layout.sheet.mood-1 {
+  --bg: #1b1e1d;
+  --fg: #ecebe6;
+  --muted: #8e9693;
+  --line: #3c4240;
+  --grid: rgba(255, 255, 255, 0.022);
+  --frame: rgba(255, 255, 255, 0.13);
+  --panel: rgba(255, 255, 255, 0.035);
+}
+
+html:not(.dark) #slide-content,
+html body,
+html #page-root,
+html #slide-container {
+  background: var(--groma-paper);
+}
+
+/* ---------- Sheet ---------- */
+.slidev-layout.sheet {
+  box-sizing: border-box;
+  position: relative;
+  height: 100%;
+  padding: 42px 54px;
+  color: var(--fg);
+  font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  background-color: var(--bg);
+  background-image:
+    linear-gradient(var(--grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+  background-size: 20px 20px;
+}
+
+.slidev-layout.sheet::after {
+  content: "";
+  position: absolute;
+  inset: 18px;
+  z-index: 4;
+  pointer-events: none;
+  border: 1px solid var(--frame);
+  clip-path: polygon(18px 0, calc(100% - 18px) 0, 100% 18px, 100% calc(100% - 18px), calc(100% - 18px) 100%, 18px 100%, 0 calc(100% - 18px), 0 18px);
+}
+
+.sheet-body {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  height: 100%;
+  flex-direction: column;
+}
+
+.slidev-layout.sheet.full {
+  padding: 0;
+}
+
+.slidev-layout.sheet h1 {
+  margin: 14px 0 0 !important;
+  color: var(--fg);
+  font-family: Inter, system-ui, sans-serif;
+  font-size: 44px;
+  font-weight: 720;
+  line-height: 1.04;
+  letter-spacing: -0.04em;
+}
+
+.slidev-layout.sheet p {
+  margin: 0;
+  line-height: 1.4;
+}
+
+.slidev-layout.sheet img {
+  border-radius: 0;
+}
+
+.slidev-layout.sheet code,
+.eyebrow {
+  font-family: "Fira Code", "JetBrains Mono", ui-monospace, monospace;
+}
+
+.eyebrow {
+  margin: 0;
+  color: var(--groma-green);
+  font-size: 12px;
+  font-weight: 650;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.accent {
+  color: var(--groma-green);
+}
+
+/* ---------- Cover ---------- */
+.cover {
+  display: flex;
+  height: 100%;
+  flex-direction: column;
+  justify-content: center;
+  padding: 0 26px;
+}
+
+.cover-lockup {
+  width: 300px;
+  margin-bottom: 34px;
+}
+
+.slidev-layout.sheet .cover h1 {
+  margin: 0 !important;
+  font-size: 96px;
+  font-weight: 700;
+  line-height: 0.94;
+  letter-spacing: -0.065em;
+}
+
+.cover-sub {
+  margin-top: 28px !important;
+  color: var(--muted);
+  font-size: 23px;
+  letter-spacing: -0.01em;
+}
+
+.cover-by {
+  position: absolute;
+  bottom: 4px;
+  left: 26px;
+  color: var(--muted);
+  font-family: "Fira Code", ui-monospace, monospace;
+  font-size: 12px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+/* ---------- Get it ---------- */
+.get {
+  display: grid;
+  height: 100%;
+  grid-template-columns: 1fr 240px;
+  align-items: center;
+  gap: 44px;
+  padding: 0 26px 34px;
+}
+
+.get .cover-lockup {
+  width: 230px;
+  margin-bottom: 26px;
+}
+
+.slidev-layout.sheet .get h1 {
+  margin: 0 !important;
+  font-size: 58px;
+  line-height: 1;
+}
+
+.steps {
+  display: flex;
+  align-items: flex-end;
+  gap: 8px;
+  margin-top: 30px;
+  white-space: nowrap;
+}
+
+/* Install, scan, curate: the label says which step, the chip says how. */
+.step {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.step span {
+  color: var(--muted);
+  font-family: "Fira Code", ui-monospace, monospace;
+  font-size: 10px;
+  font-weight: 650;
+  letter-spacing: 0.16em;
+}
+
+.step.curate span {
+  color: var(--groma-green);
+}
+
+.step.curate b {
+  padding: 10px 15px;
+  border: 1px solid var(--groma-green);
+  background: var(--groma-green);
+  color: #ffffff;
+  font-size: 16px;
+  font-weight: 650;
+  line-height: 24px;
+}
+
+.steps code {
+  padding: 10px 15px !important;
+  border: 1px solid var(--fg) !important;
+  border-radius: 0 !important;
+  background: var(--panel) !important;
+  color: var(--fg) !important;
+  font-size: 16px !important;
+  font-weight: 650;
+}
+
+.steps i {
+  padding-bottom: 11px;
+  color: var(--groma-green);
+  font-family: "Fira Code", ui-monospace, monospace;
+  font-style: normal;
+}
+
+.facts {
+  display: flex;
+  gap: 8px;
+  margin-top: 22px;
+}
+
+.facts span {
+  padding: 5px 10px;
+  border: 1px solid var(--line);
+  color: var(--muted);
+  font-family: "Fira Code", ui-monospace, monospace;
+  font-size: 11px;
+  letter-spacing: 0.12em;
+}
+
+.qr {
+  padding: 14px;
+  border: 1.5px solid var(--fg);
+  background: #ffffff;
+  box-shadow: 9px 9px 0 -4px var(--groma-green);
+  line-height: 0;
+}
+
+.qr img {
+  display: block;
+  width: 100%;
+}
+
+.qr-label {
+  display: block;
+  margin-top: 16px;
+  color: var(--fg);
+  font-family: "Fira Code", ui-monospace, monospace;
+  font-size: 20px;
+  font-weight: 700;
+  text-align: center;
+}
+
+.me {
+  position: absolute;
+  bottom: 2px;
+  left: 26px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: var(--muted);
+  font-family: "Fira Code", ui-monospace, monospace;
+  font-size: 12px;
+  letter-spacing: 0.08em;
+}
+
+.me img {
+  width: 34px;
+  height: 34px;
+  border: 1px solid var(--fg);
+  border-radius: 50% !important;
+  object-fit: cover;
+}
+
+/* ---------- 80 second clock ---------- */
+.talk-clock {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 30;
+  height: 4px;
+  pointer-events: none;
+}
+
+.talk-clock i {
+  display: block;
+  height: 100%;
+  background: var(--groma-green);
+  transform-origin: 0 50%;
+  transition: transform 0.25s linear, background-color 0.4s ease;
+}
+
+.talk-clock span {
+  position: absolute;
+  right: 12px;
+  bottom: 9px;
+  color: var(--muted);
+  font-family: "Fira Code", ui-monospace, monospace;
+  font-size: 10px;
+  font-weight: 650;
+  letter-spacing: 0.1em;
+}
+
+.talk-clock.late i { background: #bd7100; }
+.talk-clock.late span { color: #bd7100; }
+.talk-clock.over i { background: var(--alarm); }
+.talk-clock.over span { color: var(--alarm); }
