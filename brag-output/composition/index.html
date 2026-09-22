@@ -1,0 +1,450 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <title>groma.md: Your architecture, alive.</title>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      @font-face { font-family: "Inter"; font-weight: 500; src: url("assets/fonts/inter-latin-500-normal.woff2") format("woff2"); }
+      @font-face { font-family: "Inter"; font-weight: 700; src: url("assets/fonts/inter-latin-700-normal.woff2") format("woff2"); }
+      @font-face { font-family: "Inter"; font-weight: 800; src: url("assets/fonts/inter-latin-800-normal.woff2") format("woff2"); }
+      @font-face { font-family: "IBM Plex Mono"; font-weight: 400; src: url("assets/fonts/IBMPlexMono-Regular.ttf") format("truetype"); }
+      @font-face { font-family: "IBM Plex Mono"; font-weight: 500; src: url("assets/fonts/IBMPlexMono-Medium.ttf") format("truetype"); }
+      @font-face { font-family: "IBM Plex Mono"; font-weight: 600; src: url("assets/fonts/IBMPlexMono-SemiBold.ttf") format("truetype"); }
+
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body { margin: 0; width: 1920px; height: 1080px; overflow: hidden; background: #f7f6f2; }
+      #root {
+        --paper: #f7f6f2; --ink: #171b1a; --green: #1d9e75; --muted: #5d6764; --night: #07152b; --frost: #eaf6ff; --bass: 0.25;
+        position: relative; width: 100%; height: 100%; overflow: hidden;
+        font-family: "Inter", sans-serif; color: var(--ink); background: var(--paper);
+      }
+      .layer { position: absolute; inset: 0; overflow: hidden; }
+      .clip { position: absolute; inset: 0; }
+      video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; }
+      .mono { font-family: "IBM Plex Mono", monospace; }
+
+      /* The drawing sheet from the decks: paper, a fine grid, frame ticks in the corners. */
+      #sheet {
+        background-color: var(--paper);
+        background-image: linear-gradient(rgba(23, 27, 26, 0.05) 2px, transparent 2px), linear-gradient(90deg, rgba(23, 27, 26, 0.05) 2px, transparent 2px);
+        background-size: 40px 40px;
+      }
+      #ticks { position: absolute; inset: 0; pointer-events: none; color: var(--frost); }
+      #ticks i { position: absolute; width: 34px; height: 34px; border: 0 solid currentColor; opacity: 0.55; }
+      #ticks i:nth-child(1) { left: 26px; top: 26px; border-left-width: 3px; border-top-width: 3px; }
+      #ticks i:nth-child(2) { right: 26px; top: 26px; border-right-width: 3px; border-top-width: 3px; }
+      #ticks i:nth-child(3) { left: 26px; bottom: 26px; border-left-width: 3px; border-bottom-width: 3px; }
+      #ticks i:nth-child(4) { right: 26px; bottom: 26px; border-right-width: 3px; border-bottom-width: 3px; }
+
+      /* ---------- Act one: in the dark ---------- */
+      #act-dark { background: var(--night); }
+      #dim { position: absolute; inset: 0; background: #020812; opacity: 0; }
+      .scrim { position: absolute; left: -200px; bottom: -260px; width: 1900px; height: 900px; border-radius: 50%; }
+      #act-dark .scrim { background: radial-gradient(closest-side, rgba(3, 10, 24, 0.94), rgba(3, 10, 24, 0.7) 55%, rgba(3, 10, 24, 0)); }
+      #act-light .scrim { background: radial-gradient(closest-side, rgba(255, 255, 255, 0.97), rgba(255, 255, 255, 0.82) 55%, rgba(255, 255, 255, 0)); }
+      .hook {
+        position: absolute; left: 112px; bottom: 138px; width: 1500px;
+        font-weight: 800; font-size: 124px; line-height: 1.02; letter-spacing: -0.045em; color: var(--frost);
+      }
+      .hook .w { display: inline-block; margin-right: 0.24em; }
+      .kicker { font-family: "IBM Plex Mono", monospace; font-weight: 600; font-size: 24px; letter-spacing: 0.2em; }
+
+      /* ---------- Act two: lights on ---------- */
+      #act-light { background: #ffffff; }
+      #sweep {
+        position: absolute; top: -20%; left: 0; width: 360px; height: 140%; pointer-events: none; opacity: 0;
+        background: linear-gradient(90deg, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.95) 45%, rgba(190, 255, 228, 0.9) 55%, rgba(255, 255, 255, 0));
+      }
+      #flash { position: absolute; inset: 0; background: #ffffff; opacity: 0; pointer-events: none; }
+      #brand { position: absolute; left: 112px; bottom: 126px; width: 1400px; }
+      .wordmark { display: flex; align-items: center; gap: 22px; color: var(--ink); }
+      .wordmark .mark { width: 132px; height: 132px; flex: none; }
+      .wordmark .name { font-weight: 500; font-size: 138px; letter-spacing: -0.035em; line-height: 1; }
+      .wordmark .name i { font-style: normal; color: var(--green); }
+      #tagline { margin-top: 18px; font-weight: 800; font-size: 84px; letter-spacing: -0.04em; line-height: 1.05; }
+      #glow {
+        position: absolute; left: -120px; bottom: -80px; width: 1100px; height: 620px; border-radius: 50%; pointer-events: none;
+        background: radial-gradient(closest-side, rgba(29, 158, 117, 0.42), rgba(29, 158, 117, 0));
+        opacity: calc(0.25 + var(--bass) * 1.1);
+      }
+      #scan { position: absolute; left: 112px; bottom: 126px; width: 1500px; }
+      .term {
+        display: inline-flex; align-items: center; gap: 18px; padding: 18px 30px 20px; background: var(--ink); color: #f2f4f3;
+        font-family: "IBM Plex Mono", monospace; font-weight: 500; font-size: 50px;
+        box-shadow: 14px 14px 0 -4px var(--green);
+      }
+      .term .prompt { color: #3ecf9f; }
+      .typed { position: relative; display: inline-block; }
+      .caret { position: absolute; left: 4px; top: 50%; width: 0.5em; height: 1.05em; margin-top: -0.52em; background: #3ecf9f; }
+      .ch { opacity: 0; }
+      #scan-line { margin-top: 30px; font-weight: 800; font-size: 84px; letter-spacing: -0.04em; line-height: 1.05; }
+
+      /* ---------- The product card (walk, flow, timelapse) ---------- */
+      #card-stage { perspective: 2200px; }
+      #card {
+        position: absolute; left: 160px; top: 34px; width: 1600px; height: 900px; overflow: hidden; background: #ffffff;
+        border: 3px solid var(--ink); box-shadow: 18px 18px 0 -5px var(--green), 0 30px 70px rgba(23, 27, 26, 0.16);
+      }
+      .cam { position: absolute; inset: 0; }
+      .strip { position: absolute; left: 160px; top: 956px; width: 1600px; height: 110px; }
+      .strip .kicker { color: #12694d; font-size: 22px; }
+      .strip h2 { position: absolute; left: 0; top: 34px; width: 780px; font-weight: 800; font-size: 60px; letter-spacing: -0.04em; line-height: 1.05; white-space: nowrap; }
+      .strip .wordmark { position: absolute; right: 0; top: 30px; gap: 10px; }
+      .strip .wordmark .mark { width: 50px; height: 50px; }
+      .strip .wordmark .name { font-size: 46px; }
+      .state { position: absolute; right: 0; top: 36px; padding: 12px 22px 13px; border: 3px solid #8a9491; color: #4c5653; background: #ffffff; font-family: "IBM Plex Mono", monospace; font-weight: 600; font-size: 26px; letter-spacing: 0.12em; opacity: 0; }
+      .state.curated { border-color: var(--green); background: var(--green); color: #ffffff; }
+      #commits { position: absolute; right: 0; top: 4px; width: 800px; height: 100px; }
+      .commit { position: absolute; right: 0; top: 0; width: 800px; text-align: right; opacity: 0; font-family: "IBM Plex Mono", monospace; }
+      .commit b { display: block; font-weight: 600; font-size: 40px; letter-spacing: 0.04em; color: var(--ink); }
+      .commit span { display: block; margin-top: 8px; font-weight: 500; font-size: 22px; color: #3f4946; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+      #build-bar { position: absolute; right: 0; top: 96px; width: 640px; height: 6px; background: #d5dad7; }
+      #build-bar i { display: block; width: 100%; height: 100%; background: var(--green); transform-origin: 0 50%; }
+
+      /* ---------- Your stack ---------- */
+      #stack { padding: 150px 160px 0; }
+      #stack .kicker { color: #12694d; }
+      #stack h2 { margin-top: 22px; white-space: nowrap; font-weight: 800; font-size: 136px; letter-spacing: -0.045em; line-height: 1; }
+      #langs { margin-top: 84px; display: grid; grid-template-columns: repeat(4, 1fr); gap: 36px 34px; width: 1600px; }
+      .lang {
+        display: block; padding: 34px 0 38px; text-align: center; background: #ffffff; border: 3px solid var(--ink);
+        font-family: "IBM Plex Mono", monospace; font-weight: 600; font-size: 48px; letter-spacing: -0.01em;
+        box-shadow: 10px 10px 0 -3px var(--green);
+      }
+
+      /* ---------- Install ---------- */
+      #install-art { position: absolute; right: -190px; top: 40px; width: 1400px; height: 788px; mix-blend-mode: multiply; opacity: 0.95; }
+      #install-art img { display: block; width: 100%; height: 100%; object-fit: cover; }
+      #install-glow {
+        position: absolute; left: 40px; top: 250px; width: 1300px; height: 520px; border-radius: 50%; pointer-events: none;
+        background: radial-gradient(closest-side, rgba(29, 158, 117, 0.3), rgba(29, 158, 117, 0));
+        opacity: calc(0.3 + var(--bass) * 1.2);
+      }
+      #install-mark { position: absolute; left: 160px; top: 96px; }
+      #install-mark .mark { width: 104px; height: 104px; }
+      #install-mark .name { font-size: 108px; }
+      #install-term { position: absolute; left: 160px; top: 240px; width: 1010px; padding: 30px 44px 34px; background: var(--ink); color: #f2f4f3; box-shadow: 18px 18px 0 -5px var(--green); }
+      #install-term .row { display: flex; align-items: center; height: 76px; font-family: "IBM Plex Mono", monospace; font-weight: 500; font-size: 52px; white-space: nowrap; }
+      #install-term .step { flex: none; width: 250px; color: #c3d0cc; font-family: "IBM Plex Mono", monospace; font-weight: 600; font-size: 28px; letter-spacing: 0.14em; }
+      #install-term .curate .step { color: #3ecf9f; }
+      #install-term .curate .value { color: #3ecf9f; font-family: "Inter", sans-serif; font-weight: 800; font-size: 52px; letter-spacing: -0.03em; }
+      #facts { position: absolute; left: 160px; top: 556px; display: flex; gap: 20px; }
+      .fact { display: block; padding: 12px 26px 14px; border: 3px solid var(--ink); background: #ffffff; font-family: "IBM Plex Mono", monospace; font-weight: 600; font-size: 32px; letter-spacing: 0.06em; }
+      #closing { position: absolute; left: 156px; top: 690px; width: 1700px; font-weight: 800; font-size: 118px; letter-spacing: -0.045em; line-height: 1.04; }
+      #closing .line { display: block; }
+      #closing .dark { position: relative; display: inline-block; color: var(--ink); }
+      #closing-rule { position: absolute; left: 160px; top: 948px; width: 1010px; height: 8px; background: var(--green); transform-origin: 0 50%; }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-width="1920" data-height="1080" data-duration="31.0" data-fps="60">
+      <div id="sheet" class="layer"></div>
+
+      <!-- Act one: the blueprint map in the dark. The text sits inside this layer, so the light sweep wipes it away. -->
+      <div id="act-dark" class="layer">
+        <div class="cam" id="cam-dark"><video id="v-dark" src="assets/footage/hero-blueprint.mp4" data-start="0" data-duration="4.8" data-track-index="0" muted playsinline></video></div>
+        <div id="dim"></div>
+        <div id="hook" class="clip" data-start="0" data-duration="4.8" data-track-index="5">
+          <div class="scrim"></div>
+          <div class="hook" id="hook-1"><span class="w">Agents</span><span class="w">write</span><span class="w">the</span><span class="w">code.</span></div>
+          <div class="hook" id="hook-2"><span class="w">You’re</span><span class="w">in</span><span class="w">the</span><span class="w">dark.</span></div>
+        </div>
+      </div>
+
+      <!-- Act two: the same camera path filmed in the light theme, revealed by a diagonal sweep. -->
+      <div id="act-light" class="layer">
+        <div class="cam" id="cam-light"><video id="v-light" src="assets/footage/hero-light.mp4" data-start="3.5" data-duration="4.5" data-track-index="1" muted playsinline></video></div>
+        <div id="reveal" class="clip" data-start="3.5" data-duration="4.5" data-track-index="6">
+          <div class="scrim" id="light-scrim"></div>
+          <div id="glow"></div>
+          <div id="brand">
+            <div class="wordmark"><svg class="mark" viewBox="0 0 100 100" aria-hidden="true"><circle cx="50" cy="6" r="5" fill="currentColor"/><line x1="50" y1="12" x2="50" y2="94" stroke="currentColor" stroke-width="7" stroke-linecap="round"/><line x1="22" y1="32" x2="78" y2="32" stroke="currentColor" stroke-width="7" stroke-linecap="round"/><line x1="22" y1="36" x2="22" y2="62" stroke="currentColor" stroke-width="4"/><path d="M15 62 L29 62 L22 76 Z" fill="currentColor"/><line x1="78" y1="36" x2="78" y2="62" stroke="currentColor" stroke-width="4"/><path d="M71 62 L85 62 L78 76 Z" fill="currentColor"/><line x1="30" y1="94" x2="70" y2="94" stroke="currentColor" stroke-width="5" stroke-linecap="round"/></svg><span class="name">groma<i>.md</i></span></div>
+            <div id="tagline">Your architecture, alive.</div>
+          </div>
+          <div id="scan">
+            <div class="term"><span class="prompt">$</span><span class="typed" id="type-scan"><span class="ch">g</span><span class="ch">r</span><span class="ch">o</span><span class="ch">m</span><span class="ch">a</span><span class="ch">&nbsp;</span><span class="ch">w</span><span class="ch">e</span><span class="ch">b</span><i class="caret" id="caret-scan"></i></span></div>
+            <div id="scan-line">From system to component.</div>
+          </div>
+        </div>
+        <div id="flash"></div>
+      </div>
+      <div id="sweep"></div>
+
+      <!-- The product, in one card: three real recordings of groma web, cut on the bar lines. -->
+      <div id="card-stage" class="layer">
+        <div id="card">
+          <div class="cam" id="cam-walk"><video id="v-walk" src="assets/footage/walk.mp4" data-start="7.72" data-duration="4.3" data-track-index="2" muted playsinline></video></div>
+          <div class="cam" id="cam-flow"><video id="v-flow" src="assets/footage/flow.mp4" data-start="12.02" data-media-start="0.3" data-duration="4.0" data-track-index="2" muted playsinline></video></div>
+          <div class="cam" id="cam-cur"><video id="v-cur" src="assets/footage/curate.mp4" data-start="16.02" data-duration="4.0" data-track-index="2" muted playsinline></video></div>
+          <div class="cam" id="cam-time"><video id="v-time" src="assets/footage/timelapse.mp4" data-start="20.02" data-media-start="0.075" data-duration="4.0" data-track-index="2" muted playsinline></video></div>
+        </div>
+      </div>
+
+      <div id="strip-walk" class="clip" data-start="7.72" data-duration="4.3" data-track-index="7"><div class="strip">
+        <div class="kicker">01 / WALK THE MAP</div>
+        <h2 id="walk-1">Find anything.</h2>
+        <h2 id="walk-2">Read what it does.</h2>
+        <h2 id="walk-3">Open the code.</h2>
+        <div class="wordmark"><svg class="mark" viewBox="0 0 100 100" aria-hidden="true"><circle cx="50" cy="6" r="5" fill="currentColor"/><line x1="50" y1="12" x2="50" y2="94" stroke="currentColor" stroke-width="7" stroke-linecap="round"/><line x1="22" y1="32" x2="78" y2="32" stroke="currentColor" stroke-width="7" stroke-linecap="round"/><line x1="22" y1="36" x2="22" y2="62" stroke="currentColor" stroke-width="4"/><path d="M15 62 L29 62 L22 76 Z" fill="currentColor"/><line x1="78" y1="36" x2="78" y2="62" stroke="currentColor" stroke-width="4"/><path d="M71 62 L85 62 L78 76 Z" fill="currentColor"/><line x1="30" y1="94" x2="70" y2="94" stroke="currentColor" stroke-width="5" stroke-linecap="round"/></svg><span class="name">groma<i>.md</i></span></div>
+      </div></div>
+      <div id="strip-flow" class="clip" data-start="12.02" data-duration="4.0" data-track-index="7"><div class="strip">
+        <div class="kicker">02 / FLOWS</div>
+        <h2 id="flow-1">Trace a flow, step by step.</h2>
+        <div class="wordmark"><svg class="mark" viewBox="0 0 100 100" aria-hidden="true"><circle cx="50" cy="6" r="5" fill="currentColor"/><line x1="50" y1="12" x2="50" y2="94" stroke="currentColor" stroke-width="7" stroke-linecap="round"/><line x1="22" y1="32" x2="78" y2="32" stroke="currentColor" stroke-width="7" stroke-linecap="round"/><line x1="22" y1="36" x2="22" y2="62" stroke="currentColor" stroke-width="4"/><path d="M15 62 L29 62 L22 76 Z" fill="currentColor"/><line x1="78" y1="36" x2="78" y2="62" stroke="currentColor" stroke-width="4"/><path d="M71 62 L85 62 L78 76 Z" fill="currentColor"/><line x1="30" y1="94" x2="70" y2="94" stroke="currentColor" stroke-width="5" stroke-linecap="round"/></svg><span class="name">groma<i>.md</i></span></div>
+      </div></div>
+      <div id="strip-cur" class="clip" data-start="16.02" data-duration="4.0" data-track-index="7"><div class="strip">
+        <div class="kicker">03 / SCAN, THEN CURATE</div>
+        <h2 id="cur-1">Groma scans your code.</h2>
+        <h2 id="cur-2">Your agent curates it.</h2>
+        <span class="state" id="state-raw">STARTING POINT</span>
+        <span class="state curated" id="state-curated">YOUR ARCHITECTURE</span>
+      </div></div>
+      <div id="strip-time" class="clip" data-start="20.02" data-duration="4.0" data-track-index="7"><div class="strip">
+        <div class="kicker">04 / LIVE WORK</div>
+        <h2 id="time-1">Watch your agents build.</h2>
+        <div id="commits">
+          <div class="commit" id="commit-0"><b>COMMIT 03 / 48</b><span>TASK-1 in progress: Set up the service skeleton</span></div>
+          <div class="commit" id="commit-1"><b>COMMIT 04 / 48</b><span>TASK-1: the scan finds new code</span></div>
+          <div class="commit" id="commit-2"><b>COMMIT 06 / 48</b><span>TASK-1 done: Set up the service skeleton</span></div>
+          <div class="commit" id="commit-3"><b>COMMIT 08 / 48</b><span>Plan: Model the product catalog</span></div>
+          <div class="commit" id="commit-4"><b>COMMIT 09 / 48</b><span>Plan: Let customers fill a cart</span></div>
+          <div class="commit" id="commit-5"><b>COMMIT 11 / 48</b><span>Plan: Charge payments through the provider</span></div>
+          <div class="commit" id="commit-6"><b>COMMIT 13 / 48</b><span>Plan: Turn an approved cart into an order</span></div>
+          <div class="commit" id="commit-7"><b>COMMIT 14 / 48</b><span>Plan: Email order confirmations</span></div>
+          <div class="commit" id="commit-8"><b>COMMIT 16 / 48</b><span>TASK-2 in progress: Model the product catalog</span></div>
+          <div class="commit" id="commit-9"><b>COMMIT 18 / 48</b><span>TASK-2: the agent names it Product catalog</span></div>
+          <div class="commit" id="commit-10"><b>COMMIT 19 / 48</b><span>TASK-2 done: Model the product catalog</span></div>
+          <div class="commit" id="commit-11"><b>COMMIT 21 / 48</b><span>TASK-3: the scan finds new code</span></div>
+          <div class="commit" id="commit-12"><b>COMMIT 23 / 48</b><span>TASK-3 done: Let customers fill a cart</span></div>
+          <div class="commit" id="commit-13"><b>COMMIT 25 / 48</b><span>TASK-4: the scan finds new code</span></div>
+          <div class="commit" id="commit-14"><b>COMMIT 26 / 48</b><span>TASK-4: the agent names it Inventory</span></div>
+          <div class="commit" id="commit-15"><b>COMMIT 28 / 48</b><span>TASK-5 in progress: Charge payments through the provider</span></div>
+          <div class="commit" id="commit-16"><b>COMMIT 30 / 48</b><span>TASK-5: the agent names it Payment gateway</span></div>
+          <div class="commit" id="commit-17"><b>COMMIT 31 / 48</b><span>TASK-5 done: Charge payments through the provider</span></div>
+          <div class="commit" id="commit-18"><b>COMMIT 33 / 48</b><span>TASK-6: the scan finds new code</span></div>
+          <div class="commit" id="commit-19"><b>COMMIT 35 / 48</b><span>TASK-6 done: Own the order lifecycle and history</span></div>
+          <div class="commit" id="commit-20"><b>COMMIT 36 / 48</b><span>TASK-7 in progress: Turn an approved cart into an order</span></div>
+          <div class="commit" id="commit-21"><b>COMMIT 38 / 48</b><span>TASK-7: the agent names it Checkout</span></div>
+          <div class="commit" id="commit-22"><b>COMMIT 40 / 48</b><span>Explain how checkout works with its neighbours</span></div>
+          <div class="commit" id="commit-23"><b>COMMIT 41 / 48</b><span>TASK-8 in progress: Email order confirmations</span></div>
+          <div class="commit" id="commit-24"><b>COMMIT 43 / 48</b><span>TASK-8: the agent names it Order emails</span></div>
+          <div class="commit" id="commit-25"><b>COMMIT 45 / 48</b><span>TASK-9 in progress: Open the API to the shop front end</span></div>
+          <div class="commit" id="commit-26"><b>COMMIT 46 / 48</b><span>TASK-9: the scan finds new code</span></div>
+          <div class="commit" id="commit-27"><b>COMMIT 48 / 48</b><span>Explain what the HTTP API calls</span></div>
+        </div>
+        <div id="build-bar"><i id="build-fill"></i></div>
+      </div></div>
+
+      <div id="stack" class="clip" data-start="24.02" data-duration="1.5" data-track-index="8">
+        <div class="kicker" id="stack-kicker">05 / LANGUAGES AND FRAMEWORKS</div>
+        <h2 id="stack-line">Works with your stack.</h2>
+        <div id="langs">
+          <span class="lang" id="lang-0">TypeScript</span>
+          <span class="lang" id="lang-1">JavaScript</span>
+          <span class="lang" id="lang-2">Angular</span>
+          <span class="lang" id="lang-3">React</span>
+          <span class="lang" id="lang-4">Vue</span>
+          <span class="lang" id="lang-5">C# / .NET</span>
+          <span class="lang" id="lang-6">Go</span>
+          <span class="lang" id="lang-7">Java</span>
+          <span class="lang" id="lang-8">Python</span>
+          <span class="lang" id="lang-9">Rust</span>
+          <span class="lang" id="lang-10">PHP</span>
+          <span class="lang" id="lang-11">Swift</span>
+        </div>
+      </div>
+
+      <div id="install" class="clip" data-start="25.52" data-duration="5.48" data-track-index="9">
+        <div id="install-art"><img src="assets/footage/layers-still.jpg" alt="" /></div>
+        <div id="install-glow"></div>
+        <div id="install-mark" class="wordmark"><svg class="mark" viewBox="0 0 100 100" aria-hidden="true"><circle cx="50" cy="6" r="5" fill="currentColor"/><line x1="50" y1="12" x2="50" y2="94" stroke="currentColor" stroke-width="7" stroke-linecap="round"/><line x1="22" y1="32" x2="78" y2="32" stroke="currentColor" stroke-width="7" stroke-linecap="round"/><line x1="22" y1="36" x2="22" y2="62" stroke="currentColor" stroke-width="4"/><path d="M15 62 L29 62 L22 76 Z" fill="currentColor"/><line x1="78" y1="36" x2="78" y2="62" stroke="currentColor" stroke-width="4"/><path d="M71 62 L85 62 L78 76 Z" fill="currentColor"/><line x1="30" y1="94" x2="70" y2="94" stroke="currentColor" stroke-width="5" stroke-linecap="round"/></svg><span class="name">groma<i>.md</i></span></div>
+        <div id="install-term">
+          <div class="row"><span class="step">INSTALL</span><span class="typed" id="type-npm"><span class="ch">n</span><span class="ch">p</span><span class="ch">m</span><span class="ch">&nbsp;</span><span class="ch">i</span><span class="ch">&nbsp;</span><span class="ch">-</span><span class="ch">g</span><span class="ch">&nbsp;</span><span class="ch">g</span><span class="ch">r</span><span class="ch">o</span><span class="ch">m</span><span class="ch">a</span><span class="ch">.</span><span class="ch">m</span><span class="ch">d</span><i class="caret" id="caret-npm"></i></span></div>
+          <div class="row"><span class="step">SCAN</span><span class="typed" id="type-web"><span class="ch">g</span><span class="ch">r</span><span class="ch">o</span><span class="ch">m</span><span class="ch">a</span><span class="ch">&nbsp;</span><span class="ch">w</span><span class="ch">e</span><span class="ch">b</span><i class="caret" id="caret-web"></i></span></div>
+          <div class="row curate" id="row-curate"><span class="step">CURATE</span><span class="value">your agent</span></div>
+        </div>
+        <div id="facts"><span class="fact">FREE</span><span class="fact">MIT</span><span class="fact">LOCAL</span><span class="fact">NO ACCOUNT</span></div>
+        <div id="closing"><span class="line" id="close-1">In the loop.</span><span class="line" id="close-2">Not in the dark.</span></div>
+        <div id="closing-rule"></div>
+      </div>
+
+      <div id="ticks"><i></i><i></i><i></i><i></i></div>
+
+      <audio id="music" src="assets/music/happy-beats-business-moves-vol-1-by-ende-dot-app.mp3" data-start="0" data-duration="31.0" data-track-index="10" data-automation='{"version": 1, "lanes": [{"target": "volume", "points": [{"t": 0, "v": 0}, {"t": 0.2, "v": 0.34}, {"t": 3.7, "v": 0.34}, {"t": 4.05, "v": 0.5}, {"t": 29.6, "v": 0.5}, {"t": 30.95, "v": 0}]}]}'></audio>
+      <audio id="sfx-0" src="assets/sfx/impact/impactSoft_medium_001.ogg" data-start="2.0" data-duration="0.18" data-track-index="20" data-volume="0.5"></audio>
+      <audio id="sfx-1" src="assets/sfx/impact/impactSoft_heavy_003.ogg" data-start="3.99" data-duration="0.54" data-track-index="21" data-volume="0.7"></audio>
+      <audio id="sfx-2" src="assets/sfx/casino/card-slide-1.ogg" data-start="6.0" data-duration="0.6" data-track-index="22" data-volume="0.34"></audio>
+      <audio id="sfx-3" src="assets/sfx/keyboard/keypress-007.wav" data-start="6.06" data-duration="0.25" data-track-index="23" data-volume="0.3"></audio>
+      <audio id="sfx-4" src="assets/sfx/keyboard/keypress-016.wav" data-start="6.16" data-duration="0.25" data-track-index="24" data-volume="0.3"></audio>
+      <audio id="sfx-5" src="assets/sfx/keyboard/keypress-024.wav" data-start="6.26" data-duration="0.25" data-track-index="25" data-volume="0.3"></audio>
+      <audio id="sfx-6" src="assets/sfx/keyboard/keypress-031.wav" data-start="6.36" data-duration="0.25" data-track-index="26" data-volume="0.3"></audio>
+      <audio id="sfx-7" src="assets/sfx/keyboard/keypress-007.wav" data-start="6.46" data-duration="0.25" data-track-index="27" data-volume="0.3"></audio>
+      <audio id="sfx-8" src="assets/sfx/ui/click2.ogg" data-start="8.02" data-duration="0.055" data-track-index="28" data-volume="0.5"></audio>
+      <audio id="sfx-9" src="assets/sfx/keyboard/keypress-024.wav" data-start="8.12" data-duration="0.25" data-track-index="29" data-volume="0.28"></audio>
+      <audio id="sfx-10" src="assets/sfx/keyboard/keypress-011.wav" data-start="8.237" data-duration="0.25" data-track-index="30" data-volume="0.28"></audio>
+      <audio id="sfx-11" src="assets/sfx/keyboard/keypress-031.wav" data-start="8.354" data-duration="0.25" data-track-index="31" data-volume="0.28"></audio>
+      <audio id="sfx-12" src="assets/sfx/keyboard/keypress-007.wav" data-start="8.588" data-duration="0.25" data-track-index="32" data-volume="0.28"></audio>
+      <audio id="sfx-13" src="assets/sfx/keyboard/keypress-021.wav" data-start="9.02" data-duration="0.25" data-track-index="33" data-volume="0.4"></audio>
+      <audio id="sfx-14" src="assets/sfx/casino/card-slide-1.ogg" data-start="9.04" data-duration="0.6" data-track-index="34" data-volume="0.4"></audio>
+      <audio id="sfx-15" src="assets/sfx/ui/click2.ogg" data-start="10.02" data-duration="0.055" data-track-index="35" data-volume="0.5"></audio>
+      <audio id="sfx-16" src="assets/sfx/ui/click2.ogg" data-start="11.02" data-duration="0.055" data-track-index="36" data-volume="0.5"></audio>
+      <audio id="sfx-17" src="assets/sfx/ui/click2.ogg" data-start="13.01" data-duration="0.055" data-track-index="37" data-volume="0.45"></audio>
+      <audio id="sfx-18" src="assets/sfx/interface/switch_007.ogg" data-start="13.03" data-duration="0.61" data-track-index="38" data-volume="0.3"></audio>
+      <audio id="sfx-19" src="assets/sfx/ui/click2.ogg" data-start="14.02" data-duration="0.055" data-track-index="39" data-volume="0.45"></audio>
+      <audio id="sfx-20" src="assets/sfx/interface/switch_007.ogg" data-start="14.04" data-duration="0.61" data-track-index="40" data-volume="0.3"></audio>
+      <audio id="sfx-21" src="assets/sfx/ui/click2.ogg" data-start="15.02" data-duration="0.055" data-track-index="41" data-volume="0.45"></audio>
+      <audio id="sfx-22" src="assets/sfx/interface/switch_007.ogg" data-start="15.04" data-duration="0.61" data-track-index="42" data-volume="0.3"></audio>
+      <audio id="sfx-23" src="assets/sfx/ui/rollover2.ogg" data-start="16.02" data-duration="0.057" data-track-index="43" data-volume="0.4"></audio>
+      <audio id="sfx-24" src="assets/sfx/impact/impactSoft_medium_001.ogg" data-start="17.52" data-duration="0.18" data-track-index="44" data-volume="0.45"></audio>
+      <audio id="sfx-25" src="assets/sfx/casino/card-slide-1.ogg" data-start="17.54" data-duration="0.6" data-track-index="45" data-volume="0.4"></audio>
+      <audio id="sfx-26" src="assets/sfx/interface/drop_002.ogg" data-start="19.52" data-duration="0.19" data-track-index="46" data-volume="0.45"></audio>
+      <audio id="sfx-27" src="assets/sfx/ui/rollover2.ogg" data-start="20.02" data-duration="0.057" data-track-index="47" data-volume="0.34"></audio>
+      <audio id="sfx-28" src="assets/sfx/ui/rollover2.ogg" data-start="20.52" data-duration="0.057" data-track-index="48" data-volume="0.34"></audio>
+      <audio id="sfx-29" src="assets/sfx/ui/rollover2.ogg" data-start="21.02" data-duration="0.057" data-track-index="49" data-volume="0.34"></audio>
+      <audio id="sfx-30" src="assets/sfx/ui/rollover2.ogg" data-start="21.52" data-duration="0.057" data-track-index="50" data-volume="0.34"></audio>
+      <audio id="sfx-31" src="assets/sfx/ui/rollover2.ogg" data-start="22.02" data-duration="0.057" data-track-index="51" data-volume="0.34"></audio>
+      <audio id="sfx-32" src="assets/sfx/ui/rollover2.ogg" data-start="22.52" data-duration="0.057" data-track-index="52" data-volume="0.34"></audio>
+      <audio id="sfx-33" src="assets/sfx/ui/rollover2.ogg" data-start="23.02" data-duration="0.057" data-track-index="53" data-volume="0.34"></audio>
+      <audio id="sfx-34" src="assets/sfx/ui/rollover2.ogg" data-start="23.52" data-duration="0.057" data-track-index="54" data-volume="0.34"></audio>
+      <audio id="sfx-35" src="assets/sfx/interface/drop_002.ogg" data-start="23.528" data-duration="0.19" data-track-index="55" data-volume="0.55"></audio>
+      <audio id="sfx-36" src="assets/sfx/casino/card-slide-1.ogg" data-start="24.12" data-duration="0.6" data-track-index="56" data-volume="0.4"></audio>
+      <audio id="sfx-37" src="assets/sfx/keyboard/keypress-007.wav" data-start="25.62" data-duration="0.25" data-track-index="57" data-volume="0.28"></audio>
+      <audio id="sfx-38" src="assets/sfx/keyboard/keypress-016.wav" data-start="25.7" data-duration="0.25" data-track-index="58" data-volume="0.28"></audio>
+      <audio id="sfx-39" src="assets/sfx/keyboard/keypress-024.wav" data-start="25.78" data-duration="0.25" data-track-index="59" data-volume="0.28"></audio>
+      <audio id="sfx-40" src="assets/sfx/keyboard/keypress-031.wav" data-start="25.86" data-duration="0.25" data-track-index="60" data-volume="0.28"></audio>
+      <audio id="sfx-41" src="assets/sfx/keyboard/keypress-016.wav" data-start="26.02" data-duration="0.25" data-track-index="61" data-volume="0.28"></audio>
+      <audio id="sfx-42" src="assets/sfx/keyboard/keypress-024.wav" data-start="26.1" data-duration="0.25" data-track-index="62" data-volume="0.28"></audio>
+      <audio id="sfx-43" src="assets/sfx/keyboard/keypress-031.wav" data-start="26.18" data-duration="0.25" data-track-index="63" data-volume="0.28"></audio>
+      <audio id="sfx-44" src="assets/sfx/keyboard/keypress-007.wav" data-start="26.26" data-duration="0.25" data-track-index="64" data-volume="0.28"></audio>
+      <audio id="sfx-45" src="assets/sfx/keyboard/keypress-007.wav" data-start="26.47" data-duration="0.25" data-track-index="65" data-volume="0.28"></audio>
+      <audio id="sfx-46" src="assets/sfx/keyboard/keypress-016.wav" data-start="26.56" data-duration="0.25" data-track-index="66" data-volume="0.28"></audio>
+      <audio id="sfx-47" src="assets/sfx/keyboard/keypress-024.wav" data-start="26.65" data-duration="0.25" data-track-index="67" data-volume="0.28"></audio>
+      <audio id="sfx-48" src="assets/sfx/keyboard/keypress-031.wav" data-start="26.74" data-duration="0.25" data-track-index="68" data-volume="0.28"></audio>
+      <audio id="sfx-49" src="assets/sfx/keyboard/keypress-007.wav" data-start="26.83" data-duration="0.25" data-track-index="69" data-volume="0.28"></audio>
+      <audio id="sfx-50" src="assets/sfx/interface/drop_002.ogg" data-start="27.02" data-duration="0.19" data-track-index="70" data-volume="0.55"></audio>
+      <audio id="sfx-51" src="assets/sfx/impact/impactBell_heavy_003.ogg" data-start="27.52" data-duration="0.65" data-track-index="71" data-volume="0.45"></audio>
+    </div>
+
+    <script>
+      const BASS = [0.33, 0.53, 0.41, 0.4, 0.39, 0.38, 0.37, 0.37, 0.36, 0.33, 0.32, 0.33, 0.33, 0.33, 0.33, 0.31, 0.32, 0.31, 0.32, 0.33, 0.3, 0.3, 0.31, 0.31, 0.31, 0.32, 0.34, 0.34, 0.32, 0.32, 0.32, 0.26, 0.26, 0.27, 0.27, 0.28, 0.3, 0.32, 0.31, 0.29, 0.3, 0.31, 0.29, 0.28, 0.28, 0.27, 0.27, 0.27, 0.28, 0.3, 0.27, 0.28, 0.29, 0.26, 0.25, 0.26, 0.26, 0.27, 0.27, 0.27, 0.18, 0.3, 0.33, 0.3, 0.3, 0.3, 0.3, 0.32, 0.29, 0.28, 0.28, 0.28, 0.28, 0.28, 0.28, 0.27, 0.26, 0.26, 0.27, 0.26, 0.25, 0.25, 0.25, 0.25, 0.25, 0.26, 0.27, 0.26, 0.25, 0.25, 0.25, 0.23, 0.22, 0.22, 0.23, 0.23, 0.25, 0.27, 0.25, 0.23, 0.22, 0.22, 0.2, 0.19, 0.19, 0.19, 0.19, 0.19, 0.21, 0.21, 0.2, 0.21, 0.21, 0.19, 0.18, 0.18, 0.18, 0.18, 0.19, 0.21, 0.35, 0.43, 0.36, 0.34, 0.33, 0.33, 0.34, 0.36, 0.34, 0.31, 0.32, 0.32, 0.32, 0.33, 0.33, 0.32, 0.31, 0.31, 0.33, 0.33, 0.3, 0.3, 0.31, 0.31, 0.31, 0.32, 0.36, 0.35, 0.38, 0.53, 0.46, 0.35, 0.3, 0.3, 0.3, 0.31, 0.33, 0.37, 0.34, 0.33, 0.33, 0.34, 0.31, 0.31, 0.3, 0.29, 0.29, 0.3, 0.32, 0.32, 0.3, 0.3, 0.31, 0.3, 0.28, 0.28, 0.28, 0.29, 0.3, 0.32, 0.27, 0.36, 0.31, 0.29, 0.29, 0.28, 0.28, 0.29, 0.26, 0.26, 0.25, 0.26, 0.27, 0.27, 0.27, 0.26, 0.24, 0.25, 0.26, 0.25, 0.24, 0.24, 0.24, 0.24, 0.24, 0.26, 0.29, 0.27, 0.25, 0.25, 0.24, 0.23, 0.22, 0.22, 0.22, 0.21, 0.23, 0.24, 0.22, 0.21, 0.22, 0.23, 0.21, 0.21, 0.21, 0.2, 0.19, 0.2, 0.2, 0.2, 0.19, 0.19, 0.21, 0.19, 0.18, 0.18, 0.18, 0.19, 0.2, 0.21, 0.33, 0.5, 0.4, 0.38, 0.39, 0.39, 0.4, 0.4, 0.37, 0.34, 0.33, 0.35, 0.34, 0.35, 0.34, 0.33, 0.31, 0.32, 0.34, 0.34, 0.34, 0.33, 0.33, 0.33, 0.34, 0.35, 0.36, 0.35, 0.33, 0.34, 0.34, 0.3, 0.29, 0.3, 0.3, 0.3, 0.32, 0.35, 0.33, 0.32, 0.33, 0.35, 0.34, 0.33, 0.31, 0.31, 0.3, 0.3, 0.32, 0.33, 0.31, 0.31, 0.33, 0.32, 0.3, 0.31, 0.32, 0.34, 0.38, 0.36, 0.24, 0.33, 0.33, 0.3, 0.3, 0.3, 0.3, 0.32, 0.29, 0.28, 0.28, 0.29, 0.29, 0.29, 0.29, 0.28, 0.27, 0.27, 0.27, 0.27, 0.26, 0.27, 0.26, 0.26, 0.25, 0.25, 0.26, 0.24, 0.24, 0.25, 0.25, 0.23, 0.23, 0.23, 0.24, 0.24, 0.25, 0.27, 0.25, 0.24, 0.24, 0.23, 0.2, 0.2, 0.19, 0.19, 0.19, 0.19, 0.21, 0.21, 0.21, 0.21, 0.21, 0.2, 0.19, 0.19, 0.19, 0.19, 0.2, 0.21, 0.33, 0.35, 0.34, 0.33, 0.33, 0.33, 0.35, 0.37, 0.34, 0.33, 0.32, 0.33, 0.33, 0.34, 0.35, 0.34, 0.32, 0.32, 0.34, 0.35, 0.33, 0.33, 0.32, 0.31, 0.32, 0.33, 0.36, 0.34, 0.35, 0.35, 0.33, 0.3, 0.29, 0.31, 0.31, 0.32, 0.34, 0.36, 0.33, 0.32, 0.33, 0.34, 0.31, 0.31, 0.31, 0.31, 0.3, 0.3, 0.32, 0.32, 0.3, 0.3, 0.31, 0.3, 0.29, 0.29, 0.29, 0.29, 0.3, 0.32, 0.37, 0.36, 0.32, 0.3, 0.3, 0.3, 0.29, 0.31, 0.28, 0.26, 0.26, 0.26, 0.25, 0.26, 0.27, 0.27, 0.25, 0.26, 0.26, 0.26, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.28, 0.27, 0.27, 0.28, 0.27, 0.25, 0.23, 0.22, 0.21, 0.21, 0.24, 0.26, 0.23, 0.22, 0.23, 0.23, 0.22, 0.22, 0.22, 0.21, 0.19, 0.19, 0.2, 0.19, 0.19, 0.2, 0.21, 0.2, 0.19, 0.19, 0.2, 0.2, 0.21, 0.2, 0.47, 0.93, 0.52, 0.49, 0.3, 0.38, 0.42, 0.44, 0.42, 0.38, 0.39, 0.4, 0.4, 0.4, 0.39, 0.4, 0.78, 0.79, 0.31, 0.32, 0.33, 0.35, 0.37, 0.37, 0.37, 0.38, 0.38, 0.38, 0.38, 0.38, 0.44, 0.68, 0.58, 0.45, 0.25, 0.33, 0.37, 0.39, 0.38, 0.39, 0.4, 0.41, 0.39, 0.39, 0.38, 0.41, 0.8, 0.54, 0.42, 0.25, 0.3, 0.34, 0.37, 0.35, 0.34, 0.35, 0.37, 0.38, 0.38, 0.36, 0.4, 0.66, 0.62, 0.44, 0.35, 0.36, 0.39, 0.4, 0.38, 0.38, 0.37, 0.38, 0.38, 0.38, 0.38, 0.5, 0.74, 0.66, 0.34, 0.24, 0.3, 0.32, 0.33, 0.33, 0.34, 0.35, 0.37, 0.37, 0.38, 0.38, 0.39, 0.69, 0.58, 0.28, 0.19, 0.29, 0.32, 0.34, 0.34, 0.34, 0.34, 0.35, 0.34, 0.33, 0.32, 0.39, 0.69, 0.57, 0.31, 0.2, 0.24, 0.28, 0.3, 0.29, 0.27, 0.28, 0.28, 0.28, 0.29, 0.29, 0.44, 0.78, 0.63, 0.44, 0.35, 0.38, 0.4, 0.4, 0.37, 0.36, 0.35, 0.36, 0.37, 0.38, 0.38, 0.44, 0.79, 0.68, 0.31, 0.21, 0.3, 0.34, 0.36, 0.36, 0.37, 0.38, 0.39, 0.38, 0.38, 0.39, 0.51, 0.7, 0.6, 0.39, 0.28, 0.31, 0.34, 0.36, 0.36, 0.36, 0.37, 0.38, 0.37, 0.37, 0.38, 0.41, 0.76, 0.65, 0.3, 0.17, 0.26, 0.29, 0.33, 0.32, 0.33, 0.34, 0.34, 0.34, 0.33, 0.33, 0.49, 0.63, 0.6, 0.36, 0.29, 0.31, 0.34, 0.38, 0.35, 0.33, 0.33, 0.33, 0.33, 0.34, 0.36, 0.51, 0.84, 0.63, 0.3, 0.23, 0.27, 0.32, 0.32, 0.3, 0.29, 0.28, 0.29, 0.28, 0.28, 0.3, 0.43, 0.66, 0.61, 0.35, 0.22, 0.22, 0.24, 0.26, 0.25, 0.26, 0.27, 0.27, 0.27, 0.26, 0.26, 0.41, 0.74, 0.56, 0.25, 0.15, 0.19, 0.21, 0.22, 0.22, 0.21, 0.21, 0.22, 0.22, 0.23, 0.2, 0.45, 0.75, 0.48, 0.52, 0.26, 0.37, 0.41, 0.43, 0.41, 0.4, 0.4, 0.4, 0.4, 0.41, 0.41, 0.43, 0.87, 0.66, 0.37, 0.33, 0.34, 0.37, 0.39, 0.38, 0.38, 0.41, 0.44, 0.43, 0.42, 0.42, 0.37, 0.64, 0.71, 0.32, 0.31, 0.34, 0.41, 0.41, 0.39, 0.38, 0.39, 0.4, 0.38, 0.38, 0.37, 0.44, 0.71, 0.51, 0.48, 0.22, 0.32, 0.35, 0.37, 0.36, 0.34, 0.36, 0.37, 0.36, 0.37, 0.34, 0.4, 0.68, 0.62, 0.44, 0.36, 0.37, 0.39, 0.4, 0.39, 0.38, 0.37, 0.37, 0.36, 0.36, 0.36, 0.47, 0.74, 0.66, 0.36, 0.25, 0.31, 0.33, 0.34, 0.34, 0.34, 0.36, 0.37, 0.36, 0.37, 0.36, 0.39, 0.7, 0.58, 0.28, 0.19, 0.28, 0.32, 0.35, 0.36, 0.36, 0.37, 0.36, 0.33, 0.33, 0.32, 0.39, 0.68, 0.56, 0.29, 0.18, 0.22, 0.26, 0.28, 0.28, 0.27, 0.27, 0.28, 0.28, 0.28, 0.27, 0.43, 0.77, 0.63, 0.42, 0.33, 0.35, 0.38, 0.39, 0.37, 0.35, 0.36, 0.37, 0.38, 0.38, 0.39, 0.46, 0.81, 0.71, 0.32, 0.2, 0.31, 0.35, 0.37, 0.36, 0.36, 0.37, 0.37, 0.36, 0.37, 0.39, 0.54, 0.73, 0.59, 0.39, 0.29, 0.32, 0.36, 0.38, 0.37, 0.37, 0.39, 0.41, 0.38, 0.37, 0.38, 0.42, 0.76, 0.66, 0.29, 0.18, 0.28, 0.32, 0.35, 0.34, 0.34, 0.35, 0.35, 0.35, 0.35, 0.34, 0.24, 0.16, 0.15, 0.21, 0.31, 0.39, 0.43, 0.43, 0.38, 0.35, 0.34, 0.33, 0.33, 0.34, 0.35, 0.27, 0.18, 0.19, 0.21, 0.23, 0.25, 0.28, 0.28, 0.26, 0.26, 0.27, 0.27, 0.26, 0.24, 0.22];
+      const COMMITS = [20.145, 20.278, 20.395, 20.528, 20.645, 20.778, 20.895, 21.028, 21.145, 21.278, 21.395, 21.528, 21.645, 21.778, 21.895, 22.028, 22.145, 22.278, 22.395, 22.528, 22.645, 22.778, 22.895, 23.028, 23.145, 23.278, 23.395, 23.528];
+      const tl = gsap.timeline({ paused: true });
+      const each = (selector) => Array.from(document.querySelectorAll(selector));
+      const type = (selector, at, every, size) => each(selector + " .ch").forEach((ch, index) => {
+        tl.set(ch, { opacity: 1 }, at + index * every);
+        tl.set(selector + " .caret", { x: (index + 1) * size * 0.6 }, at + index * every);
+      });
+
+      // ---------- Act one: in the dark (0 to 4.02)
+      tl.fromTo("#cam-dark", { scale: 1.06 }, { scale: 1, duration: 4.8, ease: "none" }, 0);
+      tl.fromTo("#hook-1 .w", { y: 70, opacity: 0 }, { y: 0, opacity: 1, duration: 0.55, ease: "power3.out", stagger: 0.07 }, 0.22);
+      tl.to("#hook-1 .w", { y: -40, opacity: 0, duration: 0.28, ease: "power2.in", stagger: 0.03 }, 1.78);
+      // beat-locked: 2.02s (bar line): the second line lands and the lights go down
+      tl.fromTo("#hook-2 .w", { y: 70, opacity: 0 }, { y: 0, opacity: 1, duration: 0.5, ease: "power3.out", stagger: 0.06 }, 2.02);
+      tl.to("#dim", { opacity: 0.62, duration: 1.5, ease: "power1.in" }, 2.1);
+
+      // ---------- Lights on. beat-locked: 4.02s (bar line)
+      const hidden = "polygon(-40% 0%, -40% 0%, -60% 100%, -60% 100%)";
+      const shown = "polygon(-40% 0%, 150% 0%, 130% 100%, -60% 100%)";
+      tl.fromTo("#act-light", { clipPath: hidden }, { clipPath: shown, duration: 0.62, ease: "power2.inOut" }, 4.02 - 0.26);
+      tl.fromTo("#sweep", { x: -700, rotation: 11, opacity: 0 }, { x: 2300, rotation: 11, opacity: 1, duration: 0.62, ease: "power2.inOut" }, 4.02 - 0.26);
+      tl.set("#sweep", { opacity: 0 }, 4.02 + 0.37);
+      tl.fromTo("#flash", { opacity: 0.85 }, { opacity: 0, duration: 0.75, ease: "power2.out" }, 4.02 - 0.2);
+      tl.to("#ticks", { color: "#171b1a", duration: 0.4 }, 4.02);
+      tl.set("#act-dark", { opacity: 0 }, 4.7);
+      tl.fromTo("#cam-light", { scale: 1.05 }, { scale: 1, duration: 4.5, ease: "power1.out" }, 3.5);
+      tl.fromTo("#brand .wordmark", { x: -80, opacity: 0 }, { x: 0, opacity: 1, duration: 0.55, ease: "power3.out" }, 4.02 + 0.02);
+      tl.fromTo("#tagline", { y: 50, opacity: 0 }, { y: 0, opacity: 1, duration: 0.55, ease: "power3.out" }, 4.02 + 0.16);
+      tl.fromTo("#glow", { scale: 0.6 }, { scale: 1, duration: 1.2, ease: "power2.out" }, 4.02);
+      tl.to("#brand", { x: -60, opacity: 0, duration: 0.3, ease: "power2.in" }, 6.0 - 0.4);
+      tl.to("#glow", { opacity: 0, duration: 0.3 }, 6.0 - 0.4);
+      // The layers lift at 6.0s in the footage; the command types on the same bar line.
+      tl.fromTo("#scan .term", { y: 60, opacity: 0 }, { y: 0, opacity: 1, duration: 0.4, ease: "back.out(1.6)" }, 6.0 - 0.08);
+      type("#type-scan", 6.0 + 0.06, 0.05, 50);
+      tl.fromTo("#caret-scan", { opacity: 1 }, { opacity: 0, duration: 0.01, repeat: 5, repeatDelay: 0.26, yoyo: true }, 6.0 + 0.6);
+      tl.fromTo("#scan-line", { y: 50, opacity: 0 }, { y: 0, opacity: 1, duration: 0.5, ease: "power3.out" }, 6.0 + 0.34);
+      tl.to("#scan", { y: 40, opacity: 0, duration: 0.26, ease: "power2.in" }, 7.44);
+      tl.to("#act-light", { opacity: 0, duration: 0.26, ease: "power1.in" }, 7.62);
+
+      // ---------- The card (7.72 to 24.02)
+      tl.fromTo("#card", { y: 150, rotationX: 14, scale: 0.92, opacity: 0 }, { y: 0, rotationX: 0, scale: 1, opacity: 1, duration: 0.5, ease: "power3.out" }, 7.66);
+      // Walk: search, dive, how it is built, the code. Camera pushes follow where the eye should go.
+      tl.fromTo("#cam-walk", { scale: 1, xPercent: 0, yPercent: 0, transformOrigin: "50% 50%" }, { scale: 1.05, yPercent: 2.4, duration: 1.2, ease: "power1.inOut" }, 7.8);
+      tl.to("#cam-walk", { scale: 1.1, xPercent: -2, yPercent: 0.5, duration: 0.84, ease: "power2.inOut" }, 9.02);
+      tl.to("#cam-walk", { scale: 1.3, xPercent: -13.5, yPercent: 5, duration: 0.7, ease: "power2.inOut" }, 10.02 - 0.12);
+      tl.to("#cam-walk", { scale: 1.16, xPercent: -6, yPercent: 3.2, duration: 0.75, ease: "power2.inOut" }, 11.02);
+      tl.fromTo("#strip-walk .kicker", { x: -30, opacity: 0 }, { x: 0, opacity: 1, duration: 0.4, ease: "power2.out" }, 7.8);
+      tl.fromTo("#strip-walk .wordmark", { opacity: 0 }, { opacity: 1, duration: 0.4 }, 7.9);
+      tl.fromTo("#walk-1", { y: 40, opacity: 0 }, { y: 0, opacity: 1, duration: 0.36, ease: "power3.out" }, 7.9);
+      tl.to("#walk-1", { y: -30, opacity: 0, duration: 0.18, ease: "power2.in" }, 9.02 - 0.14);
+      tl.fromTo("#walk-2", { y: 40, opacity: 0 }, { y: 0, opacity: 1, duration: 0.34, ease: "power3.out" }, 9.02 + 0.04);
+      tl.to("#walk-2", { y: -30, opacity: 0, duration: 0.16, ease: "power2.in" }, 11.02 - 0.16);
+      tl.fromTo("#walk-3", { y: 40, opacity: 0 }, { y: 0, opacity: 1, duration: 0.3, ease: "power3.out" }, 11.02);
+
+      // Flow: Groma's own camera follows each step, so the card only breathes and nods on the beat.
+      tl.fromTo("#cam-flow", { scale: 1.1, xPercent: 0, transformOrigin: "46% 52%" }, { scale: 1.02, duration: 0.6, ease: "power3.out" }, 12.02);
+      tl.to("#cam-flow", { scale: 1.1, duration: 3.3, ease: "none" }, 12.02 + 0.6);
+      tl.fromTo("#strip-flow .kicker", { x: -30, opacity: 0 }, { x: 0, opacity: 1, duration: 0.3, ease: "power2.out" }, 12.02 + 0.02);
+      tl.fromTo("#flow-1", { y: 40, opacity: 0 }, { y: 0, opacity: 1, duration: 0.36, ease: "power3.out" }, 12.02 + 0.06);
+      // beat-grid: flow step 2 at 13.01s, step 3 at 14.02s, step 4 at 15.02s
+      [13.01, 14.02, 15.02].forEach((at) => tl.fromTo("#card", { y: 0 }, { y: 7, duration: 0.09, ease: "power1.out", yoyo: true, repeat: 1, immediateRender: false }, at));
+
+      // Scan, then curate. beat-locked: 16.02s (the lift) for the raw scan, 17.52s for the agent's work
+      tl.fromTo("#cam-cur", { scale: 1.08, transformOrigin: "47% 53%" }, { scale: 1.16, duration: 17.52 - 16.02, ease: "none" }, 16.02);
+      // The map grows 2.5x as it is curated and Groma zooms out to fit it; the card pushes in to keep it readable.
+      tl.to("#cam-cur", { scale: 1.3, duration: 19.52 - 17.52 + 0.3, ease: "power2.inOut" }, 17.52);
+      tl.fromTo("#strip-cur .kicker", { x: -30, opacity: 0 }, { x: 0, opacity: 1, duration: 0.3, ease: "power2.out" }, 16.02 + 0.02);
+      tl.fromTo("#cur-1", { y: 40, opacity: 0 }, { y: 0, opacity: 1, duration: 0.36, ease: "power3.out" }, 16.02 + 0.06);
+      tl.fromTo("#state-raw", { x: 30, opacity: 0 }, { x: 0, opacity: 1, duration: 0.32, ease: "power3.out" }, 16.02 + 0.2);
+      tl.to("#cur-1", { y: -30, opacity: 0, duration: 0.16, ease: "power2.in" }, 17.52 - 0.16);
+      tl.to("#state-raw", { opacity: 0, duration: 0.2 }, 17.52);
+      tl.fromTo("#cur-2", { y: 40, opacity: 0 }, { y: 0, opacity: 1, duration: 0.36, ease: "power3.out" }, 17.52);
+      tl.fromTo("#state-curated", { x: 30, opacity: 0 }, { x: 0, opacity: 1, duration: 0.32, ease: "back.out(1.6)" }, 19.52);
+
+      // Timelapse. beat-locked: 20.02s (bar line)
+      tl.fromTo("#cam-time", { scale: 1.0, xPercent: 0, yPercent: 0, transformOrigin: "50% 48%" }, { scale: 1.2, xPercent: 2.5, yPercent: 0.5, duration: 0.7, ease: "power3.out" }, 20.02);
+      tl.to("#cam-time", { scale: 1.29, xPercent: 1.5, yPercent: 1.5, duration: 3.3, ease: "none" }, 20.02 + 0.7);
+      tl.fromTo("#strip-time .kicker", { x: -30, opacity: 0 }, { x: 0, opacity: 1, duration: 0.3, ease: "power2.out" }, 20.02 + 0.02);
+      tl.fromTo("#time-1", { y: 40, opacity: 0 }, { y: 0, opacity: 1, duration: 0.36, ease: "power3.out" }, 20.02 + 0.06);
+      // beat-grid: commits land on sixteenth notes from the bar; each one swaps the counter and its subject
+      COMMITS.forEach((at, index) => {
+        tl.set("#commit-" + index, { opacity: 1 }, index === 0 ? 20.02 + 0.02 : at);
+        if (index > 0) tl.set("#commit-" + (index - 1), { opacity: 0 }, at);
+      });
+      tl.fromTo("#build-fill", { scaleX: 0.02 }, { scaleX: 1, duration: COMMITS[COMMITS.length - 1] - 20.02, ease: "none" }, 20.02);
+      tl.to("#card", { y: -120, rotationX: -10, scale: 0.94, opacity: 0, duration: 0.24, ease: "power2.in" }, 24.02 - 0.2);
+
+      // ---------- Your stack (24.02 to 25.52)
+      tl.fromTo("#stack-kicker", { x: -30, opacity: 0 }, { x: 0, opacity: 1, duration: 0.3, ease: "power2.out" }, 24.02 + 0.02);
+      tl.fromTo("#stack-line", { y: 70, opacity: 0 }, { y: 0, opacity: 1, duration: 0.4, ease: "power3.out" }, 24.02 + 0.02);
+      // beat-grid: the chips cascade from the bar and hold as a set
+      tl.fromTo(".lang", { y: 50, scale: 0.86, opacity: 0 }, { y: 0, scale: 1, opacity: 1, duration: 0.26, ease: "back.out(1.7)", stagger: 0.058 }, 24.02 + 0.12);
+      tl.to("#stack-kicker, #stack-line, #langs", { y: -50, opacity: 0, duration: 0.16, ease: "power2.in" }, 25.52 - 0.17);
+
+      // ---------- Install (25.52 to 31.0)
+      tl.fromTo("#install-art", { x: 160, opacity: 0 }, { x: 0, opacity: 0.95, duration: 0.9, ease: "power3.out" }, 25.52);
+      tl.fromTo("#install-art img", { scale: 1.12 }, { scale: 1.0, duration: 3.4, ease: "power1.out" }, 25.52);
+      tl.fromTo("#install-mark", { x: -60, opacity: 0 }, { x: 0, opacity: 1, duration: 0.4, ease: "power3.out" }, 25.52 + 0.02);
+      tl.fromTo("#install-term", { y: 60, opacity: 0 }, { y: 0, opacity: 1, duration: 0.38, ease: "power3.out" }, 25.52 + 0.04);
+      type("#type-npm", 25.62, 0.04, 52);
+      tl.set("#caret-npm", { opacity: 0 }, 26.47 - 0.04);
+      tl.fromTo("#caret-web", { opacity: 0 }, { opacity: 1, duration: 0.01 }, 26.47 - 0.04);
+      type("#type-web", 26.47, 0.045, 52);
+      // beat-locked: 27.02s (strong cue): the third step, the one the first scan needs
+      tl.set("#caret-web", { opacity: 0 }, 27.02 - 0.02);
+      tl.fromTo("#row-curate", { x: -40, opacity: 0 }, { x: 0, opacity: 1, duration: 0.42, ease: "power3.out" }, 27.02);
+      tl.fromTo(".fact", { y: 30, opacity: 0 }, { y: 0, opacity: 1, duration: 0.28, ease: "back.out(1.6)", stagger: 0.07 }, 25.52 + 0.72);
+      // beat-locked: 27.52s (strong cue): the closing line
+      tl.fromTo("#close-1", { y: 80, opacity: 0 }, { y: 0, opacity: 1, duration: 0.5, ease: "power3.out" }, 27.52);
+      tl.fromTo("#close-2", { y: 80, opacity: 0 }, { y: 0, opacity: 1, duration: 0.5, ease: "power3.out" }, 27.52 + 0.34);
+      tl.fromTo("#closing-rule", { scaleX: 0 }, { scaleX: 1, duration: 0.7, ease: "power3.inOut" }, 27.52 + 0.5);
+
+      // ---------- Audio-reactive: the bass of the track breathes the green glows (30 samples a second)
+      BASS.forEach((level, frame) => tl.set("#root", { "--bass": level }, frame / 30));
+
+      window.__timelines["main"] = tl;
+    </script>
+  </body>
+</html>

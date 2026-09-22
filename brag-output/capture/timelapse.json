@@ -1,0 +1,203 @@
+{
+ "fps": 60,
+ "pre": 12,
+ "total": 48,
+ "marks": [
+  {
+   "frame": 12,
+   "from": 1,
+   "to": 2,
+   "subject": "TASK-1 in progress: Set up the service skeleton",
+   "seen": true
+  },
+  {
+   "frame": 20,
+   "from": 3,
+   "to": 3,
+   "subject": "TASK-1: the scan finds new code",
+   "seen": true
+  },
+  {
+   "frame": 27,
+   "from": 4,
+   "to": 5,
+   "subject": "TASK-1 done: Set up the service skeleton",
+   "seen": true
+  },
+  {
+   "frame": 35,
+   "from": 6,
+   "to": 7,
+   "subject": "Plan: Model the product catalog",
+   "seen": true
+  },
+  {
+   "frame": 42,
+   "from": 8,
+   "to": 8,
+   "subject": "Plan: Let customers fill a cart",
+   "seen": true
+  },
+  {
+   "frame": 50,
+   "from": 9,
+   "to": 10,
+   "subject": "Plan: Charge payments through the provider",
+   "seen": true
+  },
+  {
+   "frame": 57,
+   "from": 11,
+   "to": 12,
+   "subject": "Plan: Turn an approved cart into an order",
+   "seen": true
+  },
+  {
+   "frame": 65,
+   "from": 13,
+   "to": 13,
+   "subject": "Plan: Email order confirmations",
+   "seen": true
+  },
+  {
+   "frame": 72,
+   "from": 14,
+   "to": 15,
+   "subject": "TASK-2 in progress: Model the product catalog",
+   "seen": true
+  },
+  {
+   "frame": 80,
+   "from": 16,
+   "to": 17,
+   "subject": "TASK-2: the agent names it Product catalog",
+   "seen": true
+  },
+  {
+   "frame": 87,
+   "from": 18,
+   "to": 18,
+   "subject": "TASK-2 done: Model the product catalog",
+   "seen": true
+  },
+  {
+   "frame": 95,
+   "from": 19,
+   "to": 20,
+   "subject": "TASK-3: the scan finds new code",
+   "seen": true
+  },
+  {
+   "frame": 102,
+   "from": 21,
+   "to": 22,
+   "subject": "TASK-3 done: Let customers fill a cart",
+   "seen": true
+  },
+  {
+   "frame": 110,
+   "from": 23,
+   "to": 24,
+   "subject": "TASK-4: the scan finds new code",
+   "seen": true
+  },
+  {
+   "frame": 117,
+   "from": 25,
+   "to": 25,
+   "subject": "TASK-4: the agent names it Inventory",
+   "seen": true
+  },
+  {
+   "frame": 125,
+   "from": 26,
+   "to": 27,
+   "subject": "TASK-5 in progress: Charge payments through the provider",
+   "seen": true
+  },
+  {
+   "frame": 132,
+   "from": 28,
+   "to": 29,
+   "subject": "TASK-5: the agent names it Payment gateway",
+   "seen": true
+  },
+  {
+   "frame": 140,
+   "from": 30,
+   "to": 30,
+   "subject": "TASK-5 done: Charge payments through the provider",
+   "seen": true
+  },
+  {
+   "frame": 147,
+   "from": 31,
+   "to": 32,
+   "subject": "TASK-6: the scan finds new code",
+   "seen": true
+  },
+  {
+   "frame": 155,
+   "from": 33,
+   "to": 34,
+   "subject": "TASK-6 done: Own the order lifecycle and history",
+   "seen": true
+  },
+  {
+   "frame": 162,
+   "from": 35,
+   "to": 35,
+   "subject": "TASK-7 in progress: Turn an approved cart into an order",
+   "seen": true
+  },
+  {
+   "frame": 170,
+   "from": 36,
+   "to": 37,
+   "subject": "TASK-7: the agent names it Checkout",
+   "seen": true
+  },
+  {
+   "frame": 177,
+   "from": 38,
+   "to": 39,
+   "subject": "Explain how checkout works with its neighbours",
+   "seen": true
+  },
+  {
+   "frame": 185,
+   "from": 40,
+   "to": 40,
+   "subject": "TASK-8 in progress: Email order confirmations",
+   "seen": true
+  },
+  {
+   "frame": 192,
+   "from": 41,
+   "to": 42,
+   "subject": "TASK-8: the agent names it Order emails",
+   "seen": true
+  },
+  {
+   "frame": 200,
+   "from": 43,
+   "to": 44,
+   "subject": "TASK-9 in progress: Open the API to the shop front end",
+   "seen": true
+  },
+  {
+   "frame": 207,
+   "from": 45,
+   "to": 45,
+   "subject": "TASK-9: the scan finds new code",
+   "seen": true
+  },
+  {
+   "frame": 215,
+   "from": 46,
+   "to": 47,
+   "subject": "Explain what the HTTP API calls",
+   "seen": true
+  }
+ ]
+}

@@ -1,0 +1,5 @@
+# Filmed clips and render snapshots are large; the capture scripts and `npx hyperframes snapshot` rebuild them.
+composition/assets/footage/
+composition/snapshots/
+# The music track's licence is unverified, so the track itself is not redistributed. See composition/assets/CREDITS.md.
+composition/assets/music/
