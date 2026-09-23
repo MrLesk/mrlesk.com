@@ -55,8 +55,9 @@ folders (`plugins/scanners/java`, ...) the same scan works: 76 seconds, about 6,
 
 - `slides.md` holds the cover and the slide order. One file per slide in `pages/`.
 - `pages/2xb-*-live.md` are the embedded live map slides; `21c` is the timelapse of the demo order service.
-- `components/SurveyorScene.vue` is the field-to-map transition. Its coordinates are slide
-  pixels and match `public/map-*.webp`. Re-capture those with `bun scripts/capture-map.mjs`.
+- `components/SurveyorScene.vue` dissolves the road engraving into the map engraving
+  (`public/groma-road.webp`, `public/groma-map.webp`). Both are the light pictures from Groma's
+  `docs/what-is-a-groma.md`; their green lines keep them to paper slides.
 - `public/demo/` holds the fallback stills.
 
 ## Commands

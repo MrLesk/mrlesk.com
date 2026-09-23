@@ -1054,160 +1054,52 @@ html[data-mood="4"] body, html[data-mood="4"] #page-root, html[data-mood="4"] #s
   overflow: hidden;
 }
 
-.scene-map,
-.scene-field,
-.scene-line {
+/* The two engravings sit inside the frame lines. Multiply lets their white take the slide's paper tone,
+   and the distance fades into the paper so the light meter stays readable. */
+.scene-art {
   position: absolute;
   inset: 0;
   width: 100%;
   height: 100%;
-}
-
-.scene-map {
   object-fit: cover;
-  opacity: 0;
+  object-position: 50% 70%;
+  mix-blend-mode: multiply;
   clip-path: polygon(36px 19px, calc(100% - 36px) 19px, calc(100% - 19px) 36px, calc(100% - 19px) calc(100% - 36px), calc(100% - 36px) calc(100% - 19px), 36px calc(100% - 19px), 19px calc(100% - 36px), 19px 36px);
-  transition: opacity 1.1s ease;
+  mask-image: linear-gradient(to bottom, transparent 3%, black 22%);
+  transition: opacity 1.4s ease;
 }
 
-.scene.mapped .scene-map.plain {
+/* Shifted down so its surveyor stands about where the road's surveyor stood. */
+.scene-art.code {
+  object-position: 50% 30%;
+}
+
+.scene-art.code,
+.scene.mapped .scene-art.land {
+  opacity: 0;
+}
+
+.scene.mapped .scene-art.code {
   opacity: 1;
 }
 
-.scene.mapped .scene-map.selected {
-  opacity: 1;
-  transition-delay: 1.75s;
-}
-
-.scene-field {
-  transition: opacity 0.7s ease;
-}
-
-.scene-field .hatch path,
-.scene-field .poles line,
-.scene-field .poles path {
-  fill: none;
-  stroke: var(--groma-ink);
-  stroke-linecap: round;
-  stroke-width: 1.3;
-}
-
-.scene-field .poles line {
-  stroke-width: 2.2;
-}
-
-.scene-field .sight {
-  stroke: var(--groma-ink);
-  stroke-dasharray: 7 6;
-  stroke-width: 1.3;
-}
-
-.scene-field text {
-  fill: var(--groma-ink);
-  font-family: "Fira Code", ui-monospace, monospace;
-  font-size: 15px;
-  font-weight: 600;
-}
-
-.scene.mapped .scene-field {
-  opacity: 0;
-}
-
-.scene-line .ground {
-  fill: none;
-  stroke-linecap: round;
-}
-
-.scene-line .ground.ink {
-  stroke: var(--groma-ink);
-  stroke-width: 1.6;
-  transition: opacity 0.6s ease;
-}
-
-.scene.mapped .scene-line .ground.ink {
-  opacity: 0;
-}
-
-.scene-line .reveal {
-  stroke: #ffffff;
-  stroke-width: 18;
-  stroke-dasharray: 100;
-  stroke-dashoffset: 100;
-  transition: stroke-dashoffset 1.2s cubic-bezier(0.6, 0, 0.3, 1) 0.65s;
-}
-
-.scene.mapped .scene-line .reveal {
-  stroke-dashoffset: 0;
-}
-
-.scene-line .ground.casing {
-  stroke: var(--groma-paper);
-  stroke-width: 10;
-  opacity: 0.92;
-}
-
-.scene-line .ground.green {
-  stroke: #0fa873;
-  stroke-width: 4;
-  stroke-dasharray: 11 8;
-  stroke-linecap: butt;
-}
-
-.scene-line .reticle {
-  opacity: 0;
-  transform-box: fill-box;
-  transform-origin: center;
-  transform: scale(0.3);
-  transition: opacity 0.4s ease 1.75s, transform 0.5s cubic-bezier(0.3, 1.6, 0.5, 1) 1.75s;
-}
-
-.scene.mapped .scene-line .reticle {
-  opacity: 1;
-  transform: scale(1);
-}
-
-.scene-line .reticle .ring {
-  fill: var(--groma-paper);
-  stroke: #0fa873;
-  stroke-width: 3;
-}
-
-.scene-line .reticle .dot {
-  fill: #0fa873;
-}
-
-.scene-line .landing {
-  fill: none;
-  stroke: #0fa873;
-  stroke-width: 2.5;
-  opacity: 0;
-  transform-box: fill-box;
-  transform-origin: center;
-}
-
-.scene.mapped .scene-line .landing {
-  animation: landed 1.2s ease-out 1.8s forwards;
-}
-
-@keyframes landed {
-  0% { opacity: 0.9; transform: scale(0.6); }
-  100% { opacity: 0; transform: scale(5); }
-}
-
-.scene-surveyor {
-  position: absolute;
-  top: 197.6px;
-  left: 57px;
-  width: 208.8px;
-  filter: drop-shadow(0 1px 0 rgba(247, 246, 242, 0.9));
-}
-
+/* The pictures keep their surveyor and groma on the left, so the line sits in the empty corner bottom right,
+   on a soft patch of paper. */
 .scene-copy {
   position: absolute;
-  top: 44px;
-  left: 54px;
-  padding: 2px 18px 12px 0;
-  background: radial-gradient(ellipse at 30% 50%, rgba(247, 246, 242, 0.96) 55%, rgba(247, 246, 242, 0) 100%);
+  right: 44px;
+  bottom: 30px;
+  isolation: isolate;
+}
+
+.scene-copy::before {
+  content: '';
+  position: absolute;
+  inset: -26px -34px -18px -46px;
+  z-index: -1;
+  border-radius: 48px;
+  background: rgba(247, 246, 242, 0.95);
+  filter: blur(18px);
 }
 
 .slidev-layout.sheet .scene-copy h1 {

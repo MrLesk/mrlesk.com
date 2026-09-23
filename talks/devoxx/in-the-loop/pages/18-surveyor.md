@@ -15,8 +15,8 @@ You plant it, you sight along the plumb lines to the ranging poles, and you get
 straight lines and right angles through land nobody has mapped yet.
 
 [click] Same idea, different territory. The field becomes your codebase, and the sight line
-lands on a component. This is the real Groma map of Groma itself, and you are about to see it live.
+lands on a component. You are about to see the real map live.
 
-IMAGE: the surveyor is cut out of the dark mock. For a cleaner edge, generate him alone on a
-transparent background and replace public/surveyor.webp (keep the staff foot at the same spot).
+PICTURES: the engravings from Groma's "What is a groma?" page. On the first, legionaries build
+the road along the surveyor's green line; on the click the land dissolves into the map.
 -->
