@@ -146,27 +146,36 @@ export async function encode(dir, output) {
 
 const easeInOut = u => u < 0.5 ? 4 * u * u * u : 1 - ((-2 * u + 2) ** 3) / 2
 
-/** Adds a drawn mouse pointer to the page. Screenshots do not include the system cursor, so the film needs its own. */
-export async function installCursor(page, start) {
-  await page.evaluate(({ x, y }) => {
+/**
+ * Adds a drawn mouse pointer to the page. Screenshots do not include the system cursor, so the film needs its own.
+ * It has the arrow, the pointing hand for anything clickable, and the text cursor; `runShot` shows the one the page
+ * asks for under the pointer. `scale` enlarges it for shots whose page is shown smaller than its own pixels.
+ */
+export async function installCursor(page, start, scale = 1) {
+  await page.evaluate(({ x, y, scale }) => {
     const cursor = document.createElement('div')
     cursor.id = 'film-cursor'
     cursor.style.cssText = `position:fixed;left:0;top:0;z-index:2147483647;pointer-events:none;transform:translate(${x}px,${y}px)`
-    cursor.innerHTML = '<i style="position:absolute;left:-23px;top:-23px;width:46px;height:46px;border-radius:50%;border:3px solid #1d9e75;opacity:0;box-sizing:border-box"></i>'
-      + '<svg width="30" height="30" viewBox="0 0 24 24" style="position:absolute;left:-5px;top:-3px;filter:drop-shadow(0 2px 3px rgba(0,0,0,.35))"><path d="M5 2.5v17.2l4.6-4.3 2.9 6.6 2.7-1.2-2.9-6.5 6.2-.4z" fill="#171b1a" stroke="#fff" stroke-width="1.5" stroke-linejoin="round"/></svg>'
+    const shadow = 'filter:drop-shadow(0 2px 3px rgba(0,0,0,.35))'
+    cursor.innerHTML = `<div style="transform:scale(${scale});transform-origin:0 0">`
+      + '<i style="position:absolute;left:-23px;top:-23px;width:46px;height:46px;border-radius:50%;border:3px solid #1d9e75;opacity:0;box-sizing:border-box"></i>'
+      + `<svg data-shape="arrow" width="30" height="30" viewBox="0 0 24 24" style="position:absolute;left:-5px;top:-3px;${shadow}"><path d="M5 2.5v17.2l4.6-4.3 2.9 6.6 2.7-1.2-2.9-6.5 6.2-.4z" fill="#171b1a" stroke="#fff" stroke-width="1.5" stroke-linejoin="round"/></svg>`
+      + `<svg data-shape="hand" width="30" height="30" viewBox="0 0 24 24" style="position:absolute;left:-12px;top:-2px;display:none;${shadow}"><path d="M8 3.2a1.7 1.7 0 0 1 3.4 0v7a1.6 1.6 0 0 1 3.2.3v.5a1.6 1.6 0 0 1 3.2.4v.6a1.5 1.5 0 0 1 3 .4v4.1c0 3-2.3 5.5-5.4 5.5h-2.6c-1.9 0-3.4-.9-4.4-2.4l-3.8-4.1c-.6-.9-.3-2 .6-2.4.8-.4 1.7-.2 2.3.5L8 14z" fill="#fff" stroke="#171b1a" stroke-width="1.3" stroke-linejoin="round"/><path d="M11.4 10.4v3.4M14.6 10.8v3M17.8 11.8v2.4" stroke="#171b1a" stroke-width="1.1" stroke-linecap="round"/></svg>`
+      + `<svg data-shape="text" width="30" height="30" viewBox="0 0 24 24" style="position:absolute;left:-15px;top:-15px;display:none;${shadow}"><path d="M9 3.5h2a1 1 0 0 1 1 1v15a1 1 0 0 1-1 1H9M15 3.5h-2a1 1 0 0 0-1 1v15a1 1 0 0 0 1 1h2" fill="none" stroke="#fff" stroke-width="3.6" stroke-linecap="round"/><path d="M9 3.5h2a1 1 0 0 1 1 1v15a1 1 0 0 1-1 1H9M15 3.5h-2a1 1 0 0 0-1 1v15a1 1 0 0 0 1 1h2" fill="none" stroke="#171b1a" stroke-width="1.6" stroke-linecap="round"/></svg>`
+      + '</div>'
     document.body.append(cursor)
-  }, start)
+  }, { ...start, scale })
 }
 
 /**
  * Runs a scripted shot. `moves` are cursor legs ({ from, to, x, y } in frames and CSS pixels), `clicks` are
  * frame numbers where the mouse really clicks at the cursor, `hooks` run just before their frame is filmed,
- * and `speed(frame)` is how fast Groma's clock runs on that frame.
+ * `speed(frame)` is how fast Groma's clock runs on that frame, and `cursorScale` enlarges the drawn pointer.
  */
-export async function runShot(stage, { frames, start, moves = [], clicks = [], hooks = {}, speed = () => 1, skipUntil = 0 }) {
+export async function runShot(stage, { frames, start, moves = [], clicks = [], hooks = {}, speed = () => 1, skipUntil = 0, cursorScale = 1 }) {
   const page = stage.page
   let at = { ...start }
-  await installCursor(page, at)
+  await installCursor(page, at, cursorScale)
   await page.mouse.move(at.x, at.y)
   const rippleFrames = 22
   for (let frame = 0; frame < frames; frame++) {
@@ -184,7 +193,14 @@ export async function runShot(stage, { frames, start, moves = [], clicks = [], h
       const cursor = document.getElementById('film-cursor')
       if (cursor === null) return
       cursor.style.transform = `translate(${x}px,${y}px)`
-      const ring = cursor.firstElementChild
+      // The shape the page asks for under the pointer. The map's own grab hand stays an arrow, so the cursor reads
+      // as a mouse while it travels; buttons, links and components show the pointing hand, text fields the I-beam.
+      const under = document.elementFromPoint(x, y)
+      const wanted = under === null ? 'auto' : getComputedStyle(under).cursor
+      const field = under?.matches('input:not([type=button]):not([type=submit]):not([type=checkbox]):not([type=radio]), textarea, [contenteditable="true"]')
+      const shape = wanted === 'pointer' ? 'hand' : wanted === 'text' || (wanted === 'auto' && field) ? 'text' : 'arrow'
+      for (const svg of cursor.querySelectorAll('svg[data-shape]')) svg.style.display = svg.dataset.shape === shape ? '' : 'none'
+      const ring = cursor.querySelector('i')
       ring.style.opacity = ripple === null ? '0' : String(0.9 * (1 - ripple))
       ring.style.transform = ripple === null ? 'scale(0.3)' : `scale(${0.35 + 1.1 * ripple})`
     }, { x: at.x, y: at.y, ripple: clicked === undefined ? null : (frame - clicked) / rippleFrames })

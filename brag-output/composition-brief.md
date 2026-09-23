@@ -41,9 +41,9 @@ Create a 25 second launch film for groma.md that Alex posts on X. People should 
 ## Storyboard
 Use the storyboard in `brag-output/brag-plan.md` as the creative contract.
 
-Scene summary (bars of the 120 BPM track are every 2 s from 0.02):
+Scene summary (bars of the 120 BPM track are every 2 s from 0.02). This is the original plan, cut to the first music track; `build.py` holds the current timings and music, where a repeated bar at 8.02 gives the iso push-in two seconds and every later scene one bar more:
 1. In the dark, 0.0 to 4.02 s: `hero-blueprint.mp4` full bleed; "Agents write the code." / "You're in the dark."
-2. Lights on, 4.02 to 8.02 s: diagonal light sweep into `hero-light.mp4` (same camera path); wordmark and "Your architecture, alive."; at 6.0 the map lifts into C4 layers; chip `groma web`; "Scans your code. Draws the map."
+2. Lights on, 4.02 to 8.02 s: diagonal light sweep into `hero-light.mp4` (same camera path, 2D); wordmark and "Your architecture, alive."; the view switch appears and at 6.02 the cursor clicks Iso, so the flat plan rises into the isometric map
 3. Walk it, 8.02 to 12.02 s: `walk.mp4` in a framed card; search, fly to a component, How it's built, source opens; "Find anything." / "Read what it does." / "Open the code."
 4. Trace a flow, 12.02 to 16.02 s: `flow.mp4`; steps 2, 3, 4 land on 13.02, 14.02, 15.02; "Trace a flow, step by step."
 5. Watch agents build, 16.02 to 20.02 s: `timelapse.mp4`; commit counter to 48 and commit subjects from `capture/timelapse.json`; "Watch your agents build."

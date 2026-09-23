@@ -12,28 +12,33 @@ import pathlib
 
 HERE = pathlib.Path(__file__).parent
 marks = json.loads((HERE / "../capture/timelapse.json").read_text())
-bass = json.loads((HERE / "../capture/bass.json").read_text())
+energy_track = json.loads((HERE / "../capture/music-energy.json").read_text())  # the track's loudness, 0 to 1, 30 samples a second
 
 # ---------------------------------------------------------------- the clock (120 BPM, bars every 2 s from 0.02)
+# The track (Sunny Launchpad, ElevenLabs Music v2.5) is 120 BPM with its bars on the same grid. It plays its bar 4 twice
+# (see "music" below), so the bass enters with the walk at 10.02 (track 8.02) and the drop lands on the scan scene at
+# 18.02 (track 16.02).
 LIGHTS = 4.02          # beat-locked: lights on, a bar line
-LAYERS = 6.0           # the map lifts into its C4 layers (filmed at frame 360)
-WALK = 8.02            # search click
-DIVE = 9.02            # Enter: the camera dives to the component
-HOW = 10.02            # "How it's built"
-CODE = 11.02           # the source file opens
-FLOW = 12.02
-STEPS = [13.01, 14.02, 15.02]
-SCANNED = 16.02        # beat-locked: the track's lift, the raw first scan of the order service
-CURATING = 17.52       # beat-locked: the agent's curation lands and the map glides (filmed at frame 90)
-CURATED = 19.52        # the glide settles (0.7 s of Groma's morph, filmed at 0.35x)
-BUILD = 20.02          # bar line: timelapse starts
-STACK = 24.02
-INSTALL = 25.52
-CURATE = 27.02         # beat-locked: the third step, your agent curates (strong cue)
-CLOSE = 27.52          # beat-locked: closing line (strong cue)
-END = 31.0
+RISE = 6.02            # beat-locked: the cursor clicks Iso and the map rises out of 2D (filmed at frame 361)
+REPEAT = 8.02          # bar line: the repeated bar, while the camera pushes in on the iso components
+BAR = 2.0
+WALK = 10.02           # search click
+DIVE = 11.02           # Enter: the camera dives to the component
+HOW = 12.02            # "How it's built"
+CODE = 13.02           # the source file opens
+FLOW = 14.02
+STEPS = [15.01, 16.02, 17.02]
+SCANNED = 18.02        # beat-locked: the track's drop, the raw first scan of the order service
+CURATING = 19.52       # beat-locked: the agent's curation lands and the map glides (filmed at frame 90)
+CURATED = 21.52        # the glide settles (0.7 s of Groma's morph, filmed at 0.35x)
+BUILD = 24.02          # bar line: the timelapse opens on the empty map; the first commit lands one second later
+STACK = 32.02
+INSTALL = 35.52
+CURATE = 37.02         # beat-locked: the third step, ask your agent (beat 3)
+CLOSE = 37.52          # beat-locked: closing line (beat 4)
+END = 41.0
 
-TIMELAPSE_MEDIA_START = 0.075
+TIMELAPSE_MEDIA_START = 0.0
 def commit_time(frame):  # composition time at which a filmed timelapse frame is on screen
     return round(BUILD + frame / 60 - TIMELAPSE_MEDIA_START, 3)
 
@@ -50,8 +55,8 @@ def typing(start, text, every, volume=0.3, skip=2):
 
 sound(2.0, "impact/impactSoft_medium_001.ogg", 0.5, 0.18)
 sound(LIGHTS - 0.03, "impact/impactSoft_heavy_003.ogg", 0.7, 0.54)
-typing(LAYERS + 0.06, "groma web", 0.05)
-sound(LAYERS, "casino/card-slide-1.ogg", 0.34, 0.6)
+sound(RISE, "ui/click2.ogg", 0.5, 0.055)
+sound(RISE + 0.1, "casino/card-slide-1.ogg", 0.36, 0.6)
 sound(WALK, "ui/click2.ogg", 0.5, 0.055)
 typing(WALK + 0.1, "web h", 0.117, 0.28, skip=1)
 sound(DIVE, "keyboard/keypress-021.wav", 0.4, 0.25)
@@ -65,7 +70,8 @@ sound(SCANNED, "ui/rollover2.ogg", 0.4, 0.057)
 sound(CURATING, "impact/impactSoft_medium_001.ogg", 0.45, 0.18)
 sound(CURATING + 0.02, "casino/card-slide-1.ogg", 0.4, 0.6)
 sound(CURATED, "interface/drop_002.ogg", 0.45, 0.19)
-for beat in [BUILD + 0.5 * index for index in range(8)]:
+first_commit, last_commit = commit_time(marks["marks"][0]["frame"]), commit_time(marks["marks"][-1]["frame"])
+for beat in [first_commit + 0.5 * index for index in range(int((last_commit - first_commit) / 0.5) + 1)]:
     sound(beat, "ui/rollover2.ogg", 0.34, 0.057)
 sound(commit_time(marks["marks"][-1]["frame"]), "interface/drop_002.ogg", 0.55, 0.19)
 sound(STACK + 0.1, "casino/card-slide-1.ogg", 0.4, 0.6)
@@ -81,9 +87,37 @@ audio_tags = "\n".join(
     for index, (time, file, volume, duration) in enumerate(sorted(sfx))
 )
 
-music_lane = json.dumps({"version": 1, "lanes": [{"target": "volume", "points": [
-    {"t": 0, "v": 0}, {"t": 0.2, "v": 0.34}, {"t": 3.7, "v": 0.34}, {"t": 4.05, "v": 0.5}, {"t": 29.6, "v": 0.5}, {"t": 30.95, "v": 0},
-]}]})
+# ---------------------------------------------------------------- music
+# Clips of the one track. Each entry is (composition time, track time) where a clip takes over; the clip before it
+# plays until then. Bar 4, the last light bar before the bass comes in, plays twice for the iso push-in. The 20 ms
+# seam ends 5 ms before the next bar's attack, which starts about 20 ms ahead of the bar line, so both sides are only
+# a tail there. Lane times are clip-local.
+MUSIC_FILE = "assets/music/sunny-launchpad-elevenlabs.mp3"
+MUSIC = [(0.0, 0.0), (REPEAT, REPEAT - BAR)]
+LEVEL = 0.44  # this track is about 1.2 dB louder than the first cut's, so the clicks and hits keep their balance
+SEAM_LEAD, SEAM_END = 0.045, 0.025
+def lane(points):
+    return json.dumps({"version": 1, "lanes": [{"target": "volume", "points": [{"t": round(t, 3), "v": v} for t, v in points]}]})
+music_tags = []
+for index, (at, track_at) in enumerate(MUSIC):
+    start = 0.0 if index == 0 else round(at - SEAM_LEAD, 3)
+    last = index == len(MUSIC) - 1
+    end = END if last else round(MUSIC[index + 1][0] - SEAM_END, 3)
+    rise = [(0, 0), (0.2, LEVEL)] if index == 0 else [(0, 0), (SEAM_LEAD - SEAM_END, LEVEL)]
+    fall = [(END - 1.4 - start, LEVEL), (END - 0.05 - start, 0)] if last else [(end - (SEAM_LEAD - SEAM_END) - start, LEVEL), (end - start, 0)]
+    music_tags.append(
+        f'      <audio id="music-{index + 1}" src="{MUSIC_FILE}" data-start="{start}" data-media-start="{round(track_at - (at - start), 3)}" '
+        f'data-duration="{round(end - start, 3)}" data-track-index="{10 + index}" data-automation=\'{lane(rise + fall)}\'></audio>'
+    )
+music_tags = "\n".join(music_tags)
+
+def track_time(at):
+    """The moment of the track heard at composition time `at`."""
+    clip_at, clip_track = [entry for entry in MUSIC if entry[0] <= at][-1]
+    return at - clip_at + clip_track
+# The glows breathe with the loudness of what is heard, 30 samples a second. The floor keeps them lit through the
+# track's hushed intro, at about the level the first cut had.
+bass = [round(0.22 + 0.5 * energy_track[min(round(track_time(frame / 30) * 30), len(energy_track) - 1)], 3) for frame in range(round(END * 30))]
 
 # ---------------------------------------------------------------- repeated markup
 def typed(text):
@@ -177,17 +211,9 @@ html = f"""<!doctype html>
         background: radial-gradient(closest-side, rgba(29, 158, 117, 0.42), rgba(29, 158, 117, 0));
         opacity: calc(0.25 + var(--bass) * 1.1);
       }}
-      #scan {{ position: absolute; left: 112px; bottom: 126px; width: 1500px; }}
-      .term {{
-        display: inline-flex; align-items: center; gap: 18px; padding: 18px 30px 20px; background: var(--ink); color: #f2f4f3;
-        font-family: "IBM Plex Mono", monospace; font-weight: 500; font-size: 50px;
-        box-shadow: 14px 14px 0 -4px var(--green);
-      }}
-      .term .prompt {{ color: #3ecf9f; }}
       .typed {{ position: relative; display: inline-block; }}
       .caret {{ position: absolute; left: 4px; top: 50%; width: 0.5em; height: 1.05em; margin-top: -0.52em; background: #3ecf9f; }}
       .ch {{ opacity: 0; }}
-      #scan-line {{ margin-top: 30px; font-weight: 800; font-size: 84px; letter-spacing: -0.04em; line-height: 1.05; }}
 
       /* ---------- The product card (walk, flow, timelapse) ---------- */
       #card-stage {{ perspective: 2200px; }}
@@ -261,19 +287,16 @@ html = f"""<!doctype html>
         </div>
       </div>
 
-      <!-- Act two: the same camera path filmed in the light theme, revealed by a diagonal sweep. -->
+      <!-- Act two: the same camera path filmed in the light theme, revealed by a diagonal sweep.
+           In the footage the view switch appears, the cursor clicks Iso and the flat plan rises into the map. -->
       <div id="act-light" class="layer">
-        <div class="cam" id="cam-light"><video id="v-light" src="assets/footage/hero-light.mp4" data-start="3.5" data-duration="4.5" data-track-index="1" muted playsinline></video></div>
-        <div id="reveal" class="clip" data-start="3.5" data-duration="4.5" data-track-index="6">
+        <div class="cam" id="cam-light"><video id="v-light" src="assets/footage/hero-light.mp4" data-start="3.5" data-duration="{round(WALK - 0.02 - 3.5, 2)}" data-track-index="1" muted playsinline></video></div>
+        <div id="reveal" class="clip" data-start="3.5" data-duration="{round(WALK - 0.02 - 3.5, 2)}" data-track-index="6">
           <div class="scrim" id="light-scrim"></div>
           <div id="glow"></div>
           <div id="brand">
             <div class="wordmark">{WORDMARK}</div>
             <div id="tagline">Your architecture, alive.</div>
-          </div>
-          <div id="scan">
-            <div class="term"><span class="prompt">$</span><span class="typed" id="type-scan">{typed("groma web")}<i class="caret" id="caret-scan"></i></span></div>
-            <div id="scan-line">From system to component.</div>
           </div>
         </div>
         <div id="flash"></div>
@@ -283,14 +306,14 @@ html = f"""<!doctype html>
       <!-- The product, in one card: three real recordings of groma web, cut on the bar lines. -->
       <div id="card-stage" class="layer">
         <div id="card">
-          <div class="cam" id="cam-walk"><video id="v-walk" src="assets/footage/walk.mp4" data-start="7.72" data-duration="4.3" data-track-index="2" muted playsinline></video></div>
+          <div class="cam" id="cam-walk"><video id="v-walk" src="assets/footage/walk.mp4" data-start="{round(WALK - 0.3, 2)}" data-duration="4.3" data-track-index="2" muted playsinline></video></div>
           <div class="cam" id="cam-flow"><video id="v-flow" src="assets/footage/flow.mp4" data-start="{FLOW}" data-media-start="0.3" data-duration="4.0" data-track-index="2" muted playsinline></video></div>
-          <div class="cam" id="cam-cur"><video id="v-cur" src="assets/footage/curate.mp4" data-start="{SCANNED}" data-duration="4.0" data-track-index="2" muted playsinline></video></div>
-          <div class="cam" id="cam-time"><video id="v-time" src="assets/footage/timelapse.mp4" data-start="{BUILD}" data-media-start="{TIMELAPSE_MEDIA_START}" data-duration="4.0" data-track-index="2" muted playsinline></video></div>
+          <div class="cam" id="cam-cur"><video id="v-cur" src="assets/footage/curate.mp4" data-start="{SCANNED}" data-duration="{round(BUILD - SCANNED, 2)}" data-track-index="2" muted playsinline></video></div>
+          <div class="cam" id="cam-time"><video id="v-time" src="assets/footage/timelapse.mp4" data-start="{BUILD}" data-media-start="{TIMELAPSE_MEDIA_START}" data-duration="{round(STACK - BUILD, 2)}" data-track-index="2" muted playsinline></video></div>
         </div>
       </div>
 
-      <div id="strip-walk" class="clip" data-start="7.72" data-duration="4.3" data-track-index="7"><div class="strip">
+      <div id="strip-walk" class="clip" data-start="{round(WALK - 0.3, 2)}" data-duration="4.3" data-track-index="7"><div class="strip">
         <div class="kicker">01 / WALK THE MAP</div>
         <h2 id="walk-1">Find anything.</h2>
         <h2 id="walk-2">Read what it does.</h2>
@@ -302,14 +325,14 @@ html = f"""<!doctype html>
         <h2 id="flow-1">Trace a flow, step by step.</h2>
         <div class="wordmark">{WORDMARK}</div>
       </div></div>
-      <div id="strip-cur" class="clip" data-start="{SCANNED}" data-duration="4.0" data-track-index="7"><div class="strip">
+      <div id="strip-cur" class="clip" data-start="{SCANNED}" data-duration="{round(BUILD - SCANNED, 2)}" data-track-index="7"><div class="strip">
         <div class="kicker">03 / SCAN, THEN CURATE</div>
         <h2 id="cur-1">Groma scans your code.</h2>
         <h2 id="cur-2">Your agent curates it.</h2>
         <span class="state" id="state-raw">STARTING POINT</span>
-        <span class="state curated" id="state-curated">YOUR ARCHITECTURE</span>
+        <span class="state curated" id="state-curated">YOUR ARCHITECTURE IS READY</span>
       </div></div>
-      <div id="strip-time" class="clip" data-start="{BUILD}" data-duration="4.0" data-track-index="7"><div class="strip">
+      <div id="strip-time" class="clip" data-start="{BUILD}" data-duration="{round(STACK - BUILD, 2)}" data-track-index="7"><div class="strip">
         <div class="kicker">04 / LIVE WORK</div>
         <h2 id="time-1">Watch your agents build.</h2>
         <div id="commits">
@@ -333,7 +356,7 @@ html = f"""<!doctype html>
         <div id="install-term">
           <div class="row"><span class="step">INSTALL</span><span class="typed" id="type-npm">{typed("npm i -g groma.md")}<i class="caret" id="caret-npm"></i></span></div>
           <div class="row"><span class="step">SCAN</span><span class="typed" id="type-web">{typed("groma web")}<i class="caret" id="caret-web"></i></span></div>
-          <div class="row curate" id="row-curate"><span class="step">CURATE</span><span class="value">your agent</span></div>
+          <div class="row curate" id="row-curate"><span class="step">CURATE</span><span class="value">ask your agent</span></div>
         </div>
         <div id="facts"><span class="fact">FREE</span><span class="fact">MIT</span><span class="fact">LOCAL</span><span class="fact">NO ACCOUNT</span></div>
         <div id="closing"><span class="line" id="close-1">In the loop.</span><span class="line" id="close-2">Not in the dark.</span></div>
@@ -342,7 +365,7 @@ html = f"""<!doctype html>
 
       <div id="ticks"><i></i><i></i><i></i><i></i></div>
 
-      <audio id="music" src="assets/music/happy-beats-business-moves-vol-1-by-ende-dot-app.mp3" data-start="0" data-duration="{END}" data-track-index="10" data-automation='{music_lane}'></audio>
+{music_tags}
 {audio_tags}
     </div>
 
@@ -377,26 +400,22 @@ html = f"""<!doctype html>
       tl.fromTo("#brand .wordmark", {{ x: -80, opacity: 0 }}, {{ x: 0, opacity: 1, duration: 0.55, ease: "power3.out" }}, {LIGHTS} + 0.02);
       tl.fromTo("#tagline", {{ y: 50, opacity: 0 }}, {{ y: 0, opacity: 1, duration: 0.55, ease: "power3.out" }}, {LIGHTS} + 0.16);
       tl.fromTo("#glow", {{ scale: 0.6 }}, {{ scale: 1, duration: 1.2, ease: "power2.out" }}, {LIGHTS});
-      tl.to("#brand", {{ x: -60, opacity: 0, duration: 0.3, ease: "power2.in" }}, {LAYERS} - 0.4);
-      tl.to("#glow", {{ opacity: 0, duration: 0.3 }}, {LAYERS} - 0.4);
-      // The layers lift at {LAYERS}s in the footage; the command types on the same bar line.
-      tl.fromTo("#scan .term", {{ y: 60, opacity: 0 }}, {{ y: 0, opacity: 1, duration: 0.4, ease: "back.out(1.6)" }}, {LAYERS} - 0.08);
-      type("#type-scan", {LAYERS} + 0.06, 0.05, 50);
-      tl.fromTo("#caret-scan", {{ opacity: 1 }}, {{ opacity: 0, duration: 0.01, repeat: 5, repeatDelay: 0.26, yoyo: true }}, {LAYERS} + 0.6);
-      tl.fromTo("#scan-line", {{ y: 50, opacity: 0 }}, {{ y: 0, opacity: 1, duration: 0.5, ease: "power3.out" }}, {LAYERS} + 0.34);
-      tl.to("#scan", {{ y: 40, opacity: 0, duration: 0.26, ease: "power2.in" }}, 7.44);
-      tl.to("#act-light", {{ opacity: 0, duration: 0.26, ease: "power1.in" }}, 7.62);
+      // The cursor clicks Iso at {RISE}s in the footage, the map rises under the title, then the camera pushes in on
+      // the components through the repeated bar. The title holds until the cut.
+      tl.to("#brand", {{ y: 40, opacity: 0, duration: 0.26, ease: "power2.in" }}, {WALK} - 0.58);
+      tl.to("#glow", {{ opacity: 0, duration: 0.26 }}, {WALK} - 0.58);
+      tl.to("#act-light", {{ opacity: 0, duration: 0.26, ease: "power1.in" }}, {WALK} - 0.4);
 
-      // ---------- The card (7.72 to {STACK})
-      tl.fromTo("#card", {{ y: 150, rotationX: 14, scale: 0.92, opacity: 0 }}, {{ y: 0, rotationX: 0, scale: 1, opacity: 1, duration: 0.5, ease: "power3.out" }}, 7.66);
+      // ---------- The card ({round(WALK - 0.3, 2)} to {STACK})
+      tl.fromTo("#card", {{ y: 150, rotationX: 14, scale: 0.92, opacity: 0 }}, {{ y: 0, rotationX: 0, scale: 1, opacity: 1, duration: 0.5, ease: "power3.out" }}, {WALK} - 0.36);
       // Walk: search, dive, how it is built, the code. Camera pushes follow where the eye should go.
-      tl.fromTo("#cam-walk", {{ scale: 1, xPercent: 0, yPercent: 0, transformOrigin: "50% 50%" }}, {{ scale: 1.05, yPercent: 2.4, duration: 1.2, ease: "power1.inOut" }}, 7.8);
+      tl.fromTo("#cam-walk", {{ scale: 1, xPercent: 0, yPercent: 0, transformOrigin: "50% 50%" }}, {{ scale: 1.05, yPercent: 2.4, duration: 1.2, ease: "power1.inOut" }}, {WALK} - 0.22);
       tl.to("#cam-walk", {{ scale: 1.1, xPercent: -2, yPercent: 0.5, duration: 0.84, ease: "power2.inOut" }}, {DIVE});
       tl.to("#cam-walk", {{ scale: 1.3, xPercent: -13.5, yPercent: 5, duration: 0.7, ease: "power2.inOut" }}, {HOW} - 0.12);
       tl.to("#cam-walk", {{ scale: 1.16, xPercent: -6, yPercent: 3.2, duration: 0.75, ease: "power2.inOut" }}, {CODE});
-      tl.fromTo("#strip-walk .kicker", {{ x: -30, opacity: 0 }}, {{ x: 0, opacity: 1, duration: 0.4, ease: "power2.out" }}, 7.8);
-      tl.fromTo("#strip-walk .wordmark", {{ opacity: 0 }}, {{ opacity: 1, duration: 0.4 }}, 7.9);
-      tl.fromTo("#walk-1", {{ y: 40, opacity: 0 }}, {{ y: 0, opacity: 1, duration: 0.36, ease: "power3.out" }}, 7.9);
+      tl.fromTo("#strip-walk .kicker", {{ x: -30, opacity: 0 }}, {{ x: 0, opacity: 1, duration: 0.4, ease: "power2.out" }}, {WALK} - 0.22);
+      tl.fromTo("#strip-walk .wordmark", {{ opacity: 0 }}, {{ opacity: 1, duration: 0.4 }}, {WALK} - 0.12);
+      tl.fromTo("#walk-1", {{ y: 40, opacity: 0 }}, {{ y: 0, opacity: 1, duration: 0.36, ease: "power3.out" }}, {WALK} - 0.12);
       tl.to("#walk-1", {{ y: -30, opacity: 0, duration: 0.18, ease: "power2.in" }}, {DIVE} - 0.14);
       tl.fromTo("#walk-2", {{ y: 40, opacity: 0 }}, {{ y: 0, opacity: 1, duration: 0.34, ease: "power3.out" }}, {DIVE} + 0.04);
       tl.to("#walk-2", {{ y: -30, opacity: 0, duration: 0.16, ease: "power2.in" }}, {CODE} - 0.16);
@@ -407,13 +426,15 @@ html = f"""<!doctype html>
       tl.to("#cam-flow", {{ scale: 1.1, duration: 3.3, ease: "none" }}, {FLOW} + 0.6);
       tl.fromTo("#strip-flow .kicker", {{ x: -30, opacity: 0 }}, {{ x: 0, opacity: 1, duration: 0.3, ease: "power2.out" }}, {FLOW} + 0.02);
       tl.fromTo("#flow-1", {{ y: 40, opacity: 0 }}, {{ y: 0, opacity: 1, duration: 0.36, ease: "power3.out" }}, {FLOW} + 0.06);
-      // beat-grid: flow step 2 at 13.01s, step 3 at 14.02s, step 4 at 15.02s
+      // beat-grid: flow steps 2, 3 and 4 at {STEPS[0]}s, {STEPS[1]}s and {STEPS[2]}s
       {json.dumps(STEPS)}.forEach((at) => tl.fromTo("#card", {{ y: 0 }}, {{ y: 7, duration: 0.09, ease: "power1.out", yoyo: true, repeat: 1, immediateRender: false }}, at));
 
       // Scan, then curate. beat-locked: {SCANNED}s (the lift) for the raw scan, {CURATING}s for the agent's work
       tl.fromTo("#cam-cur", {{ scale: 1.08, transformOrigin: "47% 53%" }}, {{ scale: 1.16, duration: {CURATING} - {SCANNED}, ease: "none" }}, {SCANNED});
       // The map grows 2.5x as it is curated and Groma zooms out to fit it; the card pushes in to keep it readable.
       tl.to("#cam-cur", {{ scale: 1.3, duration: {CURATED} - {CURATING} + 0.3, ease: "power2.inOut" }}, {CURATING});
+      // The finished architecture holds, the card drifting in a little, until the timelapse.
+      tl.to("#cam-cur", {{ scale: 1.34, duration: {BUILD} - {CURATED} - 0.3, ease: "none" }}, {CURATED} + 0.3);
       tl.fromTo("#strip-cur .kicker", {{ x: -30, opacity: 0 }}, {{ x: 0, opacity: 1, duration: 0.3, ease: "power2.out" }}, {SCANNED} + 0.02);
       tl.fromTo("#cur-1", {{ y: 40, opacity: 0 }}, {{ y: 0, opacity: 1, duration: 0.36, ease: "power3.out" }}, {SCANNED} + 0.06);
       tl.fromTo("#state-raw", {{ x: 30, opacity: 0 }}, {{ x: 0, opacity: 1, duration: 0.32, ease: "power3.out" }}, {SCANNED} + 0.2);
@@ -422,17 +443,17 @@ html = f"""<!doctype html>
       tl.fromTo("#cur-2", {{ y: 40, opacity: 0 }}, {{ y: 0, opacity: 1, duration: 0.36, ease: "power3.out" }}, {CURATING});
       tl.fromTo("#state-curated", {{ x: 30, opacity: 0 }}, {{ x: 0, opacity: 1, duration: 0.32, ease: "back.out(1.6)" }}, {CURATED});
 
-      // Timelapse. beat-locked: {BUILD}s (bar line)
-      tl.fromTo("#cam-time", {{ scale: 1.0, xPercent: 0, yPercent: 0, transformOrigin: "50% 48%" }}, {{ scale: 1.2, xPercent: 2.5, yPercent: 0.5, duration: 0.7, ease: "power3.out" }}, {BUILD});
-      tl.to("#cam-time", {{ scale: 1.29, xPercent: 1.5, yPercent: 1.5, duration: 3.3, ease: "none" }}, {BUILD} + 0.7);
+      // Timelapse. beat-locked: {BUILD}s (bar line); commits land on eighth notes from one second in
+      // The footage frames the service itself (capture/shot-timelapse.mjs), so the card only drifts in a little.
+      tl.fromTo("#cam-time", {{ scale: 1.0, transformOrigin: "50% 50%" }}, {{ scale: 1.04, duration: {STACK} - {BUILD}, ease: "none" }}, {BUILD});
       tl.fromTo("#strip-time .kicker", {{ x: -30, opacity: 0 }}, {{ x: 0, opacity: 1, duration: 0.3, ease: "power2.out" }}, {BUILD} + 0.02);
       tl.fromTo("#time-1", {{ y: 40, opacity: 0 }}, {{ y: 0, opacity: 1, duration: 0.36, ease: "power3.out" }}, {BUILD} + 0.06);
       // beat-grid: commits land on sixteenth notes from the bar; each one swaps the counter and its subject
       COMMITS.forEach((at, index) => {{
-        tl.set("#commit-" + index, {{ opacity: 1 }}, index === 0 ? {BUILD} + 0.02 : at);
+        tl.set("#commit-" + index, {{ opacity: 1 }}, at);
         if (index > 0) tl.set("#commit-" + (index - 1), {{ opacity: 0 }}, at);
       }});
-      tl.fromTo("#build-fill", {{ scaleX: 0.02 }}, {{ scaleX: 1, duration: COMMITS[COMMITS.length - 1] - {BUILD}, ease: "none" }}, {BUILD});
+      tl.fromTo("#build-fill", {{ scaleX: 0.02 }}, {{ scaleX: 1, duration: COMMITS[COMMITS.length - 1] - COMMITS[0], ease: "none" }}, COMMITS[0]);
       tl.to("#card", {{ y: -120, rotationX: -10, scale: 0.94, opacity: 0, duration: 0.24, ease: "power2.in" }}, {STACK} - 0.2);
 
       // ---------- Your stack ({STACK} to {INSTALL})

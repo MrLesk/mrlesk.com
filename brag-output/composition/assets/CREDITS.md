@@ -4,6 +4,6 @@
   [Kenney](https://kenney.nl/). The key presses are from
   [Keyboard Soundpack #1](https://opengameart.org/content/keyboard-soundpack-1-typing-and-single-keystrokes) by unicae_games.
 - **Fonts** in `fonts/`: Inter and IBM Plex Mono, under the SIL Open Font License 1.1 (`fonts/OFL.txt`).
-- **Music**: "Happy Beats / Business Moves, Vol. 1" from [ende.app](https://ende.app/en), bundled with the `/brag` skill.
-  The track is not in this repository because its licence terms are unverified. To re-render, copy
-  `happy-beats-business-moves-vol-1-by-ende-dot-app.mp3` from the skill's `assets/music/` into `music/`.
+- **Music**: "Sunny Launchpad", made for this film with ElevenLabs Music v2.5 on Alex's ElevenLabs account, whose plan
+  includes the commercial licence for generated music. The track is not in this repository. To re-render, download it
+  from that account's music history into `music/sunny-launchpad-elevenlabs.mp3`.

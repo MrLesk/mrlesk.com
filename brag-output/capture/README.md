@@ -9,11 +9,11 @@ slow motion.
 
 | Script | Shot |
 | --- | --- |
-| `shot-hero.mjs` | Map only. A scripted glide and pull-back, then F2 lifts the map into its C4 layers. Filmed twice with the same camera path (`THEME=blueprint`, `THEME=light`) so the edit can wipe between them. |
+| `shot-hero.mjs` | Map only, in 2D. A scripted glide and pull-back over the flat plan; after lights on the view switch appears (enlarged, so it reads on a phone), the cursor clicks Iso, the map rises into the isometric view at half speed, and the camera pushes in on the components. Filmed twice with the same camera path (`THEME=blueprint`, `THEME=light`) so the edit can wipe between them. |
 | `shot-walk.mjs` | Search "web h", Enter (the camera dives to Web host), How it's built, open `server.ts`. |
 | `shot-flow.mjs` | The "Scan project source" flow, one step per second with the Next button. |
-| `shot-timelapse.mjs` | Replays the demo order service's history (`SCRATCH/orders-history`, a clone of `slidev-addon-groma-live/demo/orders.bundle`) into a folder Groma watches; commits land on a sixteenth-note grid. Writes `timelapse.json` with the frame of every commit. |
-| `shot-curate.mjs` | The order service as a raw first scan (`SCRATCH/orders-raw`, a fresh scan of the demo's last commit), then the agent's curated architecture lands and the map morphs into it. |
+| `shot-timelapse.mjs` | Replays the demo order service's history (`SCRATCH/orders-history`, a clone of `slidev-addon-groma-live/demo/orders.bundle`) into a folder Groma watches: one second of the empty map, then commits on an eighth-note grid, then a long hold. The header and element filters are hidden, the empty map's card drops its scanner setup step, and the rig's camera follows the service (islands, buildings, pins) instead of Groma fitting the whole sheet. Writes `timelapse.json` with the frame of every commit; copy it next to the script. |
+| `shot-curate.mjs` | The order service as a raw first scan (`SCRATCH/orders-raw`, a fresh scan of the demo's last commit), then the agent's curated architecture lands and the map morphs into it. The film uses `HOLD_FRAMES=130` for the longer hold. |
 
 The film set is a clean clone of Groma (`SCRATCH/groma-clean`) with its scanners switched off, so the
 committed architecture is shown as is, and with `CAMERA_SETTLE_MS` set to 0 in `src/viewers/web/iso/map.ts`.
@@ -28,8 +28,13 @@ export SCRATCH=/path/to/scratch   # holds groma-clean, frames and clips
 OUT=$SCRATCH/clips THEME=blueprint TO=300 node shot-hero.mjs
 ```
 
+The drawn cursor takes the shape the page asks for under it: the pointing hand over buttons, links and components, the I-beam over text fields, the arrow elsewhere (the map's own grab hand stays an arrow).
+
 `capture-still.mjs` and `verify-deck.mjs` serve the slide decks: the first captures a deck replay's fallback still, the
 second records the flash deck's timelapse map in real time.
+
+`music-energy.json` is the music's loudness at 30 samples a second, which the edit's green glows breathe with: the
+`rms` of every frame from the hyperframes-creative skill's `extract-audio-data.py --fps 30`, rounded to three decimals.
 
 The filmed clips (`../composition/assets/footage/`), the music track and the render snapshots are not in the repository.
 The clips come back from these scripts; `../composition/assets/CREDITS.md` says where the music comes from.

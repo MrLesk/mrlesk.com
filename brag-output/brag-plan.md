@@ -1,5 +1,7 @@
 # Brag Plan: groma.md
 
+> **Current cut (2026-09-23, 41 s).** Scene times below are the original plan; `composition/build.py` holds the current ones. The opening is the flat 2D plan; after lights on the cursor clicks Iso at 6.02, the map rises, and the camera pushes in on the components through a repeated music bar (8.02 to 10.02). Alex then asked for room to breathe: the curated map holds with "YOUR ARCHITECTURE IS READY", the timelapse opens on the empty map (without its scanner setup button) and runs on eighth notes with the camera on the service, the finished service and the language chips hold longer, and the last step reads "ask your agent". The music is now "Sunny Launchpad" (ElevenLabs Music v2.5, 120 BPM on the same bar grid): its bar 4 plays twice, so the bass enters with the walk at 10.02 and the drop lands on the scan scene at 18.02.
+
 ## What is this app?
 Groma scans a repository and draws it as a live C4 architecture map in the browser. The map is stored as plain Markdown in Git, updates when code changes, and shows where coding agents are working.
 
@@ -15,7 +17,7 @@ A glowing blueprint map glides past in the dark. Two lines, one per bar:
 On the downbeat at 4.02 s a diagonal light sweep turns the blueprint into the paper map. Same camera, same frame: only the light changes.
 
 ## Key moments (the middle)
-- **Lights on (4.0 to 8.0 s).** Wordmark "groma.md" and "Your architecture, alive." Then a terminal chip types `groma web`, and the flat map lifts apart into its three C4 layers (System, Container, Component). Caption: "Scans your code. Draws the map."
+- **Lights on (4.0 to 8.0 s).** Wordmark "groma.md" and "Your architecture, alive." over the flat 2D plan. The view switch appears, a cursor clicks Iso on the 6.02 bar line, and the plan rises into the isometric map in slow motion.
 - **Walk it (8.0 to 12.0 s).** Real input on the real app: type "web h" in search (components and tasks both show up), press Enter and the camera dives to the "Web host" component with its glow, then "How it's built", then the source file opens. Captions: "Find anything." / "Read what it does." / "Open the code."
 - **Trace a flow (12.0 to 16.0 s).** The "Scan project source" flow, steps 1 to 4, one per beat, with the green path and the camera following. Caption: "Trace a flow, step by step."
 - **Watch agents build (16.0 to 20.0 s, the music lifts here).** A timelapse of a small order service built by an agent with Backlog.md tasks: task pins drop, components appear, a commit counter runs to 48. Caption: "Watch your agents build."
@@ -33,7 +35,7 @@ Run `groma web` in a repo, then the map appears, then click a component to read 
 - Interpretation: one dramatic device (dark to light), then fast, confident product shots cut on the beat. Few words, large type, real footage. No jokes, no mockups, no claims beyond the README.
 
 ## Format: landscape, 1920x1080, 60 fps
-## Duration: 31 seconds (Alex asked for more room than the /brag 25 s guideline)
+## Duration: 41 seconds (Alex asked for more room than the /brag 25 s guideline)
 
 ## Visual identity (from the project)
 - Background: paper `#F7F6F2` (deck) and `#FFFFFF` (product light theme); dark act `#07152B` (product blueprint theme)
@@ -41,7 +43,7 @@ Run `groma web` in a repo, then the map appears, then click a component to read 
 - Text: ink `#171B1A` on paper, `#D8F3FF` on blueprint
 - Display font: Inter (700 and 800, tight tracking), as in the decks
 - Body and label font: IBM Plex Mono, close to the product's monospace UI
-- Strongest visual element: the isometric map itself, especially the exploded Layers view and a traced flow
+- Strongest visual element: the isometric map itself, especially its rise out of the flat 2D plan and a traced flow
 
 ## Share copy (draft)
 Agents write the code. groma.md keeps you in the loop: a live architecture map of your repo, in plain Markdown. `npm i -g groma.md`, then `groma web`.
@@ -67,10 +69,10 @@ Music: intro bars 1 and 2, held slightly lower
 Transition mood: dramatic (diagonal light sweep with a flash) into Scene 2
 
 ### Scene 2: Lights on, 4.0 to 8.0 s
-The same shot, now the light paper theme. Wordmark "groma.md" and "Your architecture, alive." land on 4.02 and hold 1.8 s. At 6.02 a terminal chip types `groma web`; the map lifts into System, Container, Component layers and orbits slightly. Caption: "From system to component." (holds 1.6 s). It no longer says the scan draws this finished map.
-Sequential/interaction: typed command, then the layers separate
+The same shot, now the light paper theme, still in 2D. Wordmark "groma.md" and "Your architecture, alive." land on 4.02 and hold until the cut. The view switch (Iso, 2D, Layers) fades in, the cursor travels to Iso and clicks on 6.02, and the flat plan swings up into the isometric map at half speed.
+Sequential/interaction: the switch appears, the cursor clicks, the map rises
 Audio intent: release, brightness
-Audio-coupled idea: key ticks on the typed command; a soft rise as the layers lift
+Audio-coupled idea: a click on the tab, then a soft slide as the map rises
 Transition mood: clean (camera settles, cut on the bar) into Scene 3
 
 ### Scene 3: Walk it, 8.0 to 12.0 s
