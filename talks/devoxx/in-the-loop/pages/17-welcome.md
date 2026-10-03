@@ -12,8 +12,8 @@ mood: 4
 <!--
 ⏱ 08:30
 
-Lights fully on. Colour arrives with Groma: until now the deck was monochrome.
+Lights fully on. Colour arrives with Groma.md: until now the deck was monochrome.
 
-Welcome to Groma.md. It took four attempts: project Blueprint, groma, groma 2, and groma 3,
-which is the one that works. I will tell you what went wrong with the first three after the demo.
+Welcome to Groma.md. It took four attempts: project Blueprint, Groma.md 1, Groma.md 2, and Groma.md 3,
+which is the one that works. Here's what went wrong with the first three.
 -->

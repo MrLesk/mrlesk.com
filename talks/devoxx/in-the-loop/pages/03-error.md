@@ -1,7 +1,6 @@
 ---
 layout: default
 mood: 1
-clicks: 1
 ---
 
 # Until it hit me.
@@ -11,7 +10,7 @@ clicks: 1
     <b>500</b>
     <span>Unexpected server error</span>
   </div>
-  <p v-click class="in-prod">in production</p>
+  <p class="in-prod">in production</p>
 </div>
 
 <!--

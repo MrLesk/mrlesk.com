@@ -22,7 +22,7 @@ routeAlias: live-curated
   ]"
   :captions="[
     'Keycloak. 8,467 Java files, 57 components.',
-    'The server, by responsibility.',
+    'Inside the server.',
     'Who uses it.',
     'Sign in with a password, step by step.',
     'Sign in with a password, step by step.',
@@ -36,16 +36,16 @@ routeAlias: live-curated
 />
 
 <!--
-⏱ 21:15 to 23:00. Keycloak after agent curation, prepared in advance in ~/projects/keycloak.
+⏱ 25:15 to 27:00. Keycloak after agent curation, prepared in advance in ~/projects/keycloak.
 
 Click 0. The landscape: users, Keycloak, LDAP, the database, SMTP. "8,467 Java files. I can read this in a minute."
 [click] The server container: Authentication, OpenID Connect, SAML, storage, federation.
 [click] Who uses it: the end user.
 [click] x4. Follow "Sign in with a password" through the system.
 [click] One component: OpenID Connect. What it does, who it talks to.
-[click] How it is built: 264 files behind one box, and I can open any of them.
+[click] How it's built: 264 files behind one box, and I can open any of them.
 
-Land the point before leaving the demo: this is the level I review at now. Not every line. The architecture.
+Before leaving the demo, say: this is the level I review at now.
 
 `bun run dev` starts this map for you.
 The numbers in the first caption come from Keycloak at commit dd4ae31d. Re-check them if you update the checkout.

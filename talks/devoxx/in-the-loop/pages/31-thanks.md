@@ -22,7 +22,7 @@ mood: 4
 <!--
 ⏱ 29:05
 
-Leave this up for questions. Check out Groma.md, it is literally groma.md.
+Leave this up for questions. Check out Groma.md, it's literally groma.md.
 
 The QR code points at https://mrlesk.com/talks/devoxx/in-the-loop/
 Regenerate public/qr-slides.svg if the folder or URL changes.

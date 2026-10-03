@@ -25,5 +25,5 @@ I started looking at the code and, WTF.
 20 plus versions of the Button component. Authentication checks in each page instead of a middleware.
 So many leftovers between APIs and unused components. 1700 tests, most of them testing UI labels.
 
-[click] I could not even tell what code runs in production.
+[click] I couldn't even tell what code runs in production.
 -->

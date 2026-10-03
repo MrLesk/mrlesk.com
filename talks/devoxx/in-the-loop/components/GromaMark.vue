@@ -1,6 +1,6 @@
 <template>
   <!-- Inline so the mark follows the text colour of the slide's light. -->
-  <svg class="groma-mark" viewBox="0 0 100 100" role="img" aria-label="Groma mark">
+  <svg class="groma-mark" viewBox="0 0 100 100" role="img" aria-label="Groma.md mark">
     <circle cx="50" cy="6" r="5" fill="currentColor" />
     <line x1="50" y1="12" x2="50" y2="94" stroke="currentColor" stroke-width="7" stroke-linecap="round" />
     <line x1="22" y1="32" x2="78" y2="32" stroke="currentColor" stroke-width="7" stroke-linecap="round" />

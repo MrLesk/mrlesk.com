@@ -19,19 +19,20 @@ mood: 4
   <div><span>TASKS</span><strong>Native Backlog.md integration</strong></div>
   <div><span>OFFLINE</span><strong>Works without a network or an AI service</strong></div>
   <div><span>LANGUAGES</span><strong>Java, TypeScript, Go, C#, Python, Rust and more</strong></div>
-  <div><span>EXPORT</span><strong>A static architecture site</strong></div>
-  <div><span>HISTORY</span><strong>Compare the architecture between commits</strong></div>
+  <div><span>PULL REQUESTS</span><strong>A before/after map on every PR</strong></div>
+  <div><span>REVIEW</span><strong>What changed between any two commits</strong></div>
 </div>
 
 <!--
 ⏱ 27:00
 
 Top right, the three steps you just saw on Keycloak: install, scan, then your agent curates.
-The scan is a starting point; the curated map is the architecture.
+The scan just gets you started. Once it's curated, that map is your architecture.
 
 Quick spec sheet, 45 seconds. MIT. Deterministic scans. Live refresh of architecture components.
 Native integration with Backlog.md tasks. Works offline. Supports multiple popular languages.
-Can export a static architecture. Compare changes between commits.
+Review what changed between any two commits, and on every pull request: the groma.md GitHub Action
+publishes a before/after map and keeps one comment updated.
 
-Compare is real: Groma ships a time machine and revision comparison on the map (TASK-463).
+Review is real: Groma.md 0.6.0 compares any two commits on the map; you just showed it on the agents' work.
 -->

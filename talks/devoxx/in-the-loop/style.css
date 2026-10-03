@@ -8,6 +8,9 @@
   --slidev-theme-primary: #171b1a !important;
   --slidev-theme-secondary: #1d9e75 !important;
   --groma-green: #1d9e75;
+  /* The same green, deep enough for small text on paper (4.9:1) and for white text on it (5.3:1).
+     The brand green stays for fills, lines and large numbers. */
+  --groma-green-text: #127a5a;
   --groma-paper: #f7f6f2;
   --groma-ink: #171b1a;
   --alarm: #ff5a4f;
@@ -25,7 +28,7 @@
   --grid: rgba(23, 27, 26, 0.035);
   --frame: rgba(23, 27, 26, 0.28);
   --panel: rgba(255, 255, 255, 0.55);
-  --accent: #1d9e75;
+  --accent: #127a5a;
 }
 
 .slidev-layout.sheet.mood-3,
@@ -41,17 +44,18 @@
   --accent: #151918;
 }
 
+/* Light enough for dark text to read on a projector (9.4:1, APCA Lc 63), still a step below light grey. */
 .slidev-layout.sheet.mood-2,
 .light-meter[data-mood="2"] {
-  --bg: #8c918f;
-  --fg: #101312;
+  --bg: #b1b5b3;
+  --fg: #0b0d0c;
   --muted: #2c3230;
   --line: #5c6260;
-  --faint: #7e8381;
-  --grid: rgba(0, 0, 0, 0.05);
+  --faint: #a3a7a5;
+  --grid: rgba(0, 0, 0, 0.035);
   --frame: rgba(0, 0, 0, 0.3);
   --panel: rgba(255, 255, 255, 0.14);
-  --accent: #101312;
+  --accent: #0b0d0c;
 }
 
 .slidev-layout.sheet.mood-1,
@@ -71,7 +75,7 @@
 .light-meter[data-mood="0"] {
   --bg: #000000;
   --fg: #e9e7e1;
-  --muted: #5d6461;
+  --muted: #737a77;
   --line: #1d2020;
   --faint: #0d0e0e;
   --grid: transparent;
@@ -89,7 +93,7 @@ html[data-mood]:not(.dark) #slide-content {
 }
 html[data-mood="0"] body, html[data-mood="0"] #page-root, html[data-mood="0"] #slide-container, html[data-mood="0"]:not(.dark) #slide-content { background: #000000; }
 html[data-mood="1"] body, html[data-mood="1"] #page-root, html[data-mood="1"] #slide-container, html[data-mood="1"]:not(.dark) #slide-content { background: #1b1e1d; }
-html[data-mood="2"] body, html[data-mood="2"] #page-root, html[data-mood="2"] #slide-container, html[data-mood="2"]:not(.dark) #slide-content { background: #8c918f; }
+html[data-mood="2"] body, html[data-mood="2"] #page-root, html[data-mood="2"] #slide-container, html[data-mood="2"]:not(.dark) #slide-content { background: #b1b5b3; }
 html[data-mood="3"] body, html[data-mood="3"] #page-root, html[data-mood="3"] #slide-container, html[data-mood="3"]:not(.dark) #slide-content { background: #d3d6d3; }
 html[data-mood="4"] body, html[data-mood="4"] #page-root, html[data-mood="4"] #slide-container, html[data-mood="4"]:not(.dark) #slide-content { background: #f7f6f2; }
 
@@ -140,6 +144,7 @@ html[data-mood="4"] body, html[data-mood="4"] #page-root, html[data-mood="4"] #s
   font-weight: 720;
   line-height: 1.04;
   letter-spacing: -0.04em;
+  text-wrap: balance;
   transition: color var(--light-fade) ease;
 }
 
@@ -520,7 +525,7 @@ html[data-mood="4"] body, html[data-mood="4"] #page-root, html[data-mood="4"] #s
   gap: 7px;
   padding: 9px 13px;
   border-bottom: 1px solid #262a29;
-  color: #6f7673;
+  color: #7d8481;
   font-size: 11px;
   letter-spacing: 0.12em;
   text-transform: uppercase;
@@ -550,9 +555,9 @@ html[data-mood="4"] body, html[data-mood="4"] #page-root, html[data-mood="4"] #s
   white-space: nowrap;
 }
 
-.term-body .who { color: #6f7673; }
+.term-body .who { color: #7d8481; }
 .term-body .ok { color: #8fd6a4; }
-.term-body .note { color: #6f7673; }
+.term-body .note { color: #7d8481; }
 .term-body .sql { color: #f0c987; }
 .term-body .hot { color: var(--alarm); }
 
@@ -938,6 +943,26 @@ html[data-mood="4"] body, html[data-mood="4"] #page-root, html[data-mood="4"] #s
   line-height: 1.28;
 }
 
+/* "Look at what I found. Again." echoes slide 11's findings, named by their shape this time.
+   After the first click the line-level details fade and only the shapes stay. */
+.finds.short > div {
+  gap: 5px;
+  padding: 12px 18px 13px;
+}
+
+.finds.short b {
+  font-size: 32px;
+}
+
+.finds.short span {
+  font-size: 16px;
+  transition: opacity 0.8s ease;
+}
+
+.shape.seen .finds span {
+  opacity: 0.35;
+}
+
 .punch {
   font-size: 27px;
   font-weight: 680;
@@ -975,26 +1000,55 @@ html[data-mood="4"] body, html[data-mood="4"] #page-root, html[data-mood="4"] #s
   grid-template-columns: 44px 1fr auto;
   align-items: center;
   padding: 16px 0;
-  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
   font-size: 26px;
   font-weight: 560;
   letter-spacing: -0.02em;
 }
 
-.checks > div:last-child {
-  border-bottom: 1px solid var(--line);
+/* Every row closes itself, so the list looks finished at each click. */
+.checks > div:first-child {
+  border-top: 1px solid var(--line);
 }
 
+/* Green ticks: the one splash of colour before Groma arrives, filled so they read on the grey
+   (white on the deep green is 5.3:1). Each box ticks as its line arrives on a click. */
 .checks i {
   display: flex;
   width: 24px;
   height: 24px;
   align-items: center;
   justify-content: center;
-  border: 1.5px solid var(--fg);
+  border: 1.5px solid var(--groma-green-text);
+  background: var(--groma-green-text);
+  color: #ffffff;
   font-size: 15px;
   font-style: normal;
   font-weight: 800;
+}
+
+.checks > div:not(.slidev-vclick-hidden) i {
+  animation: tick 0.45s cubic-bezier(0.3, 1.6, 0.5, 1) 0.2s both;
+}
+
+@keyframes tick {
+  from { transform: scale(0.4); opacity: 0; }
+}
+
+/* The verdict sits on its own line under the last practice; its punchline comes on the next click. */
+.checks .verdict {
+  display: flex;
+  grid-column: 2;
+  align-items: center;
+  gap: 12px;
+  margin: 10px 0 2px !important;
+}
+
+.checks .verdict span {
+  font-family: "Fira Code", ui-monospace, monospace;
+  font-size: 12px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
 }
 
 .checks em {
@@ -1056,71 +1110,151 @@ html[data-mood="4"] body, html[data-mood="4"] #page-root, html[data-mood="4"] #s
   line-height: 0;
 }
 
+/* Sized to sit under a two-line title. */
 .plate img {
   display: block;
-  height: 330px;
+  height: 290px;
 }
 
-/* ---------- Should be easy ---------- */
-.easy {
-  display: grid;
-  width: 860px;
-  grid-template-columns: 1fr 70px 300px;
-  align-items: center;
+/* A small label under a framed picture, clear of the frame's shadow. */
+.plate-note {
+  margin-top: -4px !important;
 }
 
-.tasks {
-  display: grid;
-  grid-template-columns: repeat(24, 1fr);
-  gap: 4px;
-}
-
-.tasks i {
-  height: 13px;
-  border: 1px solid var(--fg);
-  background: var(--panel);
-  opacity: 0;
-}
-
-.is-active .tasks i {
-  animation: cell-on 0.3s ease forwards;
-  animation-delay: calc(var(--i) * 9ms);
-}
-
-.easy .arrow {
-  font-family: "Fira Code", ui-monospace, monospace;
-  font-size: 30px;
-  text-align: center;
-}
-
-.easy-out {
+/* ---------- Reviewing should become easier ---------- */
+/* Task, code, review. The code is the dense picture and the architecture the small one,
+   so the review moves to the one that fits on a screen. The steps come in one after another;
+   outside the live slide (presenter preview, export) they simply show. */
+.flow {
   display: flex;
-  min-height: 150px;
+  align-items: flex-start;
+  gap: 26px;
+}
+
+.flow-step {
+  display: flex;
+  width: 210px;
   flex-direction: column;
-  justify-content: center;
-  gap: 8px;
-  padding: 0 22px;
+  align-items: center;
+  gap: 18px;
+}
+
+.flow-pic {
+  box-sizing: border-box;
+  width: 210px;
+  height: 136px;
+  padding: 18px 20px;
   border: 1.5px solid var(--fg);
   background: var(--panel);
 }
 
-.easy-out strong {
-  font-size: 22px;
-  letter-spacing: -0.02em;
+.flow-step.review .flow-pic {
+  border-width: 2px;
+  box-shadow: 9px 9px 0 -4px var(--line);
 }
 
-.easy-out span,
-.tasks-label {
-  color: var(--muted);
+.flow-step strong {
+  font-size: 26px;
+  font-weight: 720;
+  letter-spacing: -0.03em;
+  white-space: nowrap;
+}
+
+.flow-arrow {
+  margin-top: 48px;
   font-family: "Fira Code", ui-monospace, monospace;
-  font-size: 12px;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
+  font-size: 30px;
+  line-height: 40px;
 }
 
-.tasks-label {
+.task-pic {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.task-pic b {
+  width: 68%;
+  height: 10px;
+  background: var(--fg);
+}
+
+.task-pic span {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.task-pic i {
+  width: 12px;
+  height: 12px;
+  box-sizing: border-box;
+  border: 1.5px solid var(--fg);
+}
+
+.task-pic s {
+  height: 5px;
+  flex: 1;
+  background: var(--muted);
+  opacity: 0.55;
+}
+
+.code-pic {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 16px 20px;
+}
+
+.code-pic i {
+  height: 4px;
+  background: var(--muted);
+  opacity: 0.55;
+  transform-origin: left;
+}
+
+.arch-pic {
+  padding: 10px 14px;
+}
+
+.arch-pic svg {
   display: block;
-  margin-top: 12px;
+  width: 100%;
+  height: 100%;
+}
+
+.arch-pic path {
+  fill: none;
+  stroke: var(--fg);
+  stroke-width: 1.5;
+}
+
+.arch-pic rect {
+  fill: var(--bg);
+  stroke: var(--fg);
+  stroke-width: 1.5;
+}
+
+.is-active .flow > * {
+  animation: flow-in 0.5s ease both;
+}
+
+.is-active .flow > :nth-child(2) { animation-delay: 0.45s; }
+.is-active .flow > :nth-child(3) { animation-delay: 0.65s; }
+.is-active .flow > :nth-child(4) { animation-delay: 1.5s; }
+.is-active .flow > :nth-child(5) { animation-delay: 1.7s; }
+
+.is-active .code-pic i {
+  animation: line-on 0.25s ease both;
+  animation-delay: calc(0.75s + var(--i) * 45ms);
+}
+
+@keyframes flow-in {
+  from { opacity: 0; transform: translateY(6px); }
+}
+
+@keyframes line-on {
+  from { transform: scaleX(0); }
 }
 
 /* ---------- Welcome ---------- */
@@ -1220,7 +1354,7 @@ html[data-mood="4"] body, html[data-mood="4"] #page-root, html[data-mood="4"] #s
 }
 
 .rail .ok em {
-  color: var(--groma-green);
+  color: var(--groma-green-text);
 }
 
 .rail.focused {
@@ -1253,6 +1387,21 @@ html[data-mood="4"] body, html[data-mood="4"] #page-root, html[data-mood="4"] #s
 .rail.focused li.current.ok::before {
   border-color: var(--groma-green);
   background: var(--groma-green);
+}
+
+/* The attempts after the welcome slide step the light up, one level per attempt. Below full
+   light the rail stays monochrome, so the green comes back with groma 3. */
+.slidev-layout.sheet:not(.mood-4) .rail .ok {
+  border-top-color: var(--line);
+}
+
+.slidev-layout.sheet:not(.mood-4) .rail .ok::before {
+  border-color: var(--line);
+  background: var(--bg);
+}
+
+.slidev-layout.sheet:not(.mood-4) .rail .ok em {
+  color: var(--muted);
 }
 
 /* ---------- Surveyor scene ---------- */
@@ -1329,7 +1478,7 @@ html[data-mood="4"] body, html[data-mood="4"] #page-root, html[data-mood="4"] #s
   position: absolute;
   top: 0;
   left: 0;
-  color: var(--groma-green);
+  color: var(--groma-green-text);
   opacity: 0;
 }
 
@@ -1381,7 +1530,7 @@ html[data-mood="4"] body, html[data-mood="4"] #page-root, html[data-mood="4"] #s
 }
 
 .loop-node span {
-  color: var(--groma-green);
+  color: var(--groma-green-text);
   font-family: "Fira Code", ui-monospace, monospace;
   font-size: 12px;
   font-weight: 700;
@@ -1521,7 +1670,7 @@ html[data-mood="4"] body, html[data-mood="4"] #page-root, html[data-mood="4"] #s
 }
 
 .cmds i {
-  color: var(--groma-green);
+  color: var(--groma-green-text);
   font-family: "Fira Code", ui-monospace, monospace;
   font-style: normal;
 }
@@ -1539,6 +1688,15 @@ html[data-mood="4"] body, html[data-mood="4"] #page-root, html[data-mood="4"] #s
   font-family: "Fira Code", ui-monospace, monospace;
   font-size: 11px;
   letter-spacing: 0.12em;
+}
+
+/* The plus between two tags joins them, so it has no box of its own. */
+.tags span.plus {
+  align-self: center;
+  padding: 0 2px;
+  border: 0;
+  font-size: 17px;
+  letter-spacing: 0;
 }
 
 .backup-link {
@@ -1594,8 +1752,8 @@ html[data-mood="4"] body, html[data-mood="4"] #page-root, html[data-mood="4"] #s
 }
 
 .tag-line.good {
-  border-color: var(--groma-green);
-  color: var(--groma-green);
+  border-color: var(--groma-green-text);
+  color: var(--groma-green-text);
 }
 
 .attempt-split {
@@ -1622,6 +1780,10 @@ html[data-mood="4"] body, html[data-mood="4"] #page-root, html[data-mood="4"] #s
 .meme pre b {
   color: #8fd6a4;
   font-weight: 500;
+}
+
+.slidev-layout.sheet:not(.mood-4) .meme pre b {
+  color: #b2b8b5;
 }
 
 .meme span {
@@ -1689,13 +1851,13 @@ html[data-mood="4"] body, html[data-mood="4"] #page-root, html[data-mood="4"] #s
 }
 
 .spec-steps .curate span {
-  color: var(--groma-green);
+  color: var(--groma-green-text);
 }
 
 .spec-steps .curate b {
   padding: 8px 13px;
-  border: 1px solid var(--groma-green);
-  background: var(--groma-green);
+  border: 1px solid var(--groma-green-text);
+  background: var(--groma-green-text);
   color: #ffffff;
   font-size: 16px;
   font-weight: 650;
@@ -1704,7 +1866,7 @@ html[data-mood="4"] body, html[data-mood="4"] #page-root, html[data-mood="4"] #s
 
 .spec-steps i {
   padding-bottom: 9px;
-  color: var(--groma-green);
+  color: var(--groma-green-text);
   font-family: "Fira Code", ui-monospace, monospace;
   font-style: normal;
 }
@@ -1729,7 +1891,7 @@ html[data-mood="4"] body, html[data-mood="4"] #page-root, html[data-mood="4"] #s
 }
 
 .spec span {
-  color: var(--groma-green);
+  color: var(--groma-green-text);
   font-family: "Fira Code", ui-monospace, monospace;
   font-size: 11px;
   font-weight: 700;
@@ -1765,6 +1927,7 @@ html[data-mood="4"] body, html[data-mood="4"] #page-root, html[data-mood="4"] #s
 }
 
 .answers .q {
+  text-wrap: balance;
   font-size: 23px;
   font-weight: 600;
   line-height: 1.2 !important;
@@ -1772,7 +1935,8 @@ html[data-mood="4"] body, html[data-mood="4"] #page-root, html[data-mood="4"] #s
 }
 
 .answers .a {
-  color: var(--groma-green);
+  text-wrap: balance;
+  color: var(--groma-green-text);
   font-size: 23px;
   font-weight: 700;
   line-height: 1.2 !important;

@@ -21,14 +21,15 @@ gromaLive:
   - name: keycloak-curated
     cwd: ~/projects/keycloak
     port: 4802
-  # A small order service an agent built task by task. Its git history is replayed on a live map.
-  - name: orders
-    port: 4804
-    replay:
+  # The small order service from the demo history. Three agents work Backlog.md tasks there for
+  # real, one phase per click, then Groma.md compares what they changed with the service before them.
+  - name: agents
+    port: 4805
+    scenario:
       source: ../../../slidev-addon-groma-live/demo/orders.bundle
-      interval: 700
+      script: ../../../slidev-addon-groma-live/demo/agents.mjs
   # Built on stage from the GromaRun slide, in the throwaway folder ~/.groma-live/keycloak.
-  # Groma proposes the folder name as the project name, so the folder is called keycloak.
+  # Groma.md proposes the folder name as the project name, so the folder is called keycloak.
   - name: keycloak
     port: 4803
     steps:
@@ -46,12 +47,12 @@ gromaLive:
 ⏱ 00:00
 
 The room starts dark on purpose. The light in these slides follows the story:
-it falls to black, then comes back when Groma arrives. The meter top right shows it.
+it falls to black, then comes back when Groma.md arrives. The meter top right shows it.
 
 One memory for the audience: I lost ownership of my code to my agents, and I got it back
 by keeping the architecture in front of me.
 
-Pace: the story is one beat per slide, about 25 seconds each. Groma must be on screen by 08:30.
+Pace: the story is one beat per slide, about 25 seconds each. Groma.md must be on screen by 08:30.
 -->
 
 ---
@@ -107,6 +108,10 @@ src: ./pages/14-not-satisfied.md
 ---
 
 ---
+src: ./pages/14b-shape.md
+---
+
+---
 src: ./pages/15-what-if.md
 ---
 
@@ -116,6 +121,22 @@ src: ./pages/16-should-be-easy.md
 
 ---
 src: ./pages/17-welcome.md
+---
+
+---
+src: ./pages/24-attempt-blueprint.md
+---
+
+---
+src: ./pages/25-attempt-groma.md
+---
+
+---
+src: ./pages/26-attempt-groma2.md
+---
+
+---
+src: ./pages/27-attempt-groma3.md
 ---
 
 ---
@@ -143,7 +164,7 @@ src: ./pages/21b-demo-agents-live.md
 ---
 
 ---
-src: ./pages/21c-demo-agents-recording.md
+src: ./pages/21c-demo-agents-review.md
 ---
 
 ---
@@ -164,22 +185,6 @@ src: ./pages/23-demo-curated.md
 
 ---
 src: ./pages/23b-demo-curated-live.md
----
-
----
-src: ./pages/24-attempt-blueprint.md
----
-
----
-src: ./pages/25-attempt-groma.md
----
-
----
-src: ./pages/26-attempt-groma2.md
----
-
----
-src: ./pages/27-attempt-groma3.md
 ---
 
 ---

@@ -1,6 +1,6 @@
 ---
 layout: default
-mood: 4
+mood: 2
 clicks: 1
 ---
 
@@ -17,10 +17,10 @@ clicks: 1
 </div>
 
 <!--
-⏱ 24:00
+⏱ 10:00. Light 2.
 
-Groma, the first one. 700 commits without showing any architecture.
-I did not understand any of the code. Also nothing worked. It felt terrible.
+The first Groma.md. 700 commits without showing any architecture.
+I didn't understand any of the code. Also nothing worked. It felt terrible.
 
-[click] I had built a dark factory to fight dark factories. I caught the disease while building the cure.
+[click] I had built a dark factory to fight dark factories.
 -->

@@ -20,6 +20,6 @@ clicks: 1
 This is where the title comes from. A dark factory is a lights-out factory:
 no humans on the floor, so nobody needs the lights.
 
-[click] A year and 300,000 agent-written lines later, my projects had quietly turned into a small one.
-Software getting built with nobody really reviewing it. I was no longer the owner of my code.
+[click] A year and 300,000 agent-written lines later, my projects had turned into a small one.
+Software getting built with nobody really reviewing it. I didn't own my code anymore.
 -->

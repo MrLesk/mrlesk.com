@@ -4,7 +4,7 @@ import { useSlideContext } from '@slidev/client'
 
 // Click 0: a Roman surveyor at his groma while soldiers build a road along his line.
 // Click 1: the land dissolves into an architecture map and the line lands on a component.
-// Both engravings come from Groma's "What is a groma?" page and place the surveyor at the
+// Both engravings come from the Groma.md page "What is a groma?" and place the surveyor at the
 // same spot, so he stays put while the ground changes under him.
 const { $clicks } = useSlideContext()
 const mapped = computed(() => $clicks.value >= 1)

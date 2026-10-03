@@ -1,13 +1,13 @@
 <script setup lang="ts">
-// The four attempts at building Groma. `current` highlights one of them (0-3);
+// The four attempts at building Groma.md. `current` highlights one of them (0-3);
 // leave it out to show the whole history at once.
 defineProps<{ current?: number }>()
 
 const attempts = [
   { name: 'project Blueprint', ok: false },
-  { name: 'groma', ok: false },
-  { name: 'groma 2', ok: false },
-  { name: 'groma 3', ok: true },
+  { name: 'groma.md 1', ok: false },
+  { name: 'groma.md 2', ok: false },
+  { name: 'groma.md 3', ok: true },
 ]
 </script>
 

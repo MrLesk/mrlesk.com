@@ -17,7 +17,7 @@ clicks: 1
 <!--
 ⏱ 02:10
 
-This time was different. I looked at an empty prompt and I did not know where to start.
+This time was different. I looked at an empty prompt and I didn't know where to start.
 
-[click] I did not know how to access production and check the logs. In my own project.
+[click] I didn't know how to access production and check the logs. In my own project.
 -->

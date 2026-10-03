@@ -22,7 +22,7 @@ clicks: 4
 Slow down here. One question per click, and leave silence between them.
 
 [click] Is this the future of software development?
-[click] What if we are cut off from AI?
+[click] What if we're cut off from AI?
 [click] Can I still consider myself an expert?
 [click] Am I a meat proxy?
 

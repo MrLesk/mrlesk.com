@@ -17,14 +17,9 @@ routeAlias: demo-java
 
 
 <!--
-⏱ 17:00. Chapter card. The next slide runs the two commands for you. No `groma init`: `groma web` sets the project up in the browser.
+⏱ 21:00. Chapter card. The next slide runs the two commands for you. No `groma init`: `groma web` sets the project up in the browser.
 
-OPEN PROBLEM: a fresh Keycloak scan finds nothing today. ~/projects/keycloak/groma/scanners.json points at
-the built scanners in groma3/plugins/scanners/*/dist/package. Those builds (0.1.1, Sep 19) still say
-"groma ^0.3.0", your Groma is 0.4.0, so `groma scanner check` reports every scanner as blocked.
-The scanner source already says ">=0.3.0": the builds are just stale. Your existing Keycloak map opens
-fine because it is read from the stored Markdown, not rescanned.
-TESTED: with scanners.json pointing at the source folders (plugins/scanners/java instead of
-plugins/scanners/java/dist/package) a fresh Keycloak scan works. It takes 76 seconds and writes about
-6,350 raw documents, so plan what you say during that minute.
+Works since Groma.md 0.5.0 and the 0.2.0 scanners on npm. From "Install & scan" to the map takes about
+4 minutes (15 s install, 2 minutes scan, 1.5 minutes preparing the map), longer than the slot,
+so plan what you say while it runs.
 -->
