@@ -72,7 +72,8 @@ repaint each commit in place.
 
 ## Limits
 
-- Dev only. A built or deployed deck shows the stills.
+- Dev only. A built or deployed deck shows the stills and never contacts localhost or the dev server,
+  so visitors get no local network permission prompt.
 - One iframe per Groma origin: every Groma page holds a live `/events` stream and browsers cap connections.
 - The camera flights need the embedding hook in Groma (`src/viewers/web/embedding.ts`). A Groma
   without it still works; the iframe reloads on each click instead.

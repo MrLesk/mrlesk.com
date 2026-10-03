@@ -124,6 +124,14 @@
       "base": "/talks/codex/meetup-july-2026-lightning/",
       "artifact": "component-talk-codex-july-2026-lightning",
       "watch": ["slidev-theme-codex/**"]
+    },
+    {
+      "id": "devoxx-in-the-loop",
+      "source": "talks/devoxx/in-the-loop",
+      "target": "talks/devoxx/in-the-loop",
+      "base": "/talks/devoxx/in-the-loop/",
+      "artifact": "component-talk-devoxx-in-the-loop",
+      "watch": ["slidev-theme-penguin/**", "slidev-addon-groma-live/**"]
     }
   ]
 }

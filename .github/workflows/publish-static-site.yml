@@ -12,6 +12,7 @@ on:
       - public/**
       - src/**
       - talks/**
+      - slidev-addon-groma-live/**
       - slidev-build.package.json
       - slidev-theme-codex/**
       - slidev-theme-codex-dark/**

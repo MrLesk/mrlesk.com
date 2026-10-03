@@ -23,6 +23,8 @@ const props = withDefaults(defineProps<{
 
 const { $clicks } = useSlideContext()
 const active = useIsSlideActive()
+// Only the dev server replays the history; a built deck shows the still and never polls.
+const dev = import.meta.env.DEV
 const frame = ref(0)
 const total = ref(0)
 const subject = ref('')
@@ -44,7 +46,7 @@ async function sync(method: 'GET' | 'POST', query = ''): Promise<void> {
 }
 
 watch([active, $clicks], async ([shown, clicks], previous) => {
-  if (!shown) return
+  if (!dev || !shown) return
   const entered = previous === undefined || previous[0] !== shown
   // Entering the slide always starts from the first commit, so a rehearsal can be repeated.
   if (entered || (clicks === 0 && previous[1] > 0)) await sync('POST', '?rewind')
@@ -55,7 +57,7 @@ watch([active, $clicks], async ([shown, clicks], previous) => {
 
 watch(active, shown => {
   clearInterval(poll)
-  if (shown) poll = setInterval(() => sync('GET'), 250)
+  if (dev && shown) poll = setInterval(() => sync('GET'), 250)
 }, { immediate: true })
 
 onBeforeUnmount(() => clearInterval(poll))

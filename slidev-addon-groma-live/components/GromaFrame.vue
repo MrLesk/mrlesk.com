@@ -34,6 +34,9 @@ const props = withDefaults(defineProps<{
 const { $clicks } = useSlideContext()
 const active = useIsSlideActive()
 const base = import.meta.env.BASE_URL
+// A built deck never reaches for localhost: no Groma runs there, and browsers would ask every
+// visitor for access to their local network. It shows the stills instead.
+const dev = import.meta.env.DEV
 
 const frame = ref<HTMLIFrameElement>()
 const status = ref<'checking' | 'live' | 'offline'>('checking')
@@ -51,6 +54,10 @@ let probeTimer: ReturnType<typeof setTimeout> | undefined
 /** A map that is being built on stage may not answer yet, so keep asking while the slide is shown. */
 async function probe(): Promise<void> {
   clearTimeout(probeTimer)
+  if (!dev) {
+    status.value = 'offline'
+    return
+  }
   try {
     await fetch(props.origin, { mode: 'no-cors', cache: 'no-store', signal: AbortSignal.timeout(1500) })
     initialSrc.value = `${props.origin}/${search.value}`
@@ -146,7 +153,8 @@ onBeforeUnmount(() => {
         alt=""
       />
       <div v-if="stills.length === 0" class="groma-offline">
-        <span>WAITING FOR GROMA ON {{ origin }}</span>
+        <span v-if="dev">WAITING FOR GROMA ON {{ origin }}</span>
+        <span v-else>SHOWN LIVE IN THE TALK</span>
       </div>
     </template>
     <transition name="groma-caption" mode="out-in">

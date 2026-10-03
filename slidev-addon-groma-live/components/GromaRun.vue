@@ -10,10 +10,12 @@ const props = defineProps<{ name: string }>()
 
 const { $clicks } = useSlideContext()
 const active = useIsSlideActive()
+// Only the dev server can run the steps; a built deck shows the empty terminal and never polls.
+const dev = import.meta.env.DEV
 const lines = ref<string[]>([])
 const serving = ref(false)
 const failed = ref(false)
-const offline = ref(false)
+const offline = ref(!dev)
 const body = ref<HTMLElement>()
 let poll: ReturnType<typeof setInterval> | undefined
 
@@ -36,12 +38,12 @@ async function sync(method: 'GET' | 'POST', query = ''): Promise<void> {
 
 /** Click n runs step n - 1, so the slide first appears with an empty prompt. */
 watch([active, $clicks], ([shown, clicks]) => {
-  if (shown && clicks > 0) void sync('POST', `?to=${clicks - 1}`)
+  if (dev && shown && clicks > 0) void sync('POST', `?to=${clicks - 1}`)
 }, { immediate: true })
 
 watch(active, shown => {
   clearInterval(poll)
-  if (shown) {
+  if (dev && shown) {
     void sync('GET')
     poll = setInterval(() => sync('GET'), 400)
   }
@@ -54,10 +56,10 @@ onBeforeUnmount(() => clearInterval(poll))
   <div class="groma-run">
     <div class="groma-run-bar">
       <i /><i /><i /><span>{{ name }}</span>
-      <button title="Start this beat over" @click="sync('POST', '?reset')">RESET</button>
+      <button v-if="dev" title="Start this beat over" @click="sync('POST', '?reset')">RESET</button>
     </div>
     <div ref="body" class="groma-run-body">
-      <p v-if="offline" class="note">Runs only in `bun run dev`.</p>
+      <p v-if="offline" class="note">{{ dev ? 'Runs only in `bun run dev`.' : 'Runs live in the talk.' }}</p>
       <p v-for="(line, i) in lines" :key="i" :class="{ command: line.startsWith('$ ') }">{{ line }}</p>
       <p v-if="!serving && !failed"><span class="prompt">$</span> <span class="cursor" /></p>
       <p v-if="failed" class="bad">A step failed. Press RESET to try again.</p>

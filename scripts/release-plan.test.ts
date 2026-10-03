@@ -45,8 +45,9 @@ describe('createReleasePlan', () => {
       'ai-native-workshop',
       'voxxed-backlog',
       'vienna-explosion',
-    ]);
       'groma-introduction',
+      'devoxx-in-the-loop',
+    ]);
   });
 
   test('rebuilds every talk when shared Slidev dependencies change', () => {

@@ -79,6 +79,12 @@ RUN cd codex-build-june-2026 && mkdir -p dist && bun run build -- --base /talks/
 COPY talks/codex/meetup-july-2026/ ./codex-meetup-july-2026/
 RUN cd codex-meetup-july-2026 && mkdir -p dist && bun run build -- --base /talks/codex/meetup-july-2026/
 
+# Build Devoxx Belgium 2026 - In the loop, not in the dark (unlisted; URL-only)
+# The deck loads ../../slidev-addon-groma-live from its parent folder, so keep the repository layout.
+COPY slidev-addon-groma-live/ ./slidev-addon-groma-live/
+COPY talks/devoxx/in-the-loop/ ./talks/devoxx/in-the-loop/
+RUN cd talks/devoxx/in-the-loop && mkdir -p dist && bun run build -- --base /talks/devoxx/in-the-loop/
+
 # ========================================
 # Stage X: Build Main Astro Site
 # ========================================
@@ -116,6 +122,7 @@ COPY --from=slidev-builds /app/groma-introduction/dist /usr/share/nginx/html/tal
 COPY --from=slidev-builds /app/codex-meetup-april-2026/dist /usr/share/nginx/html/talks/codex/meetup-april-2026
 COPY --from=slidev-builds /app/codex-build-june-2026/dist /usr/share/nginx/html/talks/codex/build-june-2026
 COPY --from=slidev-builds /app/codex-meetup-july-2026/dist /usr/share/nginx/html/talks/codex/meetup-july-2026
+COPY --from=slidev-builds /app/talks/devoxx/in-the-loop/dist /usr/share/nginx/html/talks/devoxx/in-the-loop
 
 COPY --from=slidev-builds /app/groma-introduction/dist /usr/share/nginx/html/talks/groma/introduction
 # Copy custom nginx config
