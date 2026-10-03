@@ -17,7 +17,7 @@ clicks: 1
 <!--
 ⏱ 07:10
 
-The light dips again. Better hygiene did not give me ownership back.
+The light stays low. Better hygiene did not give me ownership back.
 
 Task tracking told me what the agents did. It did not tell me what my system had become.
 

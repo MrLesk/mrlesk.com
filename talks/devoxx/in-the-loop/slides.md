@@ -79,10 +79,6 @@ src: ./pages/06-rescue.md
 ---
 
 ---
-src: ./pages/07-power.md
----
-
----
 src: ./pages/08-relief.md
 ---
 

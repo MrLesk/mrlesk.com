@@ -5,7 +5,7 @@ mood: 1
 
 # This year's goal: more throughput.
 
-<div class="stage">
+<div class="stage" v-click>
   <div class="chips">
     <span class="mine">Backlog.md</span>
     <span>Claude workflows</span>

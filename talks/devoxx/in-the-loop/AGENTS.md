@@ -47,14 +47,19 @@ real terminal on the slide: each click runs the next configured command.
 `bun scripts/check-views.mjs` (while `bun run dev` is up) checks every view id against the running
 maps; add `--stills` to re-capture the fallback images. Groma ignores ids it does not know.
 
-Open problem: a fresh Keycloak scan finds nothing while `scanners.json` points at the stale builds in
-`groma3/plugins/scanners/*/dist/package` (they declare `groma ^0.3.0`). Pointed at the scanner source
-folders (`plugins/scanners/java`, ...) the same scan works: 76 seconds, about 6,350 raw documents.
+Beat 3 works since Groma 0.5.0 and the 0.2.0 scanners on npm: Groma's setup installs them, scans and
+opens the raw map. It takes about 4 minutes from "Install & scan" to the map (about 15 s install,
+2 minutes scan, 1.5 minutes preparing the map), longer than the slide's slot. The curated Keycloak map
+(`~/projects/keycloak/groma`, not in git) uses the 0.2.0 scanners too, so its Groma server scans for
+about 50 s after `bun run dev` before slide `23b` answers.
 
 ## Files
 
 - `slides.md` holds the cover and the slide order. One file per slide in `pages/`.
 - `pages/2xb-*-live.md` are the embedded live map slides; `21c` is the timelapse of the demo order service.
+- `pages/06-rescue.md` is one terminal driven by four clicks ("AI to the rescue." rolls into "AI power!").
+  Clicks add `s1` to `s4` to the stage and `style.css` transitions on those classes, so stepping back
+  rewinds. `components/GrowingIds.vue` grows the `IN (...)` list from click 3.
 - `components/SurveyorScene.vue` dissolves the road engraving into the map engraving
   (`public/groma-road.webp`, `public/groma-map.webp`). Both are the light pictures from Groma's
   `docs/what-is-a-groma.md`; their green lines keep them to paper slides.
