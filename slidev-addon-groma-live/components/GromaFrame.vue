@@ -138,7 +138,7 @@ onBeforeUnmount(() => {
 <template>
   <div class="groma-frame" :style="{ '--scale': scale }">
     <template v-if="status === 'live' && active">
-      <iframe ref="frame" :src="initialSrc" title="Groma live map" @load="onLoad" />
+      <iframe ref="frame" :src="initialSrc" title="Groma.md live map" @load="onLoad" />
       <div v-if="!interactive" class="groma-shield" @dblclick="interactive = true" />
       <button v-else class="groma-exit" @click="stopInteracting">INTERACTIVE · CLICK TO RETURN</button>
       <div class="groma-veil" :class="{ on: veiled }" />

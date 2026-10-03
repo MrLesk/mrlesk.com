@@ -8,8 +8,12 @@ import { useIsSlideActive, useSlideContext } from '@slidev/client'
 // both ask: the server runs every step exactly once.
 const props = defineProps<{ name: string }>()
 
-const { $clicks } = useSlideContext()
+const { $clicks, $renderContext } = useSlideContext()
 const active = useIsSlideActive()
+// Slidev also counts the presenter's preview of the next click, and the overview, as this slide
+// being active. Only the slide itself (the audience window or the presenter's main view) may move
+// the shared demo; a preview that asked for the next click too would fight it.
+const drives = computed(() => active.value && ['slide', 'presenter'].includes($renderContext.value))
 // Only the dev server can run the steps; a built deck shows the empty terminal and never polls.
 const dev = import.meta.env.DEV
 const lines = ref<string[]>([])
@@ -37,8 +41,8 @@ async function sync(method: 'GET' | 'POST', query = ''): Promise<void> {
 }
 
 /** Click n runs step n - 1, so the slide first appears with an empty prompt. */
-watch([active, $clicks], ([shown, clicks]) => {
-  if (dev && shown && clicks > 0) void sync('POST', `?to=${clicks - 1}`)
+watch([drives, $clicks], ([driving, clicks]) => {
+  if (dev && driving && clicks > 0) void sync('POST', `?to=${clicks - 1}`)
 }, { immediate: true })
 
 watch(active, shown => {
@@ -83,7 +87,7 @@ onBeforeUnmount(() => clearInterval(poll))
   gap: 7px;
   padding: 9px 13px;
   border-bottom: 1px solid #262a29;
-  color: #6f7673;
+  color: #7d8481;
   font-size: 11px;
   letter-spacing: 0.12em;
   text-transform: uppercase;
@@ -139,7 +143,7 @@ onBeforeUnmount(() => clearInterval(poll))
 }
 
 .groma-run-body .prompt {
-  color: #6f7673;
+  color: #7d8481;
   font-size: 19px;
 }
 

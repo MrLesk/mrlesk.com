@@ -21,8 +21,12 @@ const props = withDefaults(defineProps<{
   scale?: number
 }>(), { view: '', autoplay: false, scale: 0.6 })
 
-const { $clicks } = useSlideContext()
+const { $clicks, $renderContext } = useSlideContext()
 const active = useIsSlideActive()
+// Slidev also counts the presenter's preview of the next click, and the overview, as this slide
+// being active. Only the slide itself (the audience window or the presenter's main view) may move
+// the shared demo; a preview that asked for the next click too would fight it.
+const drives = computed(() => active.value && ['slide', 'presenter'].includes($renderContext.value))
 // Only the dev server replays the history; a built deck shows the still and never polls.
 const dev = import.meta.env.DEV
 const frame = ref(0)
@@ -45,14 +49,14 @@ async function sync(method: 'GET' | 'POST', query = ''): Promise<void> {
   }
 }
 
-watch([active, $clicks], async ([shown, clicks], previous) => {
-  if (!dev || !shown) return
-  const entered = previous === undefined || previous[0] !== shown
+watch([drives, $clicks], async ([driving, clicks], previous) => {
+  if (!dev || !driving) return
+  const entered = previous === undefined || previous[0] !== driving
   // Entering the slide always starts from the first commit, so a rehearsal can be repeated.
   if (entered || (clicks === 0 && previous[1] > 0)) await sync('POST', '?rewind')
   if (clicks > 0) void sync('POST', '?play')
   // The map needs a moment to show the empty state before an automatic run starts.
-  else if (props.autoplay && entered) setTimeout(() => { if (active.value) void sync('POST', '?play') }, 1500)
+  else if (props.autoplay && entered) setTimeout(() => { if (drives.value) void sync('POST', '?play') }, 1500)
 }, { immediate: true })
 
 watch(active, shown => {

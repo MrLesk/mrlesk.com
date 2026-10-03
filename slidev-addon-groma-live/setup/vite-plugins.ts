@@ -4,6 +4,7 @@ import { mkdir, rm } from 'node:fs/promises'
 import { homedir } from 'node:os'
 import { dirname, join, resolve } from 'node:path'
 import process from 'node:process'
+import { Scenario } from './scenario'
 
 /*
   Starts the Groma servers a deck needs, so `bun run dev` is the only command to run.
@@ -32,6 +33,12 @@ import process from 'node:process'
   ~/.groma-live/<name>, which is wiped before the first step. That folder is fixed on purpose: a
   configurable path next to "wipe it first" would be one typo away from deleting a real repository.
   Only the commands written in the headmatter can run; the browser sends a step number, never text.
+
+  An instance with `scenario` is driven by <GromaAgents name="...">. Its `source` is cloned into
+  ~/.groma-live/<name>/work and Groma serves that clone; `script` lists what the agents do, phase by
+  phase (see demo/agents.mjs). Each slide click asks for a phase, and the steps run for real there:
+  `backlog` commands, source edits, the agent's commit. The clone's HEAD stays the "before" commit,
+  so Groma can compare it with what the agents left.
 */
 
 interface InstanceConfig {
@@ -40,6 +47,7 @@ interface InstanceConfig {
   cwd?: string
   steps?: string[]
   replay?: { source: string, interval?: number }
+  scenario?: { source: string, script: string, interval?: number }
 }
 
 interface Replay {
@@ -65,6 +73,7 @@ interface State {
   servers: Map<number, ChildProcess>
   runs: Map<string, Run>
   replays: Map<string, Replay>
+  scenarios: Map<string, Scenario>
   cleanup: boolean
 }
 
@@ -72,6 +81,7 @@ interface State {
 // restart neither loses the servers it started nor starts them twice.
 const state: State = ((globalThis as any).__gromaLive ??= { servers: new Map(), runs: new Map(), replays: new Map(), cleanup: false })
 state.replays ??= new Map()
+state.scenarios ??= new Map()
 
 const sandbox = (name: string) => join(homedir(), '.groma-live', name.replace(/[^a-z0-9-]/gi, '-'))
 const expand = (path: string) => path.startsWith('~') ? join(homedir(), path.slice(1)) : path
@@ -226,6 +236,20 @@ function stop(replay: Replay): void {
   replay.timer = undefined
 }
 
+/** Clones the scenario's service, loads its steps, and serves the clone. */
+async function prepareScenario(instance: InstanceConfig, deckRoot: string): Promise<void> {
+  if (state.scenarios.has(instance.name)) return
+  const root = sandbox(instance.name)
+  rmSync(root, { recursive: true, force: true })
+  mkdirSync(root, { recursive: true })
+  const { source, script, interval } = instance.scenario!
+  const from = (path: string) => path.startsWith('~') ? expand(path) : resolve(deckRoot, path)
+  const scenario = await Scenario.prepare(from(source), join(root, 'work'), from(script), interval ?? 600)
+  state.scenarios.set(instance.name, scenario)
+  say(instance.name, `scenario ready, ${scenario.last} phases from ${scenario.base.slice(0, 7)}`)
+  await serve(instance, scenario.work)
+}
+
 export default function gromaLive(options: { mode?: string, userRoot: string, data: { headmatter: Record<string, unknown> } }) {
   const instances = (options.data.headmatter.gromaLive ?? []) as InstanceConfig[]
   if (options.mode !== 'dev' || instances.length === 0) return []
@@ -236,7 +260,10 @@ export default function gromaLive(options: { mode?: string, userRoot: string, da
     configureServer(server: { middlewares: { use: (path: string, handler: (req: any, res: any) => void) => void }, httpServer?: { once: (event: string, listener: () => void) => void } | null }) {
       for (const instance of instances) {
         try {
-          if (instance.replay !== undefined) prepareReplay(instance, options.userRoot)
+          if (instance.scenario !== undefined) {
+            prepareScenario(instance, options.userRoot).catch(error => say(instance.name, `could not start: ${error instanceof Error ? error.message : String(error)}`))
+          }
+          else if (instance.replay !== undefined) prepareReplay(instance, options.userRoot)
           else if (instance.steps === undefined && instance.cwd !== undefined) void serve(instance, expand(instance.cwd))
         } catch (error) {
           say(instance.name, `could not start: ${error instanceof Error ? error.message : String(error)}`)
@@ -252,10 +279,17 @@ export default function gromaLive(options: { mode?: string, userRoot: string, da
       // POST /__groma-live/<name>?to=<n>   make sure steps 0..n have run
       // POST /__groma-live/<name>?reset    start over
       // For a timelapse: GET its position, POST ?play to run it, POST ?rewind to go back to the first commit.
+      // For a scenario: GET what each agent is doing, POST ?to=<phase> (or ?to=end) to move there.
       server.middlewares.use('/__groma-live', (req, res) => {
         const url = new URL(req.url ?? '/', 'http://localhost')
         const named = instances.find(item => item.name === url.pathname.slice(1))
         res.setHeader('Content-Type', 'application/json')
+        const scenario = named === undefined ? undefined : state.scenarios.get(named.name)
+        if (scenario !== undefined) {
+          const to = url.searchParams.get('to')
+          if (req.method === 'POST' && to !== null) scenario.request(to === 'end' ? scenario.last : Number(to))
+          return res.end(JSON.stringify(scenario.view()))
+        }
         const replay = named === undefined ? undefined : state.replays.get(named.name)
         if (named !== undefined && replay !== undefined) {
           if (req.method === 'POST' && url.searchParams.has('play')) play(named, replay)

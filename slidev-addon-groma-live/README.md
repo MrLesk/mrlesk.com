@@ -40,6 +40,23 @@ that folder with a real Groma whose scanners are switched off. Playing applies e
 on top, so components and tasks appear on the map because their files really appear. The history
 must store Groma architecture (`groma/`) and Backlog tasks (`backlog/`).
 
+A fourth kind is a scenario: agents working Backlog.md tasks for real.
+
+```yaml
+  - name: agents
+    port: 4805
+    scenario:
+      source: ../../../slidev-addon-groma-live/demo/orders.bundle   # cloned; its HEAD is the "before" commit
+      script: ../../../slidev-addon-groma-live/demo/agents.mjs       # what the agents do, phase by phase
+      interval: 600                                                  # milliseconds between steps of a phase
+```
+
+The addon clones `source` into `~/.groma-live/<name>/work` and serves the clone with scanners off.
+Each slide click asks for a phase and the steps run there: real `backlog` commands, real source
+edits, and a commit by the agent when its task is done. The clone stays a git repository, so Groma
+can compare its HEAD (the service before the agents) with what they left. Going back resets the
+clone and replays up to the phase at once.
+
 ## Components
 
 `<GromaFrame origin="http://localhost:4801" :views="[...]" :captions="[...]" :stills="[...]" />`
@@ -56,6 +73,17 @@ the addon starts `groma web` there. RESET starts the beat over.
 `<GromaTimelapse name="orders" origin="http://localhost:4804" still="..." />` shows that map, plays
 the history on the first click (or by itself with `autoplay`), prints each commit subject, and
 rewinds when the slide is opened again.
+
+`<GromaAgents name="agents" origin="http://localhost:4805" :phases="[0, 1, 2, 3, 3, 4]" :views="[...]" />`
+drives a scenario: click n shows phase `phases[n]` with view `views[n]`, and a panel over Groma's
+hierarchy shows what each agent is doing, in the colour of its pins. Entering the slide on its first
+click resets the scenario. With `review` it shows no panel and only makes sure the agents have
+finished, for a comparison such as `from=<before commit>`, which Groma 0.6.0 opens live.
+
+`GromaRun`, `GromaTimelapse` and `GromaAgents` share one demo per dev server, so only the slide
+itself moves it: the audience window or the presenter's main view. Slidev also counts the
+presenter's next-click preview and the overview as the active slide; those only watch. A preview
+that asked for the next click too would fight the slide, and the scenario would reset on every click.
 
 ## The demo history
 
