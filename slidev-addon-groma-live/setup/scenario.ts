@@ -1,5 +1,5 @@
 import { execFile } from 'node:child_process'
-import { appendFile, writeFile } from 'node:fs/promises'
+import { appendFile, readFile, writeFile } from 'node:fs/promises'
 import { join } from 'node:path'
 import { pathToFileURL } from 'node:url'
 import { promisify } from 'node:util'
@@ -11,6 +11,10 @@ import { promisify } from 'node:util'
   real source edit, and a finished task is committed under its ID and title, as the agent would.
   The folder stays a git repository, so Groma can compare the "before" commit with what the agents
   left, live. Slides ask for a phase; going back resets the clone and replays up to it at once.
+
+  With a HISTORY in the script, phase 0 is the source's first commit instead: an empty folder, an empty
+  map. The history phase then checks out every later commit in turn, so the map grows as it did, and
+  ends back on the branch at the "before" commit, where the agents start.
 */
 
 const run = promisify(execFile)
@@ -31,6 +35,7 @@ interface Plan {
   AGENTS: Record<string, string>
   EDITS: Record<string, [string, string]>
   STEPS: Step[]
+  HISTORY?: { phase: number, interval: number }
 }
 
 interface Progress {
@@ -53,6 +58,16 @@ export interface AgentView {
   criteria: number
 }
 
+export interface HistoryView {
+  /** The scenario phase that replays the history. */
+  phase: number
+  /** The commit checked out, from 1, of `total`. */
+  commit: number
+  total: number
+  /** Subjects of the commit checked out and the few before it, newest first. */
+  recent: string[]
+}
+
 const pause = (milliseconds: number) => new Promise(resolve => setTimeout(resolve, milliseconds))
 
 export class Scenario {
@@ -60,10 +75,13 @@ export class Scenario {
   private target = 0
   private queue: Promise<void> = Promise.resolve()
   private progress: Record<string, Progress> = {}
+  /** The history, oldest first, and which of its commits is checked out (with a HISTORY only). */
+  private commits: { id: string, subject: string }[] = []
+  private frame = 0
   readonly last: number
 
-  private constructor(readonly work: string, readonly base: string, private readonly plan: Plan, private readonly interval: number) {
-    this.last = Math.max(0, ...plan.STEPS.map(step => step.phase))
+  private constructor(readonly work: string, readonly base: string, readonly branch: string, private readonly plan: Plan, private readonly interval: number) {
+    this.last = Math.max(0, plan.HISTORY?.phase ?? 0, ...plan.STEPS.map(step => step.phase))
     this.forget()
   }
 
@@ -71,9 +89,18 @@ export class Scenario {
   static async prepare(source: string, work: string, script: string, interval: number): Promise<Scenario> {
     await run('git', ['clone', '--quiet', source, work])
     const base = (await run('git', ['-C', work, 'rev-parse', 'HEAD'])).stdout.trim()
+    const branch = (await run('git', ['-C', work, 'rev-parse', '--abbrev-ref', 'HEAD'])).stdout.trim()
     const plan = await import(pathToFileURL(script).href) as Plan
-    const scenario = new Scenario(work, base, plan, interval)
+    const scenario = new Scenario(work, base, branch, plan, interval)
+    if (plan.HISTORY !== undefined) {
+      scenario.commits = (await run('git', ['-C', work, 'log', '--reverse', '--format=%H%x09%s', base])).stdout
+        .split('\n').filter(Boolean).map((line) => {
+          const [id, subject] = line.split('\t')
+          return { id: id!, subject: subject ?? '' }
+        })
+    }
     await scenario.scannersOff()
+    await scenario.toFirstCommit()
     return scenario
   }
 
@@ -86,7 +113,7 @@ export class Scenario {
   }
 
   /** What each agent is doing, for the slide's panel. */
-  view(): { phase: number, last: number, base: string, agents: AgentView[] } {
+  view(): { phase: number, last: number, base: string, agents: AgentView[], history?: HistoryView } {
     const agents = Object.entries(this.plan.TASKS).map(([task, { agent, create }]) => {
       const progress = this.progress[task]!
       return {
@@ -100,7 +127,10 @@ export class Scenario {
         criteria: create.filter(argument => argument === '--ac').length,
       }
     })
-    return { phase: this.phase, last: this.last, base: this.base, agents }
+    const history = this.plan.HISTORY === undefined
+      ? undefined
+      : { phase: this.plan.HISTORY.phase, commit: this.frame + 1, total: this.commits.length, recent: this.commits.slice(Math.max(0, this.frame - 13), this.frame + 1).map(commit => commit.subject).reverse() }
+    return { phase: this.phase, last: this.last, base: this.base, agents, history }
   }
 
   private async goTo(phase: number): Promise<void> {
@@ -108,6 +138,9 @@ export class Scenario {
     // replays up to the phase at once, so stepping back during a rehearsal never waits.
     const forward = phase > this.phase
     if (!forward) await this.reset()
+    const history = this.plan.HISTORY
+    if (history !== undefined && this.phase < history.phase && phase >= history.phase)
+      await this.replay(forward && phase === history.phase ? history.interval : 0)
     for (const step of this.plan.STEPS.filter(item => item.phase > this.phase && item.phase <= phase)) {
       if (forward && step.phase === phase) await pause(this.interval)
       await this.step(step)
@@ -116,11 +149,38 @@ export class Scenario {
   }
 
   private async reset(): Promise<void> {
+    await run('git', ['-C', this.work, 'checkout', '--quiet', '--force', this.branch])
     await run('git', ['-C', this.work, 'reset', '--quiet', '--hard', this.base])
     await run('git', ['-C', this.work, 'clean', '-fdq'])
     await this.scannersOff()
     this.forget()
+    await this.toFirstCommit()
     this.phase = 0
+  }
+
+  /** Phase 0 with a history: the first commit, checked out on its own. */
+  private async toFirstCommit(): Promise<void> {
+    if (this.commits.length === 0) return
+    await this.checkout(this.commits[0]!.id)
+    this.frame = 0
+  }
+
+  /** Checks out the history one commit at a time, so the map grows as it did; with no interval it jumps to the end. */
+  private async replay(interval: number): Promise<void> {
+    if (interval > 0) {
+      for (let frame = this.frame + 1; frame < this.commits.length; frame++) {
+        await pause(interval)
+        await this.checkout(this.commits[frame]!.id)
+        this.frame = frame
+      }
+    }
+    await this.checkout(this.branch)
+    this.frame = this.commits.length - 1
+  }
+
+  private async checkout(ref: string): Promise<void> {
+    await run('git', ['-C', this.work, 'checkout', '--quiet', '--force', ref])
+    await this.scannersOff()
   }
 
   private forget(): void {
@@ -129,8 +189,12 @@ export class Scenario {
 
   /** The service's own scanner settings never run here: the map shows the curated architecture and the tasks. */
   private async scannersOff(): Promise<void> {
-    await writeFile(join(this.work, 'groma', 'scanners.json'), '{ "scanners": [] }\n')
-    await run('git', ['-C', this.work, 'update-index', '--assume-unchanged', 'groma/scanners.json'])
+    const file = join(this.work, 'groma', 'scanners.json')
+    const off = '{ "scanners": [] }\n'
+    // Written only when it differs, so the history's checkouts do not touch Groma's scanner settings.
+    if (await readFile(file, 'utf8').catch(() => '') !== off) await writeFile(file, off)
+    // skip-worktree, not assume-unchanged: a forced checkout rewrites an assume-unchanged file.
+    await run('git', ['-C', this.work, 'update-index', '--skip-worktree', 'groma/scanners.json'])
   }
 
   private backlog(...args: string[]) {

@@ -9,6 +9,8 @@ import { useIsSlideActive, useSlideContext } from '@slidev/client'
 // over Groma's hierarchy shows what each agent is doing; the pins on the map show where.
 // With `review`, the slide only makes sure the agents have finished, so a comparison of what they
 // changed is ready, and shows no panel.
+// A scenario with a history starts from its first commit, an empty folder. Until the history phase is
+// over, the panel shows the commits going by instead of the agents.
 // Entering the slide on its first click resets the service, so every rehearsal starts the same.
 const props = withDefaults(defineProps<{
   name: string
@@ -52,14 +54,17 @@ const drives = computed(() => active.value && ['slide', 'presenter'].includes($r
 const dev = import.meta.env.DEV
 const endpoint = computed(() => `${import.meta.env.BASE_URL}__groma-live/${props.name}`)
 const agents = ref<Agent[]>([])
+const history = ref<{ phase: number, commit: number, total: number, recent: string[] }>()
 let poll: ReturnType<typeof setInterval> | undefined
 
 const phase = computed(() => props.review ? 'end' : String(props.phases[Math.min($clicks.value, props.phases.length - 1)] ?? 0))
+const inHistory = computed(() => !props.review && history.value !== undefined && Number(phase.value) <= history.value.phase)
 
 async function sync(method: 'GET' | 'POST', query = ''): Promise<void> {
   try {
     const state = await (await fetch(`${endpoint.value}${query}`, { method })).json()
     if (Array.isArray(state.agents)) agents.value = state.agents
+    history.value = state.history
   } catch {
     // Without the dev server there are no agents; the stills stay on screen.
   }
@@ -81,7 +86,15 @@ const short = (file?: string) => file?.split('/').slice(-2).join('/')
 
 <template>
   <GromaFrame :origin="origin" :views="views" :captions="captions" :stills="stills" :scale="scale" />
-  <div v-if="!review && agents.length > 0" class="groma-agents">
+  <div v-if="inHistory && history" class="groma-agents">
+    <p class="groma-agents-label">HISTORY</p>
+    <p class="groma-history-count"><b>{{ history.commit }}</b> / {{ history.total }} commits</p>
+    <div class="groma-history-bar"><i :style="{ transform: `scaleX(${history.commit / history.total})` }" /></div>
+    <ol class="groma-history-log">
+      <li v-for="(subject, n) in history.recent" :key="history.commit - n" :class="{ latest: n === 0 }">{{ subject }}</li>
+    </ol>
+  </div>
+  <div v-else-if="!review && agents.length > 0" class="groma-agents">
     <p class="groma-agents-label">AGENTS</p>
     <div
       v-for="agent in agents"
@@ -230,6 +243,63 @@ const short = (file?: string) => file?.split('/').slice(-2).join('/')
 
 .groma-agent .criteria i.on {
   background: var(--agent);
+}
+
+.groma-history-count {
+  margin: 0 !important;
+  color: #5d6764;
+  font-family: Inter, system-ui, sans-serif;
+  font-size: 11px;
+}
+
+.groma-history-count b {
+  color: #171b1a;
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.groma-history-bar {
+  height: 3px;
+  overflow: hidden;
+  border-radius: 2px;
+  background: #e2e1db;
+}
+
+.groma-history-bar i {
+  display: block;
+  height: 100%;
+  background: #1d9e75;
+  transform-origin: left;
+  transition: transform 0.3s ease;
+}
+
+.groma-history-log {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  margin: 6px 0 0 !important;
+  padding: 0 !important;
+  list-style: none;
+}
+
+.groma-history-log li {
+  overflow: hidden;
+  color: #9a9f9c;
+  font-size: 8.5px;
+  line-height: 1.3;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.groma-history-log li.latest {
+  color: #171b1a;
+  font-size: 9.5px;
+  animation: groma-history-in 0.25s ease;
+}
+
+@keyframes groma-history-in {
+  from { opacity: 0; transform: translateY(-3px); }
 }
 
 .groma-agent-line-enter-active,

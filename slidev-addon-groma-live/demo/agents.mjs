@@ -101,34 +101,40 @@ export async function sendLowStockAlert(skus: string[], email: string): Promise<
 }
 
 /**
- * The steps, by phase. Phase 0 is the service before the agents start.
+ * Phase 0 is the service's first commit: an empty folder, an empty map. Phase 1 replays its history,
+ * one commit every `interval` milliseconds, up to the commit the agents start from.
+ */
+export const HISTORY = { phase: 1, interval: 140 }
+
+/**
+ * The agents' steps, by phase, after the history.
  * `create` plans a task, `take` hands it to its agent (assignee and In Progress), `edit` writes the
  * source and records the files and the component the agent touched, `check` ticks acceptance
  * criteria, `done` ticks the last one, commits the task's work under its ID and title, and closes it.
  */
 export const STEPS = [
-  { phase: 1, task: 'TASK-10', kind: 'create' },
-  { phase: 1, task: 'TASK-11', kind: 'create' },
-  { phase: 1, task: 'TASK-12', kind: 'create' },
+  { phase: 2, task: 'TASK-10', kind: 'create' },
+  { phase: 2, task: 'TASK-11', kind: 'create' },
+  { phase: 2, task: 'TASK-12', kind: 'create' },
 
-  { phase: 2, task: 'TASK-10', kind: 'take' },
-  { phase: 2, task: 'TASK-11', kind: 'take' },
-  { phase: 2, task: 'TASK-12', kind: 'take' },
+  { phase: 3, task: 'TASK-10', kind: 'take' },
+  { phase: 3, task: 'TASK-11', kind: 'take' },
+  { phase: 3, task: 'TASK-12', kind: 'take' },
 
-  { phase: 3, task: 'TASK-12', kind: 'edit', edits: ['threshold', 'lowList'], ref: 'catalog' },
-  { phase: 3, task: 'TASK-11', kind: 'edit', edits: ['refund'], ref: 'payments', check: [2] },
-  { phase: 3, task: 'TASK-10', kind: 'edit', edits: ['cart'], ref: 'cart', check: [1] },
-  { phase: 3, task: 'TASK-12', kind: 'check', check: [1] },
-  { phase: 3, task: 'TASK-10', kind: 'edit', edits: ['checkout'], ref: 'checkout' },
-  { phase: 3, task: 'TASK-12', kind: 'check', check: [2] },
-  { phase: 3, task: 'TASK-11', kind: 'edit', edits: ['refundEmail'], ref: 'notifications', check: [3] },
-  { phase: 3, task: 'TASK-10', kind: 'check', check: [2] },
-  { phase: 3, task: 'TASK-11', kind: 'edit', edits: ['cancel'], ref: 'orders' },
-  { phase: 3, task: 'TASK-12', kind: 'edit', edits: ['lowAlert'], ref: 'notifications' },
-  { phase: 3, task: 'TASK-11', kind: 'check', check: [1] },
-  { phase: 3, task: 'TASK-10', kind: 'edit', edits: ['discountCharge'], ref: 'payments' },
+  { phase: 4, task: 'TASK-12', kind: 'edit', edits: ['threshold', 'lowList'], ref: 'catalog' },
+  { phase: 4, task: 'TASK-11', kind: 'edit', edits: ['refund'], ref: 'payments', check: [2] },
+  { phase: 4, task: 'TASK-10', kind: 'edit', edits: ['cart'], ref: 'cart', check: [1] },
+  { phase: 4, task: 'TASK-12', kind: 'check', check: [1] },
+  { phase: 4, task: 'TASK-10', kind: 'edit', edits: ['checkout'], ref: 'checkout' },
+  { phase: 4, task: 'TASK-12', kind: 'check', check: [2] },
+  { phase: 4, task: 'TASK-11', kind: 'edit', edits: ['refundEmail'], ref: 'notifications', check: [3] },
+  { phase: 4, task: 'TASK-10', kind: 'check', check: [2] },
+  { phase: 4, task: 'TASK-11', kind: 'edit', edits: ['cancel'], ref: 'orders' },
+  { phase: 4, task: 'TASK-12', kind: 'edit', edits: ['lowAlert'], ref: 'notifications' },
+  { phase: 4, task: 'TASK-11', kind: 'check', check: [1] },
+  { phase: 4, task: 'TASK-10', kind: 'edit', edits: ['discountCharge'], ref: 'payments' },
 
-  { phase: 4, task: 'TASK-11', kind: 'done' },
-  { phase: 4, task: 'TASK-12', kind: 'done', check: [3] },
-  { phase: 4, task: 'TASK-10', kind: 'done', check: [3] },
+  { phase: 5, task: 'TASK-11', kind: 'done' },
+  { phase: 5, task: 'TASK-12', kind: 'done', check: [3] },
+  { phase: 5, task: 'TASK-10', kind: 'done', check: [3] },
 ]

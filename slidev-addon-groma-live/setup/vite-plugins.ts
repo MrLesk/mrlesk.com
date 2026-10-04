@@ -250,6 +250,38 @@ async function prepareScenario(instance: InstanceConfig, deckRoot: string): Prom
   await serve(instance, scenario.work)
 }
 
+const SETUP_FORMS = ['initialize', 'scanners']
+
+function unescaped(text: string): string {
+  return text.replace(/&quot;/g, '"').replace(/&#39;/g, "'").replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&amp;/g, '&')
+}
+
+/**
+ * Presses the button of a Groma setup screen, as a click on it would: reads the form Groma shows on
+ * `port` and, if it is `form` ('initialize' for Continue, 'scanners' for Install & scan), sends it with
+ * the values the screen shows. Any other screen is left alone, so a second window asking for the same
+ * press does nothing. Groma answers that request only when the step is done, and the scan can take a
+ * while; the setup page shows that progress itself, so this returns once the press is on its way.
+ */
+export async function pressSetup(port: number, form: string): Promise<boolean> {
+  if (!SETUP_FORMS.includes(form)) return false
+  const origin = `http://localhost:${port}`
+  const page = await (await fetch(`${origin}/`, { signal: AbortSignal.timeout(3000) })).text()
+  const shown = page.match(new RegExp(`<form[^>]*action="/${form}"[^>]*>([\\s\\S]*?)</form>`))?.[1]
+  if (shown === undefined) return false
+  const fields = new URLSearchParams()
+  for (const [tag] of shown.matchAll(/<input\b[^>]*>/g)) {
+    const name = tag.match(/\bname="([^"]*)"/)?.[1]
+    const type = tag.match(/\btype="([^"]*)"/)?.[1] ?? 'text'
+    if (name === undefined || type === 'search') continue
+    if ((type === 'radio' || type === 'checkbox') && !/\schecked\b/.test(tag)) continue
+    fields.append(name, unescaped(tag.match(/\bvalue="([^"]*)"/)?.[1] ?? ''))
+  }
+  void fetch(`${origin}/${form}`, { method: 'POST', body: fields }).catch(() => {})
+  await new Promise(resolve => setTimeout(resolve, 400))
+  return true
+}
+
 export default function gromaLive(options: { mode?: string, userRoot: string, data: { headmatter: Record<string, unknown> } }) {
   const instances = (options.data.headmatter.gromaLive ?? []) as InstanceConfig[]
   if (options.mode !== 'dev' || instances.length === 0) return []
@@ -280,10 +312,18 @@ export default function gromaLive(options: { mode?: string, userRoot: string, da
       // POST /__groma-live/<name>?reset    start over
       // For a timelapse: GET its position, POST ?play to run it, POST ?rewind to go back to the first commit.
       // For a scenario: GET what each agent is doing, POST ?to=<phase> (or ?to=end) to move there.
+      // For any instance: POST ?setup=initialize|scanners presses that Groma setup screen's button.
       server.middlewares.use('/__groma-live', (req, res) => {
         const url = new URL(req.url ?? '/', 'http://localhost')
         const named = instances.find(item => item.name === url.pathname.slice(1))
         res.setHeader('Content-Type', 'application/json')
+        if (named !== undefined && req.method === 'POST' && url.searchParams.has('setup')) {
+          pressSetup(named.port, url.searchParams.get('setup') ?? '').then(
+            submitted => res.end(JSON.stringify({ submitted })),
+            () => res.end(JSON.stringify({ submitted: false })),
+          )
+          return
+        }
         const scenario = named === undefined ? undefined : state.scenarios.get(named.name)
         if (scenario !== undefined) {
           const to = url.searchParams.get('to')

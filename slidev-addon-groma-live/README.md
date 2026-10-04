@@ -65,8 +65,11 @@ the camera flies there. Without a running Groma it shows `stills` (paths inside 
 A shield keeps keyboard focus with Slidev; double-click the map to use it by hand.
 `inset` (22 slide pixels by default) keeps Groma's header and panels inside a frame the deck draws
 near its edge, while the map still fills the slide. Pass `:inset="0"` for a deck without a frame.
+For a Groma that opens on its setup, `:setup="['', 'initialize', 'scanners']"` with the instance's `name`
+makes those clicks press Continue, then Install & scan, with the values the screen shows; the dev
+server sends the form, so the presenter's preview never presses anything.
 
-`<GromaRun name="keycloak" />` is a terminal that runs that instance's `steps` for real, one per
+`<GromaRun name="keycloak-devoxx" />` is a terminal that runs that instance's `steps` for real, one per
 click, in the throwaway folder `~/.groma-live/<name>` (wiped at the first step). After the last step
 the addon starts `groma web` there. RESET starts the beat over.
 
@@ -77,7 +80,10 @@ rewinds when the slide is opened again.
 `<GromaAgents name="agents" origin="http://localhost:4805" :phases="[0, 1, 2, 3, 3, 4]" :views="[...]" />`
 drives a scenario: click n shows phase `phases[n]` with view `views[n]`, and a panel over Groma's
 hierarchy shows what each agent is doing, in the colour of its pins. Entering the slide on its first
-click resets the scenario. With `review` it shows no panel and only makes sure the agents have
+click resets the scenario. A script with a `HISTORY` (see demo/agents.mjs) starts from the source's
+first commit, an empty folder, and its history phase checks out every later commit in turn, so the map
+grows as it did while the panel counts the commits; the agents start where the history ends. With
+`review` it shows no panel and only makes sure the agents have
 finished, for a comparison such as `from=<before commit>`, which Groma 0.6.0 opens live.
 
 `GromaRun`, `GromaTimelapse` and `GromaAgents` share one demo per dev server, so only the slide

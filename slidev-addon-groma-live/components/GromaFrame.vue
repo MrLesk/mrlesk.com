@@ -29,10 +29,20 @@ const props = withDefaults(defineProps<{
    * The map itself still fills the slide. Needs a Groma that knows the `inset` parameter.
    */
   inset?: number
-}>(), { captions: () => [], stills: () => [], origin: 'http://localhost:4747', scale: 0.6, inset: 22 })
+  /**
+   * For a Groma that opens on its setup: per click, the setup button that click presses, 'initialize'
+   * (Continue) or 'scanners' (Install & scan), '' for none. The deck's dev server presses it (see
+   * pressSetup in setup/vite-plugins.ts), so `name` must be the gromaLive instance behind `origin`.
+   */
+  setup?: string[]
+  name?: string
+}>(), { captions: () => [], stills: () => [], origin: 'http://localhost:4747', scale: 0.6, inset: 22, setup: () => [] })
 
-const { $clicks } = useSlideContext()
+const { $clicks, $renderContext } = useSlideContext()
 const active = useIsSlideActive()
+// Slidev also counts the presenter's next-click preview as this slide being active. Only the slide
+// itself may press a setup button: Groma's setup is shared, and the preview is one click ahead.
+const drives = computed(() => active.value && ['slide', 'presenter'].includes($renderContext.value))
 const base = import.meta.env.BASE_URL
 // A built deck never reaches for localhost: no Groma runs there, and browsers would ask every
 // visitor for access to their local network. It shows the stills instead.
@@ -112,6 +122,22 @@ watch(search, () => {
   else if (frame.value) {
     veiled.value = true
     setTimeout(() => { if (frame.value) frame.value.src = `${props.origin}/${search.value}` }, 220)
+  }
+})
+
+// A setup press only goes forward: Groma cannot undo a step, and stepping back just shows the slide.
+watch(index, async (now, before) => {
+  const form = props.setup[now]
+  if (!dev || !drives.value || status.value !== 'live' || !form || props.name === undefined || (before !== undefined && now <= before)) return
+  let pressed: { submitted?: boolean } = {}
+  try {
+    pressed = await (await fetch(`${base}__groma-live/${props.name}?setup=${form}`, { method: 'POST' })).json()
+  } catch {
+    return
+  }
+  if (pressed.submitted && frame.value) {
+    veiled.value = true
+    frame.value.src = `${props.origin}/${search.value}`
   }
 })
 
