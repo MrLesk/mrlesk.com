@@ -1,0 +1,33 @@
+{
+  "schema_version": 1,
+  "diagram_type": "sequence",
+  "meta": {
+    "title": "An agent moves a task",
+    "quality_profile": "showcase",
+    "viewBox": [1000, 560],
+    "column_fit": "spread"
+  },
+  "participants": [
+    { "id": "agent", "type": "external", "label": "AI agent", "sublabel": "Claude Code" },
+    { "id": "mcp", "type": "backend", "label": "MCP server", "sublabel": "stdio" },
+    { "id": "core", "type": "backend", "label": "Core", "sublabel": "tasks" },
+    { "id": "files", "type": "database", "label": "backlog/", "sublabel": "Markdown" },
+    { "id": "store", "type": "messagebus", "label": "Content store", "sublabel": "fs.watch" },
+    { "id": "server", "type": "backend", "label": "Web server", "sublabel": "Bun.serve" },
+    { "id": "ui", "type": "frontend", "label": "Web UI", "sublabel": "React board" }
+  ],
+  "segments": [
+    { "from": 160, "to": 318, "label": "Agent edit" },
+    { "from": 332, "to": 477, "label": "Live update" }
+  ],
+  "messages": [
+    { "id": "task-edit", "from": "agent", "to": "mcp", "y": 182, "label": "task_edit", "variant": "emphasis" },
+    { "id": "edit-task", "from": "mcp", "to": "core", "y": 220, "label": "edit task" },
+    { "id": "write-file", "from": "core", "to": "files", "y": 258, "label": "write task .md", "variant": "emphasis" },
+    { "id": "result", "from": "mcp", "to": "agent", "y": 296, "label": "result", "variant": "return" },
+    { "id": "watch-event", "from": "files", "to": "store", "y": 352, "label": "file changed", "variant": "dashed" },
+    { "id": "store-event", "from": "store", "to": "server", "y": 390, "label": "tasks event" },
+    { "id": "push", "from": "server", "to": "ui", "y": 428, "label": "tasks-updated", "variant": "emphasis" },
+    { "id": "refetch", "from": "ui", "to": "server", "y": 466, "label": "refresh data" }
+  ]
+}

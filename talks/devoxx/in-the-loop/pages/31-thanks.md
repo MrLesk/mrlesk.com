@@ -5,8 +5,8 @@ mood: 4
 
 <div class="thanks">
   <div>
-    <div class="qr"><img src="/qr-slides.svg" alt="QR code to these slides" /></div>
-    <span class="qr-label">THESE SLIDES</span>
+    <div class="qr"><img src="/qr-talk.png" alt="QR code to this talk in the Devoxx app" /></div>
+    <span class="qr-label">RATE THIS TALK</span>
   </div>
   <div>
     <h1>Thank you.</h1>
@@ -24,6 +24,7 @@ mood: 4
 
 Leave this up for questions. Check out Groma.md, it's literally groma.md.
 
-The QR code points at https://mrlesk.com/talks/devoxx/in-the-loop/
-Regenerate public/qr-slides.svg if the folder or URL changes.
+The QR code opens this talk in the Devoxx app:
+https://m.devoxx.com/events/dvbe26/talks/25652/in-the-loop-not-in-the-dark-staying-in-control-in-the-era-of-dark-software-factories
+It is the exact code you supplied (public/qr-talk.png), only its white border trimmed.
 -->

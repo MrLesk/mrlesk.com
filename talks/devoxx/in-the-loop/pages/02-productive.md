@@ -8,7 +8,7 @@ clicks: 1
 
 <div class="stage">
   <WhenActive><ContribGraph /></WhenActive>
-  <p class="say small dim">I shipped fast and nothing broke.</p>
+  <p class="say small dim">I started building faster and nothing broke.</p>
   <p v-click class="say">So I started <strong>skipping code review</strong>.</p>
 </div>
 

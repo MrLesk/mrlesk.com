@@ -28,19 +28,19 @@ gromaLive:
     scenario:
       source: ../../../slidev-addon-groma-live/demo/orders.bundle
       script: ../../../slidev-addon-groma-live/demo/agents.mjs
-  # Built on stage from the GromaRun slide, in the throwaway folder ~/.groma-live/keycloak.
-  # Groma.md proposes the folder name as the project name, so the folder is called keycloak.
-  - name: keycloak
+  # Built on stage from the GromaRun slide, in the throwaway folder ~/.groma-live/keycloak-devoxx.
+  # Groma.md proposes the folder name as the project name, so the folder is called keycloak-devoxx.
+  - name: keycloak-devoxx
     port: 4803
     steps:
       - git clone ~/projects/keycloak .
 ---
 
 <div class="cover">
-  <p class="eyebrow">Devoxx Belgium 2026 · Tools in Action</p>
+  <p class="eyebrow">Devoxx Belgium 2026</p>
   <h1><span class="lit">In the loop,</span><br><span class="unlit">not in the dark.</span></h1>
   <p class="cover-sub">Staying in control in the era of dark software factories</p>
-  <p class="cover-by">Alex Gavrilescu</p>
+  <p class="cover-by">a story by Alex Gavrilescu</p>
 </div>
 
 <!--
@@ -109,6 +109,10 @@ src: ./pages/14-not-satisfied.md
 
 ---
 src: ./pages/14b-shape.md
+---
+
+---
+src: ./pages/14c-ai-diagrams.md
 ---
 
 ---

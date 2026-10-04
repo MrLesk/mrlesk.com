@@ -42,7 +42,7 @@ under `gromaLive` in the headmatter and stops them with Slidev.
 | --- | --- | --- |
 | 1 Walk the map | `20b` | `~/projects/groma3`, port 4801 |
 | 2 Three agents on the order service (`21b`), then what they changed (`21c`) | `21b`, `21c` | `scenario`: a fresh clone of `slidev-addon-groma-live/demo/orders.bundle` in `~/.groma-live/agents`, steps in `demo/agents.mjs`, port 4805 |
-| 3 Keycloak, scanned on stage | `22a` runs the clone, `22b` shows the Groma.md setup and then the map | throwaway clone, port 4803 |
+| 3 Keycloak, scanned on stage | `22a` runs the clone, `22b` shows the Groma.md setup (its clicks press Continue, then Install & scan) and then the map | throwaway clone in `~/.groma-live/keycloak-devoxx`, port 4803 |
 | 4 Keycloak curated | `23b` | `~/projects/keycloak`, port 4802 |
 
 `<GromaFrame>` posts one Groma.md query string per click and the camera flies there. `<GromaRun>` is a
@@ -61,7 +61,8 @@ about 50 s after `bun run dev` before slide `23b` answers.
 ## Files
 
 - `slides.md` holds the cover and the slide order. One file per slide in `pages/`.
-- `pages/2xb-*-live.md` are the embedded live map slides. `21b` runs the agents for real, one phase per
+- `pages/2xb-*-live.md` are the embedded live map slides. `21b` opens on the order service's first commit
+  (an empty folder), replays its 48 commits on the next click, then runs the agents for real, one phase per
   click (`backlog` commands, source edits, each agent's commit), through `<GromaAgents>`; entering it from
   the slide before resets the clone. `21c` opens Groma.md 0.6.0's comparison from the demo history's last
   commit (`ee9e69b`, the service before the agents) to the working tree, and finishes the agents first.
@@ -72,6 +73,10 @@ about 50 s after `bun run dev` before slide `23b` answers.
   (`public/groma-road.webp`, `public/groma-map.webp`). Both are the light pictures from
   `docs/what-is-a-groma.md` in the Groma.md repository; their green lines keep them to paper slides.
 - `public/demo/` holds the fallback stills.
+- `pages/14c-ai-diagrams.md` shows three diagrams an AI agent drew of Backlog.md with the archify skill
+  (github.com/tt-a1i/archify). Their specs are `diagrams/*.json` (repository revision pinned in the
+  architecture spec); the pictures in `public/diagrams/` are the delivered viewers captured at 1440x900,
+  1.5x, light theme. To change one, edit its spec, run archify's `validate` and `deliver`, and recapture.
 
 ## Commands
 
