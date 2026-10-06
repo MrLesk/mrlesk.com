@@ -3,3 +3,7 @@ composition/assets/footage/
 composition/snapshots/
 # The music track was generated on Alex's ElevenLabs account and is not redistributed. See composition/assets/CREDITS.md.
 composition/assets/music/
+# Post drafts stay local: the repo is public, so a committed draft goes out before the post does.
+x-thread/
+share-copy*
+x-0.6.0/thread.md

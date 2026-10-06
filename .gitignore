@@ -7,3 +7,6 @@ tmp
 .env
 .env.*
 !.env.example
+.slidev-speech-navigation
+/.agents
+/.claude/skills/brag
