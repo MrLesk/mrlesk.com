@@ -1,4 +1,5 @@
 # Temporary latency benchmark, isolated from production deployment.
+# Measurement wave 2 (identical commands).
 name: Benchmark ubuntu-slim latency
 
 on:
