@@ -1,0 +1,35 @@
+{
+  "schema_version": 1,
+  "diagram_type": "workflow",
+  "meta": {
+    "title": "How an agent works a task",
+    "quality_profile": "showcase"
+  },
+  "lanes": [
+    { "id": "agent", "label": "AI agent" },
+    { "id": "task", "label": "Backlog.md task" }
+  ],
+  "phases": [
+    { "id": "pick-up", "label": "Pick up", "fromCol": 0, "toCol": 1 },
+    { "id": "build", "label": "Build", "fromCol": 2, "toCol": 4, "variant": "emphasis" },
+    { "id": "hand-over", "label": "Hand over", "fromCol": 5, "toCol": 5 }
+  ],
+  "mainPath": ["read", "start", "plan", "implement", "criteria", "summary", "done"],
+  "nodes": [
+    { "id": "read", "lane": "agent", "col": 0, "type": "backend", "label": "Read task", "sublabel": "--plain" },
+    { "id": "start", "lane": "task", "col": 1, "type": "database", "width": 112, "label": "In Progress", "sublabel": "assigned" },
+    { "id": "plan", "lane": "agent", "col": 2, "type": "backend", "label": "Plan", "sublabel": "before code" },
+    { "id": "implement", "lane": "agent", "col": 3, "type": "backend", "label": "Implement", "sublabel": "code + tests" },
+    { "id": "criteria", "lane": "task", "col": 4, "type": "database", "label": "Criteria", "sublabel": "checked, with notes" },
+    { "id": "summary", "lane": "agent", "col": 5, "type": "backend", "label": "Summary", "sublabel": "PR description" },
+    { "id": "done", "lane": "task", "col": 5, "type": "database", "label": "Done", "sublabel": "Definition of Done" }
+  ],
+  "edges": [
+    { "from": "read", "to": "start", "label": "eligible", "variant": "emphasis", "labelSegment": 1 },
+    { "from": "start", "to": "plan", "variant": "emphasis" },
+    { "from": "plan", "to": "implement", "variant": "emphasis" },
+    { "from": "implement", "to": "criteria", "variant": "emphasis" },
+    { "from": "criteria", "to": "summary", "variant": "emphasis" },
+    { "from": "summary", "to": "done", "variant": "emphasis", "route": "drop", "fromSide": "bottom", "toSide": "top" }
+  ]
+}

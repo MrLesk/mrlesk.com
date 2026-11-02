@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "Backlog.md",
+    "quality_profile": "showcase",
+    "repository": {
+      "url": "https://github.com/MrLesk/Backlog.md",
+      "revision": "69e7b15362337d6712783d9a685f6e4bb693fa9d"
+    }
+  },
+  "components": [
+    { "id": "developer", "type": "external", "label": "Developer", "sublabel": "terminal + browser", "pos": [40, 80], "size": [160, 64] },
+    { "id": "agent", "type": "external", "label": "AI agent", "sublabel": "Claude Code, Codex", "pos": [40, 420], "size": [160, 64] },
+    { "id": "web-ui", "type": "frontend", "label": "Web UI", "sublabel": "React board", "pos": [330, 80], "size": [160, 64], "sources": [{ "path": "src/web/App.tsx" }] },
+    { "id": "cli", "type": "frontend", "label": "CLI + terminal UI", "sublabel": "backlog · commander", "pos": [330, 250], "size": [160, 64], "sources": [{ "path": "src/cli.ts" }] },
+    { "id": "mcp", "type": "backend", "label": "MCP server", "sublabel": "stdio tools", "pos": [330, 420], "size": [160, 64], "sources": [{ "path": "src/mcp/server.ts" }] },
+    { "id": "web-server", "type": "backend", "label": "Web server", "sublabel": "Bun.serve", "pos": [620, 80], "size": [160, 64], "sources": [{ "path": "src/server/index.ts" }] },
+    { "id": "core", "type": "backend", "label": "Core", "sublabel": "tasks, docs, decisions", "pos": [620, 250], "size": [160, 64], "sources": [{ "path": "src/core/backlog.ts" }] },
+    { "id": "files", "type": "database", "label": "backlog/ folder", "sublabel": "Markdown files", "pos": [910, 250], "size": [160, 64], "sources": [{ "path": "src/file-system/operations.ts" }, { "path": "src/markdown/parser.ts" }] },
+    { "id": "git", "type": "database", "label": "Git", "sublabel": "commits, branches", "pos": [910, 420], "size": [160, 64], "sources": [{ "path": "src/git/operations.ts" }] }
+  ],
+  "connections": [
+    { "id": "developer-cli", "from": "developer", "to": "cli", "label": "commands", "variant": "emphasis" },
+    { "id": "cli-core", "from": "cli", "to": "core", "variant": "emphasis" },
+    { "id": "core-files", "from": "core", "to": "files", "label": "read / write", "variant": "emphasis" },
+    { "id": "developer-web", "from": "developer", "to": "web-ui", "label": "browser" },
+    { "id": "web-ui-server", "from": "web-ui", "to": "web-server", "label": "HTTP + WebSocket" },
+    { "id": "server-core", "from": "web-server", "to": "core" },
+    { "id": "agent-cli", "from": "agent", "to": "cli", "label": "CLI", "fromSide": "top", "toSide": "left" },
+    { "id": "agent-mcp", "from": "agent", "to": "mcp", "label": "MCP" },
+    { "id": "mcp-core", "from": "mcp", "to": "core" },
+    { "id": "core-git", "from": "core", "to": "git", "label": "auto-commit", "variant": "dashed" }
+  ],
+  "cards": [
+    { "dot": "cyan", "title": "Ways in", "items": ["CLI and terminal board", "Web UI over a local Bun server", "MCP over stdio for agents"] },
+    { "dot": "emerald", "title": "One core", "items": ["Tasks, drafts, docs, decisions, milestones", "Search across everything"] },
+    { "dot": "violet", "title": "Plain files", "items": ["Markdown with frontmatter in backlog/", "Optional auto-commit, tasks read across branches"] }
+  ]
+}

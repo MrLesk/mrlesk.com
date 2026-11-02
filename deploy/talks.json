@@ -132,6 +132,14 @@
       "base": "/talks/devoxx/in-the-loop/",
       "artifact": "component-talk-devoxx-in-the-loop",
       "watch": ["slidev-theme-penguin/**", "slidev-addon-groma-live/**"]
+    },
+    {
+      "id": "aidevcon-in-the-loop",
+      "source": "talks/aidevcon/in-the-loop",
+      "target": "talks/aidevcon/in-the-loop",
+      "base": "/talks/aidevcon/in-the-loop/",
+      "artifact": "component-talk-aidevcon-in-the-loop",
+      "watch": ["slidev-theme-penguin/**", "slidev-addon-groma-live/**"]
     }
   ]
 }
