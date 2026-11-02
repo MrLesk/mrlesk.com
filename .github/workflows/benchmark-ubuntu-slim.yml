@@ -1,0 +1,37 @@
+# Temporary latency benchmark, isolated from production deployment.
+name: Benchmark ubuntu-slim latency
+
+on:
+  pull_request:
+    types: [opened, synchronize]
+    paths:
+      - .github/workflows/benchmark-ubuntu-slim.yml
+
+permissions:
+  contents: read
+  pull-requests: read
+
+jobs:
+  pr-metadata:
+    name: ${{ matrix.runner }} / sample ${{ matrix.sample }}
+    strategy:
+      fail-fast: false
+      matrix:
+        runner: [ubuntu-latest, ubuntu-slim]
+        sample: [1, 2, 3, 4]
+    runs-on: ${{ matrix.runner }}
+    timeout-minutes: 5
+    steps:
+      - name: Fetch pull request metadata (same workload as architecture pulls job)
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          begin=$(date +%s%3N)
+          pulls=$(gh api --paginate "repos/$GITHUB_REPOSITORY/pulls?state=open" \
+            | jq --arg repo "$GITHUB_REPOSITORY" -cs \
+              '[.[][] | select(.head.repo.full_name == $repo) | {number, head: .head.sha, base: .base.sha}]')
+          echo "PRs: $pulls"
+          echo "Workload duration: $(($(date +%s%3N) - begin)) ms"
+          echo "Benchmark: runner=${{ matrix.runner }}, sample=${{ matrix.sample }}"
