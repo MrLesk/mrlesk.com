@@ -27,5 +27,4 @@ Slow down here. One question per click, and leave silence between them.
 [click] Am I a meat proxy?
 
 The last click takes the room to black. Stay in it for a few seconds before moving on.
-These four questions come back at the end of the talk, answered.
 -->

@@ -34,6 +34,20 @@ Changed from the Devoxx deck:
   never suggest it did.
 - "Look at what I found. Again." is now titled "After a few weeks... again." (Alex, 2026-11-02): clearer that the
   same problems came back weeks after the first findings.
+- "After a few weeks... again." now comes right after "Then I followed the best practices." (Alex, 2026-11-03),
+  so the problems come back straight after "... for a while". The slide after it, What my agents did against What my
+  system had become, is retitled "But I had no picture of my system." (`pages/14-no-picture.md`, was "But I was
+  still not satisfied."): it follows "I need to know the architecture." and leads into the AI diagrams.
+- The finale (`pages/30-finale.md`, Alex, 2026-11-03) has four clicks between "In the loop." and the twist. It
+  opens on the title. Click 1: the lights go out and Alex's photo of a slide shown at AI DevCon that morning comes
+  up (`public/keynote-factory.webp`: building the car, building the factory; cropped to 16:9 from his phone photo,
+  metadata stripped). Click 2: the camera flies into "Building the factory". Click 3: it goes on into the
+  platform's monitors and the lights come on: an observation deck drawn in the deck's ink on paper, a person
+  from behind at a console, three monitors with real Groma.md stills from this demo, and green robot arms (the
+  agents) on the floor. Click 4: back to the title, and "In" becomes "Over". The zoom windows are `--x`, `--y`
+  and `--zoom` in the "Title callback" section of `style.css`; re-measure them if the photo changes.
+- The answers slide ("Four questions from the dark", which answered the four questions of "The afterthought was
+  devastating.") is gone (Alex, 2026-11-03): the try slide leads straight into the finale.
 - The live demo is new: a greenfield project built by agents in the background, Keycloak as the brownfield
   project, a brownfield diff, the GitHub Action, then back to the greenfield result (see "The live demo" below).
   The Codex home for the agents is `~/.config/groma-live/codex`. The Keycloak instance scanned on stage is called
@@ -63,6 +77,8 @@ comes back when Groma.md arrives. That is the title, made visible.
 - The story slides follow Alex's own draft wording. Do not invent facts or numbers.
 - Getting started is always three steps: INSTALL `npm i -g groma.md`, SCAN `groma web`, CURATE "your agent".
   Never suggest the first scan is the finished architecture; the agent's curation turns it into one.
+  On the try slide (`28b`) the click adds Backlog.md to the install line (`npm i -g groma.md backlog.md`) and a
+  BUNDLE tag: Backlog.md keeps the tasks, Groma.md the overview (Alex, 2026-11-03).
 
 ## The live demo
 
@@ -87,13 +103,17 @@ The colours are in style.css under "Greenfield and brownfield"; they set `--grom
 name on its beat card (`<span class="project">`), the caption cards and the cost card use. The beat cards
 have no numbers: the demo switches between the two projects, so a count would not match what is on screen.
 The loop slide `19` uses both colours (`--greenfield`, `--brownfield`) for the two ways in: greenfield starts
-from tasks and comes in at Plan, brownfield starts from a scan and comes in at See.
+from tasks and comes in at Plan, brownfield starts from a scan and comes in at See, one click each (Alex,
+2026-11-03).
 
 **Greenfield.** `~/projects/task-manager` is a seed repository: `src/types.ts`, a Groma.md map with one
-component, and 20 Backlog.md tasks that depend on each other. Codex 1 starts on TASK-1, the only ready task. When a
-task finishes, the addon's orchestrator marks it Done, runs the repository's `.groma-curate.mjs` (it adds that
-task's component through the `groma` CLI: title, description, group, icon, colour and relationships), and hands the
-tasks that became ready (`backlog task list --ready`) to free slots, up to six agents. The agents write only their
+component, and 20 Backlog.md tasks that depend on each other. Codex 1 to 6 plan TASK-1 to TASK-6 when the deck
+starts and all start on 21b's click (Alex, 2026-11-03: six in parallel, even if they break things). When a task
+finishes, the addon's orchestrator marks it Done, runs the repository's `.groma-curate.mjs` (it adds that task's
+component through the `groma` CLI: title, description, group, icon, colour and relationships), and gives that agent
+the next To Do task. `anyOrder: true` in the headmatter makes it ignore the dependencies, so all six keep working.
+Tasks can finish before the ones they depend on, so `.groma-curate.mjs` adds each relationship from whichever end
+finishes last (task-manager commit `4e89f11`). The code may not fit together, which can show on `21e`. The agents write only their
 task's file and tick its criteria (`agent-prompt.md`); they run no tests, builds or `groma`. The run continues in the
 background while the Keycloak part is on screen.
 
@@ -140,8 +160,8 @@ by this deck; the flash deck still has it.
 
 - `slides.md` holds the cover and the slide order. One file per slide in `pages/`.
 - `pages/2xb-*-live.md` are the embedded live map slides. `21b` shows the greenfield seed map without the agents
-  panel (`:panels="[false, true]"`). Its click brings the panel and sends the `go` prompt: Codex 1 starts on
-  TASK-1 and the others join as tasks become ready (`<GromaAgents>` on the `live` instance; `agent-prompt.md` is
+  panel (`:panels="[false, true]"`). Its click brings the panel and sends the `go` prompt: Codex 1 to 6 start on
+  TASK-1 to TASK-6 at once (`<GromaAgents>` on the `live` instance; `agent-prompt.md` is
   the first prompt, with `{agent}` and `{task}` filled in). RESET in the panel stops them and resets the clone.
   `21c` shows the finished greenfield map, then the comparison from the clone's seed commit (`{base}`, filled in
   by the deck). Never run `check-views.mjs` on `21b` or `21c`: for a live instance a phase change is the go

@@ -3,7 +3,8 @@ import { computed } from 'vue'
 import { useSlideContext } from '@slidev/client'
 
 // Click 0: a Roman surveyor at his groma while soldiers build a road along his line.
-// Click 1: the land dissolves into an architecture map and the line lands on a component.
+// Click 1: the land dissolves into an architecture map and the line lands on a component; the Roman groma
+// becomes Groma.md, the code surveying instrument.
 // Both engravings come from the Groma.md page "What is a groma?" and place the surveyor at the
 // same spot, so he stays put while the ground changes under him.
 const { $clicks } = useSlideContext()
@@ -17,7 +18,9 @@ const base = import.meta.env.BASE_URL
     <img class="scene-art code" :src="`${base}groma-map.webp`" alt="The surveyor with his groma at the edge of an architecture map, a green line running to one component" />
 
     <div class="scene-copy">
-      <p class="eyebrow">GROMA · ROMAN SURVEYING INSTRUMENT</p>
+      <p class="eyebrow">
+        <span class="swap"><b class="was">GROMA · ROMAN SURVEYING INSTRUMENT</b><b class="now">GROMA.MD · CODE SURVEYING INSTRUMENT</b></span>
+      </p>
       <h1>
         Straight lines through<br>unknown
         <span class="swap"><b class="was">land.</b><b class="now">code.</b></span>

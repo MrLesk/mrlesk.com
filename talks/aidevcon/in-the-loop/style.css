@@ -1955,6 +1955,11 @@ html[data-mood="4"] body, html[data-mood="4"] #page-root, html[data-mood="4"] #s
   font-size: 46px;
 }
 
+/* The eyebrow's new line is a little longer than the old one: it stays on one line, under the wider title. */
+.scene-copy .eyebrow b {
+  white-space: nowrap;
+}
+
 .swap {
   position: relative;
   display: inline-block;
@@ -2477,70 +2482,249 @@ html[data-mood="4"] body, html[data-mood="4"] #page-root, html[data-mood="4"] #s
   letter-spacing: -0.025em;
 }
 
-/* ---------- Questions, answered ---------- */
-.answers {
-  display: grid;
-  width: 860px;
-  gap: 0;
-}
-
-.answers > div {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  align-items: center;
-  gap: 30px;
-  padding: 17px 0;
-  border-top: 1px solid var(--line);
-  transition: border-color var(--light-fade) ease;
-}
-
-.answers > div:last-child {
-  border-bottom: 1px solid var(--line);
-}
-
-.answers .q {
-  text-wrap: balance;
-  font-size: 23px;
-  font-weight: 600;
-  line-height: 1.2 !important;
-  letter-spacing: -0.025em;
-}
-
-.answers .a {
-  text-wrap: balance;
-  color: var(--groma-green-text);
-  font-size: 23px;
-  font-weight: 700;
-  line-height: 1.2 !important;
-  letter-spacing: -0.025em;
-  opacity: 0;
-  transform: translateX(-8px);
-  transition: opacity 0.7s ease, transform 0.7s ease;
-  transition-delay: calc(1.1s + var(--i) * 0.55s);
-}
-
-.mood-4 .answers .a {
-  opacity: 1;
-  transform: none;
-}
-
-.mood-0 .answers .a {
-  transition-delay: 0s;
-}
-
 /* ---------- Title callback ---------- */
+/* pages/30-finale.md names each click with data-beat:
+   title    "In the loop. Not in the dark."
+   photo    the lights go out, Alex's photo of this morning's slide
+   factory  the camera flies into "Building the factory"
+   deck     it goes on into the platform's monitors and the lights come on: the observation deck, Groma.md on screen
+   twist    back to the title, and "In" becomes "Over" (see "The plot twist")
+   Every change is a transition, so stepping back rewinds. */
 .finale {
-  display: flex;
+  position: relative;
   height: 100%;
+  overflow: hidden;
+}
+
+.finale-title {
+  position: absolute;
+  inset: 0;
+  display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   text-align: center;
+  transition: opacity 0.5s ease, transform 0.6s ease;
+}
+
+.finale[data-beat="photo"] .finale-title,
+.finale[data-beat="factory"] .finale-title,
+.finale[data-beat="deck"] .finale-title {
+  opacity: 0;
+  transform: scale(0.92);
+}
+
+/* Coming back from the deck, the title waits for the deck to go. */
+.finale[data-beat="twist"] .finale-title {
+  transition: opacity 0.6s ease 0.4s, transform 0.8s ease 0.4s;
 }
 
 .finale .groma-mark {
   width: 64px;
   margin-bottom: 26px;
+}
+
+/* The photo fills the slide. Each beat shows a window of it: --x and --y are the window's top-left corner as a
+   fraction of the photo, --zoom is how many times the photo is enlarged. Measured on public/keynote-factory.webp. */
+.keynote-photo {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  background: #000000;
+  opacity: 0;
+  transition: opacity 0.8s ease;
+}
+
+.slidev-layout.sheet .keynote-photo img {
+  --x: 0;
+  --y: 0;
+  --zoom: 1;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transform-origin: 0 0;
+  transform: translate(calc(var(--x) * var(--zoom) * -100%), calc(var(--y) * var(--zoom) * -100%)) scale(var(--zoom));
+  transition: transform 1.6s cubic-bezier(0.65, 0, 0.25, 1);
+}
+
+.finale[data-beat="photo"] .keynote-photo,
+.finale[data-beat="factory"] .keynote-photo {
+  opacity: 1;
+}
+
+/* "Building the factory", its line and its drawing. */
+.slidev-layout.sheet .finale[data-beat="factory"] .keynote-photo img {
+  --x: 0.368;
+  --y: 0.2;
+  --zoom: 2.4;
+}
+
+/* The platform's monitors. The camera speeds up into them and the photo fades as the deck takes over. */
+.finale[data-beat="deck"] .keynote-photo {
+  transition: opacity 0.7s ease 0.6s;
+}
+
+.slidev-layout.sheet .finale[data-beat="deck"] .keynote-photo img {
+  --x: 0.527;
+  --y: 0.32;
+  --zoom: 10;
+  transition: transform 1.3s cubic-bezier(0.55, 0, 0.9, 0.5);
+}
+
+/* The observation deck, drawn in the deck's own ink on paper: the lights are on. */
+.observation-deck {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transform: scale(0.3);
+  transform-origin: 50% 36%;
+  transition: opacity 0.5s ease, transform 0.6s ease;
+}
+
+.finale[data-beat="deck"] .observation-deck {
+  opacity: 1;
+  transform: none;
+  transition: opacity 0.7s ease 0.75s, transform 1.5s cubic-bezier(0.15, 0.7, 0.3, 1) 0.6s;
+}
+
+.finale[data-beat="twist"] .observation-deck {
+  transform: scale(1.08);
+}
+
+.observation-deck svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.observation-deck svg path,
+.observation-deck svg ellipse {
+  fill: none;
+  stroke: var(--groma-ink);
+  stroke-width: 1.5;
+  stroke-linejoin: round;
+}
+
+.observation-deck svg .observation-stand {
+  stroke-width: 8;
+}
+
+.observation-deck svg .observation-console {
+  fill: #ffffff;
+}
+
+.observation-deck svg .observation-console-edge,
+.observation-deck svg .observation-person {
+  fill: var(--groma-ink);
+}
+
+/* The arms are the agents: they keep working on the floor below. */
+.observation-deck svg .observation-arm path,
+.observation-deck svg .observation-arm circle {
+  fill: none;
+  stroke: var(--groma-green);
+  stroke-width: 5;
+  stroke-linecap: round;
+}
+
+.observation-deck svg .observation-arm circle {
+  fill: var(--groma-paper);
+}
+
+/* The console's status lights. */
+.observation-deck svg .observation-lights rect {
+  fill: var(--groma-green);
+}
+
+.observation-deck svg .observation-arm .lower {
+  transform-box: fill-box;
+  animation: observation-arm 2.4s ease-in-out infinite alternate;
+}
+
+.observation-deck svg .observation-arm.left .lower {
+  transform-origin: left top;
+}
+
+.observation-deck svg .observation-arm.right .lower {
+  transform-origin: right top;
+  animation-direction: alternate-reverse;
+}
+
+@keyframes observation-arm {
+  from { transform: rotate(-8deg); }
+  to { transform: rotate(10deg); }
+}
+
+/* Three monitors around the console. The side ones turn in towards the person. */
+.observation-screens {
+  position: absolute;
+  top: 54px;
+  right: 0;
+  left: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  perspective: 1100px;
+}
+
+.observation-screen {
+  position: relative;
+  overflow: hidden;
+  margin: 0;
+  border: 6px solid var(--groma-ink);
+  border-radius: 6px;
+  background: #0d100f;
+  aspect-ratio: 16 / 9;
+}
+
+.observation-screen.main {
+  width: 420px;
+}
+
+.observation-screen.left,
+.observation-screen.right {
+  width: 215px;
+}
+
+.observation-screen.left {
+  transform: rotateY(34deg);
+  transform-origin: right center;
+}
+
+.observation-screen.right {
+  transform: rotateY(-34deg);
+  transform-origin: left center;
+}
+
+.slidev-layout.sheet .observation-screen img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* The screens switch on one after the other once the deck is there. */
+.observation-screen::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: #0d100f;
+  transition: opacity 0.4s ease;
+}
+
+.finale[data-beat="deck"] .observation-screen::after {
+  opacity: 0;
+  transition: opacity 0.5s ease 1.5s;
+}
+
+.finale[data-beat="deck"] .observation-screen.left::after {
+  transition-delay: 1.75s;
+}
+
+.finale[data-beat="deck"] .observation-screen.right::after {
+  transition-delay: 2s;
 }
 
 .slidev-layout.sheet .finale h1 {
@@ -2693,7 +2877,7 @@ html[data-mood="4"] body, html[data-mood="4"] #page-root, html[data-mood="4"] #s
 }
 
 /* ---------- The plot twist ---------- */
-/* The finale's click strikes "In" out of the title and writes "Over" above it: In the loop becomes
+/* The finale's last click strikes "In" out of the title and writes "Over" above it: In the loop becomes
    Over the loop. Stepping back rewinds it. */
 .twist {
   position: relative;
@@ -2734,17 +2918,21 @@ html[data-mood="4"] body, html[data-mood="4"] #page-root, html[data-mood="4"] #s
   transition: opacity 0.35s ease 0.5s, transform 0.5s cubic-bezier(0.2, 0.9, 0.25, 1.25) 0.5s;
 }
 
-.finale.twisted .twist-was {
+/* The strike waits until the title is back from the observation deck (see "Title callback"). */
+.finale[data-beat="twist"] .twist-was {
   opacity: 0.45;
+  transition-delay: 1.75s;
 }
 
-.finale.twisted .twist-was::after {
+.finale[data-beat="twist"] .twist-was::after {
   transform: scaleX(1);
+  transition-delay: 1.2s;
 }
 
-.finale.twisted .twist-now {
+.finale[data-beat="twist"] .twist-now {
   opacity: 1;
   transform: translate(-50%, 0) rotate(-5deg);
+  transition-delay: 1.7s;
 }
 
 /* ---------- Karpathy's line, into the live run ---------- */
@@ -3060,7 +3248,7 @@ html[data-mood="4"] body, html[data-mood="4"] #page-root, html[data-mood="4"] #s
 
 .try-steps {
   position: relative;
-  width: 480px;
+  width: 520px;
 }
 
 .slidev-layout.sheet .try-now {
@@ -3162,6 +3350,78 @@ html[data-mood="4"] body, html[data-mood="4"] #page-root, html[data-mood="4"] #s
 .slidev-layout.sheet ul.scan-langs li,
 .slidev-layout.sheet ul.try-chips li {
   margin: 0;
+}
+
+/* Groma.md and Backlog.md as a pair (Alex, 2026-11-03). The slide's click (`bundled`) types backlog.md onto the
+   install line, then the bundle tag lands on the terminal's top edge. Stepping back rewinds both. */
+.slidev-layout.sheet .try-terminal code em {
+  display: inline-block;
+  color: var(--groma-green-text);
+  font-style: normal;
+  font-weight: 700;
+  clip-path: inset(0 100% 0 0);
+  transition: clip-path 0.3s ease;
+}
+
+.try.bundled .try-terminal code em {
+  clip-path: inset(0 0 0 0);
+  transition: clip-path 0.6s steps(10, end);
+}
+
+/* The tag hangs over the terminal's top-right corner, in the empty band under the title. */
+.try-bundle {
+  position: absolute;
+  top: -42px;
+  right: -34px;
+  width: 196px;
+  padding: 0 12px 9px;
+  border: 1.5px solid var(--fg);
+  background: #ffffff;
+  box-shadow: 6px 6px 0 -2px var(--groma-green);
+  opacity: 0;
+  transform: rotate(-10deg) scale(1.8);
+  transition: opacity 0.25s ease, transform 0.3s ease;
+}
+
+.try.bundled .try-bundle {
+  opacity: 1;
+  transform: rotate(4deg);
+  transition: opacity 0.2s ease 0.6s, transform 0.45s cubic-bezier(0.2, 0.9, 0.3, 1.3) 0.6s;
+}
+
+.slidev-layout.sheet .try-bundle p {
+  margin: 0 -12px 7px !important;
+  padding: 4px 12px 3px;
+  background: var(--groma-green-text);
+  color: #ffffff;
+  font-family: "Fira Code", ui-monospace, monospace;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.try-bundle div {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.try-bundle b {
+  color: var(--fg);
+  font-size: 17px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.try-bundle span {
+  color: var(--muted);
+  font-family: "Fira Code", ui-monospace, monospace;
+  font-size: 10px;
+  font-weight: 650;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
 }
 
 /* ---------- Keycloak, curated: Groma.md's prompt goes to Codex ---------- */

@@ -28,9 +28,9 @@ gromaLive:
   - name: keycloak-changed
     cwd: ~/projects/keycloak-changed
     port: 4804
-  # Part 1 & Part 4: Greenfield project (`~/projects/task-manager`, 20 dependent Backlog.md tasks).
-  # Starts with 1 agent on TASK-1 (the only --ready task at Wave 0); as dependencies finish, more and more
-  # agents unlock across the 6 worker slots until all 20 tasks and components are built.
+  # Part 1 & Part 4: Greenfield project (`~/projects/task-manager`, 20 Backlog.md tasks).
+  # Six agents plan TASK-1 to TASK-6 when the deck starts and all start on 21b's click. `anyOrder`: as each one
+  # finishes it takes the next To Do task, whether that task's dependencies are Done or not (Alex, 2026-11-03).
   - name: agents
     port: 4805
     live:
@@ -38,6 +38,7 @@ gromaLive:
       prompt: ./agent-prompt.md
       go: Implement your plan now. Write only the target TypeScript file, tick the acceptance criteria, and skip all tests, linting, or verification.
       codexHome: ~/.config/groma-live/codex
+      anyOrder: true
       # `bun run rehearsal` uses Alex's default ~/.codex subscription with GPT-6.1 Terra medium effort.
       rehearsal:
         model: gpt-6.1-terra
@@ -46,19 +47,19 @@ gromaLive:
         - task: TASK-1
           name: codex
           label: Codex 1
-        - task: ""
+        - task: TASK-2
           name: codex
           label: Codex 2
-        - task: ""
+        - task: TASK-3
           name: codex
           label: Codex 3
-        - task: ""
+        - task: TASK-4
           name: codex
           label: Codex 4
-        - task: ""
+        - task: TASK-5
           name: codex
           label: Codex 5
-        - task: ""
+        - task: TASK-6
           name: codex
           label: Codex 6
   # Built on stage from the GromaRun slide, in the throwaway folder ~/.groma-live/keycloak.
@@ -155,11 +156,11 @@ src: ./pages/13-best-practices.md
 ---
 
 ---
-src: ./pages/14-not-satisfied.md
+src: ./pages/14b-shape.md
 ---
 
 ---
-src: ./pages/14b-shape.md
+src: ./pages/14-no-picture.md
 ---
 
 ---
@@ -268,10 +269,6 @@ src: ./pages/28-spec.md
 
 ---
 src: ./pages/28b-try.md
----
-
----
-src: ./pages/29-answers.md
 ---
 
 ---
