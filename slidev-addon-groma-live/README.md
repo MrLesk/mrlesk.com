@@ -80,6 +80,10 @@ A fifth kind is live: real Codex agents, one `codex exec` session per Backlog.md
           label: Codex 1
 ```
 
+An agent with an empty `task` waits for one: when a task is Done, a free agent takes the next task whose
+Backlog.md dependencies are all Done. With `anyOrder: true` on the instance it takes the next To Do task whatever
+its dependencies, so every agent keeps working.
+
 The agents assign their task to themselves, read it and plan as soon as `bun run dev` starts, changing
 nothing. The `<GromaAgents>` slide's click (phase 1) sends `go` to every session; RESET stops them, puts the
 clone back on the baseline commit and plans again. With `review`, `{base}` in a view stands for that baseline

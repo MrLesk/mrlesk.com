@@ -16,6 +16,8 @@ import { type CodexRunSettings, RunCost, type RunCostView } from './run-cost'
   finishes, the orchestrator marks it Done, updates the Groma map if `.groma-curate.mjs` is present,
   and queries `backlog task list --ready --status "To Do" --unassigned --plain` to dispatch newly
   unblocked tasks to free worker slots until all ready tasks in the dependency graph are Done.
+  With `anyOrder`, it leaves out `--ready`: a free slot takes the next To Do task whether its
+  dependencies are Done or not, so every slot keeps working.
 */
 
 const run = promisify(execFile)
@@ -117,6 +119,8 @@ export class LiveAgents {
   port = 0
   /** Where to report how the plans went, for the dev server's console. */
   log: (text: string) => void = () => {}
+  /** Free slots take any To Do task, not only the ones whose dependencies are Done. */
+  anyOrder = false
   started = false
 
   private constructor(
@@ -423,7 +427,8 @@ export class LiveAgents {
     this.dispatchQueue = this.dispatchQueue.then(() => this.dispatchReady()).catch(() => {})
   }
 
-  /** Queries Backlog.md for `--ready` tasks whose dependencies are all Done and assigns them to free workers. */
+  /** Queries Backlog.md for `--ready` tasks whose dependencies are all Done (any To Do task with `anyOrder`) and
+      assigns them to free workers. */
   private async dispatchReady(): Promise<void> {
     if (!this.started) return
     const freeSlots: number[] = []
@@ -440,7 +445,8 @@ export class LiveAgents {
 
     let stdout = ''
     try {
-      const res = await this.backlog('task', 'list', '--ready', '--status', 'To Do', '--unassigned', '--plain')
+      const ready = this.anyOrder ? [] : ['--ready']
+      const res = await this.backlog('task', 'list', ...ready, '--status', 'To Do', '--unassigned', '--plain')
       stdout = res.stdout
     } catch {
       return

@@ -64,7 +64,7 @@ interface InstanceConfig {
   steps?: string[]
   replay?: { source: string, interval?: number }
   scenario?: { source: string, script: string, interval?: number }
-  live?: { template: string, branch?: string, prompt: string, go?: string, codexHome: string, rehearsal?: Record<string, string>, setup?: string[], agents: LiveAgentConfig[] }
+  live?: { template: string, branch?: string, prompt: string, go?: string, codexHome: string, rehearsal?: Record<string, string>, setup?: string[], anyOrder?: boolean, agents: LiveAgentConfig[] }
   snapshot?: { template: string, branch?: string, patch: string }
 }
 
@@ -342,7 +342,7 @@ async function prepareLive(instance: InstanceConfig, deckRoot: string): Promise<
   const root = sandbox(instance.name)
   rmSync(root, { recursive: true, force: true })
   mkdirSync(root, { recursive: true })
-  const { template, branch, prompt, go, codexHome, rehearsal, setup, agents } = instance.live!
+  const { template, branch, prompt, go, codexHome, rehearsal, setup, anyOrder, agents } = instance.live!
   const from = (path: string) => path.startsWith('~') ? expand(path) : resolve(deckRoot, path)
   const isRehearsal = Boolean(process.env.GROMA_LIVE_REHEARSAL)
   const { codexHome: rehearsalHome, ...rehearsalOverrides } = rehearsal ?? {}
@@ -356,6 +356,7 @@ async function prepareLive(instance: InstanceConfig, deckRoot: string): Promise<
   const { model, tier } = codexConfig(activeHome, overrides)
   const live = await LiveAgents.prepare(from(template), branch, join(root, 'work'), agents, from(prompt), go ?? 'Implement your plan now. Do not ask any questions.', activeHome, codexArgs, { model, tier })
   live.port = instance.port
+  live.anyOrder = anyOrder === true
   live.log = text => say(instance.name, text)
   state.lives.set(instance.name, live)
   // Setup commands run in the clone before it is served or planned on, such as installing the dependencies its
