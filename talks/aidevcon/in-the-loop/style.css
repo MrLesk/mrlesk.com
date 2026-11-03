@@ -376,6 +376,153 @@ html[data-mood="4"] body, html[data-mood="4"] #page-root, html[data-mood="4"] #s
   font-weight: 700;
 }
 
+/* ---------- YOLO warning ---------- */
+/* The slide after the cover: every demo is live and there are no backups. Like the cover it is outside the
+   light story, so it keeps AI DevCon's yellow, here as hazard tape. The talk is filmed: nothing on this slide
+   flashes faster than once a second. */
+.slidev-layout.sheet.yolo::after {
+  display: none; /* the tape is the frame */
+}
+
+.yolo-warning {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  overflow: hidden; /* the tilted tape runs off both sides */
+  align-items: center;
+  justify-content: center;
+  background: radial-gradient(circle at 50% 54%, #2b2506 0%, #000000 64%);
+}
+
+/* A slow warning light behind the sign. */
+.yolo-warning::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 50% 54%, rgba(253, 224, 71, 0.28) 0%, rgba(253, 224, 71, 0) 46%);
+  opacity: 0;
+}
+
+.is-active .yolo-warning::before {
+  animation: yolo-beacon 1.4s ease-in-out 0.9s infinite;
+}
+
+@keyframes yolo-beacon {
+  50% { opacity: 1; }
+}
+
+/* Classic 45 degree stripes in a square tile, so moving the tile by its own width loops without a seam. */
+.yolo-tape {
+  --tilt: -3deg;
+  --from: -110%;
+  position: absolute;
+  top: 30px;
+  left: -10%;
+  width: 120%;
+  height: 54px;
+  background: linear-gradient(45deg, #fde047 25%, #000000 25% 50%, #fde047 50% 75%, #000000 75%);
+  background-size: 64px 64px;
+  box-shadow: 0 0 28px rgba(253, 224, 71, 0.35);
+  transform: rotate(var(--tilt));
+}
+
+.yolo-tape.bottom {
+  --tilt: 3deg;
+  --from: 110%;
+  top: auto;
+  bottom: 30px;
+}
+
+/* The tapes slap on from opposite sides, then keep running. */
+.is-active .yolo-tape {
+  animation: yolo-tape-in 0.45s cubic-bezier(0.2, 0.9, 0.3, 1.1) both, yolo-tape-run 1.6s linear 0.45s infinite;
+}
+
+.is-active .yolo-tape.bottom {
+  animation-direction: normal, reverse;
+}
+
+@keyframes yolo-tape-in {
+  from { transform: translateX(var(--from)) rotate(var(--tilt)); }
+}
+
+@keyframes yolo-tape-run {
+  to { background-position: 64px 0; }
+}
+
+.yolo-sign {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: #fde047;
+}
+
+.yolo-sign svg {
+  width: 96px;
+}
+
+.yolo-sign svg path {
+  fill: #fde047;
+  stroke: #fde047;
+  stroke-width: 6;
+  stroke-linejoin: round;
+}
+
+.yolo-sign svg rect,
+.yolo-sign svg circle {
+  fill: #000000;
+}
+
+.slidev-layout.sheet .yolo-sign p {
+  /* The negative right margin takes back the last letter's spacing, which would push the word off centre. */
+  margin: 12px -0.5em 0 0 !important;
+  font-family: "Fira Code", ui-monospace, monospace;
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: 0.5em;
+}
+
+/* Scoped like the cover's title to win over the deck's `.slidev-layout.sheet h1`. */
+.slidev-layout.sheet .yolo-sign h1 {
+  margin: 0 !important;
+  color: #fde047;
+  font-size: 180px;
+  font-weight: 900;
+  line-height: 0.9;
+  letter-spacing: -0.03em;
+  text-shadow: 9px 9px 0 var(--alarm);
+}
+
+/* The sign drops in, YOLO slams down a beat later and the sign shakes once. */
+.is-active .yolo-sign svg,
+.is-active .yolo-sign p {
+  animation: yolo-drop 0.4s cubic-bezier(0.2, 0.9, 0.3, 1.2) 0.2s both;
+}
+
+.is-active .yolo-sign h1 {
+  animation: yolo-slam 0.32s cubic-bezier(0.5, 0, 0.75, 0) 0.55s both;
+}
+
+.is-active .yolo-sign {
+  animation: yolo-shake 0.4s ease-out 0.87s;
+}
+
+@keyframes yolo-drop {
+  from { opacity: 0; transform: translateY(-40px); }
+}
+
+@keyframes yolo-slam {
+  from { opacity: 0; transform: scale(2.6); }
+}
+
+@keyframes yolo-shake {
+  20% { transform: translate(-6px, 3px) rotate(-1deg); }
+  40% { transform: translate(5px, -2px) rotate(1deg); }
+  60% { transform: translate(-3px, 1px); }
+  80% { transform: translate(2px, 0); }
+}
+
 /* ---------- The goal ---------- */
 /* "more throughput." comes in by itself, a second after the slide does. */
 .goal-later {

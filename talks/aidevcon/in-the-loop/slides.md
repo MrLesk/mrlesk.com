@@ -91,7 +91,7 @@ gromaLive:
 <!--
 ⏱ 00:00
 
-This cover is AI DevCon's title slide, from their template. The light story starts on the next slide.
+This cover is AI DevCon's title slide, from their template. The light story starts after the YOLO warning.
 
 The room starts dark on purpose. The light in these slides follows the story:
 it falls to black, then comes back when Groma.md arrives. The meter top right shows it.
@@ -101,6 +101,10 @@ by keeping the architecture in front of me.
 
 Pace: the story is one beat per slide, about 25 seconds each. Groma.md must be on screen by 08:30.
 -->
+
+---
+src: ./pages/00-yolo.md
+---
 
 ---
 src: ./pages/01-goal.md

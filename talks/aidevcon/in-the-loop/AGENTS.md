@@ -20,9 +20,12 @@ Changed from the Devoxx deck:
   The title, subtitle, name and role are real text in the template's places, colours and font (Helvetica); the
   Cover section of `style.css` holds the positions. `speaker.jpg` is `presenter.jpg` from the other talks, resized
   to 720 px.
-- Yellow is AI DevCon's colour, not part of the light story, so it stays on the cover. The story's light starts on
-  the next slide. The cover is `mood: 0` so the room around it is black too, and it hides the deck frame and the
-  light meter.
+- Yellow is AI DevCon's colour, not part of the light story, so it stays on the cover. The cover is `mood: 0` so
+  the room around it is black too, and it hides the deck frame and the light meter.
+- The YOLO warning (`pages/00-yolo.md`, Alex, 2026-11-03) comes right after the cover. Alex says out loud that
+  every demo is live with no backups; the slide only says WARNING and YOLO, so keep it that way. It is outside the
+  light story too, like the cover: `mood: 0`, no frame, no meter, and the conference's yellow as hazard tape.
+  The talk is filmed, so nothing on it flashes faster than once a second. The story's light starts after it.
 - The thank-you slide no longer has the "Rate this talk" QR code: it opened the talk in the Devoxx app.
 - At Devoxx people asked what happened to the 1,700 tests on "I opened the code. WTF!" and "Look at what I
   found. Again.", and how Groma.md fixed them. Alex's answer: he got rid of most of them, but that's for another
@@ -47,8 +50,8 @@ comes back when Groma.md arrives. That is the title, made visible.
   and `global-top.vue` lights the area around the slide plus the small meter top right.
 - Colour is part of the light: everything is monochrome until mood 4. Groma.md green only
   appears once Groma.md is on screen. Do not use green on darker slides. One exception, Alex's
-  call: the green ticks on "I followed the best practices." The AI DevCon cover is outside the story and keeps
-  the conference's yellow (see above).
+  call: the green ticks on "I followed the best practices." The AI DevCon cover and the YOLO warning are outside
+  the story and keep the conference's yellow (see above).
 - The four attempts after the welcome slide step the light 1, 2, 3, 4, one level per attempt,
   so only Groma.md 3 is at full light (Alex's call). The attempt rail drops its green below mood 4, and the
   pictures on the attempts (the code meme, Project Blueprint's first mockup) go grey.
