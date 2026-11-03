@@ -1,7 +1,7 @@
 ---
 theme: penguin
 title: "In the loop, not in the dark"
-info: "Staying in control in the era of dark software factories. Devoxx Belgium 2026, Tools in Action."
+info: "Staying in control in the era of dark software factories. AI DevCon NYC 2026, Tools-in-Action."
 author: Alex Gavrilescu
 colorSchema: light
 drawings:
@@ -18,60 +18,61 @@ addons:
   - ../../slidev-addon-groma-live
 # The addon starts these with `bun run dev`. Nothing else to run, on stage or before.
 gromaLive:
+  # ~/projects/groma-aidevcon is a clean clone of groma.md main for this talk, apart from Alex's dev checkout.
   - name: groma
-    cwd: ~/projects/groma3
+    cwd: ~/projects/groma-aidevcon
     port: 4801
   - name: keycloak-curated
     cwd: ~/projects/keycloak
     port: 4802
-  # Beat 4: six real Codex agents work six Groma.md roadmap tasks on a fresh clone of Groma.md itself
-  # (branch in-the-loop-baseline, which holds only those six open tasks). They assign, read and plan as soon
-  # as `bun run dev` starts; the live slide's click tells them all to go; then Groma.md compares what they
-  # left with the baseline commit. CODEX_HOME keeps the demo's model and key apart from your own Codex setup.
+  - name: keycloak-changed
+    cwd: ~/projects/keycloak-changed
+    port: 4804
+  # Part 1 & Part 4: Greenfield project (`~/projects/task-manager`, 20 dependent Backlog.md tasks).
+  # Starts with 1 agent on TASK-1 (the only --ready task at Wave 0); as dependencies finish, more and more
+  # agents unlock across the 6 worker slots until all 20 tasks and components are built.
   - name: agents
     port: 4805
     live:
-      template: ~/projects/groma3
-      branch: in-the-loop-baseline
+      template: ~/projects/task-manager
       prompt: ./agent-prompt.md
-      go: Implement your plan now. Do not ask any questions.
-      codexHome: ~/.config/devoxx-keynote/codex
-      # Groma.md's own scanners run from source and need the repository's dependencies, so the clone installs
-      # them before it is served (the demo branch keeps only the TypeScript scanner).
-      setup:
-        - bun install --frozen-lockfile
-      # `bun run rehearsal` runs every agent on these instead of codexHome's setup (GPT-6.1 Sol, medium, Ultrafast).
+      go: Implement your plan now. Write only the target TypeScript file, tick the acceptance criteria, and skip all tests, linting, or verification.
+      codexHome: ~/.config/groma-live/codex
+      # `bun run rehearsal` uses Alex's default ~/.codex subscription with GPT-6.1 Terra medium effort.
       rehearsal:
-        model: gpt-6-luna
-        model_reasoning_effort: max
-        service_tier: fast
-      # The six roadmap tasks that touch the most components and relationships on Groma.md's own map. All six
-      # are @codex, so Groma.md draws the Codex logo on their pins.
+        model: gpt-6.1-terra
+        model_reasoning_effort: medium
       agents:
-        - task: TASK-561    # senior: icons and a colour on elements, from published icon packs
+        - task: TASK-1
           name: codex
           label: Codex 1
-        - task: TASK-568    # one plugins.json for scanners, work sources and icon packs; nothing loads without an entry
+        - task: ""
           name: codex
           label: Codex 2
-        - task: TASK-562    # senior: export a selection as a plan, import it as drafts
+        - task: ""
           name: codex
           label: Codex 3
-        - task: TASK-565    # intermediate: colour by commits, committers and co-change, outlier marks
+        - task: ""
           name: codex
           label: Codex 4
-        - task: TASK-563    # senior: play the history between two commits
+        - task: ""
           name: codex
           label: Codex 5
-        - task: TASK-564    # senior: a criticality level per component, critical means read-only for agents
+        - task: ""
           name: codex
           label: Codex 6
-  # Built on stage from the GromaRun slide, in the throwaway folder ~/.groma-live/keycloak-devoxx.
-  # Groma.md proposes the folder name as the project name, so the folder is called keycloak-devoxx.
-  - name: keycloak-devoxx
+  # Built on stage from the GromaRun slide, in the throwaway folder ~/.groma-live/keycloak.
+  - name: keycloak
     port: 4803
     steps:
       - git clone ~/projects/keycloak .
+  # Part 4 finale: runs `task-manager kanban` inside the live Greenfield clone built by the agents.
+  - name: task-manager
+    port: 0
+    cwd: ~/.groma-live/agents/work
+    steps:
+      - task-manager kanban
+      - task-manager list
 ---
 
 <div class="aidevcon-cover">
@@ -206,6 +207,18 @@ src: ./pages/20b-demo-walk-live.md
 ---
 
 ---
+src: ./pages/21a-karpathy.md
+---
+
+---
+src: ./pages/21-demo-agents.md
+---
+
+---
+src: ./pages/21b-demo-agents-live.md
+---
+
+---
 src: ./pages/21d-scans.md
 ---
 
@@ -230,19 +243,19 @@ src: ./pages/23b-demo-curated-live.md
 ---
 
 ---
-src: ./pages/21a-karpathy.md
+src: ./pages/23c-demo-brownfield-diff.md
 ---
 
 ---
-src: ./pages/21-demo-agents.md
----
-
----
-src: ./pages/21b-demo-agents-live.md
+src: ./pages/23d-github-action.md
 ---
 
 ---
 src: ./pages/21c-demo-agents-review.md
+---
+
+---
+src: ./pages/21e-demo-kanban-run.md
 ---
 
 ---

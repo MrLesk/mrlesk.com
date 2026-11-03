@@ -11,6 +11,14 @@
   /* The same green, deep enough for small text on paper (4.9:1) and for white text on it (5.3:1).
      The brand green stays for fills, lines and large numbers. */
   --groma-green-text: #127a5a;
+  /* The deck's own accents on a slide: Groma.md's green, or the live project's colour (see "Greenfield and brownfield"). */
+  --groma-accent: var(--groma-green);
+  --groma-accent-text: var(--groma-green-text);
+  /* The two live projects' colours, each with a deeper shade for small text (see "Greenfield and brownfield"). */
+  --greenfield: #4f9a2c;
+  --greenfield-text: #3b7a1e;
+  --brownfield: #a0652f;
+  --brownfield-text: #7f4e22;
   --groma-paper: #f7f6f2;
   --groma-ink: #171b1a;
   --alarm: #ff5a4f;
@@ -398,6 +406,8 @@ html[data-mood="4"] body, html[data-mood="4"] #page-root, html[data-mood="4"] #s
   color: var(--muted);
   font-family: "Fira Code", ui-monospace, monospace;
   font-size: 19px;
+  /* "This year started with a goal" selects Backlog.md on a click; stepping back fades it out again. */
+  transition: border-color 0.4s ease, color 0.4s ease;
 }
 
 .chips span.mine {
@@ -1019,7 +1029,7 @@ html[data-mood="4"] body, html[data-mood="4"] #page-root, html[data-mood="4"] #s
   line-height: 1.28;
 }
 
-/* "Look at what I found. Again." echoes slide 11's findings, named by their shape this time.
+/* "After a few weeks... again." echoes slide 11's findings, named by their shape this time.
    After the first click the line-level details fade and only the shapes stay. */
 .finds.short > div {
   gap: 5px;
@@ -1914,36 +1924,63 @@ html[data-mood="4"] body, html[data-mood="4"] #page-root, html[data-mood="4"] #s
   letter-spacing: 0.12em;
 }
 
-/* ---------- Demo beats ---------- */
-.beat {
-  display: grid;
-  height: 100%;
-  grid-template-columns: 210px 1fr;
-  align-items: center;
-  gap: 34px;
-}
+/* Where each live project comes into the loop, outside the ring: greenfield under Plan, brownfield above See.
+   Their arrows are in the slide's SVG, between the slide edge and the ring. */
+.loop svg .greenfield { stroke: var(--greenfield); }
+.loop svg .greenfield.head { fill: var(--greenfield); stroke: none; }
+.loop svg .brownfield { stroke: var(--brownfield); }
+.loop svg .brownfield.head { fill: var(--brownfield); stroke: none; }
 
-.beat-no {
+.loop-entry {
+  position: absolute;
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
-  padding-left: 22px;
+  gap: 3px;
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
 }
 
-.beat-no b {
-  color: var(--groma-green);
-  font-size: 190px;
-  font-weight: 720;
-  line-height: 0.86;
-  letter-spacing: -0.08em;
-}
-
-.beat-no span {
-  margin-top: 12px;
-  color: var(--muted);
+.loop-entry span {
   font-family: "Fira Code", ui-monospace, monospace;
-  font-size: 12px;
+  font-size: 11px;
+  font-weight: 700;
   letter-spacing: 0.14em;
+}
+
+.loop-entry.greenfield { top: 152px; left: 0; }
+.loop-entry.greenfield span { color: var(--greenfield-text); }
+.loop-entry.brownfield { top: 132px; right: 0; align-items: flex-end; text-align: right; }
+.loop-entry.brownfield span { color: var(--brownfield-text); }
+
+/* ---------- Greenfield and brownfield ---------- */
+/* Each live project has its own colour, so you can tell at a glance which one is on screen: leaf green for the
+   greenfield project the agents build from scratch, soil brown for Keycloak, the brownfield one. A slide joins
+   one with `class: greenfield` or `class: brownfield`. The colour takes over the deck's own accents (the project's
+   name on its beat card, the arrow between commands, the caption and cost cards). Groma.md's map and the copies of its
+   screens keep their own green. As with Groma.md's pair: the first for fills and large numbers, the deeper one
+   for small text on paper (4.9:1 and 6.4:1). The loop slide uses both, to show where each project enters it. */
+.slidev-layout.sheet.greenfield {
+  --groma-accent: var(--greenfield);
+  --groma-accent-text: var(--greenfield-text);
+}
+
+.slidev-layout.sheet.brownfield {
+  --groma-accent: var(--brownfield);
+  --groma-accent-text: var(--brownfield-text);
+}
+
+/* ---------- Demo beats ---------- */
+.beat {
+  display: flex;
+  height: 100%;
+  flex-direction: column;
+  justify-content: center;
+}
+
+/* The project's name in a beat card's title, in the project's colour (see "Greenfield and brownfield"). */
+.beat h1 .project {
+  color: var(--groma-accent);
 }
 
 .live {
@@ -2004,7 +2041,7 @@ html[data-mood="4"] body, html[data-mood="4"] #page-root, html[data-mood="4"] #s
 }
 
 .cmds i {
-  color: var(--groma-green-text);
+  color: var(--groma-accent-text);
   font-family: "Fira Code", ui-monospace, monospace;
   font-style: normal;
 }

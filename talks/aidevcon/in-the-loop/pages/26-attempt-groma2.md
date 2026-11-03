@@ -12,7 +12,7 @@ mood: 3
     <p>Decent code-to-architecture generation.</p>
     <p class="soft">It failed on anything else. The AI proposed to hardcode every possible rule.</p>
   </div>
-  <div class="meme">
+  <div v-click class="meme">
 <pre>if (n == 0) printf(<b>"even"</b>);
 else if (n == 1) printf(<b>"odd"</b>);
 else if (n == 2) printf(<b>"even"</b>);
@@ -27,7 +27,7 @@ else if (n == 5) printf(<b>"odd"</b>);</pre>
 ⏱ 11:00. Light 3.
 
 Groma.md 2. Decent code to architecture generation, for its own repo. It failed on anything else.
-The AI proposed to hardcode every possible rule. Remember this one? That's what it wanted to do.
+The AI proposed to hardcode every possible rule. [click] Remember this one? That's what it wanted to do.
 
 This is why today's scanners are deterministic and general.
 -->

@@ -6,12 +6,12 @@ clicks: 1
 
 <AttemptRail :current="3" />
 
-# Markdown files and a diagram first.
+# I pivoted to deterministic scanners.
 
 <div class="attempt">
   <div class="lines">
-    <p>It made sense at every point in time.</p>
-    <p v-click="1">When agents went off track, I used <span class="accent">Groma.md to understand and to correct Groma.md</span>.</p>
+    <p>Then an MVP: C4 Markdown files and a diagram first.</p>
+    <p v-click="1">I used <span class="accent">Groma.md to test Groma.md</span> at every point in time.</p>
   </div>
   <span v-click="1" class="tag-line good">IT WORKS</span>
 </div>
@@ -19,8 +19,10 @@ clicks: 1
 <!--
 ⏱ 12:00. Full light: Groma.md 3 is the one that works.
 
-Groma.md 3, the one you can install today. I started with Markdown files and the architecture diagram.
-It made sense at every point in time.
+Groma.md 3, the one you can install today. It won because I pivoted to deterministic scanners.
+That's the key point: same code, same map. No AI deciding what the architecture is.
+Then I took an MVP approach: C4 Markdown files and the architecture diagram first.
 
-[click] And when agents went off track, I used Groma.md to understand and to correct Groma.md. It works.
+[click] And I used Groma.md to test Groma.md at every point in time. When agents went off track,
+Groma.md showed me where, and I corrected them. It works.
 -->

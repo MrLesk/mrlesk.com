@@ -5,7 +5,6 @@ routeAlias: demo-walk
 ---
 
 <div class="beat">
-  <div class="beat-no"><b>1</b><span>OF 4 · DEMO</span></div>
   <div>
     <span class="live">LIVE</span>
     <h1>Walk the map.</h1>

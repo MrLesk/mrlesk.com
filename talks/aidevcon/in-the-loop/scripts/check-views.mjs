@@ -51,21 +51,30 @@ const builtOnStage = readFileSync(`${root}slides.md`, 'utf8').split(/^\s*- name:
 /** Moves a scenario to a phase ('end' for its last) and waits until the agents are there. */
 async function phase(scenario, to) {
   const url = `${deck}/__groma-live/${scenario.name}`
+  const status = await (await fetch(url)).json()
   // Real agents are never moved from here: their phase change is the go signal, and every reset pays
   // for a planning round. Their views are checked as the clone stands.
-  if ((await (await fetch(url)).json()).live) return console.warn(`${scenario.name}: live agents, left where they are`)
+  if (status.live) {
+    console.warn(`${scenario.name}: live agents, left where they are`)
+    return status.base
+  }
   const { last } = await (await fetch(`${url}?to=${to}`, { method: 'POST' })).json()
   const wanted = to === 'end' ? last : to
   for (let tries = 0; tries < 160 && (await (await fetch(url)).json()).phase !== wanted; tries++) await Bun.sleep(250)
-  if ((await (await fetch(url)).json()).phase !== wanted) throw new Error(`${scenario.name}: phase ${wanted} did not finish`)
+  const finalStatus = await (await fetch(url)).json()
+  if (finalStatus.phase !== wanted) throw new Error(`${scenario.name}: phase ${wanted} did not finish`)
   await Bun.sleep(1500) // Groma's map glides for 700 ms after a change
+  return finalStatus.base
 }
 
 let problems = 0
 for (const frame of frames()) {
   let known
   try {
-    if (frame.scenario !== undefined) await phase(frame.scenario, 'end')
+    if (frame.scenario !== undefined) {
+      const base = await phase(frame.scenario, 'end')
+      if (base) frame.views = frame.views.map(view => view.replaceAll('{base}', base))
+    }
     const result = await world(frame.origin)
     known = result.known
     if (result.boot.world.elements.length > 0 && result.boot.world.relationships.length === 0)

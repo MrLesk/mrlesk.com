@@ -1,0 +1,1281 @@
+diff --git a/groma/systems/task-manager/containers/kanban/components/ansi-theme.md b/groma/systems/task-manager/containers/kanban/components/ansi-theme.md
+new file mode 100644
+index 0000000..a75ad48
+--- /dev/null
++++ b/groma/systems/task-manager/containers/kanban/components/ansi-theme.md
+@@ -0,0 +1,23 @@
++---
++type: C4 Component
++title: ANSI theme
++status: stable
++groma:
++  id: ansi-theme
++  parent: kanban
++  code:
++    - scanner: typescript
++      file: src/ui/ansi-theme.ts
++  group: Terminal UI
++  icon: groma:component
++  color: '#8875C5'
++description: Provides ANSI colour helpers and visible-width string padding
++---
++
++Maps task statuses to terminal colours and computes ANSI-aware visible string widths.
++
++## Relationships
++
++| Source | Target | Description | Technology |
++| --- | --- | --- | --- |
++| [src/ui/ansi-theme.ts](../../../../../../src/ui/ansi-theme.ts) | [src/model/status-config.ts](../../../../../../src/model/status-config.ts) | Maps task statuses to terminal colours | typescript |
+diff --git a/groma/systems/task-manager/containers/kanban/components/badge-format.md b/groma/systems/task-manager/containers/kanban/components/badge-format.md
+new file mode 100644
+index 0000000..a86f49d
+--- /dev/null
++++ b/groma/systems/task-manager/containers/kanban/components/badge-format.md
+@@ -0,0 +1,23 @@
++---
++type: C4 Component
++title: Badge format
++status: stable
++groma:
++  id: badge-format
++  parent: kanban
++  code:
++    - scanner: typescript
++      file: src/ui/badge-format.ts
++  group: Terminal UI
++  icon: groma:component
++  color: '#8875C5'
++description: Formats task IDs, priority badges, assignee handles, and criteria bars
++---
++
++Renders compact inline badges and progress bars for terminal task cards.
++
++## Relationships
++
++| Source | Target | Description | Technology |
++| --- | --- | --- | --- |
++| [src/ui/badge-format.ts](../../../../../../src/ui/badge-format.ts) | [src/types.ts](../../../../../../src/types.ts) | Formats priority tags and criteria progress | typescript |
+diff --git a/groma/systems/task-manager/containers/kanban/components/board-header.md b/groma/systems/task-manager/containers/kanban/components/board-header.md
+new file mode 100644
+index 0000000..7ba1225
+--- /dev/null
++++ b/groma/systems/task-manager/containers/kanban/components/board-header.md
+@@ -0,0 +1,25 @@
++---
++type: C4 Component
++title: Board header
++status: stable
++groma:
++  id: board-header
++  parent: kanban
++  code:
++    - scanner: typescript
++      file: src/ui/board-header.ts
++      symbol: renderBoardHeader
++  group: Terminal UI
++  icon: groma:browser
++  color: '#8875C5'
++description: Renders the top Kanban summary banner and progress counters
++---
++
++Displays project title, overall completion percentage, ready count, and criteria progress.
++
++## Relationships
++
++| Source | Target | Description | Technology |
++| --- | --- | --- | --- |
++| [src/ui/board-header.ts](../../../../../../src/ui/board-header.ts) | [src/ui/box-frame.ts](../../../../../../src/ui/box-frame.ts) | Frames the top summary banner | typescript |
++| [src/ui/board-header.ts](../../../../../../src/ui/board-header.ts) | [src/query/board-metrics.ts](../../../../../../src/query/board-metrics.ts) | Displays total, ready, and done counts | typescript |
+diff --git a/groma/systems/task-manager/containers/kanban/components/board-metrics.md b/groma/systems/task-manager/containers/kanban/components/board-metrics.md
+new file mode 100644
+index 0000000..a6de886
+--- /dev/null
++++ b/groma/systems/task-manager/containers/kanban/components/board-metrics.md
+@@ -0,0 +1,25 @@
++---
++type: C4 Component
++title: Board metrics
++status: stable
++groma:
++  id: board-metrics
++  parent: kanban
++  code:
++    - scanner: typescript
++      file: src/query/board-metrics.ts
++      symbol: computeBoardMetrics
++  group: Storage & Query
++  icon: groma:worker
++  color: '#2B9A9D'
++description: Computes board completion percentages, ready counts, and criteria totals
++---
++
++Aggregates task counts across statuses, dependency readiness, and acceptance criteria.
++
++## Relationships
++
++| Source | Target | Description | Technology |
++| --- | --- | --- | --- |
++| [src/query/board-metrics.ts](../../../../../../src/query/board-metrics.ts) | [src/query/ready-resolver.ts](../../../../../../src/query/ready-resolver.ts) | Counts ready and blocked tasks | typescript |
++| [src/query/board-metrics.ts](../../../../../../src/query/board-metrics.ts) | [src/query/task-filter.ts](../../../../../../src/query/task-filter.ts) | Groups tasks by status column | typescript |
+diff --git a/groma/systems/task-manager/containers/kanban/components/box-frame.md b/groma/systems/task-manager/containers/kanban/components/box-frame.md
+new file mode 100644
+index 0000000..e419a37
+--- /dev/null
++++ b/groma/systems/task-manager/containers/kanban/components/box-frame.md
+@@ -0,0 +1,23 @@
++---
++type: C4 Component
++title: Box frame
++status: stable
++groma:
++  id: box-frame
++  parent: kanban
++  code:
++    - scanner: typescript
++      file: src/ui/box-frame.ts
++  group: Terminal UI
++  icon: groma:component
++  color: '#8875C5'
++description: Draws rounded Unicode box borders and horizontal rules
++---
++
++Frames multi-line terminal content inside aligned Unicode borders.
++
++## Relationships
++
++| Source | Target | Description | Technology |
++| --- | --- | --- | --- |
++| [src/ui/box-frame.ts](../../../../../../src/ui/box-frame.ts) | [src/ui/ansi-theme.ts](../../../../../../src/ui/ansi-theme.ts) | Pads visible text width inside box borders | typescript |
+diff --git a/groma/systems/task-manager/containers/kanban/components/card-renderer.md b/groma/systems/task-manager/containers/kanban/components/card-renderer.md
+new file mode 100644
+index 0000000..7499f9b
+--- /dev/null
++++ b/groma/systems/task-manager/containers/kanban/components/card-renderer.md
+@@ -0,0 +1,25 @@
++---
++type: C4 Component
++title: Card renderer
++status: stable
++groma:
++  id: card-renderer
++  parent: kanban
++  code:
++    - scanner: typescript
++      file: src/ui/card-renderer.ts
++      symbol: renderTaskCard
++  group: Terminal UI
++  icon: groma:browser
++  color: '#8875C5'
++description: Renders individual Kanban task cards with badges and progress bars
++---
++
++Formats a Task into a fixed-width bordered card for Kanban columns.
++
++## Relationships
++
++| Source | Target | Description | Technology |
++| --- | --- | --- | --- |
++| [src/ui/card-renderer.ts](../../../../../../src/ui/card-renderer.ts) | [src/ui/ansi-theme.ts](../../../../../../src/ui/ansi-theme.ts) | Styles card titles and metadata | typescript |
++| [src/ui/card-renderer.ts](../../../../../../src/ui/card-renderer.ts) | [src/ui/badge-format.ts](../../../../../../src/ui/badge-format.ts) | Renders priority badges and criteria progress | typescript |
+diff --git a/groma/systems/task-manager/containers/kanban/components/cli.md b/groma/systems/task-manager/containers/kanban/components/cli.md
+index 0e3bad0..8fa8c66 100644
+--- a/groma/systems/task-manager/containers/kanban/components/cli.md
++++ b/groma/systems/task-manager/containers/kanban/components/cli.md
+@@ -22,3 +22,6 @@ Main entry point for the task-manager binary.
+ | Source | Target | Description | Technology |
+ | --- | --- | --- | --- |
+ | [src/cli.ts](../../../../../../src/cli.ts) | [src/types.ts](../../../../../../src/types.ts) | Uses shared task and board contracts | typescript |
++| [src/cli.ts](../../../../../../src/cli.ts) | [src/board/kanban-board.ts](../../../../../../src/board/kanban-board.ts) | Dispatches task-manager kanban command | typescript |
++| [src/cli.ts](../../../../../../src/cli.ts) | [src/commands/list-command.ts](../../../../../../src/commands/list-command.ts) | Dispatches task-manager list and ready commands | typescript |
++| [src/cli.ts](../../../../../../src/cli.ts) | [src/commands/move-command.ts](../../../../../../src/commands/move-command.ts) | Dispatches task-manager move command | typescript |
+diff --git a/groma/systems/task-manager/containers/kanban/components/column-layout.md b/groma/systems/task-manager/containers/kanban/components/column-layout.md
+new file mode 100644
+index 0000000..5a430a1
+--- /dev/null
++++ b/groma/systems/task-manager/containers/kanban/components/column-layout.md
+@@ -0,0 +1,25 @@
++---
++type: C4 Component
++title: Column layout
++status: stable
++groma:
++  id: column-layout
++  parent: kanban
++  code:
++    - scanner: typescript
++      file: src/ui/column-layout.ts
++      symbol: renderColumnsSideBySide
++  group: Terminal UI
++  icon: groma:browser
++  color: '#8875C5'
++description: Arranges rendered task cards into side-by-side status columns
++---
++
++Frames To Do, In Progress, and Done columns and joins them horizontally for the terminal.
++
++## Relationships
++
++| Source | Target | Description | Technology |
++| --- | --- | --- | --- |
++| [src/ui/column-layout.ts](../../../../../../src/ui/column-layout.ts) | [src/ui/box-frame.ts](../../../../../../src/ui/box-frame.ts) | Frames each status column in Unicode borders | typescript |
++| [src/ui/column-layout.ts](../../../../../../src/ui/column-layout.ts) | [src/ui/card-renderer.ts](../../../../../../src/ui/card-renderer.ts) | Renders each task card inside its column | typescript |
+diff --git a/groma/systems/task-manager/containers/kanban/components/frontmatter-parser.md b/groma/systems/task-manager/containers/kanban/components/frontmatter-parser.md
+new file mode 100644
+index 0000000..4161a75
+--- /dev/null
++++ b/groma/systems/task-manager/containers/kanban/components/frontmatter-parser.md
+@@ -0,0 +1,23 @@
++---
++type: C4 Component
++title: Frontmatter parser
++status: stable
++groma:
++  id: frontmatter-parser
++  parent: kanban
++  code:
++    - scanner: typescript
++      file: src/parser/frontmatter-parser.ts
++  group: Model & Parser
++  icon: groma:worker
++  color: '#5B9A7C'
++description: Parses YAML frontmatter headers from Markdown task files
++---
++
++Extracts scalar fields and string lists from YAML frontmatter blocks at the top of task files.
++
++## Relationships
++
++| Source | Target | Description | Technology |
++| --- | --- | --- | --- |
++| [src/parser/frontmatter-parser.ts](../../../../../../src/parser/frontmatter-parser.ts) | [src/model/status-config.ts](../../../../../../src/model/status-config.ts) | Normalizes parsed status values | typescript |
+diff --git a/groma/systems/task-manager/containers/kanban/components/kanban-board.md b/groma/systems/task-manager/containers/kanban/components/kanban-board.md
+new file mode 100644
+index 0000000..23ffb27
+--- /dev/null
++++ b/groma/systems/task-manager/containers/kanban/components/kanban-board.md
+@@ -0,0 +1,25 @@
++---
++type: C4 Component
++title: Kanban board
++status: stable
++groma:
++  id: kanban-board
++  parent: kanban
++  code:
++    - scanner: typescript
++      file: src/board/kanban-board.ts
++  group: Board & Commands
++  icon: groma:browser
++  color: '#4D82C8'
++description: Composes the full terminal Kanban board from tasks, metrics, and columns
++---
++
++Coordinates task loading, metric calculation, header rendering, and 3-column Kanban layout.
++
++## Relationships
++
++| Source | Target | Description | Technology |
++| --- | --- | --- | --- |
++| [src/board/kanban-board.ts](../../../../../../src/board/kanban-board.ts) | [src/store/task-store.ts](../../../../../../src/store/task-store.ts) | Loads Markdown tasks from backlog/tasks | typescript |
++| [src/board/kanban-board.ts](../../../../../../src/board/kanban-board.ts) | [src/ui/board-header.ts](../../../../../../src/ui/board-header.ts) | Renders top summary banner | typescript |
++| [src/board/kanban-board.ts](../../../../../../src/board/kanban-board.ts) | [src/ui/column-layout.ts](../../../../../../src/ui/column-layout.ts) | Renders To Do, In Progress, and Done columns | typescript |
+diff --git a/groma/systems/task-manager/containers/kanban/components/list-command.md b/groma/systems/task-manager/containers/kanban/components/list-command.md
+new file mode 100644
+index 0000000..3c5edd3
+--- /dev/null
++++ b/groma/systems/task-manager/containers/kanban/components/list-command.md
+@@ -0,0 +1,25 @@
++---
++type: C4 Component
++title: List command
++status: stable
++groma:
++  id: list-command
++  parent: kanban
++  code:
++    - scanner: typescript
++      file: src/commands/list-command.ts
++      symbol: runListCommand
++  group: Board & Commands
++  icon: groma:application
++  color: '#B69445'
++description: Lists tasks in plain text with --ready and keyword search filtering
++---
++
++Implements the task-manager list and ready CLI commands.
++
++## Relationships
++
++| Source | Target | Description | Technology |
++| --- | --- | --- | --- |
++| [src/commands/list-command.ts](../../../../../../src/commands/list-command.ts) | [src/store/task-store.ts](../../../../../../src/store/task-store.ts) | Loads tasks from disk | typescript |
++| [src/commands/list-command.ts](../../../../../../src/commands/list-command.ts) | [src/query/task-search.ts](../../../../../../src/query/task-search.ts) | Filters and searches tasks for plain output | typescript |
+diff --git a/groma/systems/task-manager/containers/kanban/components/markdown-body.md b/groma/systems/task-manager/containers/kanban/components/markdown-body.md
+new file mode 100644
+index 0000000..753dd66
+--- /dev/null
++++ b/groma/systems/task-manager/containers/kanban/components/markdown-body.md
+@@ -0,0 +1,24 @@
++---
++type: C4 Component
++title: Markdown body
++status: stable
++groma:
++  id: markdown-body
++  parent: kanban
++  code:
++    - scanner: typescript
++      file: src/parser/markdown-body.ts
++      symbol: parseMarkdownBody
++  group: Model & Parser
++  icon: groma:worker
++  color: '#5B9A7C'
++description: Extracts task descriptions and acceptance criteria checklists
++---
++
++Parses Markdown body sections and checklist lines into AcceptanceCriterion records.
++
++## Relationships
++
++| Source | Target | Description | Technology |
++| --- | --- | --- | --- |
++| [src/parser/markdown-body.ts](../../../../../../src/parser/markdown-body.ts) | [src/types.ts](../../../../../../src/types.ts) | Builds acceptance criterion records | typescript |
+diff --git a/groma/systems/task-manager/containers/kanban/components/move-command.md b/groma/systems/task-manager/containers/kanban/components/move-command.md
+new file mode 100644
+index 0000000..543be5a
+--- /dev/null
++++ b/groma/systems/task-manager/containers/kanban/components/move-command.md
+@@ -0,0 +1,25 @@
++---
++type: C4 Component
++title: Move command
++status: stable
++groma:
++  id: move-command
++  parent: kanban
++  code:
++    - scanner: typescript
++      file: src/commands/move-command.ts
++      symbol: runMoveCommand
++  group: Board & Commands
++  icon: groma:application
++  color: '#C87966'
++description: Moves a task to a new status and reports newly unblocked ready tasks
++---
++
++Implements the task-manager move subcommand on top of the task store and ready resolver.
++
++## Relationships
++
++| Source | Target | Description | Technology |
++| --- | --- | --- | --- |
++| [src/commands/move-command.ts](../../../../../../src/commands/move-command.ts) | [src/store/task-store.ts](../../../../../../src/store/task-store.ts) | Updates task status in Markdown file | typescript |
++| [src/commands/move-command.ts](../../../../../../src/commands/move-command.ts) | [src/query/ready-resolver.ts](../../../../../../src/query/ready-resolver.ts) | Reports newly unblocked ready tasks | typescript |
+diff --git a/groma/systems/task-manager/containers/kanban/components/ready-resolver.md b/groma/systems/task-manager/containers/kanban/components/ready-resolver.md
+new file mode 100644
+index 0000000..2ef8bc2
+--- /dev/null
++++ b/groma/systems/task-manager/containers/kanban/components/ready-resolver.md
+@@ -0,0 +1,23 @@
++---
++type: C4 Component
++title: Ready resolver
++status: stable
++groma:
++  id: ready-resolver
++  parent: kanban
++  code:
++    - scanner: typescript
++      file: src/query/ready-resolver.ts
++  group: Storage & Query
++  icon: groma:queue
++  color: '#2B9A9D'
++description: Resolves task dependency chains to identify unblocked ready tasks
++---
++
++Checks task dependencies against Done statuses to power the --ready filter.
++
++## Relationships
++
++| Source | Target | Description | Technology |
++| --- | --- | --- | --- |
++| [src/query/ready-resolver.ts](../../../../../../src/query/ready-resolver.ts) | [src/model/status-config.ts](../../../../../../src/model/status-config.ts) | Checks whether dependency tasks reached Done | typescript |
+diff --git a/groma/systems/task-manager/containers/kanban/components/status-config.md b/groma/systems/task-manager/containers/kanban/components/status-config.md
+new file mode 100644
+index 0000000..98e53ec
+--- /dev/null
++++ b/groma/systems/task-manager/containers/kanban/components/status-config.md
+@@ -0,0 +1,23 @@
++---
++type: C4 Component
++title: Status config
++status: stable
++groma:
++  id: status-config
++  parent: kanban
++  code:
++    - scanner: typescript
++      file: src/model/status-config.ts
++  group: Model & Parser
++  icon: groma:component
++  color: '#5B9A7C'
++description: Defines canonical task statuses, colours, and default Kanban columns
++---
++
++Provides STATUS_ORDER, STATUS_COLOURS, DEFAULT_COLUMNS, normalizeStatus, and isTerminalStatus.
++
++## Relationships
++
++| Source | Target | Description | Technology |
++| --- | --- | --- | --- |
++| [src/model/status-config.ts](../../../../../../src/model/status-config.ts) | [src/types.ts](../../../../../../src/types.ts) | Defines status order and column metadata | typescript |
+diff --git a/groma/systems/task-manager/containers/kanban/components/task-filter.md b/groma/systems/task-manager/containers/kanban/components/task-filter.md
+new file mode 100644
+index 0000000..85cb09c
+--- /dev/null
++++ b/groma/systems/task-manager/containers/kanban/components/task-filter.md
+@@ -0,0 +1,23 @@
++---
++type: C4 Component
++title: Task filter
++status: stable
++groma:
++  id: task-filter
++  parent: kanban
++  code:
++    - scanner: typescript
++      file: src/query/task-filter.ts
++  group: Storage & Query
++  icon: groma:service
++  color: '#2B9A9D'
++description: Filters and groups tasks by status, assignee, label, and priority
++---
++
++Evaluates TaskFilter predicates and partitions tasks into board status buckets.
++
++## Relationships
++
++| Source | Target | Description | Technology |
++| --- | --- | --- | --- |
++| [src/query/task-filter.ts](../../../../../../src/query/task-filter.ts) | [src/types.ts](../../../../../../src/types.ts) | Evaluates filter predicates and groups tasks | typescript |
+diff --git a/groma/systems/task-manager/containers/kanban/components/task-loader.md b/groma/systems/task-manager/containers/kanban/components/task-loader.md
+new file mode 100644
+index 0000000..d20db15
+--- /dev/null
++++ b/groma/systems/task-manager/containers/kanban/components/task-loader.md
+@@ -0,0 +1,25 @@
++---
++type: C4 Component
++title: Task loader
++status: stable
++groma:
++  id: task-loader
++  parent: kanban
++  code:
++    - scanner: typescript
++      file: src/parser/task-loader.ts
++      symbol: parseTaskFile
++  group: Model & Parser
++  icon: groma:service
++  color: '#5B9A7C'
++description: Assembles complete Task records from frontmatter and Markdown body
++---
++
++Combines frontmatter attributes and parsed checklist items into typed Task objects.
++
++## Relationships
++
++| Source | Target | Description | Technology |
++| --- | --- | --- | --- |
++| [src/parser/task-loader.ts](../../../../../../src/parser/task-loader.ts) | [src/parser/frontmatter-parser.ts](../../../../../../src/parser/frontmatter-parser.ts) | Parses YAML frontmatter header | typescript |
++| [src/parser/task-loader.ts](../../../../../../src/parser/task-loader.ts) | [src/parser/markdown-body.ts](../../../../../../src/parser/markdown-body.ts) | Extracts description and acceptance criteria | typescript |
+diff --git a/groma/systems/task-manager/containers/kanban/components/task-search.md b/groma/systems/task-manager/containers/kanban/components/task-search.md
+new file mode 100644
+index 0000000..9e4f9d1
+--- /dev/null
++++ b/groma/systems/task-manager/containers/kanban/components/task-search.md
+@@ -0,0 +1,24 @@
++---
++type: C4 Component
++title: Task search
++status: stable
++groma:
++  id: task-search
++  parent: kanban
++  code:
++    - scanner: typescript
++      file: src/query/task-search.ts
++      symbol: searchTasks
++  group: Storage & Query
++  icon: groma:service
++  color: '#2B9A9D'
++description: Searches tasks by keyword across ID, title, description, and labels
++---
++
++Matches multi-token search queries and combines them with structured task filters.
++
++## Relationships
++
++| Source | Target | Description | Technology |
++| --- | --- | --- | --- |
++| [src/query/task-search.ts](../../../../../../src/query/task-search.ts) | [src/query/task-filter.ts](../../../../../../src/query/task-filter.ts) | Combines keyword matching with task filters | typescript |
+diff --git a/groma/systems/task-manager/containers/kanban/components/task-serializer.md b/groma/systems/task-manager/containers/kanban/components/task-serializer.md
+new file mode 100644
+index 0000000..68778cd
+--- /dev/null
++++ b/groma/systems/task-manager/containers/kanban/components/task-serializer.md
+@@ -0,0 +1,24 @@
++---
++type: C4 Component
++title: Task serializer
++status: stable
++groma:
++  id: task-serializer
++  parent: kanban
++  code:
++    - scanner: typescript
++      file: src/parser/task-serializer.ts
++      symbol: updateTaskStatusInMarkdown
++  group: Model & Parser
++  icon: groma:storage
++  color: '#5B9A7C'
++description: Updates task status and assignee fields inside Markdown frontmatter
++---
++
++Serializes status transitions back to the Markdown task file without altering the body.
++
++## Relationships
++
++| Source | Target | Description | Technology |
++| --- | --- | --- | --- |
++| [src/parser/task-serializer.ts](../../../../../../src/parser/task-serializer.ts) | [src/parser/frontmatter-parser.ts](../../../../../../src/parser/frontmatter-parser.ts) | Reads frontmatter before updating status | typescript |
+diff --git a/groma/systems/task-manager/containers/kanban/components/task-store.md b/groma/systems/task-manager/containers/kanban/components/task-store.md
+new file mode 100644
+index 0000000..efeca4f
+--- /dev/null
++++ b/groma/systems/task-manager/containers/kanban/components/task-store.md
+@@ -0,0 +1,24 @@
++---
++type: C4 Component
++title: Task store
++status: stable
++groma:
++  id: task-store
++  parent: kanban
++  code:
++    - scanner: typescript
++      file: src/store/task-store.ts
++  group: Storage & Query
++  icon: groma:database
++  color: '#2B9A9D'
++description: Loads and persists Markdown task files in backlog/tasks
++---
++
++Reads all Markdown task files from disk, sorts them by task ID, and saves status updates.
++
++## Relationships
++
++| Source | Target | Description | Technology |
++| --- | --- | --- | --- |
++| [src/store/task-store.ts](../../../../../../src/store/task-store.ts) | [src/parser/task-loader.ts](../../../../../../src/parser/task-loader.ts) | Parses every task file in backlog/tasks | typescript |
++| [src/store/task-store.ts](../../../../../../src/store/task-store.ts) | [src/parser/task-serializer.ts](../../../../../../src/parser/task-serializer.ts) | Writes updated task status to disk | typescript |
+diff --git a/src/board/kanban-board.ts b/src/board/kanban-board.ts
+new file mode 100644
+index 0000000..9238dcd
+--- /dev/null
++++ b/src/board/kanban-board.ts
+@@ -0,0 +1,26 @@
++import type { BoardColumn, KanbanOptions, Task } from '../types.ts'
++import { DEFAULT_COLUMNS } from '../model/status-config.ts'
++import { filterTasks, groupTasksByStatus } from '../query/task-filter.ts'
++import { computeBoardMetrics } from '../query/board-metrics.ts'
++import { loadTasksFromDirectory } from '../store/task-store.ts'
++import { renderBoardHeader } from '../ui/board-header.ts'
++import { renderColumnsSideBySide } from '../ui/column-layout.ts'
++
++export function renderKanbanBoard(tasks: readonly Task[], options?: KanbanOptions): string {
++  const visibleTasks = options?.filter ? filterTasks(tasks, options.filter) : tasks
++  const metrics = computeBoardMetrics(visibleTasks)
++  const groups = groupTasksByStatus(visibleTasks)
++  const columns: BoardColumn[] = DEFAULT_COLUMNS.map(column => ({
++    ...column,
++    tasks: groups[column.status],
++  }))
++  const columnWidth = Math.max(2, Math.floor(options?.columnWidth ?? 36))
++  const header = renderBoardHeader(options?.projectName ?? 'Task Manager', metrics, columnWidth * columns.length + 2 * (columns.length - 1))
++  const board = renderColumnsSideBySide(columns, columnWidth, options?.maxCardsPerColumn)
++  return `${header}\n${board}`
++}
++
++export async function runKanbanCommand(tasksDir: string, options?: KanbanOptions): Promise<string> {
++  const tasks = await loadTasksFromDirectory(tasksDir)
++  return renderKanbanBoard(tasks, options)
++}
+diff --git a/src/cli.ts b/src/cli.ts
+index bb3c92b..db17cfb 100755
+--- a/src/cli.ts
++++ b/src/cli.ts
+@@ -1,12 +1,30 @@
+ #!/usr/bin/env bun
+-import type { KanbanOptions, TaskStatus } from './types.ts'
++import { runKanbanCommand } from './board/kanban-board.ts'
++import { runListCommand } from './commands/list-command.ts'
++import { runMoveCommand } from './commands/move-command.ts'
+ 
+ export async function main(argv: string[] = process.argv.slice(2)): Promise<void> {
+   const command = argv[0] ?? 'kanban'
+-  const tasksDir = argv[1] && !argv[1].startsWith('--') ? argv[1] : 'backlog/tasks'
+-  const options: KanbanOptions = { projectName: 'Task Manager' }
+-  const defaultStatus: TaskStatus = 'To Do'
+-  console.log(`Task Manager CLI (${command}) on ${tasksDir} [default: ${defaultStatus}, project: ${options.projectName}]`)
++  const tasksDir = command !== 'move' && argv[1] && !argv[1].startsWith('--')
++    ? argv[1]
++    : 'backlog/tasks'
++
++  switch (command) {
++    case 'kanban':
++      console.log(await runKanbanCommand(tasksDir, { projectName: 'Task Manager' }))
++      break
++    case 'list':
++      console.log(await runListCommand(tasksDir, { ready: argv.includes('--ready') }))
++      break
++    case 'ready':
++      console.log(await runListCommand(tasksDir, { ready: true }))
++      break
++    case 'move':
++      console.log(await runMoveCommand(tasksDir, argv[1]!, argv[2]!))
++      break
++    default:
++      throw new Error(`Unknown command: ${command}`)
++  }
+ }
+ 
+ if (import.meta.main) {
+diff --git a/src/commands/list-command.ts b/src/commands/list-command.ts
+new file mode 100644
+index 0000000..e96ba57
+--- /dev/null
++++ b/src/commands/list-command.ts
+@@ -0,0 +1,17 @@
++import { loadTasksFromDirectory } from '../store/task-store.ts'
++import { getReadyTasks } from '../query/ready-resolver.ts'
++import { searchTasks } from '../query/task-search.ts'
++
++export async function runListCommand(
++  tasksDir: string,
++  options?: { ready?: boolean; search?: string },
++): Promise<string> {
++  let tasks = await loadTasksFromDirectory(tasksDir)
++  if (options?.ready) tasks = getReadyTasks(tasks)
++  if (options?.search?.trim()) tasks = searchTasks(tasks, options.search)
++
++  return tasks.map((task) => {
++    const checked = task.criteria.filter((criterion) => criterion.checked).length
++    return `${task.id}  [${task.status}]  ${task.title} (ac: ${checked}/${task.criteria.length})`
++  }).join('\n')
++}
+diff --git a/src/commands/move-command.ts b/src/commands/move-command.ts
+new file mode 100644
+index 0000000..2df1aa0
+--- /dev/null
++++ b/src/commands/move-command.ts
+@@ -0,0 +1,18 @@
++import { normalizeStatus } from '../model/status-config.ts'
++import { loadTasksFromDirectory, saveTaskStatus } from '../store/task-store.ts'
++import { getReadyTasks } from '../query/ready-resolver.ts'
++
++export async function runMoveCommand(
++  tasksDir: string,
++  taskId: string,
++  rawStatus: string,
++  assignee?: string,
++): Promise<string> {
++  const status = normalizeStatus(rawStatus)
++  const task = await saveTaskStatus(tasksDir, taskId, status, assignee)
++  if (!task) throw new Error(`Task not found: ${taskId}`)
++
++  const tasks = await loadTasksFromDirectory(tasksDir)
++  const readyCount = getReadyTasks(tasks).length
++  return `Moved ${task.id} to ${status}. ${readyCount} tasks are now ready.`
++}
+diff --git a/src/model/status-config.ts b/src/model/status-config.ts
+new file mode 100644
+index 0000000..22ba806
+--- /dev/null
++++ b/src/model/status-config.ts
+@@ -0,0 +1,32 @@
++import type { TaskStatus, BoardColumn } from '../types.ts'
++
++export const STATUS_ORDER: readonly TaskStatus[] = ['To Do', 'In Progress', 'Done']
++
++export const STATUS_COLOURS: Record<TaskStatus, 'yellow' | 'cyan' | 'green'> = {
++  'To Do': 'yellow',
++  'In Progress': 'cyan',
++  Done: 'green',
++}
++
++export const DEFAULT_COLUMNS: readonly Omit<BoardColumn, 'tasks'>[] = STATUS_ORDER.map(
++  status => ({ status, title: status, colour: STATUS_COLOURS[status] }),
++)
++
++export function normalizeStatus(raw: string): TaskStatus {
++  switch (raw.trim().toLowerCase()) {
++    case 'in progress':
++    case 'doing':
++    case 'working':
++      return 'In Progress'
++    case 'done':
++    case 'completed':
++    case 'closed':
++      return 'Done'
++    default:
++      return 'To Do'
++  }
++}
++
++export function isTerminalStatus(status: TaskStatus): boolean {
++  return status === 'Done'
++}
+diff --git a/src/parser/frontmatter-parser.ts b/src/parser/frontmatter-parser.ts
+new file mode 100644
+index 0000000..2822a57
+--- /dev/null
++++ b/src/parser/frontmatter-parser.ts
+@@ -0,0 +1,63 @@
++import { normalizeStatus } from '../model/status-config.ts'
++
++type FrontmatterValue = string | string[]
++
++function unquote(value: string): string {
++  const trimmed = value.trim()
++  if (trimmed.length >= 2 && trimmed.startsWith('"') && trimmed.endsWith('"')) {
++    try {
++      return JSON.parse(trimmed) as string
++    } catch {
++      return trimmed.slice(1, -1)
++    }
++  }
++  if (trimmed.length >= 2 && trimmed.startsWith("'") && trimmed.endsWith("'")) {
++    return trimmed.slice(1, -1).replace(/''/g, "'")
++  }
++  return trimmed
++}
++
++export function parseFrontmatter(raw: string): {
++  attributes: Record<string, string | string[]>
++  body: string
++} {
++  const match = /^(?:\uFEFF)?---[\t ]*\r?\n([\s\S]*?)^---[\t ]*(?:\r?\n|$)/m.exec(raw)
++  if (!match) return { attributes: {}, body: raw }
++
++  const attributes: Record<string, FrontmatterValue> = {}
++  let currentKey: string | undefined
++  for (const line of match[1].split(/\r?\n/)) {
++    const item = /^\s+-\s*(.*)$/.exec(line)
++    if (item && currentKey) {
++      if (!Array.isArray(attributes[currentKey])) attributes[currentKey] = []
++      ;(attributes[currentKey] as string[]).push(unquote(item[1]))
++      continue
++    }
++    const field = /^([^\s:#][^:]*):(?:\s*(.*))?$/.exec(line)
++    if (!field) {
++      currentKey = undefined
++      continue
++    }
++    currentKey = field[1].trim()
++    const value = (field[2] ?? '').trim()
++    if (value.startsWith('[') && value.endsWith(']')) {
++      const contents = value.slice(1, -1).trim()
++      attributes[currentKey] = contents
++        ? (contents.match(/"(?:\\.|[^"\\])*"|'(?:''|[^'])*'|[^,]+/g) ?? []).map(unquote)
++        : []
++    } else {
++      const scalar = unquote(value)
++      attributes[currentKey] = currentKey === 'status' ? normalizeStatus(scalar) : scalar
++    }
++  }
++  return { attributes, body: raw.slice(match[0].length) }
++}
++
++export function asString(value: string | string[] | undefined, fallback = ''): string {
++  return typeof value === 'string' ? value : value?.[0] ?? fallback
++}
++
++export function asStringArray(value: string | string[] | undefined): string[] {
++  if (Array.isArray(value)) return value
++  return value ? [value] : []
++}
+diff --git a/src/parser/markdown-body.ts b/src/parser/markdown-body.ts
+new file mode 100644
+index 0000000..1ac5716
+--- /dev/null
++++ b/src/parser/markdown-body.ts
+@@ -0,0 +1,26 @@
++import type { AcceptanceCriterion } from '../types.ts'
++
++export function parseMarkdownBody(body: string): {
++  description: string
++  criteria: AcceptanceCriterion[]
++} {
++  const lines = body.split(/\r?\n/)
++  const descriptionHeading = lines.findIndex((line) => /^\s*##\s+Description\s*#*\s*$/i.test(line))
++  const start = descriptionHeading === -1 ? 0 : descriptionHeading + 1
++  let end = start
++  while (end < lines.length && !/^\s*##\s+/.test(lines[end])) end++
++
++  const criteria: AcceptanceCriterion[] = []
++  for (const line of lines) {
++    const match = line.match(/^\s*-\s+\[([ xX])\]\s*(.*)$/)
++    if (match) {
++      criteria.push({
++        index: criteria.length + 1,
++        text: match[2].trim(),
++        checked: match[1].toLowerCase() === 'x',
++      })
++    }
++  }
++
++  return { description: lines.slice(start, end).join('\n').trim(), criteria }
++}
+diff --git a/src/parser/task-loader.ts b/src/parser/task-loader.ts
+new file mode 100644
+index 0000000..303bc38
+--- /dev/null
++++ b/src/parser/task-loader.ts
+@@ -0,0 +1,30 @@
++import type { Task, TaskPriority } from '../types.ts'
++import { normalizeStatus } from '../model/status-config.ts'
++import { parseFrontmatter, asString, asStringArray } from './frontmatter-parser.ts'
++import { parseMarkdownBody } from './markdown-body.ts'
++
++export function parseTaskFile(filePath: string, content: string): Task {
++  const { attributes, body } = parseFrontmatter(content)
++  const { description, criteria } = parseMarkdownBody(body)
++  const filename = filePath.split(/[\\/]/).pop() ?? ''
++  const filenameId = filename.match(/^(task-\d+(?:\.\d+)*)/i)?.[1] ?? ''
++  const rawPriority = asString(attributes.priority).trim().toLowerCase()
++  const priority: TaskPriority | undefined =
++    rawPriority === 'high' || rawPriority === 'medium' || rawPriority === 'low'
++      ? rawPriority
++      : undefined
++
++  return {
++    id: asString(attributes.id, filenameId),
++    title: asString(attributes.title),
++    status: normalizeStatus(asString(attributes.status)),
++    priority,
++    assignees: asStringArray(attributes.assignee ?? attributes.assignees),
++    labels: asStringArray(attributes.labels),
++    dependencies: asStringArray(attributes.dependencies),
++    references: asStringArray(attributes.references),
++    description,
++    criteria,
++    filePath,
++  }
++}
+diff --git a/src/parser/task-serializer.ts b/src/parser/task-serializer.ts
+new file mode 100644
+index 0000000..3408141
+--- /dev/null
++++ b/src/parser/task-serializer.ts
+@@ -0,0 +1,37 @@
++import type { TaskStatus } from '../types.ts'
++import { parseFrontmatter } from './frontmatter-parser.ts'
++
++export function updateTaskStatusInMarkdown(
++  content: string,
++  newStatus: TaskStatus,
++  assignee?: string,
++): string {
++  const parsed = parseFrontmatter(content)
++  const match = /^(?:\uFEFF)?---[\t ]*\r?\n([\s\S]*?)^---[\t ]*(?:\r?\n|$)/m.exec(content)
++  if (!match || match.index !== 0 || content.slice(match[0].length) !== parsed.body) {
++    throw new Error('Markdown content does not contain valid frontmatter')
++  }
++
++  const newline = match[0].includes('\r\n') ? '\r\n' : '\n'
++  let frontmatter = match[1]
++  const statusLine = /^status:[^\r\n]*/m
++  if (statusLine.test(frontmatter)) {
++    frontmatter = frontmatter.replace(statusLine, `status: ${JSON.stringify(newStatus)}`)
++  } else {
++    frontmatter += `status: ${JSON.stringify(newStatus)}${newline}`
++  }
++
++  if (assignee !== undefined) {
++    const assigneeBlock = /^assignee:[^\r\n]*(?:\r?\n[\t ]+[^\r\n]*)*/m
++    const replacement = `assignee:${newline}  - ${JSON.stringify(assignee)}`
++    if (assigneeBlock.test(frontmatter)) {
++      frontmatter = frontmatter.replace(assigneeBlock, () => replacement)
++    } else {
++      frontmatter += `${replacement}${newline}`
++    }
++  }
++
++  const openingLength = match[0].indexOf(match[1])
++  const closingStart = openingLength + match[1].length
++  return match[0].slice(0, openingLength) + frontmatter + match[0].slice(closingStart) + parsed.body
++}
+diff --git a/src/query/board-metrics.ts b/src/query/board-metrics.ts
+new file mode 100644
+index 0000000..35e2e6b
+--- /dev/null
++++ b/src/query/board-metrics.ts
+@@ -0,0 +1,31 @@
++import type { BoardMetrics, Task } from '../types.ts'
++import { groupTasksByStatus } from './task-filter.ts'
++import { isTaskReady } from './ready-resolver.ts'
++
++export function computeBoardMetrics(tasks: readonly Task[]): BoardMetrics {
++  const groups = groupTasksByStatus(tasks)
++  const total = tasks.length
++  const todo = groups['To Do'].length
++  const inProgress = groups['In Progress'].length
++  const done = groups['Done'].length
++  const ready = tasks.filter((task) => isTaskReady(task, tasks)).length
++  let criteriaChecked = 0
++  let criteriaTotal = 0
++
++  for (const task of tasks) {
++    criteriaTotal += task.criteria.length
++    criteriaChecked += task.criteria.filter((criterion) => criterion.checked).length
++  }
++
++  return {
++    total,
++    todo,
++    inProgress,
++    done,
++    ready,
++    blocked: todo - ready,
++    completionPercent: total === 0 ? 0 : Math.round((done / total) * 100),
++    criteriaChecked,
++    criteriaTotal,
++  }
++}
+diff --git a/src/query/ready-resolver.ts b/src/query/ready-resolver.ts
+new file mode 100644
+index 0000000..b0c6b5d
+--- /dev/null
++++ b/src/query/ready-resolver.ts
+@@ -0,0 +1,17 @@
++import type { Task } from '../types.ts'
++import { isTerminalStatus } from '../model/status-config.ts'
++
++export function unmetDependencies(task: Task, allTasks: readonly Task[]): string[] {
++  return task.dependencies.filter((id) => {
++    const dependency = allTasks.find((candidate) => candidate.id === id)
++    return !dependency || !isTerminalStatus(dependency.status)
++  })
++}
++
++export function isTaskReady(task: Task, allTasks: readonly Task[]): boolean {
++  return task.status === 'To Do' && unmetDependencies(task, allTasks).length === 0
++}
++
++export function getReadyTasks(tasks: readonly Task[]): Task[] {
++  return tasks.filter((task) => isTaskReady(task, tasks))
++}
+diff --git a/src/query/task-filter.ts b/src/query/task-filter.ts
+new file mode 100644
+index 0000000..6a97cf6
+--- /dev/null
++++ b/src/query/task-filter.ts
+@@ -0,0 +1,27 @@
++import type { Task, TaskFilter, TaskStatus } from '../types.ts'
++
++export function filterTasks(tasks: readonly Task[], filter: TaskFilter = {}): Task[] {
++  const statuses = filter.status === undefined
++    ? undefined
++    : Array.isArray(filter.status) ? filter.status : [filter.status]
++  const assignee = filter.assignee?.replace(/^@/, '')
++
++  return tasks.filter((task) => {
++    if (statuses && !statuses.includes(task.status)) return false
++    if (assignee !== undefined && !task.assignees.some((name) => name.replace(/^@/, '') === assignee)) return false
++    if (filter.label !== undefined && !task.labels.includes(filter.label)) return false
++    if (filter.priority !== undefined && task.priority !== filter.priority) return false
++    return true
++  })
++}
++
++export function groupTasksByStatus(tasks: readonly Task[]): Record<TaskStatus, Task[]> {
++  const groups: Record<TaskStatus, Task[]> = {
++    'To Do': [],
++    'In Progress': [],
++    'Done': [],
++  }
++
++  for (const task of tasks) groups[task.status].push(task)
++  return groups
++}
+diff --git a/src/query/task-search.ts b/src/query/task-search.ts
+new file mode 100644
+index 0000000..237362a
+--- /dev/null
++++ b/src/query/task-search.ts
+@@ -0,0 +1,12 @@
++import type { Task, TaskFilter } from '../types.ts'
++import { filterTasks } from './task-filter.ts'
++
++export function searchTasks(tasks: readonly Task[], query: string, filter?: TaskFilter): Task[] {
++  const candidates = filter ? filterTasks(tasks, filter) : tasks
++  const tokens = query.toLowerCase().trim().split(/\s+/).filter(Boolean)
++
++  return candidates.filter((task) => {
++    const fields = [task.id, task.title, task.description, ...task.labels].map((field) => field.toLowerCase())
++    return tokens.every((token) => fields.some((field) => field.includes(token)))
++  })
++}
+diff --git a/src/store/task-store.ts b/src/store/task-store.ts
+new file mode 100644
+index 0000000..15e903e
+--- /dev/null
++++ b/src/store/task-store.ts
+@@ -0,0 +1,32 @@
++import { readFile, readdir, writeFile } from 'node:fs/promises'
++import { join } from 'node:path'
++import type { Task, TaskStatus } from '../types.ts'
++import { parseTaskFile } from '../parser/task-loader.ts'
++import { updateTaskStatusInMarkdown } from '../parser/task-serializer.ts'
++
++export async function loadTasksFromDirectory(dirPath: string): Promise<Task[]> {
++  const entries = await readdir(dirPath, { withFileTypes: true })
++  const tasks = await Promise.all(
++    entries.filter(entry => entry.isFile() && entry.name.endsWith('.md')).map(async entry => {
++      const filePath = join(dirPath, entry.name)
++      return parseTaskFile(filePath, await readFile(filePath, 'utf8'))
++    }),
++  )
++  return tasks.sort((a, b) => a.id.localeCompare(b.id, undefined, { numeric: true }))
++}
++
++export async function saveTaskStatus(
++  dirPath: string,
++  taskId: string,
++  status: TaskStatus,
++  assignee?: string,
++): Promise<Task | undefined> {
++  const tasks = await loadTasksFromDirectory(dirPath)
++  const task = tasks.find(item => item.id.toLowerCase() === taskId.toLowerCase())
++  if (!task) return undefined
++
++  const content = await readFile(task.filePath, 'utf8')
++  const updated = updateTaskStatusInMarkdown(content, status, assignee)
++  await writeFile(task.filePath, updated, 'utf8')
++  return parseTaskFile(task.filePath, updated)
++}
+diff --git a/src/ui/ansi-theme.ts b/src/ui/ansi-theme.ts
+new file mode 100644
+index 0000000..aafd771
+--- /dev/null
++++ b/src/ui/ansi-theme.ts
+@@ -0,0 +1,54 @@
++import type { TaskStatus } from '../types.ts'
++import { STATUS_COLOURS } from '../model/status-config.ts'
++
++const style = (open: number, close: number) => (text: string): string =>
++  `\x1b[${open}m${text}\x1b[${close}m`
++
++export const ansi = {
++  bold: style(1, 22),
++  dim: style(2, 22),
++  cyan: style(36, 39),
++  green: style(32, 39),
++  yellow: style(33, 39),
++  magenta: style(35, 39),
++  red: style(31, 39),
++  gray: style(90, 39),
++  blue: style(34, 39),
++}
++
++export function colourForStatus(status: TaskStatus): (text: string) => string {
++  return ansi[STATUS_COLOURS[status]]
++}
++
++const ansiPattern = /\x1b\[[0-?]*[ -/]*[@-~]/g
++
++export function stripAnsi(text: string): string {
++  return text.replace(ansiPattern, '')
++}
++
++export function visibleLength(text: string): number {
++  return Array.from(stripAnsi(text)).length
++}
++
++export function padVisible(text: string, width: number): string {
++  const target = Math.max(0, Math.floor(width))
++  const length = visibleLength(text)
++  if (length <= target) return text + ' '.repeat(target - length)
++  if (target === 0) return ''
++
++  const limit = target - 1
++  let result = ''
++  let count = 0
++  const tokens = text.match(/\x1b\[[0-?]*[ -/]*[@-~]|[\s\S]/gu) ?? []
++  for (const token of tokens) {
++    if (token.startsWith('\x1b[')) {
++      result += token
++    } else if (count < limit) {
++      result += token
++      count++
++    } else {
++      break
++    }
++  }
++  return result + '…\x1b[0m'
++}
+diff --git a/src/ui/badge-format.ts b/src/ui/badge-format.ts
+new file mode 100644
+index 0000000..76e3fca
+--- /dev/null
++++ b/src/ui/badge-format.ts
+@@ -0,0 +1,27 @@
++import type { AcceptanceCriterion, TaskPriority } from '../types.ts'
++
++export function formatTaskId(id: string): string {
++  return id.toUpperCase()
++}
++
++export function formatPriority(priority?: TaskPriority): string {
++  switch (priority) {
++    case 'high': return '[HIGH]'
++    case 'medium': return '[MED]'
++    case 'low': return '[LOW]'
++    default: return ''
++  }
++}
++
++export function formatAssignees(assignees: readonly string[]): string {
++  return assignees.map(name => name.startsWith('@') ? name : `@${name}`).join(' ')
++}
++
++export function formatCriteriaBar(criteria: readonly AcceptanceCriterion[], width = 8): string {
++  if (criteria.length === 0) return 'no ac'
++
++  const checked = criteria.filter(criterion => criterion.checked).length
++  const barWidth = Math.max(0, Math.floor(width))
++  const filled = Math.round((checked / criteria.length) * barWidth)
++  return `${'■'.repeat(filled)}${'□'.repeat(barWidth - filled)} ${checked}/${criteria.length}`
++}
+diff --git a/src/ui/board-header.ts b/src/ui/board-header.ts
+new file mode 100644
+index 0000000..51c068f
+--- /dev/null
++++ b/src/ui/board-header.ts
+@@ -0,0 +1,17 @@
++import type { BoardMetrics } from '../types.ts'
++import { ansi } from './ansi-theme.ts'
++import { drawBox } from './box-frame.ts'
++
++export function renderBoardHeader(projectName: string, metrics: BoardMetrics, width = 112): string {
++  const percent = Math.max(0, Math.min(100, metrics.completionPercent))
++  const barWidth = Math.max(0, Math.min(30, Math.floor(width) - 20))
++  const filled = Math.round(barWidth * percent / 100)
++  const bar = ansi.green('█'.repeat(filled)) + ansi.gray('░'.repeat(barWidth - filled))
++
++  return drawBox([
++    ` ${ansi.bold(projectName)}`,
++    ` ${bar} ${ansi.bold(`${metrics.completionPercent}%`)} complete`,
++    ` Total: ${metrics.total}  Ready: ${metrics.ready}  Blocked: ${metrics.blocked}  In Progress: ${metrics.inProgress}  Done: ${metrics.done}`,
++    ` Criteria: ${metrics.criteriaChecked}/${metrics.criteriaTotal}`,
++  ], width, undefined, ansi.cyan).join('\n')
++}
+diff --git a/src/ui/box-frame.ts b/src/ui/box-frame.ts
+new file mode 100644
+index 0000000..46b64d1
+--- /dev/null
++++ b/src/ui/box-frame.ts
+@@ -0,0 +1,26 @@
++import { ansi, padVisible, visibleLength } from './ansi-theme.ts'
++
++export function horizontalRule(width: number, char = '─'): string {
++  return char.repeat(Math.max(0, Math.floor(width)))
++}
++
++export function drawBox(
++  lines: readonly string[],
++  width: number,
++  title?: string,
++  borderColour: (s: string) => string = ansi.gray,
++): string[] {
++  const innerWidth = Math.max(0, Math.floor(width) - 2)
++  let top = horizontalRule(innerWidth)
++
++  if (title && innerWidth > 0) {
++    const label = padVisible(` ${title} `, Math.min(innerWidth, visibleLength(` ${title} `)))
++    top = label + horizontalRule(innerWidth - visibleLength(label))
++  }
++
++  return [
++    borderColour(`╭${top}╮`),
++    ...lines.map(line => borderColour('│') + padVisible(line, innerWidth) + borderColour('│')),
++    borderColour(`╰${horizontalRule(innerWidth)}╯`),
++  ]
++}
+diff --git a/src/ui/card-renderer.ts b/src/ui/card-renderer.ts
+new file mode 100644
+index 0000000..37ca53f
+--- /dev/null
++++ b/src/ui/card-renderer.ts
+@@ -0,0 +1,26 @@
++import type { Task } from '../types.ts'
++import { ansi, colourForStatus, padVisible } from './ansi-theme.ts'
++import { formatTaskId, formatPriority, formatAssignees, formatCriteriaBar } from './badge-format.ts'
++
++export function renderTaskCard(task: Task, width: number): string[] {
++  const innerWidth = Math.max(0, Math.floor(width) - 2)
++  const border = (left: string, right: string) => ansi.dim(left + '─'.repeat(innerWidth) + right)
++  const row = (content: string) => ansi.dim('│') + padVisible(content, innerWidth) + ansi.dim('│')
++  const heading = [
++    colourForStatus(task.status)(formatTaskId(task.id)),
++    formatPriority(task.priority),
++    formatAssignees(task.assignees),
++  ].filter(Boolean).join(' ')
++  const details = task.dependencies.length > 0
++    ? `deps: ${task.dependencies.join(', ')}`
++    : task.labels.join(', ')
++  const progress = formatCriteriaBar(task.criteria)
++
++  return [
++    border('┌', '┐'),
++    row(heading),
++    row(task.title),
++    row([details, progress].filter(Boolean).join(' ')),
++    border('└', '┘'),
++  ]
++}
+diff --git a/src/ui/column-layout.ts b/src/ui/column-layout.ts
+new file mode 100644
+index 0000000..c9e0386
+--- /dev/null
++++ b/src/ui/column-layout.ts
+@@ -0,0 +1,27 @@
++import type { BoardColumn } from '../types.ts'
++import { ansi, colourForStatus, padVisible } from './ansi-theme.ts'
++import { drawBox } from './box-frame.ts'
++import { renderTaskCard } from './card-renderer.ts'
++
++export function renderColumnsSideBySide(
++  columns: readonly BoardColumn[],
++  columnWidth = 36,
++  maxCardsPerColumn = 6,
++): string {
++  const width = Math.max(2, Math.floor(columnWidth))
++  const limit = Math.max(0, Math.floor(maxCardsPerColumn))
++  const contents = columns.map(col => {
++    const lines = col.tasks.slice(0, limit).flatMap(task => renderTaskCard(task, width - 2))
++    const remaining = col.tasks.length - Math.min(col.tasks.length, limit)
++    if (remaining > 0) lines.push(ansi.dim(`+${remaining} more tasks...`))
++    return lines
++  })
++  const height = Math.max(0, ...contents.map(lines => lines.length))
++  const boxes = columns.map((col, index) => {
++    const lines = contents[index].concat(Array(height - contents[index].length).fill(''))
++    return drawBox(lines, width, `${col.title} (${col.tasks.length})`, colourForStatus(col.status))
++  })
++
++  if (boxes.length === 0) return ''
++  return boxes[0].map((_, row) => boxes.map(box => padVisible(box[row], width)).join('  ')).join('\n')
++}

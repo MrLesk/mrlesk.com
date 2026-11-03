@@ -26,6 +26,6 @@ The room goes black again, on purpose. Same four questions as minute 4. Let peop
 Answers 1 to 3 are yours (October 3). 4 is still a draft: it's your belief, so rewrite it if it doesn't sound like you.
 1. Yes. So our reviews have to move up a level. (Your idea: scale up the review, one level above the code.)
 2. My Groma.md components are stored locally. I still have my map. (Groma.md is local, offline, no AI service.)
-3. Yes. I can focus on architecture. (Ties back to "I need to know the architecture" on "Look at what I found. Again.")
+3. Yes. I can focus on architecture. (Ties back to "I need to know the architecture" on "After a few weeks... again.")
 4. No. I own my code again. (The last words of your abstract.)
 -->

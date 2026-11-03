@@ -1,14 +1,14 @@
 ---
 layout: default
 mood: 4
-class: full
+class: full brownfield
 meter: false
 clicks: 4
 routeAlias: live-java
 ---
 
 <GromaFrame
-  name="keycloak-devoxx"
+  name="keycloak"
   origin="http://localhost:4803"
   :setup="['', 'initialize', 'scanners']"
   :views="['', '', '', 'hud=off', '']"
@@ -21,7 +21,7 @@ routeAlias: live-java
 This slide waits until that Groma.md server answers, then shows it. A fresh copy opens on the Groma.md setup,
 and your clicks press its buttons, with the values on screen:
 
-Click 0. "Initialize Groma": the project is called keycloak-devoxx, after the folder.
+Click 0. "Initialize Groma": the project is called keycloak, after the folder.
 [click] Continue. Groma.md looks at the code and proposes scanners.
 [click] Install & scan. Let people watch the scan run; the map opens by itself when it's done.
 [click] The whole map without chrome.

@@ -1,21 +1,22 @@
 ---
 layout: default
 mood: 4
+class: greenfield
 routeAlias: demo-agents
 ---
 
 <div class="beat">
-  <div class="beat-no"><b>4</b><span>OF 4 · DEMO</span></div>
   <div>
     <span class="live">LIVE</span>
-    <h1>Watch agents work.</h1>
-    <p class="beat-line">Six Codex agents on six Groma.md tasks. Then what they changed.</p>
-    <div class="tags"><span>GROMA.MD</span><span class="plus">+</span><span>BACKLOG.MD</span></div>
+    <h1>The <span class="project">Greenfield</span> Project.</h1>
+    <p class="beat-line">A terminal Kanban board where tasks are Markdown files, built from scratch by 6 Codex agents.</p>
+    <div class="tags"><span>6 CODEX AGENTS</span><span>20 TASKS</span><span>LIVE MAP</span></div>
   </div>
 </div>
 
 
 <!--
-⏱ 25:00 (50-minute timings still to redo). Chapter card. Next: six Codex agents work six real Groma.md
-roadmap tasks on Groma.md's own map, live, then Groma.md shows what they changed.
+⏱ Chapter card: Part 1 of the 4-part flow (Greenfield Start).
+Start with 1 agent on TASK-1, then watch waves of agents unlock as dependencies finish.
+Leave them cooking after ~1 minute and move to Brownfield (Keycloak).
 -->

@@ -4,7 +4,7 @@ mood: 2
 clicks: 3
 ---
 
-# Look at what I found. Again.
+# After a few weeks... again.
 
 <div class="stage shape" :class="{ seen: $clicks >= 2 }">
   <div class="finds short">

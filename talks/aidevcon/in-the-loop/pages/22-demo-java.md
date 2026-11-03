@@ -1,15 +1,15 @@
 ---
 layout: default
 mood: 4
+class: brownfield
 routeAlias: demo-java
 ---
 
 <div class="beat">
-  <div class="beat-no"><b>2</b><span>OF 4 · DEMO</span></div>
   <div>
     <span class="live">LIVE</span>
-    <h1>Map Keycloak, live.</h1>
-    <p class="beat-line">8,467 Java files. The raw result, no AI involved.</p>
+    <h1>The <span class="project">Brownfield</span> Project.</h1>
+    <p class="beat-line">Keycloak: 8,467 Java files. First the raw deterministic scan, then the curated map.</p>
     <div class="cmds"><code>git clone</code><i>→</i><code>groma web</code></div>
     <div class="tags"><span>DETERMINISTIC</span><span>OFFLINE</span><span>SAME CODE, SAME MAP</span></div>
   </div>
@@ -17,10 +17,6 @@ routeAlias: demo-java
 
 
 <!--
-⏱ 18:45. Chapter card. The next slide runs the two commands for you. No `groma init`: `groma web` sets the project up in the browser.
-
-Rehearsed with the 0.2.1 published scanners. From "Install & scan" to the map took about
-23 seconds with scanner packages already cached. Run setup once before the talk so downloads do not
-depend on the venue network; the on-stage clone stays fresh. Explain that the first scan is a starting
-point while it runs, then move to the prepared curated map.
+⏱ Part 2: Brownfield Show (Keycloak raw scan + curated map).
+While the 6 Greenfield agents cook in the background, we clone Keycloak live, scan 8,467 Java files deterministically, and explore the curated C4 architecture.
 -->

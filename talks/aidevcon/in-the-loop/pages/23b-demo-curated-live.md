@@ -1,7 +1,7 @@
 ---
 layout: default
 mood: 4
-class: full
+class: full brownfield
 meter: false
 clicks: 8
 routeAlias: live-curated
