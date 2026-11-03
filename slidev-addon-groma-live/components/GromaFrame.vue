@@ -29,6 +29,8 @@ const props = withDefaults(defineProps<{
    * The map itself still fills the slide. Needs a Groma that knows the `inset` parameter.
    */
   inset?: number
+  /** Groma's theme for the embedded map: `light` (default) or `blueprint`, its dark theme. */
+  theme?: string
   /**
    * For a Groma that opens on its setup: per click, the setup button that click presses, 'initialize'
    * (Continue) or 'scanners' (Install & scan), '' for none. The deck's dev server presses it (see
@@ -36,7 +38,7 @@ const props = withDefaults(defineProps<{
    */
   setup?: string[]
   name?: string
-}>(), { captions: () => [], stills: () => [], origin: 'http://localhost:4747', scale: 0.6, inset: 22, setup: () => [] })
+}>(), { captions: () => [], stills: () => [], origin: 'http://localhost:4747', scale: 0.6, inset: 22, theme: 'light', setup: () => [] })
 
 const { $clicks, $renderContext } = useSlideContext()
 const active = useIsSlideActive()
@@ -49,6 +51,7 @@ const base = import.meta.env.BASE_URL
 const dev = import.meta.env.DEV
 
 const frame = ref<HTMLIFrameElement>()
+const caption = ref<HTMLElement>()
 const status = ref<'checking' | 'live' | 'offline'>('checking')
 const control = ref<'unknown' | 'message' | 'reload'>('unknown')
 const veiled = ref(true)
@@ -57,7 +60,7 @@ const initialSrc = ref('')
 
 const index = computed(() => Math.min($clicks.value, props.views.length - 1))
 // Groma counts the inset in its own pixels, which are 1/scale of a slide pixel.
-const search = computed(() => `?theme=light&inset=${Math.round(props.inset / props.scale)}&${props.views[index.value]}`)
+const search = computed(() => `?theme=${props.theme}&inset=${Math.round(props.inset / props.scale)}&${props.views[index.value]}`)
 let readyTimer: ReturnType<typeof setTimeout> | undefined
 let probeTimer: ReturnType<typeof setTimeout> | undefined
 
@@ -110,16 +113,47 @@ function keepKeyboard(): void {
 }
 const onBlur = () => setTimeout(keepKeyboard)
 
+/**
+ * `text-wrap: balance` gives a long caption two even lines, but the card keeps its max-width and shows an
+ * empty band right of the text. The card takes the width of its widest line instead, which keeps the same lines.
+ */
+function fitCaption(): void {
+  const card = caption.value
+  // A hidden slide has no layout to measure: this runs again when the slide is shown.
+  if (!card || card.offsetWidth === 0) return
+  card.style.width = ''
+  // The slide is scaled to the screen: rectangles come in screen pixels, the width is in slide pixels.
+  const scale = card.getBoundingClientRect().width / card.offsetWidth
+  const widest = card.firstElementChild!.getBoundingClientRect().width / scale
+  // The card's width includes its padding and border (box-sizing: border-box).
+  const { paddingLeft, paddingRight, borderLeftWidth, borderRightWidth } = getComputedStyle(card)
+  const edges = [paddingLeft, paddingRight, borderLeftWidth, borderRightWidth].reduce((sum, side) => sum + parseFloat(side), 0)
+  card.style.width = `${Math.ceil(widest + edges)}px`
+}
+
+// A new caption, the slide coming into view, and the font arriving late all change what the card must fit.
+watch([caption, active], fitCaption, { flush: 'post' })
+
 function stopInteracting(): void {
   interactive.value = false
   frame.value?.blur()
   window.focus()
+  // Whatever the hands left on the map (a flick that glides away, a deep zoom, a selection), the slide goes on from
+  // a fresh copy of this click's view. In Chrome a map left like that could stay blank, even after the next click.
+  if (frame.value && status.value === 'live') {
+    veiled.value = true
+    // A Groma that never announces itself is unveiled by onLoad; one that does lifts the veil itself.
+    control.value = 'unknown'
+    frame.value.src = `${props.origin}/${search.value}`
+  }
 }
 
 watch(search, () => {
   if (status.value !== 'live') return
-  if (control.value === 'message') post()
-  else if (frame.value) {
+  // No frame on the page yet (it renders on the next tick, or the slide is hidden): it will load the current view.
+  if (!frame.value) initialSrc.value = `${props.origin}/${search.value}`
+  else if (control.value === 'message') post()
+  else {
     veiled.value = true
     setTimeout(() => { if (frame.value) frame.value.src = `${props.origin}/${search.value}` }, 220)
   }
@@ -142,20 +176,27 @@ watch(index, async (now, before) => {
 })
 
 watch(active, now => {
+  // A frame that comes back with the slide starts from the view of this click, not the one it first loaded.
+  if (now && status.value === 'live') initialSrc.value = `${props.origin}/${search.value}`
   if (now && status.value !== 'live') probe()
   if (!now) {
     interactive.value = false
     clearTimeout(probeTimer)
+    // The frame leaves the page with the slide; the next one loads the view of that moment, veiled until it announces itself.
+    control.value = 'unknown'
+    veiled.value = true
   }
 }, { immediate: true })
 
 onMounted(() => {
   window.addEventListener('message', onMessage)
   window.addEventListener('blur', onBlur)
+  document.fonts.addEventListener('loadingdone', fitCaption)
 })
 onBeforeUnmount(() => {
   window.removeEventListener('message', onMessage)
   window.removeEventListener('blur', onBlur)
+  document.fonts.removeEventListener('loadingdone', fitCaption)
   clearTimeout(readyTimer)
   clearTimeout(probeTimer)
 })
@@ -164,7 +205,8 @@ onBeforeUnmount(() => {
 <template>
   <div class="groma-frame" :style="{ '--scale': scale }">
     <template v-if="status === 'live' && active">
-      <iframe ref="frame" :src="initialSrc" title="Groma.md live map" @load="onLoad" />
+      <!-- clipboard-write lets the map's own Copy buttons work while you use it by hand. -->
+      <iframe ref="frame" :src="initialSrc" title="Groma.md live map" allow="clipboard-write" @load="onLoad" />
       <div v-if="!interactive" class="groma-shield" @dblclick="interactive = true" />
       <button v-else class="groma-exit" @click="stopInteracting">INTERACTIVE · CLICK TO RETURN</button>
       <div class="groma-veil" :class="{ on: veiled }" />
@@ -184,7 +226,8 @@ onBeforeUnmount(() => {
       </div>
     </template>
     <transition name="groma-caption" mode="out-in">
-      <p v-if="captions[index]" :key="captions[index]" class="groma-caption">{{ captions[index] }}</p>
+      <!-- The span is there to measure the text: see fitCaption. -->
+      <p v-if="captions[index]" :key="captions[index]" ref="caption" class="groma-caption"><span>{{ captions[index] }}</span></p>
     </transition>
   </div>
 </template>
@@ -277,16 +320,20 @@ onBeforeUnmount(() => {
   bottom: 34px;
   left: 40px;
   z-index: 5;
+  /* fitCaption sets the width of a two-line caption and counts on border-box. */
+  box-sizing: border-box;
+  max-width: 620px;
   margin: 0;
   padding: 11px 18px 12px;
   border: 1.5px solid var(--ink);
   background: var(--paper);
-  box-shadow: 7px 7px 0 -3px var(--groma-green, #1d9e75);
+  box-shadow: 7px 7px 0 -3px var(--groma-accent, var(--groma-green, #1d9e75));
   color: var(--ink);
   font-size: 25px;
   font-weight: 680;
   letter-spacing: -0.03em;
   line-height: 1.2;
+  text-wrap: balance;
 }
 
 .groma-caption-enter-active,

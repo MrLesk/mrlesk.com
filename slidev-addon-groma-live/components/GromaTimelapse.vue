@@ -86,7 +86,7 @@ onBeforeUnmount(() => clearInterval(poll))
   padding: 11px 16px 12px;
   border: 1.5px solid var(--groma-ink, #171b1a);
   background: var(--groma-paper, #f7f6f2);
-  box-shadow: 7px 7px 0 -3px var(--groma-green, #1d9e75);
+  box-shadow: 7px 7px 0 -3px var(--groma-accent, var(--groma-green, #1d9e75));
   color: var(--groma-ink, #171b1a);
 }
 
@@ -110,7 +110,7 @@ onBeforeUnmount(() => clearInterval(poll))
 .groma-timelapse-bar i {
   display: block;
   height: 100%;
-  background: var(--groma-green, #1d9e75);
+  background: var(--groma-accent, var(--groma-green, #1d9e75));
   transform-origin: 0 50%;
   transition: transform 0.3s linear;
 }

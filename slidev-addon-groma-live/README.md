@@ -57,17 +57,48 @@ edits, and a commit by the agent when its task is done. The clone stays a git re
 can compare its HEAD (the service before the agents) with what they left. Going back resets the
 clone and replays up to the phase at once.
 
+A fifth kind is live: real Codex agents, one `codex exec` session per Backlog.md task, on a fresh clone.
+
+```yaml
+  - name: agents
+    port: 4805
+    live:
+      template: ~/projects/groma3            # cloned at `branch` into ~/.groma-live/<name>/work
+      branch: in-the-loop-baseline
+      prompt: ./agent-prompt.md              # each agent's first prompt; {agent} and {task} are filled in
+      go: Implement your plan now. Do not ask any questions.   # sent to the same sessions on the slide's click
+      codexHome: ~/.config/devoxx-keynote/codex                # the demo's Codex config and key, apart from yours
+      setup:                                  # commands run in the clone before `groma web` serves it
+        - bun install --frozen-lockfile
+      rehearsal:                              # Codex config overrides used when GROMA_LIVE_REHEARSAL is set
+        model: gpt-6-luna
+        model_reasoning_effort: max
+        service_tier: fast
+      agents:
+        - task: TASK-561
+          name: codex                         # the assignee; Groma draws the vendor mark it knows for the name
+          label: Codex 1
+```
+
+The agents assign their task to themselves, read it and plan as soon as `bun run dev` starts, changing
+nothing. The `<GromaAgents>` slide's click (phase 1) sends `go` to every session; RESET stops them, puts the
+clone back on the baseline commit and plans again. With `review`, `{base}` in a view stands for that baseline
+commit, so `from={base}` compares it with the working tree, finished or not. Closing Slidev stops the agents.
+
 ## Components
 
 `<GromaFrame origin="http://localhost:4801" :views="[...]" :captions="[...]" :stills="[...]" />`
 embeds one map. Each click posts the next Groma query string (`component=web-server&tab=how`) and
 the camera flies there. Without a running Groma it shows `stills` (paths inside the deck's `public`).
-A shield keeps keyboard focus with Slidev; double-click the map to use it by hand.
+A shield keeps keyboard focus with Slidev; double-click the map to use it by hand. The button at the top
+hands it back and reloads the map on the current click's view, so a flick or a deep zoom never stays on
+screen (in Chrome such a map could stay blank). The map may write to the clipboard, so its Copy buttons work.
 `inset` (22 slide pixels by default) keeps Groma's header and panels inside a frame the deck draws
 near its edge, while the map still fills the slide. Pass `:inset="0"` for a deck without a frame.
 For a Groma that opens on its setup, `:setup="['', 'initialize', 'scanners']"` with the instance's `name`
 makes those clicks press Continue, then Install & scan, with the values the screen shows; the dev
-server sends the form, so the presenter's preview never presses anything.
+server sends the form, so the presenter's preview never presses anything. 'scanners' presses Groma
+0.7's Plugins step (form `/plugins`, which also offers Backlog.md) or the older Scanners step.
 
 `<GromaRun name="keycloak-devoxx" />` is a terminal that runs that instance's `steps` for real, one per
 click, in the throwaway folder `~/.groma-live/<name>` (wiped at the first step). After the last step
@@ -78,7 +109,8 @@ the history on the first click (or by itself with `autoplay`), prints each commi
 rewinds when the slide is opened again.
 
 `<GromaAgents name="agents" origin="http://localhost:4805" :phases="[0, 1, 2, 3, 3, 4]" :views="[...]" />`
-drives a scenario: click n shows phase `phases[n]` with view `views[n]`, and a panel over Groma's
+drives a scenario: click n shows phase `phases[n]` with view `views[n]` (and the agents panel unless `panels[n]` is
+`false`, for a view that frames the pins first), and a panel over Groma's
 hierarchy shows what each agent is doing, in the colour of its pins. Entering the slide on its first
 click resets the scenario. A script with a `HISTORY` (see demo/agents.mjs) starts from the source's
 first commit, an empty folder, and its history phase checks out every later commit in turn, so the map
@@ -90,6 +122,10 @@ finished, for a comparison such as `from=<before commit>`, which Groma 0.6.0 ope
 itself moves it: the audience window or the presenter's main view. Slidev also counts the
 presenter's next-click preview and the overview as the active slide; those only watch. A preview
 that asked for the next click too would fight the slide, and the scenario would reset on every click.
+
+The cards drawn over the map (captions, the run's cost, the timelapse) take the deck's colours:
+`--groma-paper`, `--groma-ink`, and `--groma-accent` for the offset shadow, which falls back to `--groma-green`.
+A deck can set `--groma-accent` on one slide's layout to give that slide's cards another colour.
 
 ## The demo history
 

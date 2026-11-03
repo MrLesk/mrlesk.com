@@ -7,13 +7,12 @@
 # Nothing in it is drawn by hand: tasks come from the real `backlog` CLI, components from
 # the real TypeScript scanner, names and relationships from the real `groma` CLI.
 #
-#   ./build-orders.sh            # needs `groma`, `backlog` and the Groma repo for its scanner
+#   ./build-orders.sh            # needs the released `groma` and `backlog` CLIs
 #
-# GROMA_REPO points at the Groma checkout whose TypeScript scanner is used (default ~/projects/groma3).
+# Uses the published scanner so the bundle can be rebuilt without a Groma source checkout.
 set -euo pipefail
 
 HERE="$(cd "$(dirname "$0")" && pwd)"
-GROMA_REPO="${GROMA_REPO:-$HOME/projects/groma3}"
 WORK="$(mktemp -d)/orders"
 LOG="$(mktemp)"
 mkdir -p "$WORK" && cd "$WORK"
@@ -79,9 +78,7 @@ cat > tsconfig.json <<'JSON'
 { "compilerOptions": { "target": "ES2022", "module": "ESNext", "moduleResolution": "Bundler", "strict": true, "allowImportingTsExtensions": true, "noEmit": true }, "include": ["src"] }
 JSON
 quiet groma init "Order service" --directory groma
-cat > groma/scanners.json <<JSON
-{ "scanners": [ { "id": "typescript", "source": "$GROMA_REPO/plugins/scanners/typescript" } ] }
-JSON
+quiet groma scanner add @groma/scanner-typescript@0.2.1
 backlog init "Order service" --defaults --check-branches false --include-remote false --auto-open-browser false >>"$LOG" 2>&1 </dev/null || true
 rm -f AGENTS.md CLAUDE.md
 mkdir -p src/api src/catalog src/cart src/inventory src/payments src/orders src/checkout src/notifications

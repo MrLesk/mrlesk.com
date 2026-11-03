@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onBeforeUnmount, ref, watch } from 'vue'
+import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { useIsSlideActive, useSlideContext } from '@slidev/client'
 
 // Agents working Backlog.md tasks on a live Groma map, driven by the slide's clicks.
@@ -11,7 +11,13 @@ import { useIsSlideActive, useSlideContext } from '@slidev/client'
 // changed is ready, and shows no panel.
 // A scenario with a history starts from its first commit, an empty folder. Until the history phase is
 // over, the panel shows the commits going by instead of the agents.
+// A `live` instance runs real agents instead (see setup/live-agents.ts): they plan as soon as the dev
+// server starts, phase 1 sets them going, each card shows what its agent is doing right now, and RESET
+// puts the copy back on its baseline and has them plan again.
 // Entering the slide on its first click resets the service, so every rehearsal starts the same.
+// With `cost`, a live run's slide also shows what the run has cost so far, planning included, priced at list
+// prices from the sessions Codex saved (see setup/run-cost.ts): on the agents slide it counts up while they work,
+// on a review it says "so far" until every agent has finished.
 const props = withDefaults(defineProps<{
   name: string
   origin: string
@@ -21,16 +27,25 @@ const props = withDefaults(defineProps<{
   /** The scenario phase each click shows; 0 is the service before the agents start. */
   phases?: number[]
   review?: boolean
+  /** Groma's theme: `light` (default), `dark` or `blueprint`; the panel follows it. */
+  theme?: string
   /** Groma's pin colour for each assignee, so a card matches its agent's pins. */
   colours?: Record<string, string>
   scale?: number
+  /** Live runs only: show what the run has cost so far, bottom right. */
+  cost?: boolean
+  /** Whether the agents panel shows at each click, like `views`; shown on every click when left out. */
+  panels?: boolean[]
 }>(), {
   captions: () => [],
   stills: () => [],
   phases: () => [],
   review: false,
+  theme: 'light',
   colours: () => ({ '@codex': '#2F9ED6', '@claude': '#8B5CF6', '@antigravity': '#E8A317' }),
   scale: 0.6,
+  cost: false,
+  panels: () => [],
 })
 
 interface Agent {
@@ -38,10 +53,16 @@ interface Agent {
   name: string
   task: string
   title: string
-  status: 'idle' | 'working' | 'done'
+  status: 'planning' | 'idle' | 'working' | 'done' | 'failed'
   file?: string
   checked: number
   criteria: number
+  /** Live agents only: what the agent is doing, whether it waits on the API, and for how long it ran. */
+  action?: string
+  waiting?: boolean
+  seconds?: number
+  /** Live agents only: the colour of the agent's pin on the map. */
+  colour?: string
 }
 
 const { $clicks, $renderContext } = useSlideContext()
@@ -55,9 +76,19 @@ const dev = import.meta.env.DEV
 const endpoint = computed(() => `${import.meta.env.BASE_URL}__groma-live/${props.name}`)
 const agents = ref<Agent[]>([])
 const history = ref<{ phase: number, commit: number, total: number, recent: string[] }>()
+const live = ref(false)
+const base = ref('')
+const runCost = ref<{ usd: number, tokens: number, model?: string, tier?: string }>()
+const runPhase = ref(0)
+const completedTasks = ref(0)
+const totalTasks = ref(0)
+// A view may name the baseline commit as {base}; it is filled in once the instance reports it.
+const frameViews = computed(() => props.views.map(view => view.replaceAll('{base}', base.value)))
 let poll: ReturnType<typeof setInterval> | undefined
 
 const phase = computed(() => props.review ? 'end' : String(props.phases[Math.min($clicks.value, props.phases.length - 1)] ?? 0))
+// A click can leave the map to itself, for a view that frames the pins before the agents start.
+const panelShown = computed(() => props.panels[Math.min($clicks.value, props.panels.length - 1)] ?? true)
 const inHistory = computed(() => !props.review && history.value !== undefined && Number(phase.value) <= history.value.phase)
 
 async function sync(method: 'GET' | 'POST', query = ''): Promise<void> {
@@ -65,28 +96,66 @@ async function sync(method: 'GET' | 'POST', query = ''): Promise<void> {
     const state = await (await fetch(`${endpoint.value}${query}`, { method })).json()
     if (Array.isArray(state.agents)) agents.value = state.agents
     history.value = state.history
+    live.value = state.live === true
+    if (typeof state.base === 'string') base.value = state.base
+    if (state.cost !== undefined) runCost.value = state.cost
+    if (typeof state.phase === 'number') runPhase.value = state.phase
+    if (typeof state.completed === 'number') completedTasks.value = state.completed
+    if (typeof state.totalTasks === 'number') totalTasks.value = state.totalTasks
   } catch {
     // Without the dev server there are no agents; the stills stay on screen.
   }
 }
 
-watch([drives, phase], ([driving, to]) => {
-  if (dev && driving) void sync('POST', `?to=${to}`)
+// A click on the shown slide moves the agents to its phase. Showing the slide (opening it, coming back to it on a
+// later click, a reload, a hot update) moves a scenario there too, but never real agents: for a live run the go is
+// only ever the presenter's click, so arriving on the go click just shows the agents as they are.
+watch([drives, phase], async ([driving, to], before) => {
+  if (!dev || !driving) return
+  const [wasDriving, from] = (before ?? []) as [boolean | undefined, string | undefined]
+  const clicked = wasDriving === true && from !== undefined && from !== to
+  if (!clicked) {
+    await sync('GET')
+    if (live.value) return
+  }
+  void sync('POST', `?to=${to}`)
 }, { immediate: true })
+
+// A view that names {base} needs the baseline commit before Groma can compare with it: asking as soon as the
+// slide is mounted (Slidev mounts the next slides ahead) means the map's first load already has it.
+onMounted(() => {
+  if (dev && props.views.some(view => view.includes('{base}'))) void sync('GET')
+})
 
 watch(active, shown => {
   clearInterval(poll)
   if (dev && shown && !props.review) poll = setInterval(() => sync('GET'), 300)
+  else if (dev && shown && props.cost) poll = setInterval(() => sync('GET'), 2000)
 }, { immediate: true })
 
 onBeforeUnmount(() => clearInterval(poll))
 
 const short = (file?: string) => file?.split('/').slice(-2).join('/')
+const clock = (seconds = 0) => `${Math.floor(seconds / 60)}:${String(seconds % 60).padStart(2, '0')}`
+const reset = () => sync('POST', '?reset')
+const dollars = (usd: number) => `$${usd.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
+const millions = (tokens: number) => `${(tokens / 1e6).toFixed(1)}M`
+const modelName = (model?: string) => model?.replace(/^gpt-([\d.]+)-(\w+)$/, (_, version: string, name: string) => `GPT-${version} ${name[0]!.toUpperCase()}${name.slice(1)}`) ?? 'Codex'
+const tierName = (tier?: string) => ({ ultrafast: 'Ultrafast', priority: 'Fast', fast: 'Fast', flex: 'Flex' } as Record<string, string>)[tier ?? ''] ?? ''
 </script>
 
 <template>
-  <GromaFrame :origin="origin" :views="views" :captions="captions" :stills="stills" :scale="scale" />
-  <div v-if="inHistory && history" class="groma-agents">
+  <GromaFrame :key="origin" :origin="origin" :views="frameViews" :captions="captions" :stills="stills" :scale="scale" :theme="theme" />
+  <!-- On the agents slide the cost appears with the click that starts them; a review always shows it. -->
+  <transition name="groma-cost">
+    <div v-if="cost && live && runCost && runCost.tokens > 0 && (review || Number(phase) >= 1)" class="groma-cost">
+      <span class="groma-cost-label">{{ runPhase === 2 ? 'THIS RUN' : 'THIS RUN, SO FAR' }}</span>
+      <b>≈ {{ dollars(runCost.usd) }}</b>
+      <span class="groma-cost-line">{{ agents.length }} agents · {{ millions(runCost.tokens) }} tokens</span>
+      <span class="groma-cost-line">{{ modelName(runCost.model) }} {{ tierName(runCost.tier) }} · list prices</span>
+    </div>
+  </transition>
+  <div v-if="inHistory && history" class="groma-agents" :class="{ blueprint: theme === 'blueprint', dark: theme === 'dark' }">
     <p class="groma-agents-label">HISTORY</p>
     <p class="groma-history-count"><b>{{ history.commit }}</b> / {{ history.total }} commits</p>
     <div class="groma-history-bar"><i :style="{ transform: `scaleX(${history.commit / history.total})` }" /></div>
@@ -94,25 +163,35 @@ const short = (file?: string) => file?.split('/').slice(-2).join('/')
       <li v-for="(subject, n) in history.recent" :key="history.commit - n" :class="{ latest: n === 0 }">{{ subject }}</li>
     </ol>
   </div>
-  <div v-else-if="!review && agents.length > 0" class="groma-agents">
-    <p class="groma-agents-label">AGENTS</p>
+  <div v-else-if="!review && agents.length > 0" class="groma-agents" :class="{ compact: agents.length > 3, blueprint: theme === 'blueprint', dark: theme === 'dark', 'panel-hidden': !panelShown }">
+    <p class="groma-agents-label">
+      AGENTS<span v-if="live && totalTasks > agents.length"> · {{ completedTasks }}/{{ totalTasks }}</span>
+      <button v-if="dev && live" class="groma-agents-reset" title="Stop the agents and go back to the baseline" @click="reset">RESET</button>
+    </p>
     <div
       v-for="agent in agents"
-      :key="agent.agent"
+      :key="agent.name"
       class="groma-agent"
-      :class="agent.status"
-      :style="{ '--agent': colours[agent.agent] ?? 'var(--ink)' }"
+      :class="[agent.status, { ready: live && agent.status === 'idle' && agent.task !== '' }]"
+      :style="{ '--agent': agent.colour ?? colours[agent.agent] ?? '#9aa0a8' }"
     >
       <header>
         <i />
         <b>{{ agent.name }}</b>
-        <span v-if="agent.status !== 'idle'" class="task">{{ agent.task }}</span>
+        <span v-if="live && agent.status !== 'idle' && agent.status !== 'planning' && agent.task !== ''" class="clock">{{ clock(agent.seconds) }}</span>
+        <span v-if="(live || agent.status !== 'idle') && agent.task !== ''" class="task">{{ agent.task }}</span>
       </header>
-      <p v-if="agent.status === 'idle'" class="waiting">waiting for a task</p>
+      <!-- A live agent has its task before it starts: the card shows it, ready. -->
+      <p v-if="(agent.status === 'idle' && !live) || agent.task === ''" class="waiting">waiting for a ready task</p>
       <template v-else>
         <p class="title">{{ agent.title }}</p>
         <transition name="groma-agent-line" mode="out-in">
-          <p v-if="agent.status === 'done'" key="done" class="line done">✓ done, committed</p>
+          <p v-if="agent.status === 'planning'" key="planning" class="line">› planning</p>
+          <p v-else-if="agent.status === 'idle'" key="ready" class="line">› ready</p>
+          <p v-else-if="agent.status === 'done'" key="done" class="line done">{{ live ? '✓ done' : '✓ done, committed' }}</p>
+          <p v-else-if="agent.status === 'failed'" key="failed" class="line failed">× {{ agent.action }}</p>
+          <p v-else-if="agent.waiting" key="waiting" class="line">… waiting for the API</p>
+          <p v-else-if="live && agent.action" :key="agent.action" class="line">› {{ agent.action }}</p>
           <p v-else-if="agent.file" :key="agent.file" class="line">› {{ short(agent.file) }}</p>
           <p v-else key="start" class="line">› reading the task</p>
         </transition>
@@ -125,8 +204,67 @@ const short = (file?: string) => file?.split('/').slice(-2).join('/')
 </template>
 
 <style>
+/* The run's cost: bottom right, level with the caption card bottom left, and in its style. Groma's details
+   panel only opens there when something is selected, and its live work island sits bottom centre. */
+.groma-cost {
+  position: absolute;
+  right: 40px;
+  bottom: 34px;
+  z-index: 5;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 1px;
+  padding: 8px 13px 9px;
+  border: 1.5px solid var(--groma-ink, #171b1a);
+  background: var(--groma-paper, #f7f6f2);
+  box-shadow: 7px 7px 0 -3px var(--groma-accent, var(--groma-green, #1d9e75));
+  color: var(--groma-ink, #171b1a);
+  text-align: right;
+}
+
+/* Moves like the caption card (GromaFrame's groma-caption): 0.3 s fade and an 8 px rise. The caption swaps
+   out, then in, so the card waits the 0.3 s of the old caption leaving and rises with the new one. */
+.groma-cost-enter-active {
+  transition: opacity 0.3s ease 0.3s, transform 0.3s ease 0.3s;
+}
+
+.groma-cost-leave-active {
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.groma-cost-enter-from,
+.groma-cost-leave-to {
+  opacity: 0;
+  transform: translateY(8px);
+}
+
+.groma-cost b {
+  font-size: 23px;
+  font-weight: 750;
+  letter-spacing: -0.03em;
+  line-height: 1.1;
+}
+
+.groma-cost-label,
+.groma-cost-line {
+  font-family: "Fira Code", ui-monospace, monospace;
+  font-size: 8.5px;
+  letter-spacing: 0.1em;
+}
+
+.groma-cost-label {
+  font-weight: 700;
+  letter-spacing: 0.16em;
+}
+
+.groma-cost-line {
+  opacity: 0.72;
+}
+
 /* Sits exactly over Groma's hierarchy panel at the default scale (0.6) and inset (22): the agents
-   take the place of a panel this beat does not need, and the camera already frames the map beside it. */
+   take the place of a panel this beat does not need, and the camera already frames the map beside it.
+   It grows below that panel when the cards need more room, under the caption, which stays on top. */
 .groma-agents {
   position: absolute;
   z-index: 4;
@@ -134,7 +272,7 @@ const short = (file?: string) => file?.split('/').slice(-2).join('/')
   left: 29px;
   display: flex;
   width: 216px;
-  height: 386px;
+  min-height: 386px;
   box-sizing: border-box;
   flex-direction: column;
   gap: 9px;
@@ -143,6 +281,14 @@ const short = (file?: string) => file?.split('/').slice(-2).join('/')
   border-radius: 6px;
   background: #ffffff;
   font-family: "Fira Code", ui-monospace, monospace;
+  transition: opacity 0.4s ease, transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+/* A click that leaves the map to itself (`panels`): the panel slides out to the left and comes back with the next. */
+.groma-agents.panel-hidden {
+  opacity: 0;
+  pointer-events: none;
+  transform: translateX(-14px);
 }
 
 .groma-agents-label {
@@ -228,6 +374,72 @@ const short = (file?: string) => file?.split('/').slice(-2).join('/')
   color: #1d9e75;
 }
 
+.groma-agent .line.failed {
+  color: #c2463b;
+}
+
+.groma-agent header .clock {
+  margin-left: auto;
+  color: #6f7673;
+  font-size: 8.5px;
+}
+
+.groma-agent header .clock + .task {
+  margin-left: 6px;
+}
+
+.groma-agents-label {
+  display: flex;
+  align-items: center;
+}
+
+.groma-agents-reset {
+  margin-left: auto;
+  padding: 1px 5px;
+  border: 1px solid #dddcd6;
+  border-radius: 3px;
+  background: none;
+  color: #6f7673;
+  font: inherit;
+  cursor: pointer;
+}
+
+/* Up to six agents fit when each card keeps to its name, task, current line and criteria. */
+.groma-agents.compact {
+  gap: 4px;
+  padding: 10px 12px 11px;
+}
+
+.groma-agents.compact .groma-agent header b {
+  font-size: 11.5px;
+}
+
+.groma-agents.compact .groma-agent {
+  gap: 1px;
+  padding: 5px 9px 6px;
+}
+
+.groma-agents.compact .groma-agent .title {
+  overflow: hidden;
+  font-size: 10px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* With up to six agents, the current line and the criteria share a row, so six cards fit the panel. */
+.groma-agents.compact .groma-agent {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  column-gap: 8px;
+}
+
+.groma-agents.compact .groma-agent header,
+.groma-agents.compact .groma-agent .title,
+.groma-agents.compact .groma-agent .waiting {
+  grid-column: 1 / -1;
+}
+
 .groma-agent .criteria {
   display: flex;
   gap: 3px;
@@ -300,6 +512,133 @@ const short = (file?: string) => file?.split('/').slice(-2).join('/')
 
 @keyframes groma-history-in {
   from { opacity: 0; transform: translateY(-3px); }
+}
+
+/* Over Groma's blueprint theme, the panel takes its colours (src/viewers/web/atoms/theme.ts in Groma). */
+.groma-agents.blueprint {
+  border-color: #164764;
+  background: #07152b;
+}
+
+.groma-agents.blueprint .groma-agents-label,
+.groma-agents.blueprint .groma-agent header .clock,
+.groma-agents.blueprint .groma-agents-reset {
+  color: #79a9bd;
+}
+
+.groma-agents.blueprint .groma-agents-reset {
+  border-color: #164764;
+}
+
+.groma-agents.blueprint .groma-agent {
+  border-color: #164764;
+  border-left-color: var(--agent);
+  background: #0b1e3a;
+}
+
+.groma-agents.blueprint .groma-agent.idle {
+  border-left-color: #2c496c;
+}
+
+.groma-agents.blueprint .groma-agent header b,
+.groma-agents.blueprint .groma-agent .title,
+.groma-agents.blueprint .groma-history-count b,
+.groma-agents.blueprint .groma-history-log li.latest {
+  color: #d8f3ff;
+}
+
+.groma-agents.blueprint .groma-agent .line,
+.groma-agents.blueprint .groma-history-count {
+  color: #79a9bd;
+}
+
+.groma-agents.blueprint .groma-agent .waiting,
+.groma-agents.blueprint .groma-history-log li {
+  color: #527cb0;
+}
+
+.groma-agents.blueprint .groma-agent .line.done {
+  color: #3ddc97;
+}
+
+.groma-agents.blueprint .groma-agent .line.failed {
+  color: #ff8fab;
+}
+
+.groma-agents.blueprint .groma-agent .criteria i,
+.groma-agents.blueprint .groma-history-bar {
+  background: #164764;
+}
+
+.groma-agents.blueprint .groma-agent .criteria i.on {
+  background: var(--agent);
+}
+
+/* Over Groma's dark theme, the panel takes its colours (src/viewers/web/atoms/theme.ts in Groma). */
+.groma-agents.dark {
+  border-color: #2a2e33;
+  background: #111315;
+}
+
+.groma-agents.dark .groma-agents-label,
+.groma-agents.dark .groma-agent header .clock,
+.groma-agents.dark .groma-agents-reset {
+  color: #9aa0a8;
+}
+
+.groma-agents.dark .groma-agents-reset {
+  border-color: #2a2e33;
+}
+
+.groma-agents.dark .groma-agent {
+  border-color: #2a2e33;
+  border-left-color: var(--agent);
+  background: #181b1e;
+}
+
+.groma-agents.dark .groma-agent.idle {
+  border-left-color: #4a5058;
+}
+
+.groma-agents.dark .groma-agent header b,
+.groma-agents.dark .groma-agent .title,
+.groma-agents.dark .groma-history-count b,
+.groma-agents.dark .groma-history-log li.latest {
+  color: #e6e8eb;
+}
+
+.groma-agents.dark .groma-agent .line,
+.groma-agents.dark .groma-history-count {
+  color: #9aa0a8;
+}
+
+.groma-agents.dark .groma-agent .waiting,
+.groma-agents.dark .groma-history-log li {
+  color: #6b717a;
+}
+
+.groma-agents.dark .groma-agent .line.done {
+  color: #3ddc97;
+}
+
+.groma-agents.dark .groma-agent .line.failed {
+  color: #ff7b72;
+}
+
+.groma-agents.dark .groma-agent .criteria i,
+.groma-agents.dark .groma-history-bar {
+  background: #2a2e33;
+}
+
+.groma-agents.dark .groma-agent .criteria i.on {
+  background: var(--agent);
+}
+
+/* A live agent that has not started yet already carries its task's colour. */
+.groma-agents .groma-agent.idle.ready,
+.groma-agents.dark .groma-agent.idle.ready,
+.groma-agents.blueprint .groma-agent.idle.ready {
+  border-left-color: var(--agent);
 }
 
 .groma-agent-line-enter-active,

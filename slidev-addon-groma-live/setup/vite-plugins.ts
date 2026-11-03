@@ -1,9 +1,11 @@
-import { type ChildProcess, execFileSync, spawn } from 'node:child_process'
-import { mkdirSync, rmSync, writeFileSync } from 'node:fs'
+import { type ChildProcess, execFile, execFileSync, spawn } from 'node:child_process'
+import { mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
 import { mkdir, rm } from 'node:fs/promises'
 import { homedir } from 'node:os'
 import { dirname, join, resolve } from 'node:path'
 import process from 'node:process'
+import { promisify } from 'node:util'
+import { type LiveAgentConfig, LiveAgents } from './live-agents'
 import { Scenario } from './scenario'
 
 /*
@@ -39,6 +41,20 @@ import { Scenario } from './scenario'
   phase (see demo/agents.mjs). Each slide click asks for a phase, and the steps run for real there:
   `backlog` commands, source edits, the agent's commit. The clone's HEAD stays the "before" commit,
   so Groma can compare it with what the agents left.
+
+  An instance with `live` is driven by <GromaAgents name="..."> too, but its agents are real: its
+  `template` repository (at `branch`) is cloned into ~/.groma-live/<name>/work, Groma serves that
+  clone, and one `codex exec` per entry in `agents` starts right away with the `prompt` file (its
+  {task} and {agent} filled in): read the task and plan, change nothing yet. Asking for phase 1
+  resumes those sessions with the `go` text, all at once. CODEX_HOME is set to `codexHome`, so the
+  demo's model and key stay apart from your own Codex setup (see setup/live-agents.ts). With the
+  GROMA_LIVE_REHEARSAL environment variable set, the instance's `rehearsal` settings (Codex config keys,
+  such as `model: gpt-6-luna`) override that setup for every run, for cheaper rehearsals.
+
+  An instance with `snapshot` is a copy that nothing changes: its `template` repository (at `branch`) is
+  cloned into ~/.groma-live/<name>/work, the `patch` file is applied to the working tree (Backlog task files
+  left out), and Groma serves that folder. It backs up a live instance: the same baseline with the result
+  of a recorded run.
 */
 
 interface InstanceConfig {
@@ -48,6 +64,8 @@ interface InstanceConfig {
   steps?: string[]
   replay?: { source: string, interval?: number }
   scenario?: { source: string, script: string, interval?: number }
+  live?: { template: string, branch?: string, prompt: string, go?: string, codexHome: string, rehearsal?: Record<string, string>, setup?: string[], agents: LiveAgentConfig[] }
+  snapshot?: { template: string, branch?: string, patch: string }
 }
 
 interface Replay {
@@ -74,6 +92,8 @@ interface State {
   runs: Map<string, Run>
   replays: Map<string, Replay>
   scenarios: Map<string, Scenario>
+  lives: Map<string, LiveAgents>
+  snapshots: Set<string>
   cleanup: boolean
 }
 
@@ -82,6 +102,8 @@ interface State {
 const state: State = ((globalThis as any).__gromaLive ??= { servers: new Map(), runs: new Map(), replays: new Map(), cleanup: false })
 state.replays ??= new Map()
 state.scenarios ??= new Map()
+state.lives ??= new Map()
+state.snapshots ??= new Set()
 
 const sandbox = (name: string) => join(homedir(), '.groma-live', name.replace(/[^a-z0-9-]/gi, '-'))
 const expand = (path: string) => path.startsWith('~') ? join(homedir(), path.slice(1)) : path
@@ -115,6 +137,7 @@ async function serve(instance: InstanceConfig, cwd: string): Promise<void> {
 function stopAll(): void {
   for (const child of state.servers.values()) child.kill()
   state.servers.clear()
+  for (const live of state.lives.values()) live.stop()
 }
 
 function runOf(name: string): Run {
@@ -130,12 +153,14 @@ function runStep(instance: InstanceConfig, run: Run, index: number): Promise<voi
   return new Promise(resolve => {
     const command = instance.steps![index]!
     run.lines.push(`$ ${command}`)
-    const child = spawn('sh', ['-c', command], { cwd: sandbox(instance.name), stdio: ['ignore', 'pipe', 'pipe'] })
+    const cwd = instance.cwd !== undefined ? expand(instance.cwd) : sandbox(instance.name)
+    const child = spawn('sh', ['-c', command], { cwd, stdio: ['ignore', 'pipe', 'pipe'] })
     // Progress output rewrites its own line ("Updating files: 42%"), so it replaces the last line
     // instead of filling the slide with a hundred percentages.
     const progress = (line: string | undefined) => line?.match(/^([A-Za-z ]+):\s+\d+%/)?.[1]
     const collect = (data: unknown) => {
-      for (const line of String(data).split(/[\r\n]+/).map(text => text.trimEnd()).filter(text => text !== '')) {
+      const clean = String(data).replace(/\x1B\[[0-9;]*[A-Za-z]/g, '')
+      for (const line of clean.split(/[\r\n]+/).map(text => text.trimEnd()).filter(text => text !== '')) {
         if (progress(line) !== undefined && progress(run.lines.at(-1)) === progress(line)) run.lines[run.lines.length - 1] = line
         else run.lines.push(line)
       }
@@ -159,14 +184,16 @@ function advance(instance: InstanceConfig, to: number): void {
     const index = ++run.started
     run.queue = run.queue.then(async () => {
       if (run.failed) return
-      if (index === 0) {
+      if (index === 0 && instance.cwd === undefined) {
         await rm(sandbox(instance.name), { recursive: true, force: true })
         await mkdir(sandbox(instance.name), { recursive: true })
       }
       await runStep(instance, run, index)
       if (!run.failed && index === instance.steps!.length - 1) {
-        run.lines.push(`$ groma web --port ${instance.port}`)
-        await serve(instance, sandbox(instance.name))
+        if (instance.port) {
+          run.lines.push(`$ groma web --port ${instance.port}`)
+          await serve(instance, instance.cwd !== undefined ? expand(instance.cwd) : sandbox(instance.name))
+        }
         run.serving = true
       }
     })
@@ -250,7 +277,15 @@ async function prepareScenario(instance: InstanceConfig, deckRoot: string): Prom
   await serve(instance, scenario.work)
 }
 
-const SETUP_FORMS = ['initialize', 'scanners']
+/**
+ * The setup steps a slide can press, each with the form actions Groma has used for it, newest first.
+ * Groma 0.7 renamed the scanner step's form from /scanners to /plugins when that screen started to offer
+ * Backlog.md too; slides keep saying 'scanners'.
+ */
+const SETUP_FORMS = new Map<string, readonly string[]>([
+  ['initialize', ['initialize']],
+  ['scanners', ['plugins', 'scanners']],
+])
 
 function unescaped(text: string): string {
   return text.replace(/&quot;/g, '"').replace(/&#39;/g, "'").replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&amp;/g, '&')
@@ -258,28 +293,106 @@ function unescaped(text: string): string {
 
 /**
  * Presses the button of a Groma setup screen, as a click on it would: reads the form Groma shows on
- * `port` and, if it is `form` ('initialize' for Continue, 'scanners' for Install & scan), sends it with
- * the values the screen shows. Any other screen is left alone, so a second window asking for the same
+ * `port` and, if it belongs to `step` ('initialize' for Continue, 'scanners' for Install & scan), sends it
+ * with the values the screen shows. Any other screen is left alone, so a second window asking for the same
  * press does nothing. Groma answers that request only when the step is done, and the scan can take a
  * while; the setup page shows that progress itself, so this returns once the press is on its way.
  */
-export async function pressSetup(port: number, form: string): Promise<boolean> {
-  if (!SETUP_FORMS.includes(form)) return false
+export async function pressSetup(port: number, step: string): Promise<boolean> {
+  const actions = SETUP_FORMS.get(step)
+  if (actions === undefined) return false
   const origin = `http://localhost:${port}`
   const page = await (await fetch(`${origin}/`, { signal: AbortSignal.timeout(3000) })).text()
-  const shown = page.match(new RegExp(`<form[^>]*action="/${form}"[^>]*>([\\s\\S]*?)</form>`))?.[1]
+  const action = actions.find(name => page.includes(`action="/${name}"`))
+  if (action === undefined) return false
+  const shown = page.match(new RegExp(`<form[^>]*action="/${action}"[^>]*>([\\s\\S]*?)</form>`))?.[1]
   if (shown === undefined) return false
   const fields = new URLSearchParams()
   for (const [tag] of shown.matchAll(/<input\b[^>]*>/g)) {
     const name = tag.match(/\bname="([^"]*)"/)?.[1]
     const type = tag.match(/\btype="([^"]*)"/)?.[1] ?? 'text'
-    if (name === undefined || type === 'search') continue
+    // A browser sends neither search boxes, disabled fields, nor unchecked boxes.
+    if (name === undefined || type === 'search' || /\sdisabled\b/.test(tag)) continue
     if ((type === 'radio' || type === 'checkbox') && !/\schecked\b/.test(tag)) continue
     fields.append(name, unescaped(tag.match(/\bvalue="([^"]*)"/)?.[1] ?? ''))
   }
-  void fetch(`${origin}/${form}`, { method: 'POST', body: fields }).catch(() => {})
+  void fetch(`${origin}/${action}`, { method: 'POST', body: fields }).catch(() => {})
   await new Promise(resolve => setTimeout(resolve, 400))
   return true
+}
+
+/** The model, effort and speed tier the agents' Codex uses, from CODEX_HOME's config.toml and the overrides. */
+function codexConfig(codexHome: string, overrides: Record<string, string>): { model?: string, effort?: string, tier?: string } {
+  let toml = ''
+  try {
+    toml = readFileSync(join(codexHome, 'config.toml'), 'utf8')
+  } catch {}
+  const value = (key: string) => overrides[key] ?? toml.match(new RegExp(`^${key}\\s*=\\s*"([^"]*)"`, 'm'))?.[1]
+  return { model: value('model'), effort: value('model_reasoning_effort'), tier: value('service_tier') }
+}
+
+/** The same settings, for the console. */
+function codexSettings(codexHome: string, overrides: Record<string, string>): string {
+  const { model, effort, tier } = codexConfig(codexHome, overrides)
+  return `${model ?? 'default model'}, ${effort ?? 'default'} effort, ${tier ?? 'standard'} tier`
+}
+
+async function prepareLive(instance: InstanceConfig, deckRoot: string): Promise<void> {
+  if (state.lives.has(instance.name)) return
+  const root = sandbox(instance.name)
+  rmSync(root, { recursive: true, force: true })
+  mkdirSync(root, { recursive: true })
+  const { template, branch, prompt, go, codexHome, rehearsal, setup, agents } = instance.live!
+  const from = (path: string) => path.startsWith('~') ? expand(path) : resolve(deckRoot, path)
+  const isRehearsal = Boolean(process.env.GROMA_LIVE_REHEARSAL)
+  const { codexHome: rehearsalHome, ...rehearsalOverrides } = rehearsal ?? {}
+  const activeHome = from(isRehearsal ? (rehearsalHome ?? '~/.codex') : codexHome)
+  const overrides = isRehearsal ? rehearsalOverrides : {}
+  const codexArgs = [
+    ...(isRehearsal ? ['-c', 'notify=[]'] : []),
+    ...Object.entries(overrides).flatMap(([key, value]) => ['-c', `${key}=${JSON.stringify(value)}`]),
+  ]
+  // Codex logs a session's speed tier only on a resume, so the cost counter prices the rest at the configured one.
+  const { model, tier } = codexConfig(activeHome, overrides)
+  const live = await LiveAgents.prepare(from(template), branch, join(root, 'work'), agents, from(prompt), go ?? 'Implement your plan now. Do not ask any questions.', activeHome, codexArgs, { model, tier })
+  live.port = instance.port
+  live.log = text => say(instance.name, text)
+  state.lives.set(instance.name, live)
+  // Setup commands run in the clone before it is served or planned on, such as installing the dependencies its
+  // scanners need. A reset keeps their output: it cleans untracked files, not ignored ones.
+  for (const command of setup ?? []) {
+    say(instance.name, `running "${command}" in the clone`)
+    try {
+      await run('sh', ['-c', command], { cwd: live.work, maxBuffer: 64 * 1024 * 1024 })
+    } catch (error) {
+      say(instance.name, `"${command}" failed: ${error instanceof Error ? error.message : String(error)}`)
+    }
+  }
+  live.plan()
+  const mode = isRehearsal ? (rehearsal === undefined ? ' (rehearsal, but no rehearsal settings)' : ' (rehearsal)') : ''
+  say(instance.name, `${agents.length} live agents planning on ${live.base.slice(0, 7)} with ${codexSettings(activeHome, overrides)}${mode}`)
+  await serve(instance, live.work)
+}
+
+const run = promisify(execFile)
+
+/** Clones the template, applies the patch to its working tree and serves it: a copy that nothing changes. */
+async function prepareSnapshot(instance: InstanceConfig, deckRoot: string): Promise<void> {
+  if (state.snapshots.has(instance.name)) return
+  state.snapshots.add(instance.name)
+  const root = sandbox(instance.name)
+  rmSync(root, { recursive: true, force: true })
+  mkdirSync(root, { recursive: true })
+  const { template, branch, patch } = instance.snapshot!
+  const from = (path: string) => path.startsWith('~') ? expand(path) : resolve(deckRoot, path)
+  const work = join(root, 'work')
+  await run('git', ['clone', '--quiet', ...(branch === undefined ? [] : ['--branch', branch]), from(template), work])
+  // Backlog task files stay out: a comparison shows architecture and code, never tasks, and a recorded run's task
+  // edits stop applying as soon as the deck's tasks are rewritten.
+  await run('git', ['-C', work, 'apply', '--binary', '--exclude=backlog/*', from(patch)])
+  const changed = (await run('git', ['-C', work, 'status', '--short'])).stdout.split('\n').filter(Boolean).length
+  say(instance.name, `snapshot ready: ${changed} changed files from ${patch}`)
+  await serve(instance, work)
 }
 
 export default function gromaLive(options: { mode?: string, userRoot: string, data: { headmatter: Record<string, unknown> } }) {
@@ -295,6 +408,12 @@ export default function gromaLive(options: { mode?: string, userRoot: string, da
           if (instance.scenario !== undefined) {
             prepareScenario(instance, options.userRoot).catch(error => say(instance.name, `could not start: ${error instanceof Error ? error.message : String(error)}`))
           }
+          else if (instance.live !== undefined) {
+            prepareLive(instance, options.userRoot).catch(error => say(instance.name, `could not start: ${error instanceof Error ? error.message : String(error)}`))
+          }
+          else if (instance.snapshot !== undefined) {
+            prepareSnapshot(instance, options.userRoot).catch(error => say(instance.name, `could not start: ${error instanceof Error ? error.message : String(error)}`))
+          }
           else if (instance.replay !== undefined) prepareReplay(instance, options.userRoot)
           else if (instance.steps === undefined && instance.cwd !== undefined) void serve(instance, expand(instance.cwd))
         } catch (error) {
@@ -304,7 +423,8 @@ export default function gromaLive(options: { mode?: string, userRoot: string, da
       if (!state.cleanup) {
         state.cleanup = true
         process.once('exit', stopAll)
-        for (const signal of ['SIGINT', 'SIGTERM'] as const) process.once(signal, () => { stopAll(); process.exit(0) })
+        // SIGHUP is the terminal closing: the agents run in their own process groups and would carry on without it.
+        for (const signal of ['SIGINT', 'SIGTERM', 'SIGHUP'] as const) process.once(signal, () => { stopAll(); process.exit(0) })
       }
 
       // GET  /__groma-live/<name>          what the run printed so far
@@ -323,6 +443,16 @@ export default function gromaLive(options: { mode?: string, userRoot: string, da
             () => res.end(JSON.stringify({ submitted: false })),
           )
           return
+        }
+        const live = named === undefined ? undefined : state.lives.get(named.name)
+        if (live !== undefined && named !== undefined) {
+          void serve(named, live.work)
+          // Only a number starts the agents; 'end' (a review slide) and 0 never start or reset anything.
+          const to = Number(url.searchParams.get('to'))
+          const done = () => live.view().then(view => res.end(JSON.stringify(view)), () => res.end('{}'))
+          if (req.method === 'POST' && url.searchParams.has('reset')) return void live.reset().then(done, done)
+          if (req.method === 'POST' && to >= 1) live.start()
+          return void done()
         }
         const scenario = named === undefined ? undefined : state.scenarios.get(named.name)
         if (scenario !== undefined) {

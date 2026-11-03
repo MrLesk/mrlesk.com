@@ -6,7 +6,7 @@ import { useIsSlideActive, useSlideContext } from '@slidev/client'
 // The commands live in the deck's headmatter and run on the Slidev dev server; this component only
 // sends "run up to step n" and prints what came back. The presenter and the audience window may
 // both ask: the server runs every step exactly once.
-const props = defineProps<{ name: string }>()
+const props = defineProps<{ name: string, tall?: boolean }>()
 
 const { $clicks, $renderContext } = useSlideContext()
 const active = useIsSlideActive()
@@ -57,7 +57,7 @@ onBeforeUnmount(() => clearInterval(poll))
 </script>
 
 <template>
-  <div class="groma-run">
+  <div class="groma-run" :class="{ tall }">
     <div class="groma-run-bar">
       <i /><i /><i /><span>{{ name }}</span>
       <button v-if="dev" title="Start this beat over" @click="sync('POST', '?reset')">RESET</button>
@@ -79,6 +79,17 @@ onBeforeUnmount(() => clearInterval(poll))
   color: #e6e4de;
   font-family: "Fira Code", "JetBrains Mono", ui-monospace, monospace;
   text-align: left;
+}
+
+.groma-run.tall .groma-run-body {
+  height: 315px;
+}
+
+.slidev-layout .groma-run.tall .groma-run-body p:not(.command) {
+  color: #d6dad8;
+  font-size: 10.5px;
+  line-height: 1.25;
+  white-space: pre;
 }
 
 .groma-run-bar {
