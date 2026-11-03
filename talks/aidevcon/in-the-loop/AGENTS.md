@@ -38,14 +38,14 @@ Changed from the Devoxx deck:
   so the problems come back straight after "... for a while". The slide after it, What my agents did against What my
   system had become, is retitled "But I had no picture of my system." (`pages/14-no-picture.md`, was "But I was
   still not satisfied."): it follows "I need to know the architecture." and leads into the AI diagrams.
-- The finale (`pages/30-finale.md`, Alex, 2026-11-03) has four clicks between "In the loop." and the twist. It
-  opens on the title. Click 1: the lights go out and Alex's photo of a slide shown at AI DevCon that morning comes
-  up (`public/keynote-factory.webp`: building the car, building the factory; cropped to 16:9 from his phone photo,
-  metadata stripped). Click 2: the camera flies into "Building the factory". Click 3: it goes on into the
-  platform's monitors and the lights come on: an observation deck drawn in the deck's ink on paper, a person
-  from behind at a console, three monitors with real Groma.md stills from this demo, and green robot arms (the
-  agents) on the floor. Click 4: back to the title, and "In" becomes "Over". The zoom windows are `--x`, `--y`
-  and `--zoom` in the "Title callback" section of `style.css`; re-measure them if the photo changes.
+- The finale (`pages/30-finale.md`, Alex, 2026-11-03) opens in the dark on Alex's photo of a slide shown at AI
+  DevCon that morning (`public/keynote-factory.webp`: building the car, building the factory; cropped to 16:9 from
+  his phone photo, metadata stripped). Click 1: the camera flies into "Building the factory". Click 2: it goes on
+  into the platform's monitors and the lights come on: an observation deck drawn in the deck's ink on paper, a
+  person from behind at a console, three monitors with real Groma.md stills from this demo, and green robot arms
+  (the agents) on the floor. Click 3: "In the loop. Not in the dark." Click 4: "In" becomes "Over". The zoom
+  windows are `--x`, `--y` and `--zoom` in the "Title callback" section of `style.css`; re-measure them if the
+  photo changes.
 - The answers slide ("Four questions from the dark", which answered the four questions of "The afterthought was
   devastating.") is gone (Alex, 2026-11-03): the try slide leads straight into the finale.
 - The live demo is new: a greenfield project built by agents in the background, Keycloak as the brownfield

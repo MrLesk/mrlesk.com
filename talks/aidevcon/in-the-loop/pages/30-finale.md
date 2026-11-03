@@ -2,14 +2,14 @@
 layout: default
 # Full bleed for the photo. The room goes dark for this morning's slide and the lights come on at the deck.
 class: full
-mood: 4
-moodSteps: [4, 0, 0, 4, 4]
+mood: 0
+moodSteps: [0, 0, 4, 4, 4]
 clicks: 4
 ---
 
 <script setup>
 // One name per click, so style.css can say what each click shows (see "Title callback").
-const beats = ['title', 'photo', 'factory', 'deck', 'twist']
+const beats = ['photo', 'factory', 'deck', 'title', 'twist']
 </script>
 
 <div class="finale" :data-beat="beats[$clicks]">
@@ -66,9 +66,7 @@ const beats = ['title', 'photo', 'factory', 'deck', 'twist']
 <!--
 ⏱ 30:15
 
-"In the loop. Not in the dark." Let the title sit for a second.
-
-[click] The lights go out and this morning's slide comes up.
+The lights go out and this morning's slide comes up.
 DRAFT, your words: This morning we saw this slide. Building the car: humans at every station.
 Building the factory: agents execute, humans oversee.
 
@@ -80,7 +78,9 @@ on its screens (the GitHub Action's diff, Keycloak, OpenID Connect).
 Closing line: "A dark factory runs with the lights off because nobody is inside.
 I walked back in, and I turned the lights on."
 
-[click] Back to the title, then the plot twist: "In" gets struck out and "Over" takes its place.
+[click] "In the loop. Not in the dark." Let the title sit for a second.
+
+[click] The plot twist: "In" gets struck out and "Over" takes its place.
 DRAFT, your words: You just watched six agents work at once. I'm not in the loop of every one of them anymore.
 I'm over it: the map shows me the whole loop, and I step in where it matters.
 

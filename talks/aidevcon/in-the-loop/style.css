@@ -2484,11 +2484,11 @@ html[data-mood="4"] body, html[data-mood="4"] #page-root, html[data-mood="4"] #s
 
 /* ---------- Title callback ---------- */
 /* pages/30-finale.md names each click with data-beat:
-   title    "In the loop. Not in the dark."
-   photo    the lights go out, Alex's photo of this morning's slide
+   photo    in the dark, Alex's photo of this morning's slide
    factory  the camera flies into "Building the factory"
    deck     it goes on into the platform's monitors and the lights come on: the observation deck, Groma.md on screen
-   twist    back to the title, and "In" becomes "Over" (see "The plot twist")
+   title    "In the loop. Not in the dark."
+   twist    "In" becomes "Over" (see "The plot twist")
    Every change is a transition, so stepping back rewinds. */
 .finale {
   position: relative;
@@ -2514,8 +2514,8 @@ html[data-mood="4"] body, html[data-mood="4"] #page-root, html[data-mood="4"] #s
   transform: scale(0.92);
 }
 
-/* Coming back from the deck, the title waits for the deck to go. */
-.finale[data-beat="twist"] .finale-title {
+/* Coming from the deck, the title waits for the deck to go. */
+.finale[data-beat="title"] .finale-title {
   transition: opacity 0.6s ease 0.4s, transform 0.8s ease 0.4s;
 }
 
@@ -2587,6 +2587,7 @@ html[data-mood="4"] body, html[data-mood="4"] #page-root, html[data-mood="4"] #s
   transition: opacity 0.7s ease 0.75s, transform 1.5s cubic-bezier(0.15, 0.7, 0.3, 1) 0.6s;
 }
 
+.finale[data-beat="title"] .observation-deck,
 .finale[data-beat="twist"] .observation-deck {
   transform: scale(1.08);
 }
@@ -2918,21 +2919,17 @@ html[data-mood="4"] body, html[data-mood="4"] #page-root, html[data-mood="4"] #s
   transition: opacity 0.35s ease 0.5s, transform 0.5s cubic-bezier(0.2, 0.9, 0.25, 1.25) 0.5s;
 }
 
-/* The strike waits until the title is back from the observation deck (see "Title callback"). */
 .finale[data-beat="twist"] .twist-was {
   opacity: 0.45;
-  transition-delay: 1.75s;
 }
 
 .finale[data-beat="twist"] .twist-was::after {
   transform: scaleX(1);
-  transition-delay: 1.2s;
 }
 
 .finale[data-beat="twist"] .twist-now {
   opacity: 1;
   transform: translate(-50%, 0) rotate(-5deg);
-  transition-delay: 1.7s;
 }
 
 /* ---------- Karpathy's line, into the live run ---------- */
