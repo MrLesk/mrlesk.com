@@ -23,10 +23,14 @@ Changed for Vienna (Alex, 2026-11-04):
   hazard tape. It hides the light meter because the tape runs over it.
   Alex says out loud that every demo is live with no backups; the slide only says WARNING and YOLO, so keep it
   that way. Nothing on it flashes faster than once a second.
-- The finale no longer shows a photo of another speaker's slide. It opens on a software factory drawn for this
-  deck (`components/FactoryFloor.vue`, drawn by `lib/factory-scene.ts`): robot arms, the agents, build cars along
-  a line below a raised platform with three monitors. The idea comes from a slide shown at AI DevCon (building the
-  car, building the factory); the drawing is this deck's own. See "The finale" below.
+- The finale no longer shows a photo of another speaker's slide. It tells that slide's whole message (Guy's
+  "Software development is transforming" at AI DevCon: building the car, humans at every station; building the
+  factory, agents execute and humans oversee) with a production line drawn for this deck
+  (`components/FactoryFloor.vue`, drawn by `lib/factory-scene.ts`), then flies into the factory's monitors, where
+  Groma.md is. The drawing is this deck's own, not a copy. See "The finale" below.
+- The greenfield is one part now: its review (`21c`) and the run of the board (`21e`) come straight after the
+  agents' run (`21b`), not after the GitHub Action. On Ultrafast the six agents finished in about 30 seconds at
+  AI DevCon, while Alex was still on the run slide, so coming back to them later made no sense.
 
 Changed at AI DevCon, and still true here:
 
@@ -43,8 +47,8 @@ Changed at AI DevCon, and still true here:
   still not satisfied."): it follows "I need to know the architecture." and leads into the AI diagrams.
 - The answers slide ("Four questions from the dark", which answered the four questions of "The afterthought was
   devastating.") is gone (Alex, 2026-11-03): the try slide leads straight into the finale.
-- The live demo is new: a greenfield project built by agents in the background, Keycloak as the brownfield
-  project, a brownfield diff, the GitHub Action, then back to the greenfield result (see "The live demo" below).
+- The live demo is new: a greenfield project built by agents, Keycloak as the brownfield project, a brownfield
+  diff and the GitHub Action (see "The live demo" below).
   The Codex home for the agents is `~/.config/groma-live/codex`. The Keycloak instance scanned on stage is called
   `keycloak`.
 
@@ -77,24 +81,31 @@ comes back when Groma.md arrives. That is the title, made visible.
 
 ## The finale
 
-`pages/30-finale.md` has four beats, one per click, named in `data-beat` so `style.css` can style each one
-("Title callback" and "The factory" sections):
+`pages/30-finale.md` has five beats, one per click, named in `data-beat` so `style.css` can style each one
+("Title callback" and "The factory" sections). Alex asked for the whole message of the AI DevCon slide, left half
+to right half, then into the monitors (2026-11-04). The dark beat in the middle ties it to this talk's dark factory.
 
-1. `factory`: the room is black. A software factory in faint lines: four robot arms (the agents) work on three
-   cars along a line, pillar lights breathe, and nobody stands on the platform; its monitors are off.
-2. `deck`: the camera flies up to the platform and the lights come on (mood 4): ink on paper, the arms turn
+1. `car`: grey light (mood 2), titled "Factories before." (Alex). Building the car: a production line with three
+   cars and a person at every station. Its framing leaves the top of the slide free for the title.
+2. `factory`: the lights go out (mood 0), titled "Factories after." Building the factory: the people leave, a
+   robot arm (an agent) grows in at each station, and a platform with three monitors rises behind the line.
+   Nobody is on it and its monitors are off: the dark factory.
+3. `deck`: the camera flies up to the platform and the lights come on (mood 4): ink on paper, the arms turn
    Groma.md green, a person stands at the console, and the three monitors switch on with Groma.md stills from
    `public/demo/` (the GitHub Action's diff, Keycloak, OpenID Connect; `pictures` in `FactoryFloor.vue`).
-3. `title`: "In the loop. Not in the dark."
-4. `twist`: "In" is struck out and "Over" written above it (see "The plot twist" in `style.css`).
+4. `title`: "In the loop. Not in the dark."
+5. `twist`: "In" is struck out and "Over" written above it (see "The plot twist" in `style.css`). It echoes the
+   slide's "humans oversee".
 
-The drawing is code, not a picture. `lib/factory-scene.ts` describes the factory in world units (x towards the
+The drawing is code, not a picture. `lib/factory-scene.ts` describes the line in world units (x towards the
 bottom right of the slide, y towards the bottom left, z up), projects it in 30 degree isometric, fits it to the
-980 x 551 slide and lists the parts back to front. Sizes and places are the constants at its top (`PLATFORM`,
-`MONITOR`, `STAIRS`, `LINE`, `PILLAR`) and the positions in `platform()` and `floor()`. It also works out where
-the camera goes: `focus` is the middle of the monitors and the person, and `zoom` makes them fill 80% of the slide.
-`FactoryFloor.vue` turns the parts into SVG and passes `focus` and `zoom` to the CSS as `--focus-x`, `--focus-y`
-and `--zoom`. The colours for both lights are in "The factory" in `style.css`.
+980 x 551 slide and lists the parts back to front, as two groups: the platform, and the floor in front of it.
+Both scenes share one floor plan: each station holds a worker (shown on the car beat) and an arm (shown from the
+factory beat on). Sizes and places are the constants at its top (`PLATFORM`, `MONITOR`, `STAIRS`, `LINE`, `PILLAR`)
+and the positions in `platform()` and `floor()`. It also works out the three camera framings (`cameras`): the line
+alone for the car, the whole drawing for the factory, the monitors and the person for the deck.
+`FactoryFloor.vue` turns the parts into SVG and passes the framings to the CSS as `--camera-car`,
+`--camera-factory` and `--camera-deck`. The colours for the three lights are in "The factory" in `style.css`.
 
 ## The live demo
 
@@ -105,12 +116,12 @@ under `gromaLive` in the headmatter and stops them with Slidev.
 | Order | Slides | Server |
 | --- | --- | --- |
 | Walk the map | `20`, `20b` | `groma`: Groma.md's own map in `~/projects/groma-aidevcon`, port 4801 |
-| Greenfield, started | `21a`, `21`, `21b` | `agents` (`live`): a clone of `~/projects/task-manager` in `~/.groma-live/agents/work`, port 4805 |
+| Greenfield, built | `21a`, `21`, `21b`, `21c` | `agents` (`live`): a clone of `~/projects/task-manager` in `~/.groma-live/agents/work`, port 4805 |
+| Greenfield, run | `21e` | `task-manager`: runs `task-manager kanban` and `task-manager list` in the agents' clone (no server, port 0) |
 | Brownfield, scanned on stage | `21d`, `22`, `22a`, `22b` | `keycloak`: a throwaway clone of `~/projects/keycloak` in `~/.groma-live/keycloak`, port 4803. `22b`'s clicks press Continue, then Install & scan |
 | Brownfield, curated | `23`, `23b` | `keycloak-curated`: `~/projects/keycloak`, port 4802 |
 | Brownfield diff | `23c` | `keycloak-changed`: `~/projects/keycloak-changed`, port 4804 |
 | GitHub Action | `23d` | none: pictures in `public/demo/action-*.webp` of `MrLesk/groma.md-action` |
-| Greenfield, finished | `21c`, `21e` | `agents` again, then `task-manager`: `21e` runs `task-manager kanban` and `task-manager list` in the agents' clone (no server, port 0) |
 
 **Colours.** Each project has its own colour: the slides from its beat card on carry `class: greenfield`
 (leaf green: `21`, `21b`, `21c`, `21e`) or `class: brownfield` (soil brown: `22`, `22a`, `22b`, `23`, `23b`,
@@ -130,8 +141,9 @@ component through the `groma` CLI: title, description, group, icon, colour and r
 the next To Do task. `anyOrder: true` in the headmatter makes it ignore the dependencies, so all six keep working.
 Tasks can finish before the ones they depend on, so `.groma-curate.mjs` adds each relationship from whichever end
 finishes last (task-manager commit `4e89f11`). The code may not fit together, which can show on `21e`. The agents write only their
-task's file and tick its criteria (`agent-prompt.md`); they run no tests, builds or `groma`. The run continues in the
-background while the Keycloak part is on screen.
+task's file and tick its criteria (`agent-prompt.md`); they run no tests, builds or `groma`. On Ultrafast all six
+finished in about 30 seconds at AI DevCon, while Alex was still on `21b`, so the greenfield is one part: the run,
+then straight on to its review (`21c`) and running the board (`21e`), then Keycloak (Alex, 2026-11-04).
 
 **Brownfield diff.** `~/projects/keycloak-changed` is the curated Keycloak map at commit `21cb8e51` plus a feature
 in its working tree, Adaptive step-up risk, implemented and curated by Codex. `23c` compares `21cb8e51` with that

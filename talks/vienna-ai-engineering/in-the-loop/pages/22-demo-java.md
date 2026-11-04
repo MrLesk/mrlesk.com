@@ -18,5 +18,5 @@ routeAlias: demo-java
 
 <!--
 ⏱ Part 2: Brownfield Show (Keycloak raw scan + curated map).
-While the 6 Greenfield agents cook in the background, we clone Keycloak live, scan 8,467 Java files deterministically, and explore the curated C4 architecture.
+We clone Keycloak live, scan 8,467 Java files deterministically, and explore the curated C4 architecture.
 -->

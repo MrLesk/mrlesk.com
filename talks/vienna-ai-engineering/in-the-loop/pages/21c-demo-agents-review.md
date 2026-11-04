@@ -18,6 +18,6 @@ routeAlias: live-review
 />
 
 <!--
-⏱ Part 4: Greenfield End (Architecture map & diff).
-Return to the Greenfield project that was cooking in the background: all 20 tasks are Done, and the map now has 20 components organized across Model & Parser, Storage & Query, Terminal UI, and Board & Commands, complete with C4 relationships.
+⏱ Part 1: Greenfield, the result (architecture map and diff).
+Straight after the run: all 20 tasks are Done, and the map now has 20 components organized across Model & Parser, Storage & Query, Terminal UI, and Board & Commands, complete with C4 relationships.
 -->

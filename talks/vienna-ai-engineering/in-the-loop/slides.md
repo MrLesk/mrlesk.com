@@ -25,7 +25,7 @@ gromaLive:
   - name: keycloak-changed
     cwd: ~/projects/keycloak-changed
     port: 4804
-  # Part 1 & Part 4: Greenfield project (`~/projects/task-manager`, 20 Backlog.md tasks).
+  # Greenfield project (`~/projects/task-manager`, 20 Backlog.md tasks).
   # Six agents plan TASK-1 to TASK-6 when the deck starts and all start on 21b's click. `anyOrder`: as each one
   # finishes it takes the next To Do task, whether that task's dependencies are Done or not (Alex, 2026-11-03).
   - name: agents
@@ -64,7 +64,7 @@ gromaLive:
     port: 4803
     steps:
       - git clone ~/projects/keycloak .
-  # Part 4 finale: runs `task-manager kanban` inside the live Greenfield clone built by the agents.
+  # Greenfield finale: runs `task-manager kanban` inside the live Greenfield clone built by the agents.
   - name: task-manager
     port: 0
     cwd: ~/.groma-live/agents/work
@@ -213,6 +213,14 @@ src: ./pages/21b-demo-agents-live.md
 ---
 
 ---
+src: ./pages/21c-demo-agents-review.md
+---
+
+---
+src: ./pages/21e-demo-kanban-run.md
+---
+
+---
 src: ./pages/21d-scans.md
 ---
 
@@ -242,14 +250,6 @@ src: ./pages/23c-demo-brownfield-diff.md
 
 ---
 src: ./pages/23d-github-action.md
----
-
----
-src: ./pages/21c-demo-agents-review.md
----
-
----
-src: ./pages/21e-demo-kanban-run.md
 ---
 
 ---

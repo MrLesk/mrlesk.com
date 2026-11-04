@@ -1,12 +1,14 @@
 /**
- * The finale's software factory as an isometric line drawing (pages/30-finale.md draws it with
- * components/FactoryFloor.vue).
+ * The finale's production line as an isometric line drawing (pages/30-finale.md draws it with
+ * components/FactoryFloor.vue). It holds two scenes on one floor plan, and the CSS shows one at a time:
  *
- * Robot arms, the agents, build cars along a line on the factory floor. Behind the line, stairs lead up to a
- * raised platform where a person oversees on three monitors. The scene is a small model in world units: x runs
- * towards the bottom right of the slide, y towards the bottom left, z up. `scene()` projects it onto the
- * 980 x 551 slide, scaled to fit, and lists the parts back to front so later parts cover earlier ones.
- * To move or resize something, change its numbers in the constants below.
+ * - building the car: a person works at every station of the line;
+ * - building the factory: a robot arm, an agent, stands where each person stood, and behind the line stairs lead
+ *   up to a raised platform where a person oversees on three monitors.
+ *
+ * The scene is a small model in world units: x runs towards the bottom right of the slide, y towards the bottom
+ * left, z up. `scene()` projects it onto the 980 x 551 slide, scaled to fit, and lists the parts back to front so
+ * later parts cover earlier ones. To move or resize something, change its numbers in the constants below.
  */
 
 type XY = [number, number]
@@ -22,10 +24,15 @@ export type Part =
   | { kind: 'beacon', at: P2, r: number }
   /** A monitor's picture, drawn into the monitor's plane by an SVG matrix. */
   | { kind: 'screen', cls: string, matrix: string, width: number, height: number }
-  /** The person on the platform, seen from behind: one filled outline. */
-  | { kind: 'person', d: string }
+  /** A person, as one filled outline: a worker at a station, or the one who oversees from the platform. */
+  | { kind: 'person', d: string, role: Role }
+
+/** Who a person is: the CSS shows the workers while the car is built and the overseer once the lights are on. */
+export type Role = 'worker' | 'overseer'
 
 const SLIDE = { width: 980, height: 551, margin: 26 }
+/** The band at the top of the slide that the car's framing leaves free for the title. */
+const TITLE_BAND = 96
 
 /** The raised platform: an octagon `half` units from the centre, with cut corners. */
 const PLATFORM = { half: 2.3, backCut: 1.6, sideCut: 0.8, frontCut: 1.0, height: 1.7 }
@@ -49,18 +56,29 @@ type WorldPart =
   | { kind: 'arm', base: WorldPart[], shoulder: P3, elbow: P3, wrist: P3, tool: P3, swing: 'left' | 'right' }
   | { kind: 'beacon', at: P3 }
   | { kind: 'screen', cls: string, corner: P3, right: P3, down: P3 }
-  | { kind: 'person', at: P3, height: number }
+  | { kind: 'person', at: P3, height: number, role: Role }
 
 interface Model { parts: WorldPart[] }
 
-export function scene(): { parts: Part[], focus: { x: number, y: number, zoom: number } } {
-  const model: Model = { parts: [] }
-  const focusPoints: P3[] = []
-  platform(model, focusPoints)
-  floor(model)
+/** Where the camera stands for a beat: a CSS transform for the drawing, with its origin at the top left. */
+export interface Cameras {
+  /** Building the car: closer, on the line, as the platform is not there yet. */
+  car: string
+  /** Building the factory: the whole drawing. */
+  factory: string
+  /** Up on the platform: the monitors and the person fill most of the slide. */
+  deck: string
+}
+
+export function scene(): { platform: Part[], floor: Part[], cameras: Cameras } {
+  const platformModel: Model = { parts: [] }
+  const floorModel: Model = { parts: [] }
+  const deckPoints: P3[] = []
+  platform(platformModel, deckPoints)
+  floor(floorModel)
 
   // Fit every point onto the slide, then project with that scale and origin.
-  const all = allPoints(model.parts)
+  const all = [...allPoints(platformModel.parts), ...allPoints(floorModel.parts)]
   const xs = all.map(p => raw(p)[0])
   const ys = all.map(p => raw(p)[1])
   const scale = Math.min(
@@ -74,21 +92,37 @@ export function scene(): { parts: Part[], focus: { x: number, y: number, zoom: n
     return [round(offsetX + x * scale), round(offsetY + y * scale)]
   }
 
-  const parts = model.parts.map(part => resolve(part, project, scale))
-  const focus = focusPoints.map(project)
-  const fx = focus.map(p => p[0])
-  const fy = focus.map(p => p[1])
-  // The platform fills 80% of the slide, so the monitors keep clear of the deck's frame.
-  const zoom = Math.min(SLIDE.width * 0.8 / (Math.max(...fx) - Math.min(...fx)), SLIDE.height * 0.8 / (Math.max(...fy) - Math.min(...fy)))
   return {
-    parts,
-    focus: { x: round((Math.max(...fx) + Math.min(...fx)) / 2), y: round((Math.max(...fy) + Math.min(...fy)) / 2), zoom: round(zoom) },
+    platform: platformModel.parts.map(part => resolve(part, project, scale)),
+    floor: floorModel.parts.map(part => resolve(part, project, scale)),
+    cameras: {
+      // Below the slide's title, "Factories before." (see pages/30-finale.md).
+      car: camera(allPoints(floorModel.parts).map(project), 0.92, TITLE_BAND),
+      factory: camera([[0, 0], [SLIDE.width, SLIDE.height]], 1),
+      // The platform fills 80% of the slide, so the monitors keep clear of the deck's frame.
+      deck: camera(deckPoints.map(project), 0.8),
+    },
   }
+}
+
+/**
+ * The transform that centres `points` on the slide and makes them fill `share` of it. With `top`, they fill the
+ * slide below that many pixels instead, leaving the top for a title.
+ */
+function camera(points: P2[], share: number, top = 0): string {
+  const xs = points.map(p => p[0])
+  const ys = points.map(p => p[1])
+  const height = SLIDE.height - top
+  const zoom = Math.min(SLIDE.width * share / (Math.max(...xs) - Math.min(...xs)), height * share / (Math.max(...ys) - Math.min(...ys)))
+  const x = SLIDE.width / 2 - zoom * (Math.max(...xs) + Math.min(...xs)) / 2
+  const y = top + height / 2 - zoom * (Math.max(...ys) + Math.min(...ys)) / 2
+  return `translate(${round(x)}px, ${round(y)}px) scale(${Number(zoom.toFixed(3))})`
 }
 
 // ---------- The platform ----------
 
-function platform(model: Model, focus: P3[]): void {
+/** The raised platform, with `deckPoints` collecting what the camera frames once it is up there. */
+function platform(model: Model, deckPoints: P3[]): void {
   const { half: r, backCut: b, sideCut: s, frontCut: f, height: h } = PLATFORM
   // Clockwise on the slide from the back corner: back, right-back, right, front-right, front, front-left, left, left-back.
   const outline: XY[] = [[-r, -r + b], [-r + b, -r], [r - s, -r], [r, -r + s], [r, r - f], [r - f, r], [-r + s, r], [-r, r - s]]
@@ -100,7 +134,7 @@ function platform(model: Model, focus: P3[]): void {
     { cls: 'main', from: outline[0], to: outline[1] },
     { cls: 'right', from: outline[1], to: outline[2] },
   ]
-  for (const { cls, from, to } of screens) monitor(model, focus, cls, from, to)
+  for (const { cls, from, to } of screens) monitor(model, deckPoints, cls, from, to)
 
   // The console and the person at it, far enough forward that the main monitor shows above their head.
   const desk = rotatedBox([-0.4, -0.4], unit([1, -1]), 2.0, 0.55)
@@ -109,8 +143,8 @@ function platform(model: Model, focus: P3[]): void {
     const at = add([-0.4, -0.4], scaleXY(unit([1, -1]), along))
     model.parts.push({ kind: 'path', cls: 'console-light line', points: [[at[0], at[1], h + 0.86], [at[0] + 0.12, at[1] + 0.12, h + 0.86]], closed: false })
   }
-  model.parts.push({ kind: 'person', at: [0.25, 0.25, h], height: 1.75 })
-  focus.push([0.25, 0.25, h])
+  model.parts.push({ kind: 'person', at: [0.25, 0.25, h], height: 1.75, role: 'overseer' })
+  deckPoints.push([0.25, 0.25, h])
 
   // Railings along the front edges, with gaps where the stairs come up.
   const { start, width } = STAIRS
@@ -125,7 +159,7 @@ function platform(model: Model, focus: P3[]): void {
   stairs(model, 'right')
 }
 
-function monitor(model: Model, focus: P3[], cls: string, from: XY, to: XY): void {
+function monitor(model: Model, deckPoints: P3[], cls: string, from: XY, to: XY): void {
   const { inset, lift, height, border } = MONITOR
   const h = PLATFORM.height
   // Pull the monitor a little in from the corners and towards the middle of the platform.
@@ -142,7 +176,7 @@ function monitor(model: Model, focus: P3[], cls: string, from: XY, to: XY): void
   const ia = add(a, scaleXY(along, border))
   const ib = add(b, scaleXY(along, -border))
   model.parts.push({ kind: 'screen', cls, corner: [ia[0], ia[1], top - border], right: [ib[0], ib[1], top - border], down: [ia[0], ia[1], bottom + border] })
-  focus.push([a[0], a[1], top], [b[0], b[1], top])
+  deckPoints.push([a[0], a[1], top], [b[0], b[1], top])
 }
 
 function stairs(model: Model, side: 'left' | 'right'): void {
@@ -205,7 +239,8 @@ function floor(model: Model): void {
   ]
   for (const { at, dir, z } of cars) things.push({ depth: at[0] + at[1], draw: () => car(model, at, dir, z) })
 
-  // The agents: one arm behind each side car and two beside the front one, each reaching over a car's roof.
+  // The stations: one behind each side car and two beside the front one. Building the car, a person works at each;
+  // building the factory, an arm (an agent) stands there instead, reaching over a car's roof.
   const roof = height + 1.1
   const arms: Array<{ base: XY, target: P3, swing: 'left' | 'right' }> = [
     { base: [start + 4.2, c - w / 2 - 0.8], target: [start + 3.3, c, roof], swing: 'left' },
@@ -213,7 +248,10 @@ function floor(model: Model): void {
     { base: [c - 2.3, c - 0.2], target: [c - 0.25, c + 0.15, turntableHeight + 1.1], swing: 'left' },
     { base: [c - 0.2, c - 2.3], target: [c + 0.15, c - 0.25, turntableHeight + 1.1], swing: 'right' },
   ]
-  for (const { base, target, swing } of arms) things.push({ depth: base[0] + base[1], draw: () => arm(model, base, target, swing) })
+  for (const { base, target, swing } of arms) {
+    things.push({ depth: base[0] + base[1], draw: () => arm(model, base, target, swing) })
+    things.push({ depth: base[0] + base[1], draw: () => model.parts.push({ kind: 'person', at: [base[0], base[1], 0], height: 1.75, role: 'worker' }) })
+  }
 
   // Pillars with lights at both ends of each belt, and a rail between the outer ones.
   const out = w / 2 + 0.4
@@ -368,7 +406,7 @@ function resolve(part: WorldPart, project: (p: P3) => P2, scale: number): Part {
     case 'beacon':
       return { kind: 'beacon', at: project(part.at), r: round(scale * 0.11) }
     case 'person':
-      return { kind: 'person', d: personOutline(project(part.at), scale * part.height) }
+      return { kind: 'person', d: personOutline(project(part.at), scale * part.height), role: part.role }
     case 'screen': {
       // The picture is drawn in a 1600 x 900 box, then mapped onto the monitor's face.
       const width = 1600

@@ -13,7 +13,8 @@ routeAlias: run-kanban
 </div>
 
 <!--
-⏱ Part 4 Finale: Run `task-manager kanban` (and `task-manager list`) in the repository the 6 agents just built!
+⏱ Part 1 finale: Run `task-manager kanban` (and `task-manager list`) in the repository the 6 agents just built,
+then on to Brownfield (Keycloak).
 Click 1: Runs `task-manager kanban` and renders the ANSI Kanban board of the repo's own 20 tasks.
 Click 2: Runs `task-manager list` to show the plain list output.
 -->

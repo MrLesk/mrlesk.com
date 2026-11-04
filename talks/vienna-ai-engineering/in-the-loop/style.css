@@ -2422,11 +2422,12 @@ html[data-mood="4"] body, html[data-mood="4"] #page-root, html[data-mood="4"] #s
 
 /* ---------- Title callback ---------- */
 /* pages/30-finale.md names each click with data-beat:
-   factory  in the dark, a software factory: agents build cars on the floor, nobody is on the platform
+   car      building the car: a person at every station of the line
+   factory  building the factory, in the dark: the agents took the stations, nobody is on the platform
    deck     the camera flies up to the platform and the lights come on: someone at the console, Groma.md on screen
    title    "In the loop. Not in the dark."
    twist    "In" becomes "Over" (see "The plot twist")
-   Every change is a transition, so stepping back rewinds. The factory itself is under "The factory". */
+   Every change is a transition, so stepping back rewinds. The line itself is under "The factory". */
 .finale {
   position: relative;
   height: 100%;
@@ -2444,6 +2445,7 @@ html[data-mood="4"] body, html[data-mood="4"] #page-root, html[data-mood="4"] #s
   transition: opacity 0.5s ease, transform 0.6s ease;
 }
 
+.finale[data-beat="car"] .finale-title,
 .finale[data-beat="factory"] .finale-title,
 .finale[data-beat="deck"] .finale-title {
   opacity: 0;
@@ -2455,25 +2457,60 @@ html[data-mood="4"] body, html[data-mood="4"] #page-root, html[data-mood="4"] #s
   transition: opacity 0.6s ease 0.4s, transform 0.8s ease 0.4s;
 }
 
+/* The title of the two factory beats: "Factories before." on the car, "Factories after." on the dark factory.
+   It sits where every slide's title does and takes the room's text colour, so it follows the light. */
+.finale-label {
+  position: absolute;
+  top: 42px;
+  left: 54px;
+  z-index: 2;
+  color: var(--fg);
+  font-size: 44px;
+  font-weight: 720;
+  line-height: 1.04;
+  letter-spacing: -0.04em;
+  transition: color var(--light-fade) ease;
+}
+
+.finale-label span {
+  position: absolute;
+  white-space: nowrap;
+  opacity: 0;
+  transition: opacity 0.5s ease;
+}
+
+.finale[data-beat="car"] .finale-label .before,
+.finale[data-beat="factory"] .finale-label .after {
+  opacity: 1;
+  transition: opacity 0.6s ease 0.5s;
+}
+
 .finale .groma-mark {
   width: 64px;
   margin-bottom: 26px;
 }
 
 /* ---------- The factory ---------- */
-/* components/FactoryFloor.vue, drawn by lib/factory-scene.ts. In the dark (the factory beat) it is faint lines on
-   black and its monitors are off. From the deck beat on the lights are on: ink on paper, green agents, and the
-   monitors show Groma.md. The component sets --focus-x and --focus-y, the middle of the platform on the slide,
-   and --zoom, how far the camera goes in to fill the slide with it. */
+/* components/FactoryFloor.vue, drawn by lib/factory-scene.ts: one production line, three scenes.
+   car      grey light (mood 2): ink lines on grey, a person at every station, no platform yet
+   factory  black (mood 0): faint lines, an arm where each person stood, the platform up behind the line, empty,
+            its monitors off
+   deck     paper (mood 4) from here on: ink on white, green arms, someone at the console, Groma.md on the monitors
+   The component sets --camera-car, --camera-factory and --camera-deck: the transform of each framing. */
 .factory {
   position: absolute;
   inset: 0;
-  transform-origin: var(--focus-x) var(--focus-y);
+  transform-origin: 0 0;
+  transform: var(--camera-factory);
   transition: transform 1.8s cubic-bezier(0.65, 0, 0.25, 1), opacity 0.5s ease;
 }
 
-.finale:not([data-beat="factory"]) .factory {
-  transform: translate(calc(50% - var(--focus-x)), calc(50% - var(--focus-y))) scale(var(--zoom));
+.finale[data-beat="car"] .factory {
+  transform: var(--camera-car);
+}
+
+.finale:is([data-beat="deck"], [data-beat="title"], [data-beat="twist"]) .factory {
+  transform: var(--camera-deck);
 }
 
 .finale[data-beat="title"] .factory,
@@ -2488,6 +2525,7 @@ html[data-mood="4"] body, html[data-mood="4"] #page-root, html[data-mood="4"] #s
   height: 100%;
 }
 
+/* In the dark. */
 .factory svg path,
 .factory svg circle {
   fill: #000000;
@@ -2573,46 +2611,91 @@ html[data-mood="4"] body, html[data-mood="4"] #page-root, html[data-mood="4"] #s
   fill: var(--groma-ink);
   stroke: none;
   opacity: 0;
+  transition: opacity 0.6s ease;
+}
+
+/* Building the car, in grey light: no colour yet, and a person at every station. */
+.finale[data-beat="car"] .factory svg path,
+.finale[data-beat="car"] .factory svg circle {
+  fill: #c6c9c7;
+  stroke: var(--groma-ink);
+}
+
+.finale[data-beat="car"] .factory svg .line { fill: none; }
+.finale[data-beat="car"] .factory svg .window { fill: #9da2a0; }
+.finale[data-beat="car"] .factory svg .wheel { fill: var(--groma-ink); }
+
+.finale[data-beat="car"] .factory svg .beacon {
+  fill: #5c6260;
+  animation: none;
+}
+
+.finale[data-beat="car"] .factory svg .person.worker {
+  fill: var(--groma-ink);
+  opacity: 1;
+}
+
+/* The agents take the stations once the people have left: each arm grows from its base. */
+.factory svg .factory-arm {
+  transform-box: view-box;
+  transition: transform 0.7s cubic-bezier(0.2, 0.9, 0.3, 1.15) 0.7s, opacity 0.4s ease 0.7s;
+}
+
+.finale[data-beat="car"] .factory svg .factory-arm {
+  opacity: 0;
+  transform: scale(0.2);
+  transition: transform 0.4s ease, opacity 0.3s ease;
+}
+
+/* Then the platform rises behind the line. */
+.factory svg .factory-platform {
+  transition: transform 1.2s cubic-bezier(0.2, 0.8, 0.3, 1) 1s, opacity 0.8s ease 1s;
+}
+
+.finale[data-beat="car"] .factory svg .factory-platform {
+  opacity: 0;
+  transform: translateY(60px);
+  transition: transform 0.5s ease, opacity 0.4s ease;
 }
 
 /* Lights on. */
-.finale:not([data-beat="factory"]) .factory svg path,
-.finale:not([data-beat="factory"]) .factory svg circle {
+.finale:is([data-beat="deck"], [data-beat="title"], [data-beat="twist"]) .factory svg path,
+.finale:is([data-beat="deck"], [data-beat="title"], [data-beat="twist"]) .factory svg circle {
   fill: #ffffff;
   stroke: var(--groma-ink);
 }
 
-.finale:not([data-beat="factory"]) .factory svg .line,
-.finale:not([data-beat="factory"]) .factory svg .arm-tube,
-.finale:not([data-beat="factory"]) .factory svg .arm-core {
+.finale:is([data-beat="deck"], [data-beat="title"], [data-beat="twist"]) .factory svg .line,
+.finale:is([data-beat="deck"], [data-beat="title"], [data-beat="twist"]) .factory svg .arm-tube,
+.finale:is([data-beat="deck"], [data-beat="title"], [data-beat="twist"]) .factory svg .arm-core {
   fill: none;
 }
 
-.finale:not([data-beat="factory"]) .factory svg .window { fill: #dfe4e2; }
-.finale:not([data-beat="factory"]) .factory svg .wheel { fill: var(--groma-ink); }
-.finale:not([data-beat="factory"]) .factory svg .monitor { fill: var(--groma-ink); }
-.finale:not([data-beat="factory"]) .factory svg .arm-core { stroke: var(--groma-green); }
+.finale:is([data-beat="deck"], [data-beat="title"], [data-beat="twist"]) .factory svg .window { fill: #dfe4e2; }
+.finale:is([data-beat="deck"], [data-beat="title"], [data-beat="twist"]) .factory svg .wheel { fill: var(--groma-ink); }
+.finale:is([data-beat="deck"], [data-beat="title"], [data-beat="twist"]) .factory svg .monitor { fill: var(--groma-ink); }
+.finale:is([data-beat="deck"], [data-beat="title"], [data-beat="twist"]) .factory svg .arm-core { stroke: var(--groma-green); }
 
-.finale:not([data-beat="factory"]) .factory svg .beacon {
+.finale:is([data-beat="deck"], [data-beat="title"], [data-beat="twist"]) .factory svg .beacon {
   fill: var(--groma-green);
   animation: none;
 }
 
 /* Someone walked back in. */
-.finale:not([data-beat="factory"]) .factory svg .person {
+.finale:is([data-beat="deck"], [data-beat="title"], [data-beat="twist"]) .factory svg .person.overseer {
   fill: var(--groma-ink);
   opacity: 1;
   transition: opacity 0.6s ease 1.2s;
 }
 
 /* The monitors switch on one after the other once the camera is there. */
-.finale:not([data-beat="factory"]) .factory svg .screen image {
+.finale:is([data-beat="deck"], [data-beat="title"], [data-beat="twist"]) .factory svg .screen image {
   opacity: 1;
   transition: opacity 0.5s ease 1.6s;
 }
 
-.finale:not([data-beat="factory"]) .factory svg .screen.left image { transition-delay: 1.85s; }
-.finale:not([data-beat="factory"]) .factory svg .screen.right image { transition-delay: 2.1s; }
+.finale:is([data-beat="deck"], [data-beat="title"], [data-beat="twist"]) .factory svg .screen.left image { transition-delay: 1.85s; }
+.finale:is([data-beat="deck"], [data-beat="title"], [data-beat="twist"]) .factory svg .screen.right image { transition-delay: 2.1s; }
 
 .slidev-layout.sheet .finale h1 {
   margin: 0 !important;

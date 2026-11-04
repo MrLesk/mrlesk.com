@@ -16,7 +16,7 @@ routeAlias: demo-agents
 
 
 <!--
-⏱ Chapter card: Part 1 of the 4-part flow (Greenfield Start).
-Start with 1 agent on TASK-1, then watch waves of agents unlock as dependencies finish.
-Leave them cooking after ~1 minute and move to Brownfield (Keycloak).
+⏱ Chapter card: Part 1 of the 3-part flow (Greenfield).
+Six agents start at once on TASK-1 to TASK-6. On Ultrafast they all finished in about 30 seconds last time,
+so stay with them: watch the map fill in, review the diff, run what they built, then move to Brownfield (Keycloak).
 -->
