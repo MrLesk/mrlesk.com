@@ -278,35 +278,22 @@ async function prepareScenario(instance: InstanceConfig, deckRoot: string): Prom
 }
 
 /**
- * The setup steps a slide can press, each with the form actions Groma has used for it, newest first.
- * Groma 0.7 renamed the scanner step's form from /scanners to /plugins when that screen started to offer
- * Backlog.md too; slides keep saying 'scanners'.
+ * The setup steps a slide can press, in the order Groma shows them, each with the form actions Groma has
+ * used for it, newest first. Groma 0.7 renamed the scanner step's form from /scanners to /plugins when that
+ * screen started to offer Backlog.md too; slides keep saying 'scanners'.
  */
-const SETUP_FORMS = new Map<string, readonly string[]>([
-  ['initialize', ['initialize']],
-  ['scanners', ['plugins', 'scanners']],
-])
+const SETUP_STEPS: readonly { step: string, actions: readonly string[] }[] = [
+  { step: 'initialize', actions: ['initialize'] },
+  { step: 'scanners', actions: ['plugins', 'scanners'] },
+]
 
 function unescaped(text: string): string {
   return text.replace(/&quot;/g, '"').replace(/&#39;/g, "'").replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&amp;/g, '&')
 }
 
-/**
- * Presses the button of a Groma setup screen, as a click on it would: reads the form Groma shows on
- * `port` and, if it belongs to `step` ('initialize' for Continue, 'scanners' for Install & scan), sends it
- * with the values the screen shows. Any other screen is left alone, so a second window asking for the same
- * press does nothing. Groma answers that request only when the step is done, and the scan can take a
- * while; the setup page shows that progress itself, so this returns once the press is on its way.
- */
-export async function pressSetup(port: number, step: string): Promise<boolean> {
-  const actions = SETUP_FORMS.get(step)
-  if (actions === undefined) return false
-  const origin = `http://localhost:${port}`
-  const page = await (await fetch(`${origin}/`, { signal: AbortSignal.timeout(3000) })).text()
-  const action = actions.find(name => page.includes(`action="/${name}"`))
-  if (action === undefined) return false
-  const shown = page.match(new RegExp(`<form[^>]*action="/${action}"[^>]*>([\\s\\S]*?)</form>`))?.[1]
-  if (shown === undefined) return false
+/** Sends a setup form the way a click on its button would, with the values the screen shows. */
+function submitForm(origin: string, page: string, action: string): void {
+  const shown = page.match(new RegExp(`<form[^>]*action="/${action}"[^>]*>([\\s\\S]*?)</form>`))?.[1] ?? ''
   const fields = new URLSearchParams()
   for (const [tag] of shown.matchAll(/<input\b[^>]*>/g)) {
     const name = tag.match(/\bname="([^"]*)"/)?.[1]
@@ -317,8 +304,41 @@ export async function pressSetup(port: number, step: string): Promise<boolean> {
     fields.append(name, unescaped(tag.match(/\bvalue="([^"]*)"/)?.[1] ?? ''))
   }
   void fetch(`${origin}/${action}`, { method: 'POST', body: fields }).catch(() => {})
-  await new Promise(resolve => setTimeout(resolve, 400))
-  return true
+}
+
+const wait = (ms: number) => new Promise(resolve => setTimeout(resolve, ms))
+
+/**
+ * Brings the Groma setup on `port` up to `step` ('initialize' for Continue, 'scanners' for Install & scan):
+ * presses, in order, each setup button up to that step that Groma still shows, waiting while Groma works
+ * on the one before. So a click the slide made before this Groma answered, or a reload in the middle of
+ * the setup, still ends on the right screen. A screen past `step`, the map, or any other screen is left
+ * alone, and a screen that stays the same after its press (an error) is not pressed twice, so a second
+ * window asking for the same step does nothing. Groma answers the last press only when the scan is done,
+ * which can take a while; the setup page shows that progress itself, so this returns once it is on its way.
+ */
+export async function pressSetup(port: number, step: string): Promise<boolean> {
+  const target = SETUP_STEPS.findIndex(item => item.step === step)
+  if (target === -1) return false
+  const origin = `http://localhost:${port}`
+  const deadline = Date.now() + 30_000
+  let lastPressed = -1
+  while (Date.now() < deadline) {
+    const page = await (await fetch(`${origin}/`, { signal: AbortSignal.timeout(3000) })).text()
+    // Groma is working on a step: its next screen comes when that is done.
+    if (page.includes('aria-busy="true"')) {
+      await wait(500)
+      continue
+    }
+    const shown = SETUP_STEPS.findIndex(item => item.actions.some(action => page.includes(`action="/${action}"`)))
+    if (shown === -1 || shown > target || shown <= lastPressed) break
+    submitForm(origin, page, SETUP_STEPS[shown].actions.find(action => page.includes(`action="/${action}"`))!)
+    lastPressed = shown
+    // Groma marks the page busy as soon as the press arrives.
+    await wait(400)
+    if (shown === target) break
+  }
+  return lastPressed !== -1
 }
 
 /** The model, effort and speed tier the agents' Codex uses, from CODEX_HOME's config.toml and the overrides. */

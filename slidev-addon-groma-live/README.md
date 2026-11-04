@@ -102,7 +102,9 @@ near its edge, while the map still fills the slide. Pass `:inset="0"` for a deck
 For a Groma that opens on its setup, `:setup="['', 'initialize', 'scanners']"` with the instance's `name`
 makes those clicks press Continue, then Install & scan, with the values the screen shows; the dev
 server sends the form, so the presenter's preview never presses anything. 'scanners' presses Groma
-0.7's Plugins step (form `/plugins`, which also offers Backlog.md) or the older Scanners step.
+0.7's Plugins step (form `/plugins`, which also offers Backlog.md) or the older Scanners step. Each click
+asks for the step it needs and the dev server presses every button up to it that Groma still shows, in
+order, so a click made before that Groma answered, or a reload in the middle of the setup, catches up.
 
 `<GromaRun name="keycloak-devoxx" />` is a terminal that runs that instance's `steps` for real, one per
 click, in the throwaway folder `~/.groma-live/<name>` (wiped at the first step). After the last step

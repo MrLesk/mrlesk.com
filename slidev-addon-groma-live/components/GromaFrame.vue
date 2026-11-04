@@ -159,13 +159,16 @@ watch(search, () => {
   }
 })
 
-// A setup press only goes forward: Groma cannot undo a step, and stepping back just shows the slide.
-watch(index, async (now, before) => {
-  const form = props.setup[now]
-  if (!dev || !drives.value || status.value !== 'live' || !form || props.name === undefined || (before !== undefined && now <= before)) return
+// The setup step this click needs: the last one pressed at or before it. The dev server presses every
+// button up to it that Groma still shows, so a click made before Groma answered is not lost.
+const setupStep = computed(() => props.setup.slice(0, index.value + 1).filter(Boolean).at(-1))
+
+async function pressSetup(): Promise<void> {
+  const step = setupStep.value
+  if (!dev || !drives.value || status.value !== 'live' || step === undefined || props.name === undefined) return
   let pressed: { submitted?: boolean } = {}
   try {
-    pressed = await (await fetch(`${base}__groma-live/${props.name}?setup=${form}`, { method: 'POST' })).json()
+    pressed = await (await fetch(`${base}__groma-live/${props.name}?setup=${step}`, { method: 'POST' })).json()
   } catch {
     return
   }
@@ -173,6 +176,15 @@ watch(index, async (now, before) => {
     veiled.value = true
     frame.value.src = `${props.origin}/${search.value}`
   }
+}
+
+// A setup press only goes forward: Groma cannot undo a step, and stepping back just shows the slide.
+watch(index, (now, before) => {
+  if (before === undefined || now > before) void pressSetup()
+})
+// Groma answered after the click that needed it, or the slide was reloaded in the middle of the setup.
+watch(() => status.value === 'live' && drives.value, ready => {
+  if (ready) void pressSetup()
 })
 
 watch(active, now => {
