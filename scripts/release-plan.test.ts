@@ -47,6 +47,8 @@ describe('createReleasePlan', () => {
       'vienna-explosion',
       'groma-introduction',
       'devoxx-in-the-loop',
+      'aidevcon-in-the-loop',
+      'vienna-in-the-loop',
     ]);
   });
 

@@ -140,6 +140,14 @@
       "base": "/talks/aidevcon/in-the-loop/",
       "artifact": "component-talk-aidevcon-in-the-loop",
       "watch": ["slidev-theme-penguin/**", "slidev-addon-groma-live/**"]
+    },
+    {
+      "id": "vienna-in-the-loop",
+      "source": "talks/vienna-ai-engineering/in-the-loop",
+      "target": "talks/vienna-ai-engineering/in-the-loop",
+      "base": "/talks/vienna-ai-engineering/in-the-loop/",
+      "artifact": "component-talk-vienna-in-the-loop",
+      "watch": ["slidev-theme-penguin/**", "slidev-addon-groma-live/**"]
     }
   ]
 }
