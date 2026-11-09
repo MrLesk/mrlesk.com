@@ -92,33 +92,60 @@ comes back when Groma.md arrives. That is the title, made visible.
 to right half, then into the monitors (2026-11-04). The dark beat in the middle ties it to this talk's dark factory.
 
 1. `car`: grey light (mood 2), titled "Factories before." (Alex). Building the car: a production line with three
-   cars and people at work on them, seen from the side: one welds (white sparks), one hammers, one turns a
-   wrench, one more welds. Alex wanted them to look busy, not standing around (2026-11-06). Its framing leaves the
-   top of the slide free for the title.
-2. `factory`: the lights go out (mood 0), titled "Factories after." Building the factory: the people leave, a
-   robot arm (an agent) grows in at each station and gets to work (Alex, 2026-11-06): it moves to a spot on the
-   car, welds there with pale sparks, and moves on. A platform with three monitors rises behind the line. Nobody
-   is on it and its monitors are off: the dark factory.
-3. `deck`: the camera flies up to the platform and the lights come on (mood 4): ink on paper, the arms turn
-   Groma.md green, a person stands at the console, and the three monitors switch on with Groma.md stills from
-   `public/demo/` (the GitHub Action's diff, Keycloak, OpenID Connect; `pictures` in `FactoryFloor.vue`). The
-   monitors have thin bezels (`MONITOR.border`, Alex, 2026-11-06).
+   cars and people in white hard hats at work on them, seen from the side: one welds (white sparks), one hammers,
+   one turns a wrench, one more welds. Alex wanted them to look busy, not standing around (2026-11-06). In the
+   middle of the floor is their workshop: a workbench with a tool board and someone hammering at it, tyres and a
+   crate. Its framing leaves the top of the slide free for the title.
+2. `factory`: the lights go out (mood 0), titled "Factories after." Building the factory: the people and their
+   workshop go, a robot arm (an agent) grows in at each station, one after the other, and gets to work (Alex,
+   2026-11-06): it moves its tool to a spot on the car, welds there with pale sparks, and moves on. The welds and
+   the pillars' lamps are the only light, each with a soft glow that falls on what is near it. A platform with
+   three monitors rises where the workshop stood. Nobody is on it and its monitors are off: the dark factory.
+3. `deck`: the camera flies up to the platform, looks over its front railing, and the lights come on (mood 4):
+   ink on paper, the arms turn Groma.md green, a person stands at the control desk with their hands on their
+   hips (someone who oversees), and the three monitors switch on with Groma.md stills from `public/demo/` (the
+   GitHub Action's diff, Keycloak, OpenID Connect; `pictures` in `FactoryFloor.vue`), then the desk's status
+   lights. The monitors have thin bezels (`MONITOR.border`, Alex, 2026-11-06).
 4. `title`: "In the loop. Not in the dark."
 5. `twist`: "In" is struck out and "Over" written above it (see "The plot twist" in `style.css`). It echoes the
    slide's "humans oversee".
 
+Alex found the first drawing quite basic (2026-11-09): cars made of two boxes, stick figures, one flat fill for
+every face. So the drawing is shaded now, and that is what to keep when adding to it: every face has a tone for
+the way it faces, things cast a shadow, the cars have a bonnet, glass, wheels and headlights, and the people
+have hats and a workshop. Add detail in that spirit before adding more motion.
+
 The drawing is code, not a picture. `lib/factory-scene.ts` describes the line in world units (x towards the
 bottom right of the slide, y towards the bottom left, z up), projects it in 30 degree isometric, fits it to the
-980 x 551 slide and lists the parts back to front, as two groups: the platform, and the floor in front of it.
-Both scenes share one floor plan. The workers (shown on the car beat) stand at the cars: `workers` in `floor()`
-says where and what each one does, `POSE` and `TOOLS` say how they are drawn, and "The workers" in `style.css`
-swings each working arm around its elbow. The arms (shown from the factory beat on) stand at the stations, `arms`
-in `floor()`, each drawn just after its car so the tool and sparks show on the roof; "The agents at work" in
-`style.css` is their move, weld, move rhythm. Sizes and places are the constants at its top (`PLATFORM`, `MONITOR`, `STAIRS`, `LINE`, `PILLAR`)
-and the positions in `platform()` and `floor()`. It also works out the three camera framings (`cameras`): the line
-alone for the car, the whole drawing for the factory, the monitors and the person for the deck.
-`FactoryFloor.vue` turns the parts into SVG and passes the framings to the CSS as `--camera-car`,
-`--camera-factory` and `--camera-deck`. The colours for the three lights are in "The factory" in `style.css`.
+980 x 551 slide and lists the parts back to front, as three groups: the platform, the people's workshop, and the
+line in front of them. `components/FactoryFloor.vue` turns the parts into SVG, and "The factory" in `style.css`
+colours and moves them. Where to change what:
+
+- **Sizes and places**: the constants at the top of `factory-scene.ts` (`PLATFORM`, `MONITOR`, `DESK`, `STAIRS`,
+  `LINE`, `PILLAR`, `ARM`, `CAR`, `BENCH`, `TYRE`) and the positions in `platform()`, `workshop()` and `floor()`.
+- **Colours**: each light is one block of colours on `.factory` in `style.css` (`--face-top`, `--line`, `--glow`
+  and so on): the dark is the default, then one block for the car beat and one for the lights on. The rules
+  below those blocks only use the names, so change a colour in its block, never in a rule.
+- **Shading**: every face gets a class for the way it faces (`tone-top`, `tone-left`, `tone-front`,
+  `tone-right`; `prism()`, `frustum()` and `cylinder()` add it), and each light gives the four tones a fill.
+  Shadows are flat shapes on the floor (`shadow()`, direction and length in `SHADOW`), drawn before the things
+  that stand on it.
+- **The cars**: `CAR` holds the side profile of the body as named points (rear bumper to front bumper), the
+  cabin and the wheels. `car()` draws the faces of that profile that are turned to the room, then the cabin with
+  its glass, the headlights and the grille.
+- **The people**: the workers (car beat only) stand at the cars and at the workbench: `workers` in `floor()` and
+  the one in `workshop()` say where and what each one does, `POSE`, `TOOLS` and `HAT` say how they are drawn,
+  and "The workers" in `style.css` swings each working arm around its elbow. The person on the platform is
+  `BACK_VIEW` and `ARM_GAP`.
+- **The agents**: the arms (from the factory beat on) stand at the stations, `arms` in `floor()`, each drawn
+  just after its car so the tool and sparks show on the roof. An arm is two groups, the upper arm and on it the
+  forearm, and "The agents at work" in `style.css` turns them around the shoulder and the elbow in a move, weld,
+  move rhythm. The weld's light (sparks and a glow) shares that clock, so it only shows while the tool holds
+  still. The glow is one SVG gradient in `FactoryFloor.vue`; its colour and strength are `--glow` and
+  `--glow-strength`.
+- **The camera**: `cameras` in `scene()` works out the three framings: the line alone for the car, the whole
+  drawing for the factory, and for the deck the monitors down to the front railing (`deckPoints`).
+  `FactoryFloor.vue` passes them to the CSS as `--camera-car`, `--camera-factory` and `--camera-deck`.
 
 ## The live demo
 

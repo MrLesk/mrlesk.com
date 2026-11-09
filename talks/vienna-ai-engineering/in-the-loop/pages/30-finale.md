@@ -25,18 +25,19 @@ const beats = ['car', 'factory', 'deck', 'title', 'twist']
 <!--
 ⏱ 30:15
 
-"Factories before." A production line in grey light, with people at work on every car: welding, hammering,
-turning a wrench.
+"Factories before." A production line in grey light, with people in hard hats at work on every car: welding,
+hammering, turning a wrench. Their workshop is in the middle: a workbench, tools on a board, tyres.
 DRAFT, your words: This is how we built software. Building the car: a human at every station.
 We wrote it, tested it, reviewed it, by hand.
 
-[click] "Factories after." The lights go out. The people leave, a robot arm takes each station and gets to
-work, welding spot after spot, and a platform rises behind the line: empty, with its monitors off.
+[click] "Factories after." The lights go out. The people and their workshop go, a robot arm takes each station
+and gets to work, welding spot after spot: the welds are the only light. A platform rises where the workshop
+stood: empty, with its monitors off.
 DRAFT: Now we build the factory instead. Agents execute at every station, and up there is where humans should
 oversee it. In a dark factory, nobody is up there. That's the factory I was running.
 
-[click] The camera goes up to the platform and the lights come on: someone is at the console, and the monitors
-show Groma.md (the GitHub Action's diff, Keycloak, OpenID Connect).
+[click] The camera goes up to the platform and the lights come on: someone stands at the control desk, hands on
+their hips, and the monitors show Groma.md (the GitHub Action's diff, Keycloak, OpenID Connect).
 Closing line: "A dark factory runs with the lights off because nobody is inside.
 I walked back in, and I turned the lights on."
 
