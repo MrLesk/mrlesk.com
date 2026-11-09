@@ -2,8 +2,8 @@
  * The finale's production line as an isometric line drawing (pages/30-finale.md draws it with
  * components/FactoryFloor.vue). It holds two scenes on one floor plan, and the CSS shows one at a time:
  *
- * - building the car: a person works at every station of the line;
- * - building the factory: a robot arm, an agent, stands where each person stood, and behind the line stairs lead
+ * - building the car: people work on every car of the line, each with a tool;
+ * - building the factory: a robot arm, an agent, stands at every station instead, and behind the line stairs lead
  *   up to a raised platform where a person oversees on three monitors.
  *
  * The scene is a small model in world units: x runs towards the bottom right of the slide, y towards the bottom
@@ -18,17 +18,45 @@ export type P2 = [number, number]
 export type Part =
   /** A face, or a line when `cls` contains "line". */
   | { kind: 'path', cls: string, d: string }
-  /** A robot arm: a base, then an upper arm, an elbow and a forearm that swings around the elbow. */
-  | { kind: 'arm', base: string[], shoulder: P2, elbow: P2, wrist: P2, tool: P2, swing: 'left' | 'right' }
+  /** A robot arm: a base, then an upper arm, an elbow and a forearm that swings around the elbow, with sparks at the tool. */
+  | { kind: 'arm', base: string[], shoulder: P2, elbow: P2, wrist: P2, tool: P2, sparks: string, swing: 'left' | 'right' }
   /** The light on top of a pillar. */
   | { kind: 'beacon', at: P2, r: number }
   /** A monitor's picture, drawn into the monitor's plane by an SVG matrix. */
   | { kind: 'screen', cls: string, matrix: string, width: number, height: number }
-  /** A person, as one filled outline: a worker at a station, or the one who oversees from the platform. */
-  | { kind: 'person', d: string, role: Role }
+  /** The person who oversees from the platform, seen from behind, as one filled outline. */
+  | { kind: 'person', d: string }
+  /** A person building a car, seen from the side and facing it (see `workerParts()`). */
+  | Worker
 
-/** Who a person is: the CSS shows the workers while the car is built and the overseer once the lights are on. */
-export type Role = 'worker' | 'overseer'
+/** What a worker does to the car. style.css moves each job's arm, under "The workers". */
+export type Job = 'weld' | 'hammer' | 'wrench'
+
+/**
+ * A worker as stroked lines in slide pixels. The working arm's forearm and tool are their own group, so the CSS
+ * can swing them around the elbow. `facing` is 1 when they face right and -1 when they face left.
+ */
+export interface Worker {
+  kind: 'worker'
+  job: Job
+  facing: 1 | -1
+  /** The far arm, resting on the car, then the legs and the trunk. */
+  restArm: string
+  legs: string
+  trunk: string
+  head: { at: P2, r: number }
+  upperArm: string
+  forearm: string
+  /** The tool's handle, and the bar across its end (empty for the torch). */
+  tool: string
+  toolEnd: string
+  /** Short rays around the torch's tip (empty for the other tools). */
+  sparks: string
+  elbow: P2
+  tip: P2
+  /** Stroke widths in slide pixels, so the lines keep their proportions at any scale. */
+  widths: { limb: number, trunk: number, tool: number }
+}
 
 const SLIDE = { width: 980, height: 551, margin: 26 }
 /** The band at the top of the slide that the car's framing leaves free for the title. */
@@ -36,8 +64,8 @@ const TITLE_BAND = 96
 
 /** The raised platform: an octagon `half` units from the centre, with cut corners. */
 const PLATFORM = { half: 2.3, backCut: 1.6, sideCut: 0.8, frontCut: 1.0, height: 1.7 }
-/** Monitors stand on the three back edges. */
-const MONITOR = { inset: 0.15, lift: 0.55, height: 1.6, border: 0.12 }
+/** Monitors stand on the three back edges. `border` is the bezel around the picture. */
+const MONITOR = { inset: 0.15, lift: 0.55, height: 1.6, border: 0.04 }
 /** The stairs: one down each front side, `run` units long. */
 const STAIRS = { start: -1.35, width: 0.9, run: 2.2, steps: 8 }
 /** The line: two belts that meet in front at (centre, centre) on a turntable. */
@@ -56,7 +84,8 @@ type WorldPart =
   | { kind: 'arm', base: WorldPart[], shoulder: P3, elbow: P3, wrist: P3, tool: P3, swing: 'left' | 'right' }
   | { kind: 'beacon', at: P3 }
   | { kind: 'screen', cls: string, corner: P3, right: P3, down: P3 }
-  | { kind: 'person', at: P3, height: number, role: Role }
+  | { kind: 'person', at: P3, height: number }
+  | { kind: 'worker', at: P3, height: number, facing: 1 | -1, job: Job }
 
 interface Model { parts: WorldPart[] }
 
@@ -143,7 +172,7 @@ function platform(model: Model, deckPoints: P3[]): void {
     const at = add([-0.4, -0.4], scaleXY(unit([1, -1]), along))
     model.parts.push({ kind: 'path', cls: 'console-light line', points: [[at[0], at[1], h + 0.86], [at[0] + 0.12, at[1] + 0.12, h + 0.86]], closed: false })
   }
-  model.parts.push({ kind: 'person', at: [0.25, 0.25, h], height: 1.75, role: 'overseer' })
+  model.parts.push({ kind: 'person', at: [0.25, 0.25, h], height: 1.75 })
   deckPoints.push([0.25, 0.25, h])
 
   // Railings along the front edges, with gaps where the stairs come up.
@@ -239,18 +268,31 @@ function floor(model: Model): void {
   ]
   for (const { at, dir, z } of cars) things.push({ depth: at[0] + at[1], draw: () => car(model, at, dir, z) })
 
-  // The stations: one behind each side car and two beside the front one. Building the car, a person works at each;
-  // building the factory, an arm (an agent) stands there instead, reaching over a car's roof.
-  const roof = height + 1.1
-  const arms: Array<{ base: XY, target: P3, swing: 'left' | 'right' }> = [
-    { base: [start + 4.2, c - w / 2 - 0.8], target: [start + 3.3, c, roof], swing: 'left' },
-    { base: [c - w / 2 - 0.8, start + 4.2], target: [c, start + 3.3, roof], swing: 'right' },
-    { base: [c - 2.3, c - 0.2], target: [c - 0.25, c + 0.15, turntableHeight + 1.1], swing: 'left' },
-    { base: [c - 0.2, c - 2.3], target: [c + 0.15, c - 0.25, turntableHeight + 1.1], swing: 'right' },
+  // Building the car, people work on every car: one behind each side car, on the floor just behind its belt and
+  // beside the bonnet (the cabin would hide their tools), and two on the turntable beside the front car. Each faces
+  // the car they work on.
+  const workers: Array<{ at: P3, car: XY, job: Job }> = [
+    { at: [start + 4.45, c - 1.0, 0], car: cars[0].at, job: 'weld' },
+    { at: [c - 1.0, start + 4.45, 0], car: cars[1].at, job: 'hammer' },
+    { at: [c - 0.57, c + 0.78, turntableHeight], car: cars[2].at, job: 'wrench' },
+    { at: [c + 0.78, c - 0.57, turntableHeight], car: cars[2].at, job: 'weld' },
   ]
-  for (const { base, target, swing } of arms) {
-    things.push({ depth: base[0] + base[1], draw: () => arm(model, base, target, swing) })
-    things.push({ depth: base[0] + base[1], draw: () => model.parts.push({ kind: 'person', at: [base[0], base[1], 0], height: 1.75, role: 'worker' }) })
+  for (const { at, car, job } of workers) {
+    const facing = raw([car[0], car[1], 0])[0] > raw(at)[0] ? 1 : -1
+    things.push({ depth: at[0] + at[1], draw: () => model.parts.push({ kind: 'worker', at, height: 1.75, facing, job }) })
+  }
+
+  // Building the factory, an arm (an agent) stands at every station instead, reaching over a car's roof. Each arm is
+  // drawn just after the car it works on, so its tool and sparks show on the roof; its base stands clear of the car.
+  const roof = height + 1.1
+  const arms: Array<{ base: XY, target: P3, car: XY, swing: 'left' | 'right' }> = [
+    { base: [start + 4.2, c - w / 2 - 0.8], target: [start + 3.3, c, roof], car: cars[0].at, swing: 'left' },
+    { base: [c - w / 2 - 0.8, start + 4.2], target: [c, start + 3.3, roof], car: cars[1].at, swing: 'right' },
+    { base: [c - 2.3, c - 0.2], target: [c - 0.25, c + 0.15, turntableHeight + 1.1], car: cars[2].at, swing: 'left' },
+    { base: [c - 0.2, c - 2.3], target: [c + 0.15, c - 0.25, turntableHeight + 1.1], car: cars[2].at, swing: 'right' },
+  ]
+  for (const { base, target, car, swing } of arms) {
+    things.push({ depth: car[0] + car[1] + 0.01, draw: () => arm(model, base, target, swing) })
   }
 
   // Pillars with lights at both ends of each belt, and a rail between the outer ones.
@@ -385,6 +427,7 @@ function allPoints(parts: WorldPart[]): P3[] {
       case 'screen': return [part.corner]
       case 'beacon': return [part.at]
       case 'person': return [part.at]
+      case 'worker': return [part.at]
     }
   })
 }
@@ -401,12 +444,15 @@ function resolve(part: WorldPart, project: (p: P3) => P2, scale: number): Part {
         elbow: project(part.elbow),
         wrist: project(part.wrist),
         tool: project(part.tool),
+        sparks: sparkRays(project(part.tool), scale * 0.1, scale * 0.36),
         swing: part.swing,
       }
     case 'beacon':
       return { kind: 'beacon', at: project(part.at), r: round(scale * 0.11) }
     case 'person':
-      return { kind: 'person', d: personOutline(project(part.at), scale * part.height), role: part.role }
+      return { kind: 'person', d: personOutline(project(part.at), scale * part.height) }
+    case 'worker':
+      return workerParts(project(part.at), scale * part.height, part.facing, part.job)
     case 'screen': {
       // The picture is drawn in a 1600 x 900 box, then mapped onto the monitor's face.
       const width = 1600
@@ -430,6 +476,62 @@ function personOutline([x, y]: P2, height: number): string {
   const right = left.slice(0, -1).reverse().map(([a, b]): XY => [-a, b])
   const body = [...left, ...right].map(([a, b]): P2 => [round(x + a * height), round(y + b * height)])
   return `${head} ${pathOf(body, true)}`
+}
+
+/**
+ * A worker's pose, facing right, in fractions of their height from the feet (y up is negative): leaning in, the
+ * far arm resting on the car, the working arm reaching forward with the tool.
+ */
+const POSE = {
+  backFoot: [-0.11, 0], frontFoot: [0.07, 0], hip: [-0.02, -0.47], shoulder: [0.08, -0.74], head: [0.14, -0.865],
+  elbow: [0.2, -0.6], hand: [0.34, -0.58], restElbow: [0.17, -0.55], restHand: [0.3, -0.49],
+} satisfies Record<string, XY>
+
+/**
+ * Each job's tool, from the hand: where its handle ends (`end`), half the length of the bar across that end
+ * (`bar`, 0 for none), and whether sparks fly from it.
+ */
+const TOOLS: Record<Job, { end: XY, bar: number, sparks: boolean }> = {
+  // A torch, pointed down at the car.
+  weld: { end: [0.1, 0.07], bar: 0, sparks: true },
+  // The handle points up from the fist; the head lies across its end.
+  hammer: { end: [0.06, -0.15], bar: 0.06, sparks: false },
+  // Held out level, the jaw across its end.
+  wrench: { end: [0.12, 0.02], bar: 0.04, sparks: false },
+}
+
+function workerParts([x, y]: P2, height: number, facing: 1 | -1, job: Job): Worker {
+  const at = ([a, b]: XY): P2 => [round(x + facing * a * height), round(y + b * height)]
+  const line = (...points: XY[]) => pathOf(points.map(at), false)
+  const { end, bar, sparks } = TOOLS[job]
+  const tip = add(POSE.hand, end)
+  // The bar runs across the handle's end, at right angles to it.
+  const across = scaleXY(unit([-end[1], end[0]]), bar)
+  return {
+    kind: 'worker',
+    job,
+    facing,
+    restArm: line(POSE.shoulder, POSE.restElbow, POSE.restHand),
+    legs: `${line(POSE.backFoot, POSE.hip)} ${line(POSE.frontFoot, POSE.hip)}`,
+    trunk: line(POSE.hip, POSE.shoulder),
+    head: { at: at(POSE.head), r: round(height * 0.085) },
+    upperArm: line(POSE.shoulder, POSE.elbow),
+    forearm: line(POSE.elbow, POSE.hand),
+    tool: line(POSE.hand, tip),
+    toolEnd: bar ? line(add(tip, scaleXY(across, -1)), add(tip, across)) : '',
+    sparks: sparks ? sparkRays(at(tip), height * 0.035, height * 0.11) : '',
+    elbow: at(POSE.elbow),
+    tip: at(tip),
+    widths: { limb: round(height * 0.085), trunk: round(height * 0.17), tool: round(height * 0.028) },
+  }
+}
+
+/** Sparks flying from a torch: six short rays around `centre`, from `inner` to `outer` slide pixels out. */
+function sparkRays([x, y]: P2, inner: number, outer: number): string {
+  return [-80, -35, 5, 45, 90, 135].map(degrees => {
+    const [dx, dy] = [Math.cos((degrees * Math.PI) / 180), Math.sin((degrees * Math.PI) / 180)]
+    return pathOf([[round(x + dx * inner), round(y + dy * inner)], [round(x + dx * outer), round(y + dy * outer)]], false)
+  }).join(' ')
 }
 
 function pathOf(points: P2[], closed: boolean): string {

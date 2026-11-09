@@ -56,16 +56,22 @@ export interface LiveAgentConfig {
   /** The assignee name without @. Groma's pin shows the vendor's logo for codex, claude or antigravity,
       and the first two letters of any other name. */
   name: string
-  /** What the panel calls the agent; the assignee name when left out. */
+  /** What the panel calls the agent; the assignee name when left out. `{n}` in it is the agent's number in the
+      run (see `AgentRun.number`): six cards labelled `Codex {n}` start as Codex 1 to 6 and count on from there. */
   label?: string
 }
+
+type AgentStatus = 'planning' | 'idle' | 'working' | 'done' | 'failed'
 
 export interface LiveAgentView {
   agent: string
   name: string
+  /** The agent's number in the run (see `AgentRun.number`). */
+  number: number
   task: string
   title: string
-  status: 'planning' | 'idle' | 'working' | 'done' | 'failed'
+  /** `queued` is only in `everyAgent`: an agent that will start once a card is free. */
+  status: AgentStatus | 'queued'
   file?: string
   action?: string
   waiting: boolean
@@ -78,8 +84,11 @@ export interface LiveAgentView {
 
 interface AgentRun {
   task: string
+  /** This agent's number in the run. The first wave counts 1, 2, 3 in panel order. Every task a card takes after
+      that starts a new Codex session, so it is a new agent with the next number. 0 while the card has no task. */
+  number: number
   child?: ChildProcess
-  status: LiveAgentView['status']
+  status: AgentStatus
   /** The Codex session that read the task and planned; the click resumes it. */
   thread?: string
   /** Every Codex session this worker slot started across waves, for its cost. */
@@ -96,6 +105,19 @@ interface AgentRun {
   timer?: ReturnType<typeof setTimeout>
 }
 
+/** An agent that finished, kept after its card took the next task, so `everyAgent` still lists it. */
+interface PastAgent {
+  number: number
+  /** The card (index in the configured agents) it ran in, for its label. */
+  slot: number
+  task: string
+  status: AgentStatus
+  seconds: number
+  action?: string
+  /** Its task's acceptance criteria, read once when the list first shows it: the task no longer changes. */
+  ticks?: { checked: number, criteria: number }
+}
+
 /** A shell command as the panel shows it: the program and its first argument, without the shell wrapper. */
 function summarize(command: string): string {
   const inner = command.match(/^\/bin\/\w+ -lc ['"](.*)['"]$/s)?.[1] ?? command
@@ -104,12 +126,16 @@ function summarize(command: string): string {
 
 export class LiveAgents {
   private runs: AgentRun[] = []
+  /** The agents that finished and whose card has moved on to a new agent, oldest first. */
+  private pastAgents: PastAgent[] = []
   private files = new Map<string, string>()
   private titles = new Map<string, string>()
   private colours = new Map<string, string>()
   private coloursRead = 0
   private claimedTasks = new Set<string>()
   private completedTasks = 0
+  /** How many agents this run has numbered so far; the next agent gets the next number. */
+  private agentsNumbered = 0
   private curationQueue: Promise<void> = Promise.resolve()
   private dispatchQueue: Promise<void> = Promise.resolve()
   private readonly costs: RunCost
@@ -125,7 +151,8 @@ export class LiveAgents {
 
   private constructor(
     readonly work: string,
-    readonly base: string,
+    /** The baseline commit; RESET moves it to the template's latest main. */
+    public base: string,
     private readonly agents: LiveAgentConfig[],
     private readonly prompt: string,
     private readonly goPrompt: string,
@@ -201,16 +228,22 @@ export class LiveAgents {
     }
   }
 
-  async view(): Promise<{ live: true, phase: number, last: number, base: string, agents: LiveAgentView[], cost?: RunCostView, completed?: number, totalTasks?: number }> {
+  /**
+   * What the panel shows. `agents` has one entry per card, each showing the agent working in it now.
+   * `everyAgent` lists every agent of the run by number: the finished ones whose card moved on, the ones in the
+   * cards now, then one `queued` agent per task nobody has taken yet.
+   */
+  async view(): Promise<{ live: true, phase: number, last: number, base: string, agents: LiveAgentView[], everyAgent: LiveAgentView[], cost?: RunCostView, completed?: number, totalTasks?: number }> {
     const now = Date.now()
     await this.readColours(now)
     const cost = await this.readCost(now)
-    const agents = await Promise.all(this.agents.map(async (agent, index) => {
+    const agents = await Promise.all(this.agents.map(async (agent, index): Promise<LiveAgentView> => {
       const record = this.runs[index]!
       const { checked, criteria } = record.task === '' ? { checked: 0, criteria: 0 } : await this.criteria(record.task)
       return {
         agent: `@${agent.name}`,
-        name: agent.label ?? agent.name,
+        name: this.nameOf(agent, record.number),
+        number: record.number,
         task: record.task,
         title: record.task === '' ? '' : (this.titles.get(record.task) ?? record.task),
         status: record.status,
@@ -226,12 +259,16 @@ export class LiveAgents {
     const totalTasks = this.titles.size
     const allClaimed = totalTasks > 0 ? this.claimedTasks.size >= totalTasks : true
     const finished = this.started && allClaimed && agents.every(agent => agent.status === 'done' || agent.status === 'failed')
+    const past = await Promise.all(this.pastAgents.map(agent => this.pastView(agent)))
+    const queued = Array.from({ length: Math.max(0, totalTasks - this.claimedTasks.size) }, (_, k) => this.queuedView(this.agentsNumbered + 1 + k))
+    const everyAgent = [...past, ...agents.filter(agent => agent.task !== ''), ...queued].sort((a, b) => a.number - b.number)
     return {
       live: true,
       phase: !this.started ? 0 : finished ? 2 : 1,
       last: 2,
       base: this.base,
       agents,
+      everyAgent,
       cost,
       completed: this.completedTasks,
       totalTasks,
@@ -263,11 +300,14 @@ export class LiveAgents {
   private forget(): void {
     this.claimedTasks = new Set()
     this.completedTasks = 0
+    this.agentsNumbered = 0
+    this.pastAgents = []
     this.runs = this.agents.map((agent) => {
       const task = (agent.task ?? '').trim()
       if (task !== '') this.claimedTasks.add(task)
       return {
         task,
+        number: task !== '' ? ++this.agentsNumbered : 0,
         status: task !== '' ? 'planning' as const : 'idle' as const,
         threads: [],
         planned: false,
@@ -281,6 +321,38 @@ export class LiveAgents {
 
   private current(index: number, record: AgentRun): boolean {
     return this.runs[index] === record
+  }
+
+  /** What the panel and the log call agent `number` working in a card configured as `agent`: its label, with `{n}`
+      filled in. */
+  private nameOf(agent: LiveAgentConfig, number: number): string {
+    const label = agent.label ?? agent.name
+    return label.replaceAll('{n}', number === 0 ? '' : String(number)).trim()
+  }
+
+  private async pastView(past: PastAgent): Promise<LiveAgentView> {
+    const agent = this.agents[past.slot]!
+    past.ticks ??= await this.criteria(past.task)
+    return {
+      agent: `@${agent.name}`,
+      name: this.nameOf(agent, past.number),
+      number: past.number,
+      task: past.task,
+      title: this.titles.get(past.task) ?? past.task,
+      status: past.status,
+      action: past.action,
+      waiting: false,
+      seconds: past.seconds,
+      checked: past.ticks.checked,
+      criteria: past.ticks.criteria,
+      colour: this.colours.get(past.task),
+    }
+  }
+
+  /** An agent that has not started yet. Which card it will run in is not known, so it takes the first card's label. */
+  private queuedView(number: number): LiveAgentView {
+    const agent = this.agents[0]!
+    return { agent: `@${agent.name}`, name: this.nameOf(agent, number), number, task: '', title: '', status: 'queued', waiting: false, seconds: 0, checked: 0, criteria: 0 }
   }
 
   private fill(text: string, agent: LiveAgentConfig, task: string): string {
@@ -351,7 +423,7 @@ export class LiveAgents {
     const record = this.runs[index]!
     const task = record.task
     if (task === '') return
-    const name = agent.label ?? agent.name
+    const name = this.nameOf(agent, record.number)
     const began = Date.now()
     this.codex(record, ['exec', ...this.codexArgs, '--json', '--skip-git-repo-check', '-C', this.work, this.fill(this.prompt, agent, task)], (code, said) => {
       if (!this.current(index, record) || record.task !== task) return
@@ -387,7 +459,7 @@ export class LiveAgents {
   private implement(index: number, record: AgentRun): void {
     const agent = this.agents[index]!
     const task = record.task
-    const name = agent.label ?? agent.name
+    const name = this.nameOf(agent, record.number)
     const args = record.thread !== undefined
       ? ['exec', 'resume', ...this.codexArgs, '--json', '--skip-git-repo-check', record.thread, this.goPrompt]
       : ['exec', ...this.codexArgs, '--json', '--skip-git-repo-check', '-C', this.work, `${this.fill(this.prompt, agent, task)}\n\n${this.goPrompt}`]
@@ -463,8 +535,14 @@ export class LiveAgents {
       const record = this.runs[slotIndex]!
       const agent = this.agents[slotIndex]!
       const wasNeverUsed = record.task === ''
+      if (!wasNeverUsed) {
+        const seconds = record.started === undefined ? 0 : Math.round(((record.ended ?? Date.now()) - record.started) / 1000)
+        this.pastAgents.push({ number: record.number, slot: slotIndex, task: record.task, status: record.status, seconds, action: record.action })
+      }
       this.claimedTasks.add(nextTask)
       record.task = nextTask
+      // A new Codex session, so a new agent: the card counts on.
+      record.number = ++this.agentsNumbered
       record.thread = undefined
       record.planned = false
       record.go = true

@@ -84,6 +84,13 @@ An agent with an empty `task` waits for one: when a task is Done, a free agent t
 Backlog.md dependencies are all Done. With `anyOrder: true` on the instance it takes the next To Do task whatever
 its dependencies, so every agent keeps working.
 
+Every task a card takes starts a new Codex session, so a new agent. `{n}` in a `label` numbers them in the order
+they start: six agents labelled `Codex {n}` show Codex 1 to 6, and a card that takes another task becomes Codex 7,
+and so on. A label without `{n}` stays as it is. With `every-agent` on `<GromaAgents>`, the panel lists every agent
+of the run instead, one card each: the finished ones, the ones at work, and one queued card per task nobody has
+taken yet. The list scrolls inside the panel, and scrolls by itself to the first agent still at work when that
+one changes.
+
 The agents assign their task to themselves, read it and plan as soon as `bun run dev` starts, changing
 nothing. The `<GromaAgents>` slide's click (phase 1) sends `go` to every session; RESET stops them, puts the
 clone back on the baseline commit and plans again. With `review`, `{base}` in a view stands for that baseline
@@ -123,6 +130,8 @@ first commit, an empty folder, and its history phase checks out every later comm
 grows as it did while the panel counts the commits; the agents start where the history ends. With
 `review` it shows no panel and only makes sure the agents have
 finished, for a comparison such as `from=<before commit>`, which Groma 0.6.0 opens live.
+Groma reads `from` and `revision` only when the map opens, so a click that changes them (the plain map,
+then `from={base}` for the diff) reloads the map behind the veil; a click within one comparison flies there.
 
 `GromaRun`, `GromaTimelapse` and `GromaAgents` share one demo per dev server, so only the slide
 itself moves it: the audience window or the presenter's main view. Slidev also counts the

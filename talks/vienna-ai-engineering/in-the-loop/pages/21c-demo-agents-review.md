@@ -13,7 +13,7 @@ routeAlias: live-review
   review
   cost
   :views="['container=kanban', 'from={base}&container=kanban']"
-  :captions="['Greenfield complete: 21 components across 4 groups.', 'Architecture diff: everything the 6 agents built from the seed commit.']"
+  :captions="['Greenfield complete: 21 components across 4 groups.', 'Architecture diff: everything the 20 agents built from the seed commit.']"
   :stills="['demo/walk-0.webp', 'demo/walk-0.webp']"
 />
 

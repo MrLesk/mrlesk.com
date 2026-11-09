@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
+import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { useIsSlideActive, useSlideContext } from '@slidev/client'
 
 // Agents working Backlog.md tasks on a live Groma map, driven by the slide's clicks.
@@ -18,6 +18,9 @@ import { useIsSlideActive, useSlideContext } from '@slidev/client'
 // With `cost`, a live run's slide also shows what the run has cost so far, planning included, priced at list
 // prices from the sessions Codex saved (see setup/run-cost.ts): on the agents slide it counts up while they work,
 // on a review it says "so far" until every agent has finished.
+// With `everyAgent`, a live run's panel lists every agent of the run, one card each: the finished ones, the ones at
+// work, then the queued ones, which start as cards free up. The list scrolls inside the panel, by hand, and by itself
+// to the first agent still at work whenever that one changes, so the cards at work stay in view.
 const props = withDefaults(defineProps<{
   name: string
   origin: string
@@ -36,6 +39,8 @@ const props = withDefaults(defineProps<{
   cost?: boolean
   /** Whether the agents panel shows at each click, like `views`; shown on every click when left out. */
   panels?: boolean[]
+  /** Live runs only: one card per agent of the run, queued ones included, in a list that scrolls. */
+  everyAgent?: boolean
 }>(), {
   captions: () => [],
   stills: () => [],
@@ -46,6 +51,7 @@ const props = withDefaults(defineProps<{
   scale: 0.6,
   cost: false,
   panels: () => [],
+  everyAgent: false,
 })
 
 interface Agent {
@@ -53,7 +59,8 @@ interface Agent {
   name: string
   task: string
   title: string
-  status: 'planning' | 'idle' | 'working' | 'done' | 'failed'
+  /** `queued`: live runs with `everyAgent` only, an agent that starts once a card is free. */
+  status: 'planning' | 'idle' | 'working' | 'done' | 'failed' | 'queued'
   file?: string
   checked: number
   criteria: number
@@ -75,6 +82,7 @@ const drives = computed(() => active.value && ['slide', 'presenter'].includes($r
 const dev = import.meta.env.DEV
 const endpoint = computed(() => `${import.meta.env.BASE_URL}__groma-live/${props.name}`)
 const agents = ref<Agent[]>([])
+const everyAgentList = ref<Agent[]>([])
 const history = ref<{ phase: number, commit: number, total: number, recent: string[] }>()
 const live = ref(false)
 const base = ref('')
@@ -89,12 +97,23 @@ let poll: ReturnType<typeof setInterval> | undefined
 const phase = computed(() => props.review ? 'end' : String(props.phases[Math.min($clicks.value, props.phases.length - 1)] ?? 0))
 // A click can leave the map to itself, for a view that frames the pins before the agents start.
 const panelShown = computed(() => props.panels[Math.min($clicks.value, props.panels.length - 1)] ?? true)
+// The cards the panel shows: one per agent of the run with `everyAgent`, otherwise one per card of the run.
+const cards = computed(() => props.everyAgent && everyAgentList.value.length > 0 ? everyAgentList.value : agents.value)
+const list = ref<HTMLElement>()
+const firstAtWork = computed(() => cards.value.find(agent => agent.task !== '' && agent.status !== 'done' && agent.status !== 'failed')?.name)
+watch(firstAtWork, async (name) => {
+  if (!props.everyAgent || name === undefined) return
+  await nextTick()
+  const card = list.value?.querySelector<HTMLElement>(`[data-agent="${name}"]`)
+  if (card) list.value!.scrollTo({ top: card.offsetTop, behavior: 'smooth' })
+})
 const inHistory = computed(() => !props.review && history.value !== undefined && Number(phase.value) <= history.value.phase)
 
 async function sync(method: 'GET' | 'POST', query = ''): Promise<void> {
   try {
     const state = await (await fetch(`${endpoint.value}${query}`, { method })).json()
     if (Array.isArray(state.agents)) agents.value = state.agents
+    if (Array.isArray(state.everyAgent)) everyAgentList.value = state.everyAgent
     history.value = state.history
     live.value = state.live === true
     if (typeof state.base === 'string') base.value = state.base
@@ -163,42 +182,46 @@ const tierName = (tier?: string) => ({ ultrafast: 'Ultrafast', priority: 'Fast',
       <li v-for="(subject, n) in history.recent" :key="history.commit - n" :class="{ latest: n === 0 }">{{ subject }}</li>
     </ol>
   </div>
-  <div v-else-if="!review && agents.length > 0" class="groma-agents" :class="{ compact: agents.length > 3, blueprint: theme === 'blueprint', dark: theme === 'dark', 'panel-hidden': !panelShown }">
+  <div v-else-if="!review && agents.length > 0" class="groma-agents" :class="{ compact: cards.length > 3, every: everyAgent, blueprint: theme === 'blueprint', dark: theme === 'dark', 'panel-hidden': !panelShown }">
     <p class="groma-agents-label">
       AGENTS<span v-if="live && totalTasks > agents.length"> · {{ completedTasks }}/{{ totalTasks }}</span>
       <button v-if="dev && live" class="groma-agents-reset" title="Stop the agents and go back to the baseline" @click="reset">RESET</button>
     </p>
-    <div
-      v-for="agent in agents"
-      :key="agent.name"
-      class="groma-agent"
-      :class="[agent.status, { ready: live && agent.status === 'idle' && agent.task !== '' }]"
-      :style="{ '--agent': agent.colour ?? colours[agent.agent] ?? '#9aa0a8' }"
-    >
-      <header>
-        <i />
-        <b>{{ agent.name }}</b>
-        <span v-if="live && agent.status !== 'idle' && agent.status !== 'planning' && agent.task !== ''" class="clock">{{ clock(agent.seconds) }}</span>
-        <span v-if="(live || agent.status !== 'idle') && agent.task !== ''" class="task">{{ agent.task }}</span>
-      </header>
-      <!-- A live agent has its task before it starts: the card shows it, ready. -->
-      <p v-if="(agent.status === 'idle' && !live) || agent.task === ''" class="waiting">waiting for a ready task</p>
-      <template v-else>
-        <p class="title">{{ agent.title }}</p>
-        <transition name="groma-agent-line" mode="out-in">
-          <p v-if="agent.status === 'planning'" key="planning" class="line">› planning</p>
-          <p v-else-if="agent.status === 'idle'" key="ready" class="line">› ready</p>
-          <p v-else-if="agent.status === 'done'" key="done" class="line done">{{ live ? '✓ done' : '✓ done, committed' }}</p>
-          <p v-else-if="agent.status === 'failed'" key="failed" class="line failed">× {{ agent.action }}</p>
-          <p v-else-if="agent.waiting" key="waiting" class="line">… waiting for the API</p>
-          <p v-else-if="live && agent.action" :key="agent.action" class="line">› {{ agent.action }}</p>
-          <p v-else-if="agent.file" :key="agent.file" class="line">› {{ short(agent.file) }}</p>
-          <p v-else key="start" class="line">› reading the task</p>
-        </transition>
-        <div class="criteria" :title="`${agent.checked} of ${agent.criteria} acceptance criteria`">
-          <i v-for="n in agent.criteria" :key="n" :class="{ on: n <= agent.checked }" />
-        </div>
-      </template>
+    <div ref="list" class="groma-agents-list">
+      <div
+        v-for="agent in cards"
+        :key="agent.name"
+        class="groma-agent"
+        :class="[agent.status, { ready: live && agent.status === 'idle' && agent.task !== '' }]"
+        :data-agent="agent.name"
+        :style="{ '--agent': agent.status === 'queued' ? '#c9c8c2' : agent.colour ?? colours[agent.agent] ?? '#9aa0a8' }"
+      >
+        <header>
+          <i />
+          <b>{{ agent.name }}</b>
+          <span v-if="live && agent.status !== 'idle' && agent.status !== 'planning' && agent.task !== ''" class="clock">{{ clock(agent.seconds) }}</span>
+          <span v-if="(live || agent.status !== 'idle') && agent.task !== ''" class="task">{{ agent.task }}</span>
+        </header>
+        <!-- A live agent has its task before it starts: the card shows it, ready. -->
+        <p v-if="agent.status === 'queued'" class="waiting">queued</p>
+        <p v-else-if="(agent.status === 'idle' && !live) || agent.task === ''" class="waiting">waiting for a ready task</p>
+        <template v-else>
+          <p class="title">{{ agent.title }}</p>
+          <transition name="groma-agent-line" mode="out-in">
+            <p v-if="agent.status === 'planning'" key="planning" class="line">› planning</p>
+            <p v-else-if="agent.status === 'idle'" key="ready" class="line">› ready</p>
+            <p v-else-if="agent.status === 'done'" key="done" class="line done">{{ live ? '✓ done' : '✓ done, committed' }}</p>
+            <p v-else-if="agent.status === 'failed'" key="failed" class="line failed">× {{ agent.action }}</p>
+            <p v-else-if="agent.waiting" key="waiting" class="line">… waiting for the API</p>
+            <p v-else-if="live && agent.action" :key="agent.action" class="line">› {{ agent.action }}</p>
+            <p v-else-if="agent.file" :key="agent.file" class="line">› {{ short(agent.file) }}</p>
+            <p v-else key="start" class="line">› reading the task</p>
+          </transition>
+          <div class="criteria" :title="`${agent.checked} of ${agent.criteria} acceptance criteria`">
+            <i v-for="n in agent.criteria" :key="n" :class="{ on: n <= agent.checked }" />
+          </div>
+        </template>
+      </div>
     </div>
   </div>
 </template>
@@ -289,6 +312,36 @@ const tierName = (tier?: string) => ({ ultrafast: 'Ultrafast', priority: 'Fast',
   opacity: 0;
   pointer-events: none;
   transform: translateX(-14px);
+}
+
+/* The cards, with the panel's gap between them. Positioned, so a card's offsetTop is its place in the list. */
+.groma-agents-list {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: inherit;
+}
+
+/* `everyAgent`: the panel keeps the hierarchy panel's height, and the list scrolls inside it under the header. */
+.groma-agents.every {
+  height: 386px;
+}
+
+.groma-agents.every .groma-agents-list {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+  scrollbar-color: #d3d2cc transparent;
+}
+
+.groma-agents.every .groma-agent {
+  flex-shrink: 0;
+}
+
+.groma-agent.queued header b {
+  color: #8a8f8c;
 }
 
 .groma-agents-label {

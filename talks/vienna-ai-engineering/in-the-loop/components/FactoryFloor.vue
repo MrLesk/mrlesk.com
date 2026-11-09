@@ -24,8 +24,12 @@ const pictures: Record<string, string> = {
       <g v-for="group in groups" :key="group.cls" :class="group.cls">
         <template v-for="(part, index) in group.parts" :key="index">
           <path v-if="part.kind === 'path'" :class="part.cls" :d="part.d" />
-          <!-- An arm grows from its base: upper arm, then the forearm, which swings around the elbow. -->
-          <g v-else-if="part.kind === 'arm'" :class="['factory-arm', part.swing]" :style="{ transformOrigin: `${part.shoulder[0]}px ${part.shoulder[1]}px` }">
+          <!-- An arm grows from its base: upper arm, then the forearm, which swings around the elbow and welds. -->
+          <g
+            v-else-if="part.kind === 'arm'"
+            :class="['factory-arm', part.swing]"
+            :style="{ transformOrigin: `${part.shoulder[0]}px ${part.shoulder[1]}px`, '--turn': part.swing === 'left' ? 1 : -1 }"
+          >
             <path v-for="face in part.base" :key="face" class="arm-base" :d="face" />
             <path class="arm-tube" :d="`M${part.shoulder} L${part.elbow}`" />
             <path class="arm-core" :d="`M${part.shoulder} L${part.elbow}`" />
@@ -34,6 +38,10 @@ const pictures: Record<string, string> = {
               <path class="arm-tube" :d="`M${part.elbow} L${part.wrist}`" />
               <path class="arm-core" :d="`M${part.elbow} L${part.wrist}`" />
               <circle class="arm-joint" :cx="part.wrist[0]" :cy="part.wrist[1]" r="5" />
+              <!-- Same delay as the forearm, so the sparks fly while it holds still (see style.css). -->
+              <g class="arm-sparks" :style="{ transformOrigin: `${part.tool[0]}px ${part.tool[1]}px`, animationDelay: `${-index * 0.37}s` }">
+                <path :d="part.sparks" />
+              </g>
             </g>
             <circle class="arm-joint" :cx="part.shoulder[0]" :cy="part.shoulder[1]" r="5" />
             <circle class="arm-joint" :cx="part.elbow[0]" :cy="part.elbow[1]" r="5" />
@@ -42,7 +50,27 @@ const pictures: Record<string, string> = {
           <g v-else-if="part.kind === 'screen'" :class="['screen', part.cls]" :transform="part.matrix">
             <image :href="base + pictures[part.cls]" :width="part.width" :height="part.height" preserveAspectRatio="xMidYMid slice" />
           </g>
-          <path v-else-if="part.kind === 'person'" :class="['person', part.role]" :d="part.d" />
+          <path v-else-if="part.kind === 'person'" class="person" :d="part.d" />
+          <!-- A worker building a car: the body, then the working arm, whose forearm and tool swing around the elbow. -->
+          <g
+            v-else-if="part.kind === 'worker'"
+            :class="['worker', part.job]"
+            :style="{ '--turn': part.facing, '--limb': `${part.widths.limb}px`, '--trunk': `${part.widths.trunk}px`, '--tool': `${part.widths.tool}px` }"
+          >
+            <path class="limb" :d="part.restArm" />
+            <path class="limb" :d="part.legs" />
+            <path class="trunk" :d="part.trunk" />
+            <circle class="head" :cx="part.head.at[0]" :cy="part.head.at[1]" :r="part.head.r" />
+            <path class="limb" :d="part.upperArm" />
+            <g class="worker-forearm" :style="{ transformOrigin: `${part.elbow[0]}px ${part.elbow[1]}px`, animationDelay: `${-index * 0.23}s` }">
+              <path class="limb" :d="part.forearm" />
+              <path class="tool" :d="part.tool" />
+              <path v-if="part.toolEnd" class="limb" :d="part.toolEnd" />
+              <g v-if="part.sparks" class="sparks" :style="{ transformOrigin: `${part.tip[0]}px ${part.tip[1]}px`, animationDelay: `${-index * 0.17}s` }">
+                <path class="spark" :d="part.sparks" />
+              </g>
+            </g>
+          </g>
         </template>
       </g>
     </svg>

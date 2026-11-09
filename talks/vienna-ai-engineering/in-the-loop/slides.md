@@ -28,6 +28,7 @@ gromaLive:
   # Greenfield project (`~/projects/task-manager`, 20 Backlog.md tasks).
   # Six agents plan TASK-1 to TASK-6 when the deck starts and all start on 21b's click. `anyOrder`: as each one
   # finishes it takes the next To Do task, whether that task's dependencies are Done or not (Alex, 2026-11-03).
+  # Every task is a new Codex session, so a new agent: `{n}` numbers them, and the cards count Codex 1 to 20 (2026-11-09).
   - name: agents
     port: 4805
     live:
@@ -43,22 +44,22 @@ gromaLive:
       agents:
         - task: TASK-1
           name: codex
-          label: Codex 1
+          label: 'Codex {n}'
         - task: TASK-2
           name: codex
-          label: Codex 2
+          label: 'Codex {n}'
         - task: TASK-3
           name: codex
-          label: Codex 3
+          label: 'Codex {n}'
         - task: TASK-4
           name: codex
-          label: Codex 4
+          label: 'Codex {n}'
         - task: TASK-5
           name: codex
-          label: Codex 5
+          label: 'Codex {n}'
         - task: TASK-6
           name: codex
-          label: Codex 6
+          label: 'Codex {n}'
   # Built on stage from the GromaRun slide, in the throwaway folder ~/.groma-live/keycloak.
   - name: keycloak
     port: 4803

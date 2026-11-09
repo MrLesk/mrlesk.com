@@ -2422,7 +2422,7 @@ html[data-mood="4"] body, html[data-mood="4"] #page-root, html[data-mood="4"] #s
 
 /* ---------- Title callback ---------- */
 /* pages/30-finale.md names each click with data-beat:
-   car      building the car: a person at every station of the line
+   car      building the car: people at work on every car of the line
    factory  building the factory, in the dark: the agents took the stations, nobody is on the platform
    deck     the camera flies up to the platform and the lights come on: someone at the console, Groma.md on screen
    title    "In the loop. Not in the dark."
@@ -2492,8 +2492,8 @@ html[data-mood="4"] body, html[data-mood="4"] #page-root, html[data-mood="4"] #s
 
 /* ---------- The factory ---------- */
 /* components/FactoryFloor.vue, drawn by lib/factory-scene.ts: one production line, three scenes.
-   car      grey light (mood 2): ink lines on grey, a person at every station, no platform yet
-   factory  black (mood 0): faint lines, an arm where each person stood, the platform up behind the line, empty,
+   car      grey light (mood 2): ink lines on grey, people at work on the cars, no platform yet
+   factory  black (mood 0): faint lines, an arm welding at every station, the platform up behind the line, empty,
             its monitors off
    deck     paper (mood 4) from here on: ink on white, green arms, someone at the console, Groma.md on the monitors
    The component sets --camera-car, --camera-factory and --camera-deck: the transform of each framing. */
@@ -2582,18 +2582,37 @@ html[data-mood="4"] body, html[data-mood="4"] #page-root, html[data-mood="4"] #s
   stroke-width: 1.4;
 }
 
-.factory svg .forearm {
+/* The agents at work, a little quicker than the people: each forearm moves to a spot, welds there, and moves on,
+   three spots per round. The sparks run on the same clock and delay as their forearm, so they only fly while it
+   holds still. --turn (from FactoryFloor.vue) mirrors the swing for the arms on the right. */
+.factory svg .forearm,
+.factory svg .arm-sparks {
   transform-box: view-box;
-  animation: factory-arm 2.6s ease-in-out infinite alternate;
 }
 
-.factory svg .factory-arm.right .forearm {
-  animation-direction: alternate-reverse;
-}
+.factory svg .forearm { animation: factory-arm 2.4s ease-in-out infinite; }
+.factory svg .arm-sparks { animation: arm-sparks 2.4s linear infinite; }
 
 @keyframes factory-arm {
-  from { transform: rotate(-7deg); }
-  to { transform: rotate(7deg); }
+  0%, 22% { transform: rotate(calc(var(--turn) * -10deg)); }
+  33%, 55% { transform: rotate(0deg); }
+  66%, 88% { transform: rotate(calc(var(--turn) * 10deg)); }
+  100% { transform: rotate(calc(var(--turn) * -10deg)); }
+}
+
+@keyframes arm-sparks {
+  0%, 33%, 66% { opacity: 1; transform: scale(0.7); }
+  10%, 43%, 76% { opacity: 1; transform: scale(1.2); }
+  20%, 53%, 86% { opacity: 0.8; transform: scale(0.8); }
+  22%, 31%, 55%, 64%, 88%, 100% { opacity: 0; transform: scale(0.5); }
+}
+
+/* Sparks: pale in the dark, Groma.md green once the lights are on (under "Lights on"). */
+.factory svg .arm-sparks path {
+  fill: none;
+  stroke: #e9e7e1;
+  stroke-width: 2;
+  stroke-linecap: round;
 }
 
 /* The pillars' lights breathe in the dark, slower than once a second. */
@@ -2614,7 +2633,7 @@ html[data-mood="4"] body, html[data-mood="4"] #page-root, html[data-mood="4"] #s
   transition: opacity 0.6s ease;
 }
 
-/* Building the car, in grey light: no colour yet, and a person at every station. */
+/* Building the car, in grey light: no colour yet, and people at work on the cars (see "The workers" below). */
 .finale[data-beat="car"] .factory svg path,
 .finale[data-beat="car"] .factory svg circle {
   fill: #c6c9c7;
@@ -2630,9 +2649,71 @@ html[data-mood="4"] body, html[data-mood="4"] #page-root, html[data-mood="4"] #s
   animation: none;
 }
 
-.finale[data-beat="car"] .factory svg .person.worker {
-  fill: var(--groma-ink);
+/* The workers: stroked lines in profile, at work on the cars. lib/factory-scene.ts passes their widths as --limb,
+   --trunk and --tool, and --turn (1 facing right, -1 facing left) so each arm swings towards its car.
+   `.finale` and `g.worker` in these selectors outrank the colour rules of every light, so the workers stay ink. */
+.factory svg g.worker {
+  opacity: 0;
+  transition: opacity 0.6s ease;
+}
+
+.finale[data-beat="car"] .factory svg g.worker {
   opacity: 1;
+}
+
+.finale .factory svg g.worker path {
+  fill: none;
+  stroke: var(--groma-ink);
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.finale .factory svg g.worker .limb { stroke-width: var(--limb); }
+.finale .factory svg g.worker .trunk { stroke-width: var(--trunk); }
+.finale .factory svg g.worker .tool { stroke-width: var(--tool); }
+
+.finale .factory svg g.worker .head {
+  fill: var(--groma-ink);
+  stroke: none;
+}
+
+/* Welding sparks: white, like the torch's light, growing and fading slower than twice a second. */
+.finale .factory svg g.worker .spark {
+  stroke: #ffffff;
+  stroke-width: calc(var(--tool) * 1.4);
+}
+
+.factory svg .worker-forearm,
+.factory svg .sparks {
+  transform-box: view-box;
+}
+
+.factory svg .weld .worker-forearm { animation: worker-weld 1.8s ease-in-out infinite alternate; }
+.factory svg .hammer .worker-forearm { animation: worker-hammer 1.1s ease-in-out infinite; }
+.factory svg .wrench .worker-forearm { animation: worker-wrench 1.3s ease-in-out infinite alternate; }
+.factory svg .sparks { animation: worker-sparks 0.9s ease-in-out infinite; }
+
+@keyframes worker-weld {
+  from { transform: rotate(calc(var(--turn) * -3deg)); }
+  to { transform: rotate(calc(var(--turn) * 4deg)); }
+}
+
+/* Raise, wind up, strike, rebound. */
+@keyframes worker-hammer {
+  0%, 100% { transform: rotate(calc(var(--turn) * -30deg)); }
+  55% { transform: rotate(calc(var(--turn) * -42deg)); }
+  72% { transform: rotate(calc(var(--turn) * 20deg)); }
+  82% { transform: rotate(calc(var(--turn) * 12deg)); }
+}
+
+@keyframes worker-wrench {
+  from { transform: rotate(calc(var(--turn) * -18deg)); }
+  to { transform: rotate(calc(var(--turn) * 14deg)); }
+}
+
+@keyframes worker-sparks {
+  0%, 100% { opacity: 0.3; transform: scale(0.6); }
+  45% { opacity: 1; transform: scale(1.2); }
 }
 
 /* The agents take the stations once the people have left: each arm grows from its base. */
@@ -2675,6 +2756,7 @@ html[data-mood="4"] body, html[data-mood="4"] #page-root, html[data-mood="4"] #s
 .finale:is([data-beat="deck"], [data-beat="title"], [data-beat="twist"]) .factory svg .wheel { fill: var(--groma-ink); }
 .finale:is([data-beat="deck"], [data-beat="title"], [data-beat="twist"]) .factory svg .monitor { fill: var(--groma-ink); }
 .finale:is([data-beat="deck"], [data-beat="title"], [data-beat="twist"]) .factory svg .arm-core { stroke: var(--groma-green); }
+.finale:is([data-beat="deck"], [data-beat="title"], [data-beat="twist"]) .factory svg .arm-sparks path { stroke: var(--groma-green); }
 
 .finale:is([data-beat="deck"], [data-beat="title"], [data-beat="twist"]) .factory svg .beacon {
   fill: var(--groma-green);
@@ -2682,7 +2764,7 @@ html[data-mood="4"] body, html[data-mood="4"] #page-root, html[data-mood="4"] #s
 }
 
 /* Someone walked back in. */
-.finale:is([data-beat="deck"], [data-beat="title"], [data-beat="twist"]) .factory svg .person.overseer {
+.finale:is([data-beat="deck"], [data-beat="title"], [data-beat="twist"]) .factory svg .person {
   fill: var(--groma-ink);
   opacity: 1;
   transition: opacity 0.6s ease 1.2s;
@@ -3085,7 +3167,9 @@ html[data-mood="4"] body, html[data-mood="4"] #page-root, html[data-mood="4"] #s
   z-index: 2;
   display: flex;
   justify-content: center;
-  gap: 20px;
+  /* Card width (112) plus this gap (14) is the 126 px `pitch` in ScanFlow.vue: change both together, or the
+     lines stop meeting the cards. */
+  gap: 14px;
   margin: 0;
   padding: 0;
   list-style: none;
@@ -3094,7 +3178,7 @@ html[data-mood="4"] body, html[data-mood="4"] #page-root, html[data-mood="4"] #s
 .scan-langs li {
   box-sizing: border-box;
   display: flex;
-  width: 120px;
+  width: 112px;
   height: 104px;
   flex-direction: column;
   align-items: center;
@@ -3129,6 +3213,7 @@ html[data-mood="4"] body, html[data-mood="4"] #page-root, html[data-mood="4"] #s
   text-align: center;
 }
 
+/* The other scanners: a pile of cards, two outlines peeking out behind the front one. */
 .scan-langs li.yours {
   border-style: dashed;
   border-color: var(--groma-green);

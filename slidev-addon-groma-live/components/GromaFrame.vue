@@ -9,7 +9,9 @@ import { useIsSlideActive, useSlideContext } from '@slidev/client'
 //
 // How a click reaches the map, best case first:
 //   1. message: Groma announces itself with { gromaReady: true }. Each click posts
-//      { gromaView: '?...' } and the map flies there without reloading.
+//      { gromaView: '?...' } and the map flies there without reloading. A posted view only moves the
+//      selection and the camera, so a click that changes what Groma loads (`from` or `revision`, as in
+//      'from=<commit>' to compare that commit with the working tree) reloads the map behind the veil.
 //   2. reload:  an older Groma never announces itself, so each click reloads the iframe behind a veil.
 //   3. stills:  nothing answers on `origin`, so the slide shows the captured images instead,
 //               or a note when there are none.
@@ -64,6 +66,20 @@ const search = computed(() => `?theme=${props.theme}&inset=${Math.round(props.in
 let readyTimer: ReturnType<typeof setTimeout> | undefined
 let probeTimer: ReturnType<typeof setTimeout> | undefined
 
+/** What a view asks Groma to load: one revision, or a comparison. Groma reads these only when the page opens. */
+function loadedPart(view: string): string {
+  const params = new URLSearchParams(view)
+  return `from=${params.get('from') ?? ''}&revision=${params.get('revision') ?? ''}`
+}
+/** `loadedPart` of the page the iframe opened last. */
+let loaded = ''
+
+/** The address of the current view, remembered as what the iframe holds once it opens it. */
+function frameUrl(): string {
+  loaded = loadedPart(search.value)
+  return `${props.origin}/${search.value}`
+}
+
 /** A map that is being built on stage may not answer yet, so keep asking while the slide is shown. */
 async function probe(): Promise<void> {
   clearTimeout(probeTimer)
@@ -73,7 +89,7 @@ async function probe(): Promise<void> {
   }
   try {
     await fetch(props.origin, { mode: 'no-cors', cache: 'no-store', signal: AbortSignal.timeout(1500) })
-    initialSrc.value = `${props.origin}/${search.value}`
+    initialSrc.value = frameUrl()
     status.value = 'live'
   } catch {
     status.value = 'offline'
@@ -144,18 +160,19 @@ function stopInteracting(): void {
     veiled.value = true
     // A Groma that never announces itself is unveiled by onLoad; one that does lifts the veil itself.
     control.value = 'unknown'
-    frame.value.src = `${props.origin}/${search.value}`
+    frame.value.src = frameUrl()
   }
 }
 
 watch(search, () => {
   if (status.value !== 'live') return
   // No frame on the page yet (it renders on the next tick, or the slide is hidden): it will load the current view.
-  if (!frame.value) initialSrc.value = `${props.origin}/${search.value}`
-  else if (control.value === 'message') post()
+  if (!frame.value) initialSrc.value = frameUrl()
+  // The same revision or comparison: the map flies there. Another one: Groma must load it, so the map reloads.
+  else if (control.value === 'message' && loadedPart(search.value) === loaded) post()
   else {
     veiled.value = true
-    setTimeout(() => { if (frame.value) frame.value.src = `${props.origin}/${search.value}` }, 220)
+    setTimeout(() => { if (frame.value) frame.value.src = frameUrl() }, 220)
   }
 })
 

@@ -25,12 +25,13 @@ const beats = ['car', 'factory', 'deck', 'title', 'twist']
 <!--
 ⏱ 30:15
 
-"Factories before." A production line in grey light, with a person at every station.
+"Factories before." A production line in grey light, with people at work on every car: welding, hammering,
+turning a wrench.
 DRAFT, your words: This is how we built software. Building the car: a human at every station.
 We wrote it, tested it, reviewed it, by hand.
 
-[click] "Factories after." The lights go out. The people leave their stations, a robot arm takes each one,
-and a platform rises behind the line: empty, with its monitors off.
+[click] "Factories after." The lights go out. The people leave, a robot arm takes each station and gets to
+work, welding spot after spot, and a platform rises behind the line: empty, with its monitors off.
 DRAFT: Now we build the factory instead. Agents execute at every station, and up there is where humans should
 oversee it. In a dark factory, nobody is up there. That's the factory I was running.
 

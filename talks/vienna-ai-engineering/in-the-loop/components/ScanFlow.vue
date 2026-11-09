@@ -1,30 +1,45 @@
 <script setup lang="ts">
 import { useIsSlideActive } from '@slidev/client'
 
-// Every language feeds the same scan: six cards at the bottom, each with a line into the scanner card.
+// Every language feeds the same scan: seven cards at the bottom, each with a line into the scanner card.
 // The lines draw on when the slide opens, then keep flowing upwards. The marks are drawn here, in each
 // language's colours, rather than copied logos. Every language listed has a scanner marked Available in
-// the Groma.md README; the last card stands for the scanner plugins anyone can add. From Tuesday's keynote
-// demo, on paper.
+// the Groma.md README. The `more` card counts the README's other scanners, so nobody thinks these five are
+// all there is (Alex, 2026-11-06): a card like the others, its mark four of those languages as small tiles.
+// The last card stands for the scanner plugins anyone can add. From Tuesday's keynote demo, on paper.
 const active = useIsSlideActive()
 
-const languages = ['java', 'csharp', 'rust', 'php', 'typescript', 'yours'] as const
+// The Groma.md README on GitHub lists 24 scanners (12 Available, 12 Experimental) on 2026-11-06. Five have
+// their own card, so the `more` card says the rest. Recount when the README's Languages table changes.
+const scannersInReadme = 24
+const moreCount = scannersInReadme - 5
+// Four of the others, in their own colours, for the `more` card's mark.
+const moreTiles = [
+  { label: 'Go', colour: '#00add8', x: 3, y: 3 },
+  { label: 'Py', colour: '#3776ab', x: 25, y: 3 },
+  { label: 'Kt', colour: '#7f52ff', x: 3, y: 25 },
+  { label: 'Sw', colour: '#f05138', x: 25, y: 25 },
+]
+
+const languages = ['java', 'csharp', 'rust', 'php', 'typescript', 'more', 'yours'] as const
 const names: Record<(typeof languages)[number], string> = {
   java: 'Java',
   csharp: 'C#',
   rust: 'Rust',
   php: 'PHP',
   typescript: 'TypeScript',
+  more: `+${moreCount} more`,
   yours: 'Your favorite language',
 }
 
-// The cards sit on a 140 px pitch, centred on the slide; the lines meet the scanner card along its bottom edge.
+// The cards sit on a 126 px pitch, centred on the slide: card width plus gap, `.scan-langs` in style.css.
+// The lines meet the scanner card along its bottom edge, 46 px apart.
 const W = 980
-const pitch = 140
-const first = W / 2 - pitch * 2.5
+const pitch = 126
+const middle = (languages.length - 1) / 2
 const paths = languages.map((_, i) => {
-  const x = first + pitch * i
-  const into = W / 2 + (i - 2.5) * 46
+  const x = W / 2 + (i - middle) * pitch
+  const into = W / 2 + (i - middle) * 46
   return `M ${x} 392 C ${x} 330, ${into} 318, ${into} 262`
 })
 </script>
@@ -72,6 +87,12 @@ const paths = languages.map((_, i) => {
         <svg v-else-if="lang === 'typescript'" viewBox="0 0 48 48" aria-hidden="true">
           <rect x="6" y="6" width="36" height="36" rx="4" fill="#3178c6" />
           <text style="font-family: Inter, system-ui, sans-serif; font-size: 17px; font-weight: 800" x="38.5" y="37.5" text-anchor="end" fill="#fff">TS</text>
+        </svg>
+        <svg v-else-if="lang === 'more'" viewBox="0 0 48 48" aria-hidden="true">
+          <g v-for="tile in moreTiles" :key="tile.label">
+            <rect :x="tile.x" :y="tile.y" width="20" height="20" rx="3" :fill="tile.colour" />
+            <text style="font-family: Inter, system-ui, sans-serif; font-size: 10px; font-weight: 800" :x="tile.x + 10" :y="tile.y + 13.6" text-anchor="middle" fill="#fff">{{ tile.label }}</text>
+          </g>
         </svg>
         <svg v-else viewBox="0 0 48 48" aria-hidden="true">
           <rect x="7" y="7" width="34" height="34" rx="4" fill="none" stroke="#1d9e75" stroke-width="2.4" stroke-dasharray="5 4" />

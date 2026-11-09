@@ -31,6 +31,12 @@ Changed for Vienna (Alex, 2026-11-04):
 - The greenfield is one part now: its review (`21c`) and the run of the board (`21e`) come straight after the
   agents' run (`21b`), not after the GitHub Action. On Ultrafast the six agents finished in about 30 seconds at
   AI DevCon, while Alex was still on the run slide, so coming back to them later made no sense.
+- The scans slide (`pages/21d-scans.md`, `components/ScanFlow.vue`) has a card "+19 more" between TypeScript
+  and "Your favorite language" (Alex, 2026-11-06), drawn like the others: its mark is four of those languages as
+  small tiles (Go, Python, Kotlin, Swift). A pile of cards with "+19 languages & frameworks" looked odd (Alex).
+  At AI DevCon people thought Groma.md only scanned the five languages on the slide. The number is the
+  scanners in the Groma.md README on GitHub (24 that day) minus the five with their own card; recount it in
+  `ScanFlow.vue` when the README's Languages table changes.
 
 Changed at AI DevCon, and still true here:
 
@@ -86,13 +92,17 @@ comes back when Groma.md arrives. That is the title, made visible.
 to right half, then into the monitors (2026-11-04). The dark beat in the middle ties it to this talk's dark factory.
 
 1. `car`: grey light (mood 2), titled "Factories before." (Alex). Building the car: a production line with three
-   cars and a person at every station. Its framing leaves the top of the slide free for the title.
+   cars and people at work on them, seen from the side: one welds (white sparks), one hammers, one turns a
+   wrench, one more welds. Alex wanted them to look busy, not standing around (2026-11-06). Its framing leaves the
+   top of the slide free for the title.
 2. `factory`: the lights go out (mood 0), titled "Factories after." Building the factory: the people leave, a
-   robot arm (an agent) grows in at each station, and a platform with three monitors rises behind the line.
-   Nobody is on it and its monitors are off: the dark factory.
+   robot arm (an agent) grows in at each station and gets to work (Alex, 2026-11-06): it moves to a spot on the
+   car, welds there with pale sparks, and moves on. A platform with three monitors rises behind the line. Nobody
+   is on it and its monitors are off: the dark factory.
 3. `deck`: the camera flies up to the platform and the lights come on (mood 4): ink on paper, the arms turn
    Groma.md green, a person stands at the console, and the three monitors switch on with Groma.md stills from
-   `public/demo/` (the GitHub Action's diff, Keycloak, OpenID Connect; `pictures` in `FactoryFloor.vue`).
+   `public/demo/` (the GitHub Action's diff, Keycloak, OpenID Connect; `pictures` in `FactoryFloor.vue`). The
+   monitors have thin bezels (`MONITOR.border`, Alex, 2026-11-06).
 4. `title`: "In the loop. Not in the dark."
 5. `twist`: "In" is struck out and "Over" written above it (see "The plot twist" in `style.css`). It echoes the
    slide's "humans oversee".
@@ -100,8 +110,11 @@ to right half, then into the monitors (2026-11-04). The dark beat in the middle 
 The drawing is code, not a picture. `lib/factory-scene.ts` describes the line in world units (x towards the
 bottom right of the slide, y towards the bottom left, z up), projects it in 30 degree isometric, fits it to the
 980 x 551 slide and lists the parts back to front, as two groups: the platform, and the floor in front of it.
-Both scenes share one floor plan: each station holds a worker (shown on the car beat) and an arm (shown from the
-factory beat on). Sizes and places are the constants at its top (`PLATFORM`, `MONITOR`, `STAIRS`, `LINE`, `PILLAR`)
+Both scenes share one floor plan. The workers (shown on the car beat) stand at the cars: `workers` in `floor()`
+says where and what each one does, `POSE` and `TOOLS` say how they are drawn, and "The workers" in `style.css`
+swings each working arm around its elbow. The arms (shown from the factory beat on) stand at the stations, `arms`
+in `floor()`, each drawn just after its car so the tool and sparks show on the roof; "The agents at work" in
+`style.css` is their move, weld, move rhythm. Sizes and places are the constants at its top (`PLATFORM`, `MONITOR`, `STAIRS`, `LINE`, `PILLAR`)
 and the positions in `platform()` and `floor()`. It also works out the three camera framings (`cameras`): the line
 alone for the car, the whole drawing for the factory, the monitors and the person for the deck.
 `FactoryFloor.vue` turns the parts into SVG and passes the framings to the CSS as `--camera-car`,
@@ -137,10 +150,17 @@ from tasks and comes in at Plan, brownfield starts from a scan and comes in at S
 component, and 20 Backlog.md tasks that depend on each other. Codex 1 to 6 plan TASK-1 to TASK-6 when the deck
 starts and all start on 21b's click (Alex, 2026-11-03: six in parallel, even if they break things). When a task
 finishes, the addon's orchestrator marks it Done, runs the repository's `.groma-curate.mjs` (it adds that task's
-component through the `groma` CLI: title, description, group, icon, colour and relationships), and gives that agent
-the next To Do task. `anyOrder: true` in the headmatter makes it ignore the dependencies, so all six keep working.
+component through the `groma` CLI: title, description, group, icon, colour and relationships), and starts a fresh
+Codex session on the next To Do task. So the 20 tasks are 20 agents, six at a time, labelled `Codex {n}` in the
+headmatter: the addon numbers them in the order they start (`AgentRun.number`). With `every-agent` on 21b the panel
+lists all 20, one card each, in a list that scrolls inside the panel (Alex, 2026-11-09): Codex 7 to 20 show as
+queued until they start, and the list scrolls by itself to the first agent still at work. The count next to AGENTS
+says how many tasks are done. 21b's caption says "20 tasks, 20 agents queued." (Alex, 2026-11-09). `anyOrder: true` in the headmatter makes it ignore the dependencies, so all six keep working.
 Tasks can finish before the ones they depend on, so `.groma-curate.mjs` adds each relationship from whichever end
-finishes last (task-manager commit `4e89f11`). The code may not fit together, which can show on `21e`. The agents write only their
+finishes last (task-manager commit `4e89f11`). Every seed task also lists the container's id, `kanban`, as its
+last reference (Alex, 2026-11-08): until one of its files exists, a task stands as a pin on Task Manager CLI, so
+`21b` opens on the 20 queued tasks (the row of pins runs on under the agents panel), and each pin
+moves to its component once an agent writes the file. The code may not fit together, which can show on `21e`. The agents write only their
 task's file and tick its criteria (`agent-prompt.md`); they run no tests, builds or `groma`. On Ultrafast all six
 finished in about 30 seconds at AI DevCon, while Alex was still on `21b`, so the greenfield is one part: the run,
 then straight on to its review (`21c`) and running the board (`21e`), then Keycloak (Alex, 2026-11-04).
@@ -187,10 +207,11 @@ by this deck; the flash deck still has it.
 ## Files
 
 - `slides.md` holds the cover and the slide order. One file per slide in `pages/`.
-- `pages/2xb-*-live.md` are the embedded live map slides. `21b` shows the greenfield seed map without the agents
-  panel (`:panels="[false, true]"`). Its click brings the panel and sends the `go` prompt: Codex 1 to 6 start on
-  TASK-1 to TASK-6 at once (`<GromaAgents>` on the `live` instance; `agent-prompt.md` is
-  the first prompt, with `{agent}` and `{task}` filled in). RESET in the panel stops them and resets the clone.
+- `pages/2xb-*-live.md` are the embedded live map slides. `21b` opens on the agents panel, Codex 1 to 6 ready on
+  their tasks: no seed map without the panel first (Alex, 2026-11-09). `<GromaAgents>` runs on the `live`
+  instance; `agent-prompt.md` is the first prompt, with `{agent}` and `{task}` filled in. The click sends the `go`
+  prompt: Codex 1 to 6 start on TASK-1 to TASK-6 at once. Opening the slide never starts them, so a reload or a
+  jump to `21b` costs nothing. RESET in the panel stops them and resets the clone.
   `21c` shows the finished greenfield map, then the comparison from the clone's seed commit (`{base}`, filled in
   by the deck). Never run `check-views.mjs` on `21b` or `21c`: for a live instance a phase change is the go
   signal, and every start or RESET costs agent runs on the demo key. Use `--only` for the other pages.
