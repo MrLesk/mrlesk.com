@@ -38,6 +38,17 @@ Changed for Vienna (Alex, 2026-11-04):
   scanners in the Groma.md README on GitHub (24 that day) minus the five with their own card; recount it in
   `ScanFlow.vue` when the README's Languages table changes.
 
+- After the thank-you comes a save-the-dates slide (`pages/32-save-the-dates.md`, Alex, 2026-11-09) for two
+  events: Codex Build at TU Wien on Saturday 2026-11-28 (https://luma.com/codex-yfcw) and Cafe Compute at Flinn
+  on Saturday 2026-12-12 (https://luma.com/cafe-compute-vienna-1). Alex asked for a completely different style
+  there, the one of his Codex meetup decks. So it is the only slide that is not lit like the room: it uses
+  `layouts/codex.vue` (the Prater at night, shooting stars, dark glass cards, after `slidev-theme-codex-dark` at
+  the repository root), with `mood: 0` for black around the slide and `meter: false`. Its styles are under "Save
+  the dates" in `style.css`. The words are Alex's sketch: the title, each event's name and place, its date. Keep
+  it that short; what he says about the events is in the speaker notes. The two cards stand at the two edges of
+  the slide, as far apart as they go, so a phone at the back of the room can pick up one code at a time (Alex);
+  keep them apart. See "Files" for its pictures and QR codes.
+
 Changed at AI DevCon, and still true here:
 
 - At Devoxx people asked what happened to the 1,700 tests on "I opened the code. WTF!" and "Look at what I
@@ -254,6 +265,12 @@ by this deck; the flash deck still has it.
   Clicks add `s1` to `s4` to the stage and `style.css` transitions on those classes, so stepping back
   rewinds. `components/GrowingIds.vue` grows the `IN (...)` list from click 3.
 - `components/FactoryFloor.vue` and `lib/factory-scene.ts` are the finale's factory (see "The finale").
+- `layouts/codex.vue` is the Codex meetups' look, used by the save-the-dates slide only. Its night picture and
+  Codex mark, `public/codex/prater-night.jpg` and `public/codex/codex-logo.png`, are copies from
+  `slidev-theme-codex-dark/public`. The slide's QR codes are `public/qr-codex-build.svg` and
+  `public/qr-cafe-compute.svg`, drawn on the pale paper colour of the panel they sit on (`--codex-paper`). To
+  make one again, with the event's address at the end:
+  `qrencode -t SVG -l M -m 2 --foreground=080808 --background=edeff6 -o public/qr-codex-build.svg https://luma.com/codex-yfcw`
 - `components/SurveyorScene.vue` dissolves the road engraving into the map engraving
   (`public/groma-road.webp`, `public/groma-map.webp`). Both are the light pictures from
   `docs/what-is-a-groma.md` in the Groma.md repository; their green lines keep them to paper slides.
