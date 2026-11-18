@@ -103,7 +103,7 @@ RUN bun run build
 # ========================================
 # Stage Y: Production - Serve with Nginx
 # ========================================
-FROM nginx:alpine
+FROM nginx:1.31.9-alpine
 RUN rm -rf /usr/share/nginx/html/*
 
 # Copy Astro build output
