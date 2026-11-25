@@ -17,7 +17,7 @@ clicks: 1
 </div>
 
 <!--
-⏱ 27:45
+⏱ 29:15
 
 The room goes black again, on purpose. Same four questions as minute 4. Let people recognize them.
 

@@ -11,6 +11,8 @@
     "@slidev/types": "52.14.2",
     "@vueuse/core": "14.2.1",
     "qrcode": "1.5.4",
+    "playwright-chromium": "1.55.0",
+    "slidev-addon-speech-navigation": "github:MrLesk/slidev-addon-speech-navigation#2e9dfe1",
     "slidev-theme-codex": "file:./slidev-theme-codex",
     "slidev-theme-codex-dark": "file:./slidev-theme-codex-dark",
     "slidev-theme-penguin": "file:./slidev-theme-penguin",

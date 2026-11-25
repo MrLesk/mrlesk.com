@@ -1,6 +1,6 @@
 ---
 theme: penguin
-title: "groma.md: Keep humans in the loop"
+title: "groma.md: See your architecture live"
 author: Alex Gavrilescu
 colorSchema: light
 drawings:
@@ -13,32 +13,22 @@ themeConfig:
 ---
 
 <div class="cover-sheet">
-  <div class="cover-registration">ARCHITECTURE MASTER DRAWING · 01</div>
+  <div class="cover-registration">DEVOXX · GROMA.MD</div>
   <img src="/groma-lockup.svg" class="cover-lockup" alt="groma.md" />
-  <h1>Keep humans<br><span>in the loop.</span></h1>
-  <p>A living architectural blueprint for humans and AI agents.</p>
-  <div class="cover-meta">
-    <span>LOCAL FIRST</span>
-    <span>INTENT + EVIDENCE</span>
-    <span>GIT FRIENDLY</span>
-    <span>MIT OPEN SOURCE</span>
-  </div>
+  <h1>See your architecture.<br><span>Watch it change.</span></h1>
+  <p>Your project’s architecture, updating in real time.</p>
+  <div class="cover-meta"><span>groma.md</span></div>
 </div>
+
+
+<!--
+One memory: With Groma, I can see my project's architecture and watch it update in real time.
+Return to this benefit after each demonstration. Supporting benefits are local scanning,
+visible agent work with Backlog.md, and understandable actor-to-system flows.
+-->
 
 ---
 src: ./pages/what.md
----
-
----
-src: ./pages/why.md
----
-
----
-src: ./pages/altitude.md
----
-
----
-src: ./pages/loop.md
 ---
 
 ---
@@ -46,15 +36,7 @@ src: ./pages/scan.md
 ---
 
 ---
-src: ./pages/meaning.md
----
-
----
 src: ./pages/living-map.md
----
-
----
-src: ./pages/plan.md
 ---
 
 ---
@@ -62,7 +44,11 @@ src: ./pages/agents.md
 ---
 
 ---
-src: ./pages/future.md
+src: ./pages/flows.md
+---
+
+---
+src: ./pages/loop.md
 ---
 
 ---

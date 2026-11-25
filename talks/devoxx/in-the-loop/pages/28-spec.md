@@ -24,9 +24,9 @@ mood: 4
 </div>
 
 <!--
-⏱ 27:00
+⏱ 28:30
 
-Top right, the three steps you just saw on Keycloak: install, scan, then your agent curates.
+Top right, the three steps you saw on Keycloak: install, scan, then your agent curates.
 The scan just gets you started. Once it's curated, that map is your architecture.
 
 Quick spec sheet, 45 seconds. MIT. Deterministic scans. Live refresh of architecture components.

@@ -1223,3 +1223,29 @@ html:not(.dark) #slide-content {
     "main next"
     "bottom bottom" !important;
 }
+
+
+/* Devoxx: one live-architecture message, supported by user benefits. */
+.cover-sheet h1 { font-size: 62px; }
+.cover-sheet > p { width: auto; white-space: normal; }
+.demo-command { margin-top: 28px; font-size: 22px !important; }
+.benefit-scan { align-items: center; margin-top: 54px; }
+.benefit-scan .measure-list { margin-top: 0; }
+.benefit-scan .measure-list > div { grid-template-columns: 150px 1fr; gap: 18px; padding: 22px 0; }
+.benefit-scan .measure-list small { font-size: 17px; }
+.scan-time { min-height: 230px; }
+.scan-time > strong { font-size: 84px; line-height: 1; letter-spacing: -0.06em; color: var(--groma-green); }
+.scan-time > strong span { display: block; margin-top: 8px; font-size: 27px; letter-spacing: -0.02em; }
+.scan-time > p { margin: 24px 0 0; font-size: 19px; font-weight: 500; line-height: 1.3; }
+.snapshot-explanation { margin: 20px 0 0; color: var(--groma-muted); font-size: 18px; }
+.work-tools { margin: 8px 0 34px; }
+.work-benefits { position: relative; z-index: 2; display: grid; grid-template-columns: 1fr 1fr; gap: 54px; }
+.work-benefits section { padding: 22px 0; border-top: 1px solid var(--groma-line); }
+.work-benefits section > span { color: var(--groma-green); font: 13px "Fira Code", ui-monospace, monospace; letter-spacing: .1em; }
+.work-benefits h2 { margin: 22px 0 15px; font-size: 30px; line-height: 1.15; letter-spacing: -.03em; }
+.work-benefits p { margin: 0; color: var(--groma-muted); font-size: 23px; }
+.flow-benefit h1 { font-size: 64px; }
+.getting-started .command-step { padding: 18px 13px; }
+.getting-started .command-step code { font-size: 17px !important; white-space: nowrap; }
+.getting-started .command-step > span { font-size: 11px; }
+.closing-sheet h1 { font-size: 59px; }

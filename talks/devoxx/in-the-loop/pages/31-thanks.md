@@ -5,7 +5,7 @@ mood: 4
 
 <div class="thanks">
   <div>
-    <div class="qr"><img src="/qr-talk.png" alt="QR code to this talk in the Devoxx app" /></div>
+    <div class="qr"><img src="/qr-talk.svg" alt="QR code to this talk in the Devoxx app" /></div>
     <span class="qr-label">RATE THIS TALK</span>
   </div>
   <div>
@@ -20,11 +20,12 @@ mood: 4
 </div>
 
 <!--
-⏱ 29:05
+⏱ 30:35
 
 Leave this up for questions. Check out Groma.md, it's literally groma.md.
 
-The QR code opens this talk in the Devoxx app:
-https://m.devoxx.com/events/dvbe26/talks/25652/in-the-loop-not-in-the-dark-staying-in-control-in-the-era-of-dark-software-factories
-It is the exact code you supplied (public/qr-talk.png), only its white border trimmed.
+The QR code opens Friday's talk in the Devoxx app, where people can rate it once it has started:
+https://m.devoxx.com/events/dvbe26/talks/52104
+It is public/qr-talk.svg, made with qrencode from that short link, so the code stays coarse enough to scan
+from the back of the room. Monday's 30-minute talk was 25652.
 -->

@@ -1,6 +1,7 @@
 # In the loop, not in the dark
 
-Slidev deck for Alex Gavrilescu's Devoxx Belgium 2026 talk (Tools in Action, 30 minutes).
+Slidev deck for Alex Gavrilescu's Devoxx Belgium 2026 talk (Tools in Action, 30 minutes), now growing into the
+50-minute keynote on Friday 2026-10-09, 09:30, Room 4. Notes marked "50-minute timings still to redo" are new.
 Read https://sli.dev/llms.txt before changing Slidev mechanics.
 
 ## The one idea that shapes everything
@@ -16,7 +17,8 @@ comes back when Groma.md arrives. That is the title, made visible.
   appears once Groma.md is on screen. Do not use green on darker slides. One exception, Alex's
   call: the green ticks on "I followed the best practices." 
 - The four attempts after the welcome slide step the light 1, 2, 3, 4, one level per attempt,
-  so only Groma.md 3 is at full light (Alex's call). The attempt rail drops its green below mood 4.
+  so only Groma.md 3 is at full light (Alex's call). The attempt rail drops its green below mood 4, and the
+  pictures on the attempts (the code meme, Project Blueprint's first mockup) go grey.
 
 ## Voice
 
@@ -41,9 +43,13 @@ under `gromaLive` in the headmatter and stops them with Slidev.
 | Beat | Slides | Groma.md server |
 | --- | --- | --- |
 | 1 Walk the map | `20b` | `~/projects/groma3`, port 4801 |
-| 2 Three agents on the order service (`21b`), then what they changed (`21c`) | `21b`, `21c` | `scenario`: a fresh clone of `slidev-addon-groma-live/demo/orders.bundle` in `~/.groma-live/agents`, steps in `demo/agents.mjs`, port 4805 |
-| 3 Keycloak, scanned on stage | `22a` runs the clone, `22b` shows the Groma.md setup (its clicks press Continue, then Install & scan) and then the map | throwaway clone in `~/.groma-live/keycloak-devoxx`, port 4803 |
-| 4 Keycloak curated | `23b` | `~/projects/keycloak`, port 4802 |
+| 2 Keycloak, scanned on stage | `22a` runs the clone, `22b` shows the Groma.md setup (its clicks press Continue, then Install & scan) and then the map | throwaway clone in `~/.groma-live/keycloak-devoxx`, port 4803 |
+| 3 Keycloak curated | `23b` | `~/projects/keycloak`, port 4802 |
+| 4 Six Codex agents on six Groma.md tasks (`21b`), then what they changed (`21c`) | `21b`, `21c` | `live`: a fresh clone of `~/projects/groma3` at branch `in-the-loop-baseline` in `~/.groma-live/agents`, one `codex exec` session per task planning from `bun run dev` on, port 4805 |
+
+The beats follow how a team would start with Groma.md (Alex, 2026-10-08): see a map, scan and curate
+your own code (Keycloak, beats 2 and 3), and only then let agents work on tasks with the map open (beat 4).
+The scans slide `21d` leads into beat 2 and the Karpathy card `21a` into beat 4.
 
 `<GromaFrame>` posts one Groma.md query string per click and the camera flies there. `<GromaRun>` is a
 real terminal on the slide: each click runs the next configured command.
@@ -52,20 +58,36 @@ maps; add `--stills` to re-capture the fallback images, `--only 21` to limit it 
 `--deck <url>` when the deck is not on port 3030. Groma.md ignores ids it does not know. For `<GromaAgents>`
 slides it moves the agents to the right phase first.
 
-Beat 3 works since Groma.md 0.5.0 and the 0.2.0 scanners on npm: the Groma.md setup installs them, scans and
-opens the raw map. It takes about 4 minutes from "Install & scan" to the map (about 15 s install,
-2 minutes scan, 1.5 minutes preparing the map), longer than the slide's slot. The curated Keycloak map
-(`~/projects/keycloak/groma`, not in git) uses the 0.2.0 scanners too, so its Groma.md server scans for
-about 50 s after `bun run dev` before slide `23b` answers.
+Rehearsed with Groma.md 0.6.2 plus the standalone scanner dependency fix, and the 0.2.1 published
+scanners. The fresh Keycloak setup reached its map in about 23 seconds with scanners already cached;
+a cold download depends on the network. Start the deck before the talk and let both prepared maps
+finish loading. Run `bun scripts/check-views.mjs` before presenting; it checks view IDs, relationships,
+comparison revisions, and source files. The raw Keycloak map is intentionally built on stage.
+
+The curated Keycloak relationships live in their source element documents. Do not restore the old
+central `relationships.md`. The order-service scenario (`orders.bundle`, `demo/agents.mjs`) is no longer used
+by this deck; the flash deck still has it.
 
 ## Files
 
 - `slides.md` holds the cover and the slide order. One file per slide in `pages/`.
-- `pages/2xb-*-live.md` are the embedded live map slides. `21b` opens on the order service's first commit
-  (an empty folder), replays its 48 commits on the next click, then runs the agents for real, one phase per
-  click (`backlog` commands, source edits, each agent's commit), through `<GromaAgents>`; entering it from
-  the slide before resets the clone. `21c` opens Groma.md 0.6.0's comparison from the demo history's last
-  commit (`ee9e69b`, the service before the agents) to the working tree, and finishes the agents first.
+- `pages/2xb-*-live.md` are the embedded live map slides. `21b` opens zoomed on the Groma application, where the
+  six tasks are pinned, without the agents panel (`:panels="[false, true]"`; `hud=off` would hide the pins too).
+  Its click brings the panel and the full map, and sends the `go` prompt to the six Codex sessions that planned when `bun run dev` started
+  (`<GromaAgents>` on the `live` instance; `agent-prompt.md` is their first prompt, with `{agent}` and `{task}`
+  filled in). RESET in the panel stops them, resets the clone and plans again. `21c` opens the comparison from
+  the clone's baseline commit (`{base}`, filled in by the deck) to the working tree, finished or not. Never run
+  `check-views.mjs` on `21b` or `21c`: for a live instance a phase change is the go signal, and every start or
+  RESET costs a planning round on the demo key. Use `--only` for the other pages. `bun run rehearsal` runs the
+  agents on GPT-6 Luna at max effort on the Fast tier instead of the keynote setup (GPT-6.1 Sol, medium, Ultrafast).
+  `21c` also shows what the run has cost so far, bottom right (`<GromaAgents review cost>`): the addon's
+  `setup/run-cost.ts` prices every response in the agents' saved Codex sessions at list prices, with the model
+  and tier Codex logged, planning included, and says "so far" while agents still work.
+- `pages/23-demo-curated.md` (no LIVE tag: the curated map was made before the talk) runs
+  `components/CodexPaste.vue` on Alex's clicks (2026-10-09): when it opens, the pointer waits on Copy prompt in
+  Groma.md's First scan notice from the previous slide; click 1 copies and a Codex terminal opens, click 2 pastes
+  the prompt (⌘V), click 3 sends it (⏎) and Codex starts working. The prompt
+  is Groma.md's own text from `src/viewers/web/chrome/empty.ts`; keep it word for word. Previews show the end state.
 - `pages/06-rescue.md` is one terminal driven by four clicks ("AI to the rescue." rolls into "AI power!").
   Clicks add `s1` to `s4` to the stage and `style.css` transitions on those classes, so stepping back
   rewinds. `components/GrowingIds.vue` grows the `IN (...)` list from click 3.
@@ -77,6 +99,24 @@ about 50 s after `bun run dev` before slide `23b` answers.
   (github.com/tt-a1i/archify). Their specs are `diagrams/*.json` (repository revision pinned in the
   architecture spec); the pictures in `public/diagrams/` are the delivered viewers captured at 1440x900,
   1.5x, light theme. To change one, edit its spec, run archify's `validate` and `deliver`, and recapture.
+  Its click (Alex, 2026-10-08) makes the point that they go stale right away: the sheets fade to grey, an ink
+  STALE stamp lands across them, and the caption becomes "One commit later". Monochrome, as the light is grey.
+
+## From Tuesday's keynote demo (2026-10-07)
+
+Alex brought four pieces of his demo in Stephan Janssen's opening keynote into this deck, restyled on paper:
+`pages/21a-karpathy.md` (Karpathy's "give it success criteria" card, the bridge into the agents beat),
+`pages/21d-scans.md` with `components/ScanFlow.vue` (deterministic offline scans and the languages, before
+Keycloak gets scanned), `pages/28b-try.md` (QR code to groma.md in `public/qr-groma.svg`, the three steps and
+the chips, over Groma.md's own map `public/demo/walk-0.webp`), and a plot twist on the finale: its click strikes
+"In" out of "In the loop." and writes "Over" above it. The title stays "In the loop"; the twist is the ending.
+Beat 4 is now six real Codex agents on six Groma.md tasks, in the light theme, with no recorded fallback: Alex
+chose to go all in. The tasks (2026-10-08) live on the local groma3 branch `in-the-loop-baseline`, checked out in
+the worktree `~/projects/groma3-in-the-loop`, picked as the six that touch the most components and relationships
+on Groma.md's own map: TASK-561 icons and colour from published icon packs, TASK-562 plans exported and imported,
+TASK-563 play history between two commits, TASK-564 a criticality level per component, TASK-565 colour by how the
+code moves plus outlier marks, TASK-568 one plugins.json for every plugin kind. Edit them there with
+`backlog task edit`, then commit on that branch; never push it.
 
 ## Commands
 

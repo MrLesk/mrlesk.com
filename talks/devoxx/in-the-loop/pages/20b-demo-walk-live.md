@@ -29,7 +29,7 @@ routeAlias: live-walk
     'Containers.',
     'Components.',
     'Code.',
-    'Start from an actor.',
+    'Flows.',
     'Follow a flow, step by step.',
     'Follow a flow, step by step.',
     'Follow a flow, step by step.',
@@ -48,7 +48,7 @@ Click 0. The whole application, no chrome. "This is the architecture of Groma.md
 [click] Containers: what runs inside the system. Browser map is highlighted.
 [click] Components: the Web host, inside the Groma application.
 [click] Code: the Web host's source, at the exact line.
-[click] Now the flows. Select an actor: the Developer, and the flows that start from them.
+[click] Flows. Start from an actor: the Developer, and the flows that start from them, listed on the right.
 [click] x4. Follow "Scan project source" step by step. Say what happens at each step, not the code.
 
 `bun run dev` starts Groma.md for you. If it can't start, this slide shows captured stills of the same eleven views.

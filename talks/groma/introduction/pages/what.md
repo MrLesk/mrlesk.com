@@ -2,24 +2,20 @@
 layout: default
 ---
 
-<div class="sheet-id">01 · DEFINITION</div>
+<div class="sheet-id">01 · LIVE ARCHITECTURE</div>
 
-# What is <span class="accent">groma.md</span>?
-
-<div class="split split-definition">
-  <div class="definition-copy">
-    <p class="lede">A living map of your system’s architecture, stored inside your repository.</p>
-    <p>It helps you understand unfamiliar codebases and describe where the architecture should go next.</p>
-    <div class="truth-pair">
-      <div><strong>Intent</strong><span>What each part is for</span></div>
-      <div><strong>Evidence</strong><span>What scanners found in code</span></div>
-    </div>
-  </div>
-  <div class="blueprint-mini" aria-label="A small system blueprint">
-    <div class="bp-title">SYSTEM BLUEPRINT</div>
-    <div class="bp-domain domain-one"><span>WEB</span><i class="bp-node dashed">App</i><i class="bp-node">Checkout</i></div>
-    <div class="bp-domain domain-two"><span>CORE</span><i class="bp-node selected">Orders</i><i class="bp-node">Inventory</i></div>
-    <div class="bp-domain domain-three"><span>IDENTITY</span><i class="bp-node dashed">Login</i></div>
-    <img src="/groma-mark-topdown.svg" class="bp-register" alt="" />
-  </div>
+<div class="statement-slide live-demo">
+  <img src="/groma-mark-sightline.svg" class="statement-mark" alt="" />
+  <p class="eyebrow">LIVE DEMO</p>
+  <h1>Save a change.<br><span>See it on the map.</span></h1>
+  <p>Keep your project’s architecture open while you work.</p>
+  <code class="demo-command">groma web</code>
 </div>
+
+<!--
+Show this benefit before explaining scanners. Open an initialized project with supported
+scanners in groma web. Start with a readable part of its architecture, save a small source
+change, and show the map update automatically. Say: “I can see my project's architecture
+and watch it update in real time.” Show the actual current app. groma view is an optional
+terminal alternative, not another headline to remember.
+-->

@@ -37,10 +37,11 @@ function frames() {
   return found
 }
 
-async function world(origin) {
-  const html = await (await fetch(origin, { signal: AbortSignal.timeout(4000) })).text()
-  const boot = JSON.parse(html.match(/<script[^>]*id="world"[^>]*>([\s\S]*?)<\/script>/)[1])
-  return new Set([...boot.world.elements.map(element => element.id), ...boot.world.flows.map(flow => flow.id), ...boot.work.items.map(task => task.id)])
+async function world(origin, search = '') {
+  const response = await fetch(`${origin}/world.json${search}`, { signal: AbortSignal.timeout(10000) })
+  if (!response.ok) throw new Error(`${origin}: HTTP ${response.status}`)
+  const boot = await response.json()
+  return { boot, known: new Set([...boot.world.elements.map(element => element.id), ...boot.world.flows.map(flow => flow.id), ...boot.work.items.map(task => task.id)]) }
 }
 
 /** Ports of maps that are built on stage (gromaLive entries with `steps`), so they may not answer yet. */
@@ -50,9 +51,13 @@ const builtOnStage = readFileSync(`${root}slides.md`, 'utf8').split(/^\s*- name:
 /** Moves a scenario to a phase ('end' for its last) and waits until the agents are there. */
 async function phase(scenario, to) {
   const url = `${deck}/__groma-live/${scenario.name}`
+  // Real agents are never moved from here: their phase change is the go signal, and every reset pays
+  // for a planning round. Their views are checked as the clone stands.
+  if ((await (await fetch(url)).json()).live) return console.warn(`${scenario.name}: live agents, left where they are`)
   const { last } = await (await fetch(`${url}?to=${to}`, { method: 'POST' })).json()
   const wanted = to === 'end' ? last : to
   for (let tries = 0; tries < 160 && (await (await fetch(url)).json()).phase !== wanted; tries++) await Bun.sleep(250)
+  if ((await (await fetch(url)).json()).phase !== wanted) throw new Error(`${scenario.name}: phase ${wanted} did not finish`)
   await Bun.sleep(1500) // Groma's map glides for 700 ms after a change
 }
 
@@ -61,10 +66,22 @@ for (const frame of frames()) {
   let known
   try {
     if (frame.scenario !== undefined) await phase(frame.scenario, 'end')
-    known = await world(frame.origin)
-  } catch {
-    const later = builtOnStage.includes(new URL(frame.origin).port)
-    console.log(later ? `- ${frame.page}: ${frame.origin} is built on stage, not running yet` : `✗ ${frame.page}: nothing answers on ${frame.origin}`)
+    const result = await world(frame.origin)
+    known = result.known
+    if (result.boot.world.elements.length > 0 && result.boot.world.relationships.length === 0)
+      throw new Error(`${frame.origin}: the demo map has no relationships; rebuild its saved architecture with the current Groma`)
+    const comparisons = new Set(frame.views.map(view => new URLSearchParams(view).get('from')).filter(Boolean))
+    for (const from of comparisons) await world(frame.origin, `?from=${encodeURIComponent(from)}`)
+    for (const view of frame.views) {
+      const query = new URLSearchParams(view), file = query.get('file')
+      if (!file) continue
+      query.set('element', query.get('component'))
+      const response = await fetch(`${frame.origin}/source.json?${query}`, { signal: AbortSignal.timeout(10000) })
+      if (!response.ok) throw new Error(`${frame.origin}: cannot open ${file} (HTTP ${response.status})`)
+    }
+  } catch (error) {
+    const later = builtOnStage.includes(new URL(frame.origin).port) && error instanceof TypeError
+    console.log(later ? `- ${frame.page}: ${frame.origin} is built on stage, not running yet` : `✗ ${frame.page}: ${error.message}`)
     if (!later) problems++
     continue
   }

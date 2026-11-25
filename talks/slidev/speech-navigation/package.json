@@ -1,0 +1,21 @@
+{
+  "name": "speech-navigation-demo",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "dev": "slidev --open",
+    "build": "slidev build",
+    "export": "slidev export --per-slide --wait 500 --output speech-navigation.pdf"
+  },
+  "overrides": {
+    "floating-vue": "5.2.2"
+  },
+  "dependencies": {
+    "@slidev/cli": "52.19.1",
+    "playwright-chromium": "1.55.0",
+    "qrcode": "1.5.4",
+    "slidev-addon-speech-navigation": "file:../../../../slidev-addon-speech-navigation",
+    "slidev-theme-codex": "file:../../../slidev-theme-codex",
+    "vue": "3.5.33"
+  }
+}

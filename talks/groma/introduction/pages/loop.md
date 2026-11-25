@@ -2,31 +2,21 @@
 layout: default
 ---
 
-<div class="sheet-id">04 · LOCAL LOOP</div>
+<div class="sheet-id">06 · YOUR PROJECT</div>
 
-# Three commands to a useful map
+# Open your own live map
 
-<div class="command-loop">
-  <div class="command-step">
-    <span>01</span>
-    <code>groma init</code>
-    <p>Create the local workspace.</p>
-  </div>
+<div class="command-loop getting-started">
+  <div class="command-step"><span>INSTALL</span><code>npm i -g groma.md</code><p>Install Groma.</p></div>
   <div class="command-arrow">→</div>
-  <div class="command-step">
-    <span>02</span>
-    <code>groma scan</code>
-    <p>Observe what is in the code.</p>
-  </div>
+  <div class="command-step"><span>IN YOUR REPOSITORY</span><code>groma init</code><p>Set up your project and scanners.</p></div>
   <div class="command-arrow">→</div>
-  <div class="command-step active">
-    <span>03</span>
-    <code>groma web</code>
-    <p>Open the interactive blueprint.</p>
-  </div>
+  <div class="command-step active"><span>OPEN THE MAP</span><code>groma web</code><p>Watch the architecture update as you work.</p></div>
 </div>
+<div class="command-foot"><p>Prefer the terminal? <code>groma view</code></p><div><span>LOCAL</span><span>OPEN SOURCE</span></div></div>
 
-<div class="command-foot">
-  <p>Bare <code>groma</code> opens the bounded read-only blueprint.</p>
-  <div><span>NO SERVER</span><span>NO ACCOUNT</span><span>NO UPLOAD</span></div>
-</div>
+<!--
+Run init inside the repository. Supported language/framework scanners must be installed
+and ready. Backlog.md is optional for the map; install and configure it to get the task
+integration shown earlier. Keep setup brief and finish on the single core benefit.
+-->

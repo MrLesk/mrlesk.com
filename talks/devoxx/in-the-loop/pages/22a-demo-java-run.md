@@ -12,7 +12,7 @@ routeAlias: run-java
 </div>
 
 <!--
-⏱ 21:15 to 22:00. A real terminal, run by the slides. You type nothing.
+⏱ 19:00 to 19:45. A real terminal, run by the slides. You type nothing.
 
 [click] git clone: a fresh copy of Keycloak, from your local checkout so the wifi doesn't matter.
 When it finishes, the addon starts `groma web` in that copy by itself. There's no `groma init`:

@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "slidev --open",
+    "rehearsal": "GROMA_LIVE_REHEARSAL=1 slidev --open",
     "build": "slidev build",
     "export": "slidev export"
   },

@@ -36,7 +36,7 @@ routeAlias: live-curated
 />
 
 <!--
-⏱ 25:15 to 27:00. Keycloak after agent curation, prepared in advance in ~/projects/keycloak.
+⏱ 23:00 to 24:45. Keycloak after agent curation, prepared in advance in ~/projects/keycloak.
 
 Click 0. The landscape: users, Keycloak, LDAP, the database, SMTP. "8,467 Java files. I can read this in a minute."
 [click] The server container: Authentication, OpenID Connect, SAML, storage, federation.
@@ -45,7 +45,7 @@ Click 0. The landscape: users, Keycloak, LDAP, the database, SMTP. "8,467 Java f
 [click] One component: OpenID Connect. What it does, who it talks to.
 [click] How it's built: 264 files behind one box, and I can open any of them.
 
-Before leaving the demo, say: this is the level I review at now.
+Before leaving Keycloak, say: this is the level I review at now.
 
 `bun run dev` starts this map for you.
 The numbers in the first caption come from Keycloak at commit dd4ae31d. Re-check them if you update the checkout.

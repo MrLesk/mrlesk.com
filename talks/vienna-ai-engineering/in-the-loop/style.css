@@ -3018,10 +3018,12 @@ html[data-mood="4"] body, html[data-mood="4"] #page-root, html[data-mood="4"] #s
 
 /* ---------- Save the dates (the Codex meetups' look) ---------- */
 /* pages/32-save-the-dates.md comes after the thank-you and announces two events, so it leaves this deck's lit
-   room on purpose and borrows the look of Alex's Codex meetup decks (layouts/codex.vue): the Prater at night,
-   shooting stars, dark glass cards, QR codes on soft paper. Colours and sizes follow slidev-theme-codex-dark at
-   the repository root. Its mono font is JetBrains Mono; this deck only loads Fira Code, so the captions use that. */
-.slidev-layout.codex-night {
+   room on purpose and borrows the look of Alex's Codex meetup decks (layouts/codex.vue): a picture of the place
+   behind dark glass cards, QR codes on soft paper. The picture is TU Wien by day, where the first event is
+   (public/codex/tu-wien-day.jpg, painted by Codex in the style of the codex-events.com pictures; see AGENTS.md).
+   Colours and sizes follow slidev-theme-codex-dark at the repository root. Its mono font is JetBrains Mono; this
+   deck only loads Fira Code, so the captions use that. */
+.slidev-layout.codex-look {
   --codex-fg: #f3f5fc;
   --codex-accent: #9aa6ff;
   --codex-border: rgba(255, 255, 255, 0.14);
@@ -3038,15 +3040,17 @@ html[data-mood="4"] body, html[data-mood="4"] #page-root, html[data-mood="4"] #s
   padding: 40px 54px;
   color: var(--codex-fg);
   font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  /* The night picture (set by layouts/codex.vue), under a light wash that darkens it a little towards the bottom.
-     Keep the wash light: the stars and the sunset behind the Riesenrad are the point of the picture. */
+  /* The picture (set by layouts/codex.vue), under a light wash that darkens it a little towards the bottom, and a
+     soft shade in the top-left corner so the white title reads over the bright leaves there. Keep both light:
+     the sunny day is the point of the picture. */
   background:
-    linear-gradient(180deg, rgba(4, 7, 15, 0.05) 0%, rgba(4, 7, 15, 0.3) 100%),
-    var(--codex-night) center / cover no-repeat,
+    radial-gradient(ellipse 50% 32% at 0% 0%, rgba(4, 7, 15, 0.5), rgba(4, 7, 15, 0) 100%),
+    linear-gradient(180deg, rgba(4, 7, 15, 0) 0%, rgba(4, 7, 15, 0.25) 100%),
+    var(--codex-picture) center / cover no-repeat,
     #060a16;
 }
 
-.codex-night .codex-mark {
+.codex-look .codex-mark {
   position: absolute;
   top: 30px;
   right: 40px;
@@ -3055,47 +3059,11 @@ html[data-mood="4"] body, html[data-mood="4"] #page-root, html[data-mood="4"] #s
   filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.5));
 }
 
-/* Shooting stars: each streak is turned by --tilt and flies --travel along its own line, in the first tenth of a
-   long round (--dur), so streaks stay rare. The tracks keep to the open sky at the top of the picture. */
-.codex-night .codex-stars {
-  position: absolute;
-  inset: 0;
-  overflow: hidden;
-  pointer-events: none;
-}
-
-.codex-night .star {
-  position: absolute;
-  width: 122px;
-  height: 2px;
-  border-radius: 2px;
-  background: linear-gradient(90deg, rgba(255, 255, 255, 0) 0%, rgba(214, 225, 255, 0.55) 62%, #ffffff 100%);
-  filter: drop-shadow(0 0 3px rgba(214, 225, 255, 0.45));
-  opacity: 0;
-  transform: rotate(var(--tilt));
-  animation: codex-star var(--dur) linear var(--delay) infinite;
-}
-
-.codex-night .star-1 { top: 6%; left: 10%; --tilt: 12deg; --dur: 14s; --delay: 1s; --travel: 347px; }
-.codex-night .star-2 { top: 10%; left: 48%; --tilt: 16deg; --dur: 17s; --delay: 5.5s; --travel: 265px; }
-.codex-night .star-3 { top: 4%; left: 58%; --tilt: 9deg; --dur: 15s; --delay: 9s; --travel: 184px; width: 92px; }
-.codex-night .star-4 { top: 18%; left: 6%; --tilt: 14deg; --dur: 19s; --delay: 12.5s; --travel: 225px; width: 92px; }
-.codex-night .star-5 { top: 8%; left: 30%; --tilt: 11deg; --dur: 16s; --delay: 15s; --travel: 306px; }
-.codex-night .star-6 { top: 20%; left: 50%; --tilt: 18deg; --dur: 22s; --delay: 7.8s; --travel: 184px; width: 82px; }
-.codex-night .star-7 { top: 2%; left: 34%; --tilt: 7deg; --dur: 18s; --delay: 18s; --travel: 316px; }
-
-@keyframes codex-star {
-  0%, 2% { transform: rotate(var(--tilt)) translateX(0); opacity: 0; }
-  4.5% { opacity: 0.9; }
-  9% { opacity: 0.8; }
-  12%, 100% { transform: rotate(var(--tilt)) translateX(var(--travel)); opacity: 0; }
-}
-
 .save-dates {
   position: relative;
 }
 
-.slidev-layout.codex-night .save-dates h1 {
+.slidev-layout.codex-look .save-dates h1 {
   margin: 0 0 30px;
   color: #ffffff;
   font-family: inherit;
@@ -3115,7 +3083,7 @@ html[data-mood="4"] body, html[data-mood="4"] #page-root, html[data-mood="4"] #s
 }
 
 /* One event: its name, the QR code to its Luma page, its date. The whole card is the link. */
-.slidev-layout.codex-night .save-date {
+.slidev-layout.codex-look .save-date {
   display: flex;
   box-sizing: border-box;
   width: 330px;
@@ -3134,7 +3102,7 @@ html[data-mood="4"] body, html[data-mood="4"] #page-root, html[data-mood="4"] #s
   -webkit-backdrop-filter: blur(14px);
 }
 
-.slidev-layout.codex-night .save-date h2 {
+.slidev-layout.codex-look .save-date h2 {
   margin: 0;
   color: #ffffff;
   font-family: inherit;
@@ -3176,7 +3144,7 @@ html[data-mood="4"] body, html[data-mood="4"] #page-root, html[data-mood="4"] #s
   letter-spacing: 0;
 }
 
-.slidev-layout.codex-night .save-date p {
+.slidev-layout.codex-look .save-date p {
   margin: 0;
   color: #ffffff;
   font-size: 29px;

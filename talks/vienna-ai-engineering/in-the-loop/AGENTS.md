@@ -42,8 +42,10 @@ Changed for Vienna (Alex, 2026-11-04):
   events: Codex Build at TU Wien on Saturday 2026-11-28 (https://luma.com/codex-yfcw) and Cafe Compute at Flinn
   on Saturday 2026-12-12 (https://luma.com/cafe-compute-vienna-1). Alex asked for a completely different style
   there, the one of his Codex meetup decks. So it is the only slide that is not lit like the room: it uses
-  `layouts/codex.vue` (the Prater at night, shooting stars, dark glass cards, after `slidev-theme-codex-dark` at
-  the repository root), with `mood: 0` for black around the slide and `meter: false`. Its styles are under "Save
+  `layouts/codex.vue` (a picture of the place behind dark glass cards, after `slidev-theme-codex-dark` at the
+  repository root), with `mood: 0` for black around the slide and `meter: false`. The picture is TU Wien by
+  day, not the meetups' Prater at night: the events are during the day (Alex, 2026-11-09). So there are no
+  shooting stars either. Its styles are under "Save
   the dates" in `style.css`. The words are Alex's sketch: the title, each event's name and place, its date. Keep
   it that short; what he says about the events is in the speaker notes. The two cards stand at the two edges of
   the slide, as far apart as they go, so a phone at the back of the room can pick up one code at a time (Alex);
@@ -265,9 +267,13 @@ by this deck; the flash deck still has it.
   Clicks add `s1` to `s4` to the stage and `style.css` transitions on those classes, so stepping back
   rewinds. `components/GrowingIds.vue` grows the `IN (...)` list from click 3.
 - `components/FactoryFloor.vue` and `lib/factory-scene.ts` are the finale's factory (see "The finale").
-- `layouts/codex.vue` is the Codex meetups' look, used by the save-the-dates slide only. Its night picture and
-  Codex mark, `public/codex/prater-night.jpg` and `public/codex/codex-logo.png`, are copies from
-  `slidev-theme-codex-dark/public`. The slide's QR codes are `public/qr-codex-build.svg` and
+- `layouts/codex.vue` is the Codex meetups' look, used by the save-the-dates slide only. Its Codex mark,
+  `public/codex/codex-logo.png`, is a copy from `slidev-theme-codex-dark/public`. Its picture,
+  `public/codex/tu-wien-day.jpg`, is TU Wien's main building on Karlsplatz on a sunny autumn day, painted by
+  Codex's image tool (gpt-6.1-sol, xhigh) in the style of the Vienna event pictures on codex-events.com: oil
+  paintings of WU and of the Stephansdom, seen from above. The prompt was one line, with those two paintings
+  attached: "make a 16:9 image of TU Wien at Karlsplatz on a sunny day, in the style of these images". Keep it
+  that simple (Alex): no photo of the place, and more detail only if the result is bad. The slide's QR codes are `public/qr-codex-build.svg` and
   `public/qr-cafe-compute.svg`, drawn on the pale paper colour of the panel they sit on (`--codex-paper`). To
   make one again, with the event's address at the end:
   `qrencode -t SVG -l M -m 2 --foreground=080808 --background=edeff6 -o public/qr-codex-build.svg https://luma.com/codex-yfcw`

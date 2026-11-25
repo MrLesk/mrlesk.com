@@ -1,0 +1,5 @@
+node_modules/
+dist/
+.slidev/
+slides-export/
+speech-navigation.pdf

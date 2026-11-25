@@ -16,7 +16,7 @@ routeAlias: live-java
 />
 
 <!--
-⏱ 22:30 to 25:00. The map of the copy you just cloned, scanned in front of the audience.
+⏱ 20:15 to 22:45. The map of the copy you just cloned, scanned in front of the audience.
 
 This slide waits until that Groma.md server answers, then shows it. A fresh copy opens on the Groma.md setup,
 and your clicks press its buttons, with the values on screen:

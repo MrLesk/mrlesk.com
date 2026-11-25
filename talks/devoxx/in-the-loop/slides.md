@@ -21,13 +21,48 @@ gromaLive:
   - name: keycloak-curated
     cwd: ~/projects/keycloak
     port: 4802
-  # The small order service from the demo history. Three agents work Backlog.md tasks there for
-  # real, one phase per click, then Groma.md compares what they changed with the service before them.
+  # Beat 4: six real Codex agents work six Groma.md roadmap tasks on a fresh clone of Groma.md itself
+  # (branch in-the-loop-baseline, which holds only those six open tasks). They assign, read and plan as soon
+  # as `bun run dev` starts; the live slide's click tells them all to go; then Groma.md compares what they
+  # left with the baseline commit. CODEX_HOME keeps the demo's model and key apart from your own Codex setup.
   - name: agents
     port: 4805
-    scenario:
-      source: ../../../slidev-addon-groma-live/demo/orders.bundle
-      script: ../../../slidev-addon-groma-live/demo/agents.mjs
+    live:
+      template: ~/projects/groma3
+      branch: in-the-loop-baseline
+      prompt: ./agent-prompt.md
+      go: Implement your plan now. Do not ask any questions.
+      codexHome: ~/.config/devoxx-keynote/codex
+      # Groma.md's own scanners run from source and need the repository's dependencies, so the clone installs
+      # them before it is served (the demo branch keeps only the TypeScript scanner).
+      setup:
+        - bun install --frozen-lockfile
+      # `bun run rehearsal` runs every agent on these instead of codexHome's setup (GPT-6.1 Sol, medium, Ultrafast).
+      rehearsal:
+        model: gpt-6-luna
+        model_reasoning_effort: max
+        service_tier: fast
+      # The six roadmap tasks that touch the most components and relationships on Groma.md's own map. All six
+      # are @codex, so Groma.md draws the Codex logo on their pins.
+      agents:
+        - task: TASK-561    # senior: icons and a colour on elements, from published icon packs
+          name: codex
+          label: Codex 1
+        - task: TASK-568    # one plugins.json for scanners, work sources and icon packs; nothing loads without an entry
+          name: codex
+          label: Codex 2
+        - task: TASK-562    # senior: export a selection as a plan, import it as drafts
+          name: codex
+          label: Codex 3
+        - task: TASK-565    # intermediate: colour by commits, committers and co-change, outlier marks
+          name: codex
+          label: Codex 4
+        - task: TASK-563    # senior: play the history between two commits
+          name: codex
+          label: Codex 5
+        - task: TASK-564    # senior: a criticality level per component, critical means read-only for agents
+          name: codex
+          label: Codex 6
   # Built on stage from the GromaRun slide, in the throwaway folder ~/.groma-live/keycloak-devoxx.
   # Groma.md proposes the folder name as the project name, so the folder is called keycloak-devoxx.
   - name: keycloak-devoxx
@@ -160,15 +195,7 @@ src: ./pages/20b-demo-walk-live.md
 ---
 
 ---
-src: ./pages/21-demo-agents.md
----
-
----
-src: ./pages/21b-demo-agents-live.md
----
-
----
-src: ./pages/21c-demo-agents-review.md
+src: ./pages/21d-scans.md
 ---
 
 ---
@@ -192,7 +219,27 @@ src: ./pages/23b-demo-curated-live.md
 ---
 
 ---
+src: ./pages/21a-karpathy.md
+---
+
+---
+src: ./pages/21-demo-agents.md
+---
+
+---
+src: ./pages/21b-demo-agents-live.md
+---
+
+---
+src: ./pages/21c-demo-agents-review.md
+---
+
+---
 src: ./pages/28-spec.md
+---
+
+---
+src: ./pages/28b-try.md
 ---
 
 ---
