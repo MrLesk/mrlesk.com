@@ -1,0 +1,126 @@
+/* Deck-level styles for the ChatGPT Sites talk.
+   Styles for one component live in that component's own <style scoped> block. */
+
+:root {
+  /* Colours the mock product screens share. The theme's own colours start with --codex-. */
+  --sites-panel: #f5f6fb; /* soft backdrop behind mock windows */
+  --sites-line: rgba(3, 10, 24, 0.1); /* hairlines inside mock windows */
+  --sites-live: #14a166; /* "live" and "verified" green */
+  --sites-live-soft: #e2f6ec;
+  --sites-shadow: 0 calc(14 * var(--pt)) calc(40 * var(--pt)) rgba(20, 14, 80, 0.14);
+
+  /* Motion curves: "out" settles gently, "spring" overshoots a little. */
+  --sites-ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --sites-ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* ── Entrances ─────────────────────────────────────────────────────────────
+   Slidev hides every slide but the current one with display: none, so a CSS
+   animation starts again each time its slide is shown. Entrances need no script. */
+
+@keyframes sites-rise {
+  from {
+    opacity: 0;
+    transform: translateY(calc(16 * var(--pt)));
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes sites-pop {
+  from {
+    opacity: 0;
+    transform: scale(0.6);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.slidev-layout.default h1 {
+  margin-bottom: calc(14 * var(--pt));
+  animation: sites-rise 700ms var(--sites-ease-out) both;
+}
+
+/* The one-line message under a slide title. */
+.lede {
+  margin: 0 0 calc(18 * var(--pt)) 0;
+  color: var(--codex-fg);
+  font-size: calc(20 * var(--pt));
+  font-weight: 500;
+  letter-spacing: -0.015em;
+  line-height: 1.25;
+  animation: sites-rise 700ms var(--sites-ease-out) 100ms both;
+}
+
+/* The closing line at the bottom of a slide. */
+.kicker {
+  margin: calc(16 * var(--pt)) 0 0 0;
+  color: var(--codex-fg);
+  font-size: calc(15 * var(--pt));
+  font-weight: 500;
+  animation: sites-rise 700ms var(--sites-ease-out) 500ms both;
+}
+
+/* ── Cover ───────────────────────────────────────────────────────────────── */
+
+.slidev-layout.cover .cover-body h1 {
+  animation: sites-rise 800ms var(--sites-ease-out) both;
+}
+
+.slidev-layout.cover .cover-body p {
+  animation: sites-rise 800ms var(--sites-ease-out) 200ms both;
+}
+
+.slidev-layout.cover .cover-hero {
+  animation: sites-rise 900ms var(--sites-ease-out) 100ms both;
+}
+
+/* ── Thank you ───────────────────────────────────────────────────────────── */
+
+.slidev-layout.thanks .thanks-body h1 {
+  animation: sites-rise 800ms var(--sites-ease-out) both;
+}
+
+.slidev-layout.thanks .thanks-body p {
+  animation: sites-rise 800ms var(--sites-ease-out) 200ms both;
+}
+
+/* The QR card stands on the right, level with the middle of the slide, and floats a little.
+   The negative margin is half the card's height. */
+.thanks-qr {
+  position: absolute;
+  top: 50%;
+  right: calc(70 * var(--pt));
+  margin-top: calc(-152 * var(--pt));
+  animation:
+    sites-pop 700ms var(--sites-ease-spring) 500ms both,
+    thanks-qr-float 5s ease-in-out 1200ms infinite;
+}
+
+@keyframes thanks-qr-float {
+  0%,
+  100% {
+    translate: 0 0;
+  }
+  50% {
+    translate: 0 calc(-6 * var(--pt));
+  }
+}
+
+/* ── People who ask their computer for less motion ───────────────────────── */
+
+@media (prefers-reduced-motion: reduce) {
+  .slidev-layout *,
+  .slidev-layout *::before,
+  .slidev-layout *::after {
+    animation-duration: 1ms !important;
+    animation-delay: 0ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 1ms !important;
+    transition-delay: 0ms !important;
+  }
+}

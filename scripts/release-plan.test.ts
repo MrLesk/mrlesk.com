@@ -30,6 +30,7 @@ describe('createReleasePlan', () => {
       'codex-april-2026',
       'codex-build-june-2026',
       'codex-july-2026-lightning',
+      'codex-chatgpt-sites',
     ]);
   });
 

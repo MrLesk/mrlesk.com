@@ -126,6 +126,14 @@
       "watch": ["slidev-theme-codex/**"]
     },
     {
+      "id": "codex-chatgpt-sites",
+      "source": "talks/codex/chatgpt-sites",
+      "target": "talks/codex/chatgpt-sites",
+      "base": "/talks/codex/chatgpt-sites/",
+      "artifact": "component-talk-codex-chatgpt-sites",
+      "watch": ["slidev-theme-codex/**"]
+    },
+    {
       "id": "devoxx-in-the-loop",
       "source": "talks/devoxx/in-the-loop",
       "target": "talks/devoxx/in-the-loop",
