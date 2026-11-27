@@ -1,0 +1,181 @@
+/* Deck-level styles for the Codex Community Build opening.
+   Styles for one component live in that component's own <style> block. */
+
+:root {
+  /* Motion curves: "out" settles gently, "spring" overshoots a little. */
+  --deck-ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --deck-ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  /* Surfaces the white slides share. The theme's own colours start with --codex-. */
+  --deck-panel: #f5f6fb;
+  --deck-line: rgba(3, 10, 24, 0.1);
+  --deck-shadow: 0 calc(14 * var(--pt)) calc(40 * var(--pt)) rgba(20, 14, 80, 0.14);
+  --deck-green: #14a166;
+}
+
+/* ── Entrances ─────────────────────────────────────────────────────────────
+   Slidev hides every slide but the current one with display: none, so a CSS
+   animation starts again each time its slide is shown. Entrances need no script. */
+
+@keyframes deck-rise {
+  from {
+    opacity: 0;
+    transform: translateY(calc(16 * var(--pt)));
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes deck-pop {
+  from {
+    opacity: 0;
+    transform: scale(0.6);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes deck-fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* ── White slides: a title at the top, one component below ───────────────── */
+
+.slidev-layout.default {
+  display: flex;
+  flex-direction: column;
+  padding: calc(34 * var(--pt)) calc(44 * var(--pt)) calc(44 * var(--pt));
+}
+
+.slidev-layout.default h1 {
+  margin: 0 0 calc(20 * var(--pt)) 0;
+  font-size: calc(34 * var(--pt));
+  animation: deck-rise 700ms var(--deck-ease-out) both;
+}
+
+/* ── Slides that one component fills from edge to edge ───────────────────── */
+
+.slidev-layout.full {
+  padding: 0;
+  overflow: hidden;
+}
+
+/* ── Cover ───────────────────────────────────────────────────────────────── */
+
+.slidev-layout.cover .cover-body h1 {
+  animation: deck-rise 800ms var(--deck-ease-out) both;
+}
+
+.slidev-layout.cover .cover-body p {
+  animation: deck-rise 800ms var(--deck-ease-out) 200ms both;
+}
+
+/* The date stands close under the hosts' line, in the text colour. */
+.slidev-layout.cover .cover-body p.cover-date {
+  margin-top: calc(10 * var(--pt));
+  color: var(--codex-fg);
+  font-weight: 500;
+  animation-delay: 350ms;
+}
+
+.slidev-layout.cover .cover-footer {
+  animation: deck-rise 800ms var(--deck-ease-out) 500ms both;
+}
+
+.slidev-layout.cover .cover-hero {
+  animation: deck-rise 900ms var(--deck-ease-out) 100ms both;
+}
+
+.slidev-layout.cover .cover-hero img {
+  animation: cover-logo-float 6s ease-in-out infinite;
+}
+
+@keyframes cover-logo-float {
+  0%,
+  100% {
+    translate: 0 calc(-4 * var(--pt));
+  }
+  50% {
+    translate: 0 calc(4 * var(--pt));
+  }
+}
+
+/* ── People who ask their computer for less motion ───────────────────────── */
+
+@media (prefers-reduced-motion: reduce) {
+  .slidev-layout *,
+  .slidev-layout *::before,
+  .slidev-layout *::after {
+    animation-duration: 1ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 1ms !important;
+  }
+}
+
+/* ── "Thank you for being part of this community": the picture wall ──────── */
+
+.wall-stage {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  background: #ffffff;
+  color: var(--codex-fg);
+}
+
+/* White over the wall, so the pictures stay in the background. */
+.wall-stage-veil {
+  position: absolute;
+  inset: 0;
+  background: rgba(255, 255, 255, 0.45);
+}
+
+.wall-stage-card {
+  position: relative;
+  max-width: calc(640 * var(--pt));
+  padding: calc(40 * var(--pt)) calc(52 * var(--pt));
+  border-radius: calc(30 * var(--pt));
+  border: 1px solid rgba(255, 255, 255, 0.9);
+  background: rgba(255, 255, 255, 0.86);
+  backdrop-filter: blur(calc(18 * var(--pt)));
+  box-shadow: 0 calc(24 * var(--pt)) calc(70 * var(--pt)) rgba(20, 14, 80, 0.3);
+  text-align: center;
+  animation: deck-pop 900ms var(--deck-ease-spring) both;
+}
+
+/* ── The last slide: the message, with a strip of pictures along the bottom ─ */
+
+.closing-stage {
+  position: absolute;
+  inset: 0;
+  color: #ffffff;
+}
+
+.closing-stage-body {
+  position: absolute;
+  left: calc(60 * var(--pt));
+  right: calc(60 * var(--pt));
+  top: calc(60 * var(--pt));
+  bottom: calc(210 * var(--pt));
+  display: grid;
+  place-items: center;
+  text-align: center;
+}
+
+.closing-stage-strip {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: calc(34 * var(--pt));
+  height: calc(150 * var(--pt));
+  animation: deck-rise 900ms var(--deck-ease-out) 700ms both;
+}
